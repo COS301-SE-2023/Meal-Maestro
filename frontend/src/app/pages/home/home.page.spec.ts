@@ -1,20 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
+import { ExploreContainerComponent } from '../../components/explore-container/explore-container.component';
 
-import { ExploreContainerComponent } from '../explore-container/explore-container.component';
+import { HomePage } from './home.page';
 
-import { PantryPage } from './pantry.page';
-
-describe('PantryPage', () => {
-  let component: PantryPage;
-  let fixture: ComponentFixture<PantryPage>;
+describe('HomePage', () => {
+  let component: HomePage;
+  let fixture: ComponentFixture<HomePage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PantryPage, IonicModule, ExploreContainerComponent],
+      imports: [HomePage, IonicModule, ExploreContainerComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PantryPage);
+    fixture = TestBed.createComponent(HomePage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
