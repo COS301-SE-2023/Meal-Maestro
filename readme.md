@@ -56,6 +56,7 @@ Languages:
 1. C/C++
 2. Java
 3. javascript/html
+
 Despite his strengths, Theo acknowledges a few shortcomings that he aims to address. He
 occasionally hyper focuses on small details, costing him valuable time. To counteract this,
 Theo plans to prioritize the app's needs and features more effectively. Additionally, while
@@ -80,6 +81,7 @@ Languages:
 3. Javascript/Angular
 4. Python
 5. C#
+
 Although Ethan currently lacks substantial experience in code testing and unit testing, he is
 committed to integrating these tests at every stage of development, thereby strengthening
 his skill set in this area.
@@ -97,6 +99,7 @@ Languages:
 1. Java
 2. C++
 3. JavaScript
+
 Wian's pursuit of idealism, even when a sub-ideal solution is satisfactory, remains an area
 for growth. By recognizing this tendency, he can continue to refine his approach to
 problem-solving and project management
@@ -119,6 +122,7 @@ Languages :
 3. Angular (Materials & Ionic)
 4. JavaScript
 5. Python
+
 Whilst Franko is a determined engineer, he is also motivated by interest and may lack
 motivation if he does not understand or find the goal intriguing. To keep Franko motivated
 and driven, we provide him with clear communication and engaging tasks. This approach
@@ -140,6 +144,7 @@ Languages :
 3. HTML / PHP
 4. C++
 5. Java
+
 Despite her strengths , Amicke acknowledges that there are areas where she could
 improve, including unit testing and time management. She has a tendency to leave tasks to
 the last minute, which can sometimes cause inconveniences and stress. However, she is
