@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-shopping',
@@ -12,7 +14,12 @@ import { IonicModule } from '@ionic/angular';
 })
 export class ShoppingPage implements OnInit {
 
-  constructor() { }
+  constructor(public r : Router) { }
+
+  LoadPantryPage()
+  {
+    this.r.navigate(['/tabs/pantry']);
+  }
 
   ngOnInit() {
   }
