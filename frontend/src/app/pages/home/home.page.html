@@ -10,22 +10,28 @@
       <ion-title size="large">Whats on the menu?</ion-title>
     </ion-toolbar>
   </ion-header>
-<div class="fill">
   <ion-list lines="inset">
-    <ion-item >
+    <ion-item>
       <ion-label>Today</ion-label>
     </ion-item>
 
     <ion-card button="true" color="primary">
-      <ion-card-header>
-        <ion-card-subtitle>Breakfast</ion-card-subtitle>
-        <ion-card-title>Muesli & Yogurt</ion-card-title>
-      </ion-card-header>
+      <div>
+        <ion-card-header>
+          <ion-card-subtitle>Breakfast</ion-card-subtitle>
+          <ion-card-title>Muesli & Yogurt</ion-card-title>
+        </ion-card-header>
 
-      <ion-card-content>
-        A classic Nutritious breakfast with a low gi to sustain you through your
-        busy day
-      </ion-card-content>
+        <ion-card-content>
+          A classic Nutritious breakfast with a low gi to sustain you through
+          your busy day
+        </ion-card-content>
+      </div>
+  
+    
+        <img src="https://www.jessicagavin.com/wp-content/uploads/2016/06/berry-muesli-breakfast-bowls.jpg">
+
+
     </ion-card>
 
     <ion-card button="true" color="primary">
@@ -48,8 +54,7 @@
       </ion-card-content>
     </ion-card>
   </ion-list>
-</div>
-<div class="fill">
+
   <ion-list lines="inset" lines-color="secondary">
     <ion-item>
       <ion-label>Tomorow</ion-label>
@@ -87,6 +92,6 @@
       </ion-card-content>
     </ion-card>
   </ion-list>
-</div>
+
   <app-explore-container name="Home page"></app-explore-container>
 </ion-content>

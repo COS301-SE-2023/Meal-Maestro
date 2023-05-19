@@ -1,15 +1,29 @@
 ion-item {
- --border-color:var(--ion-color-primary-shade);
+  --border-color: var(--ion-color-primary-shade);
 
- ion-label {
+  ion-label {
     --color: var(--ion-color-primary-shade);
-   }
+  }
 }
 
 ion-title {
- color: var(--ion-color-primary);
+  color: var(--ion-color-primary);
 }
 
 ion-card {
-    background-color: var(--ion-color-primary-shade);
+  background-color: var(--ion-color-primary-shade);
+ 
+div {
+    float: left;
+    width: 68%;
+    
 }
+  img {
+    padding-bottom: 0;
+    float: right;
+    width:32%;
+    height: max-content;
+    object-fit: fill;
+  }
+}
+
