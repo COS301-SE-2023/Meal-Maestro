@@ -1,38 +1,70 @@
 body {
-    --ion-background-color: white;
+  //  --ion-background-color: white;
    // text-align: center;
-    
+   //flex-wrap: wrap;
+    display: flex;
 }
 
 .shop {
     text-align: center;
 }
 
-.shopbutton {
-    margin-top: 60px;
-    width: 80%;
+// .shopbutton {
+//     margin-top: 60px;
+//     width: 80vw;
     
-  //  margin-left: 25px;
-  //  margin-right: 30px;
+//   //  margin-left: 25px;
+//   //  margin-right: 30px;
+//     margin-bottom: 0;
+//     width: 330px;
+//     --background : rgb(204, 204, 204);
+//     color: black;
+//     --box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
+//     border: 1px solid grey;
+//     border-radius: 15px;
+//     font-size: 2ch;
+// }
+
+.shopfont {
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+ion-card-content {
+    font-size: 1rem;
+}
+
+.shopcard {
+   // display: flex;
+    --background : var(--ion-color-primary);
+    width: 80vw;
+    border-radius: 15px;
+    color: white;
+    margin-top: 5vh;
+    text-align: center;
     margin-bottom: 0;
-    width: 330px;
-    --background : rgb(204, 204, 204);
-    color: black;
+    text-size-adjust: 4ch;
     --box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
     border: 1px solid grey;
-    border-radius: 15px;
-    font-size: 2ch;
+    border-radius: 10px;
+    height: 6vh;
+    z-index: -1;
+    font-size: 1.2rem;
+    padding-top: 1.5vh;
 }
 
 .card {
     //text-align: center;
    // margin-left: 25px;
-    margin-top: 2%;
-    width: 330px;
-    border-radius: 15px;
-    height: 600px;
-    --background : rgb(204, 204, 204);
-    color: black;
+   z-index: -1;
+   display: flex;
+    z-index: -1;
+    margin-top: 1vh;
+    width: 80vw;
+    border-radius: 10px;
+    height: 70vh;
+    --background : var(--ion-color-primary);
+    color: white;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
    // font-size: 2ch;
 }
@@ -42,13 +74,13 @@ body {
 }
 
 .plusbutton {
-    margin-top: -70px;
-    margin-left: 300px;
+    margin-top: -10vh;
+    margin-left: 75vw;
     width: 60px;
     height: 60px;
     font-size: 4ch;
-    --background : rgb(155, 153, 153);
-    color: black;
+    --background : var(--ion-color-secondary);
+    color: white;
     --box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
    // border: 1px solid black;
     //border-radius: 50%;
