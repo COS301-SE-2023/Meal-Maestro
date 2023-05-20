@@ -9,6 +9,13 @@ body {
     text-align: center;
 }
 
+// .try {
+//     width: 80vw;
+//     margin-top: 5vh;
+//     border-radius: 15px;
+//     height: 7vh;
+// }
+
 // .shopbutton {
 //     margin-top: 60px;
 //     width: 80vw;
@@ -34,23 +41,25 @@ ion-card-content {
     font-size: 1rem;
 }
 
-.shopcard {
+.shopbutton {
+    margin-top: 4vh;
    // display: flex;
     --background : var(--ion-color-primary);
     width: 80vw;
     border-radius: 15px;
     color: white;
-    margin-top: 5vh;
+  //  margin-top: vh;
     text-align: center;
     margin-bottom: 0;
     text-size-adjust: 4ch;
     --box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
-    border: 1px solid grey;
-    border-radius: 10px;
+   // border: 1px solid grey;
+  //  border-radius: 0px;
+    border: var(--ion-color-primary-shade);
     height: 6vh;
     z-index: -1;
     font-size: 1.2rem;
-    padding-top: 1.5vh;
+   // padding-top: 1.5vh;
 }
 
 .card {
