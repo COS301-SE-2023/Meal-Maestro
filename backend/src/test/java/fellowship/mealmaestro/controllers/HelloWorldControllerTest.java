@@ -1,4 +1,4 @@
-package fellowship.mealmaestro;
+package fellowship.mealmaestro.controllers;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class HelloWorldTest {
+public class HelloWorldControllerTest {
     
     @Autowired
     private MockMvc mockMvc;
