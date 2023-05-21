@@ -65,8 +65,8 @@ implementing them. To improve in this area, Theo is dedicating time to relevant 
 and learning resources
 
 Links:
-https://www.linkedin.com/in/theodor-le-roux-123a4a274?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3Butxr%2F8s6RsmhTFZz%2BJK83Q%3D%3D
-https://github.com/theodorleroux
+- https://www.linkedin.com/in/theodor-le-roux-123a4a274?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3Butxr%2F8s6RsmhTFZz%2BJK83Q%3D%3D
+- https://github.com/theodorleroux
 
 ### Ethan
 Ethan is a proficient team player, adept at completing tasks swiftly and effectively. He has
@@ -87,6 +87,8 @@ committed to integrating these tests at every stage of development, thereby stre
 his skill set in this area.
 
 Links:
+- https://www.linkedin.com/in/ethan-de-beer-257403277
+- https://github.com/SkulderLock
 
 ### Wian
 Wian is a versatile and creative problem solver, able to effectively contribute to a wide
@@ -105,8 +107,8 @@ for growth. By recognizing this tendency, he can continue to refine his approach
 problem-solving and project management
 
 Links:
-https://github.com/gryffindor-coder
-https://www.linkedin.com/in/wian-du-toit-995238271
+- https://github.com/gryffindor-coder
+- https://www.linkedin.com/in/wian-du-toit-995238271
 
 ### Franko
 Franko is an intrigued and determined engineer who finds solutions to counter-intuitive
