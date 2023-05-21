@@ -105,6 +105,8 @@ for growth. By recognizing this tendency, he can continue to refine his approach
 problem-solving and project management
 
 Links:
+https://github.com/gryffindor-coder
+https://www.linkedin.com/in/wian-du-toit-995238271
 
 ### Franko
 Franko is an intrigued and determined engineer who finds solutions to counter-intuitive
