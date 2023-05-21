@@ -1,3 +1,4 @@
+[![codecov](https://codecov.io/gh/COS301-SE-2023/Meal-Maestro/branch/development/graph/badge.svg?token=TUYXXQO1FK)](https://codecov.io/gh/COS301-SE-2023/Meal-Maestro)
 # Meal Maestro
 ## The Fellowship
 
