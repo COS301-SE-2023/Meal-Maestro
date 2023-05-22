@@ -1,17 +1,53 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Pantry
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Pantry</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <app-explore-container name="Pantry page"></app-explore-container>
+ <body> 
+  <ion-content [fullscreen]="true">
+  <ion-grid class="grid">
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col>
+        <ion-button class="shopbutton" (click)="LoadShoppingPage()">
+          Shopping List
+        </ion-button>
+    </ion-col>
+    <ion-col></ion-col>
+      
+    </ion-row>
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col>
+      <ion-card class="card">    
+        <ion-card-content>
+          <ul class="mylist">
+            <li>Eggs</li>
+            <li>Pasta</li>
+            <li>Tomato sauce</li>
+            <li>Flour</li>
+            <li>Avocados</li>
+            <li>Brown rice</li>
+            <li>Mixed veggies</li>
+            <li>Peanut butter</li>
+            <li>Carrots</li>
+            <li>Chicken breasts</li>
+            <li>Peri-peri sauce</li>
+            <li>Lean mince</li>
+            <li>Olives</li>
+            <li>Sugar</li>
+            <li>Peppers</li>
+            <li>Canned beans</li>
+          </ul>
+        </ion-card-content>
+      </ion-card>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col></ion-col>
+      <ion-col>
+        <ion-button shape="round" class="plusbutton">+</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
+</body>
+
+
