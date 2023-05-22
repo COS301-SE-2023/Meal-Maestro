@@ -11,7 +11,7 @@ ingredients for each meal and generate a grocery list based on the ingredients n
 also includes optional features such as dietary goal tracking, meal ratings, ingredient
 substitutions, budget preferences and gives users the ability to add ingredients to their
 virtual pantry through image recognition. It aims to reduce decision fatigue, helps users
-easily plan meals for the coming week and helps them hit their nutritional goals.
+easily plan meals for the coming week and helps them hit their nutritional goals. 
 
 # Set Up
 ## Install:
