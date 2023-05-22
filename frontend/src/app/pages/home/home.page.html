@@ -1,17 +1,97 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Home
-    </ion-title>
+    <ion-title> Whats on the menu? </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Home</ion-title>
+      <ion-title size="large">Whats on the menu?</ion-title>
     </ion-toolbar>
   </ion-header>
+  <ion-list lines="inset">
+    <ion-item>
+      <ion-label>Today</ion-label>
+    </ion-item>
+
+    <ion-card button="true" color="primary">
+      <div>
+        <ion-card-header>
+          <ion-card-subtitle>Breakfast</ion-card-subtitle>
+          <ion-card-title>Muesli & Yogurt</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+          A classic Nutritious breakfast with a low gi to sustain you through
+          your busy day
+        </ion-card-content>
+      </div>
+  
+    
+        <img src="https://www.jessicagavin.com/wp-content/uploads/2016/06/berry-muesli-breakfast-bowls.jpg">
+
+
+    </ion-card>
+
+    <ion-card button="true" color="primary">
+      <ion-card-header>
+        <ion-card-subtitle>Lunch</ion-card-subtitle>
+        <ion-card-title>Chicken Alfredo</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content> A savoury filling lunch </ion-card-content>
+    </ion-card>
+
+    <ion-card button="true" color="primary">
+      <ion-card-header>
+        <ion-card-subtitle>Dinner</ion-card-subtitle>
+        <ion-card-title>Butternut soup</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        A warm soup to fill you in these winter months
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
+  <ion-list lines="inset" lines-color="secondary">
+    <ion-item>
+      <ion-label>Tomorow</ion-label>
+    </ion-item>
+
+    <ion-card button="true" color="primary">
+      <ion-card-header>
+        <ion-card-subtitle>Breakfast</ion-card-subtitle>
+        <ion-card-title>Muesli & Yogurt</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        A classic Nutritious breakfast with a low gi to sustain you through your
+        busy day
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card button="true" color="primary">
+      <ion-card-header>
+        <ion-card-subtitle>Lunch</ion-card-subtitle>
+        <ion-card-title>Chicken Alfredo</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content> A savoury filling lunch </ion-card-content>
+    </ion-card>
+
+    <ion-card button="true" color="primary">
+      <ion-card-header>
+        <ion-card-subtitle>Dinner</ion-card-subtitle>
+        <ion-card-title>Butternut soup</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        A warm soup to fill you in these winter months
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
 
   <app-explore-container name="Home page"></app-explore-container>
 </ion-content>
