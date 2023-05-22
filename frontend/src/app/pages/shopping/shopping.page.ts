@@ -18,7 +18,7 @@ export class ShoppingPage implements OnInit {
 
   LoadPantryPage()
   {
-    this.r.navigate(['/tabs/pantry']);
+    this.r.navigate(['app/tabs/pantry']);
   }
 
   ngOnInit() {
