@@ -105,3 +105,4 @@ out/
 
 ### VS Code ###
 .vscode/
+angular.json
