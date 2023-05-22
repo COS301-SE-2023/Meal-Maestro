@@ -135,6 +135,7 @@ and driven, we provide him with clear communication and engaging tasks. This app
 ensures that he stays focused and delivers exceptional results for the project
 
 Links:
+- https://github.com/Krygsmancode
 
 ### Amicke
 Amicke has been actively involved in project designing and web development. Over time,
@@ -158,4 +159,4 @@ working to overcome these shortcomings and constantly seeking opportunities to l
 and grow as a software developer
 
 Links:
-https://github.com/AmickeC
+- https://github.com/AmickeC
