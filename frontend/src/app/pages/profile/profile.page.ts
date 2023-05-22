@@ -5,9 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 import { RangeCustomEvent, RangeValue } from '@ionic/core';
-import { RouterModule } from '@angular/router';
-
-
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -15,10 +13,10 @@ import { RouterModule } from '@angular/router';
   templateUrl: 'profile.page.html',
   styleUrls: ['profile.page.scss'],
   standalone: true,
-  imports: [IonicModule, ExploreContainerComponent,FormsModule,CommonModule,RouterModule],
+  imports: [IonicModule, ExploreContainerComponent, FormsModule, CommonModule],
 })
 export class ProfilePage {
-  constructor() {}
+  constructor( private router: Router ) {}
 
   lastEmittedValue: RangeValue | undefined;
   isCardVisible: boolean = false;
@@ -38,4 +36,7 @@ export class ProfilePage {
     this.anyChanges = true;
   }
   
+  navToProfile(){
+    this.router.navigate(['acc-profile']);
+  }
 }
