@@ -1,0 +1,22 @@
+<ion-content [fullscreen]="true" scrollY="false">
+    <img id=logo src="assets/logo.svg">
+    <ion-input
+      id="login-email"
+      placeholder="Email"
+      type="email"
+      required="true"
+      shape="round"
+      [(ngModel)]="user.email">
+    </ion-input>
+    <br>
+    <ion-input 
+      id="login-password"
+      placeholder="Password"
+      type="password" 
+      required="true"
+      shape="round"
+      [(ngModel)]="user.password">
+    </ion-input>
+    <br>
+    <ion-button expand="block" (click)="login()">Login</ion-button>
+</ion-content>
