@@ -3,6 +3,7 @@ body {
    // text-align: center;
    //flex-wrap: wrap;
     display: flex;
+    justify-content: flex-end;
 }
 
 .shop {
@@ -80,8 +81,28 @@ ion-card-content {
     //text-align: center;
     font-size: 1.7ch;
     margin-top: 2.5vh;
+  //  margin-left: -1vw;
    // margin-left: -2vw;
   // box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+ion-col {
+   // box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+ion-toggle {
+    margin-top: 2.5vh;
+    --track-background: var(--ion-color-secondary);
+}
+
+.check {
+    --background : var(--ion-color-secondary);
+    margin-top: 1.5vh;
+    text-align: center;
+  //  margin-left: 8vw;
+    height: 4vh;
+    width: 12vw;
+    --box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
 }
 
 
@@ -94,7 +115,7 @@ ion-card-content {
     margin-top: 1.5vh;
     width: 80vw;
     border-radius: 10px;
-    height: 70vh;
+    height: 75vh;
     --background : var(--ion-color-primary);
     color: white;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
