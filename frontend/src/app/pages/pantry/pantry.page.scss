@@ -67,14 +67,21 @@ ion-card-content {
     width: 4rem;
     height: 4rem;
     --border-radius: 15%;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+ion-card-content {
+    margin-top: 2vh;
 }
 
 .col {
-    width: 100%;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
+    width: 60vw;
     //text-align: center;
     font-size: 1.7ch;
     margin-top: 2.5vh;
    // margin-left: -2vw;
+  // box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
 }
 
 
