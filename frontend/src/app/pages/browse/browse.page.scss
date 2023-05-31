@@ -1,0 +1,22 @@
+.search {
+    margin-top: 4vh;
+   // --height: 5vh;
+ //  --background-color: var(--ion-color-primary-shade);;
+}
+
+.head {
+    font-size: 3ch;
+}
+
+ion-card {
+    width: 85vw;
+    height: 30vh;
+    margin-bottom: -2vh;
+    margin-top: 1.5vh;
+}
+
+ion-avatar {
+    width: auto;
+    height: 15vh;
+    --border-radius:5%;
+}
