@@ -16,7 +16,31 @@ body {
    // text-align: center;
 }
 
+ion-input{
+    //--background: #8a8a8a;
+    --background : var(--ion-color-secondary);
+    --border-radius: 20px;
+    --color: black;
+    --padding-bottom: 20px;
+    --padding-top: 20px;
+    --padding-start: 20px;
+    max-width: 85%;
+    margin: 0 auto;
+}
 
+
+ion-button {
+    --background : var(--ion-color-primary);
+    --border-radius: 20px;
+    --color: black;
+    --padding-bottom: 20px;
+    --padding-top: 20px;
+    --padding-start: 20px;
+    width: 50vw;
+    height: 8vh;
+    margin-top: 10vh;
+    font-size: 2.5vh;
+}
 
 
 a {
