@@ -62,6 +62,21 @@ ion-card-content {
    // padding-top: 1.5vh;
 }
 
+.prent {
+    margin-top: 0.5vh;
+    width: 4rem;
+    height: 4rem;
+    --border-radius: 15%;
+}
+
+.col {
+    width: 100%;
+    //text-align: center;
+    font-size: 1.7ch;
+    margin-top: 2.5vh;
+   // margin-left: -2vw;
+}
+
 
 .card {
     //text-align: center;
@@ -69,10 +84,10 @@ ion-card-content {
    z-index: -1;
    display: flex;
     z-index: -1;
-    margin-top: 1vh;
+    margin-top: 5vh;
     width: 80vw;
     border-radius: 10px;
-    height: 70vh;
+    height: 80vh;
     --background : var(--ion-color-primary);
     color: white;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
