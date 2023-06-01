@@ -1,13 +1,67 @@
-<ion-header [translucent]="true">
+<body>
+  <ion-content [fullscreen]="true" scrollY="false">
+    <ion-grid>
+      <ion-row>
+        <ion-col></ion-col>
+        <ion-col>
+          <ion-avatar class="logo">
+            <img src="https://images.unsplash.com/photo-1530554764233-e79e16c91d08?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80">
+          </ion-avatar>
+        </ion-col>
+        <ion-col></ion-col>
+      </ion-row>
+      <ion-col></ion-col>
+      <ion-col>
+        <ion-input class="firstinput"
+          id="signup-name"
+          placeholder="Name"
+          type="text"
+          required="true"
+          shape="round"
+        >
+        </ion-input>
+        <br>
+        <ion-input class="secondinput"
+          id="signup-email"
+          placeholder="Email"
+          type="email"
+          required="true"
+          shape="round"
+        >
+        </ion-input>
+        <br>
+        <ion-input class="thirdinput"
+          id="signup-password"
+          placeholder="Password"
+          type="password" 
+          required="true"
+          shape="round"
+          >
+        </ion-input>
+      </ion-col>
+      <ion-col></ion-col>
+      <ion-row>
+        <ion-col></ion-col>
+        <ion-col>
+          <ion-button expand="block">Sign up</ion-button>
+        </ion-col>
+        <ion-col></ion-col>
+      </ion-row>
+      <ion-row>
+        <a>Forget Password</a>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
+</body>
+
+
+<!-- <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>login</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- <ion-header collapse="condense">
-    
-  </ion-header> -->
   <ion-content>
     <ion-grid>
       <ion-row>
@@ -42,4 +96,4 @@
     </ion-grid>
   </ion-content>
 </ion-content>
-
+ -->
