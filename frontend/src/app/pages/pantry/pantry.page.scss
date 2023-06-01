@@ -10,6 +10,54 @@ body {
     text-align: center;
 }
 
+.back-icon {
+    font-size: 40px;
+    margin-left: 5vw;
+    margin-top: 2vh;
+    color: white;
+}
+
+.shoplist {
+    color: white;
+    width: 80vw;
+    height: 72vh;
+    border-radius: 13px;
+    margin-top: 1vh;
+    background-color: var(--ion-color-primary);
+}
+
+.shop {
+    text-align: center;
+    font-size: 3ch;
+}
+
+.shoplabel {
+    margin-bottom: 2vh;
+    font-size: 2ch;
+    width: 100%;
+    text-align: center;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+.list {
+    margin-top: -2vh;
+}
+
+ion-card-content {
+    font-size: 2.2ch;
+}
+
+.notificationshop {
+    width: 80vw;
+    height: 7vh;
+    margin-top: -1vh;
+    border-radius: 13px;
+    text-align: center;
+    //margin-top : 2vh;
+    background-color: var(--ion-color-primary);
+    color: white;
+}
+
 // .try {
 //     width: 80vw;
 //     margin-top: 5vh;
