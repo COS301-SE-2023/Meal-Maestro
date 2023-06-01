@@ -74,6 +74,13 @@ ion-card-content {
     color: white;
 }
 
+.next {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 1vh;
+    margin-top: -1.5vh;
+}
+
 // .try {
 //     width: 80vw;
 //     margin-top: 5vh;
@@ -151,7 +158,8 @@ ion-card-content {
 }
 
 ion-col {
-   // box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
+    // background-color: aqua;
+    // box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.14), 0px 3px 4px rgba(0, 0, 0, 0.12), 0px 1px 5px rgba(0, 0, 0, 0.2);
 }
 
 ion-toggle {
