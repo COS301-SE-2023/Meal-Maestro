@@ -1,9 +1,12 @@
 <body>
-  <header>
-    
-  </header>
+  <ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-searchbar class="search"></ion-searchbar>
+    </ion-toolbar>
+  </ion-header>
+
   <ion-content [fullscreen]="true" scrollY="true">
-    <ion-searchbar class="search"></ion-searchbar>
+    <!-- <ion-searchbar class="search"></ion-searchbar> -->
     <ion-grid>
       
       <ion-row>
@@ -60,7 +63,7 @@
         <ion-col></ion-col>
       </ion-row>
 
-      <ion-row>
+      <ion-row class="rowlast">
         <ion-col></ion-col>
         <ion-col>
           <ion-card button="true" color="primary">
