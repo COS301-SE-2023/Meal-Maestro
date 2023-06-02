@@ -27,6 +27,11 @@ export const routes: Routes = [
       //     import('../signup/signup.page').then((m) => m.SignupPage),
       // },
       {
+        path: 'browse',
+        loadComponent: () =>
+          import('../browse/browse.page').then((m) => m.BrowsePage),
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full',
