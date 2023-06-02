@@ -22,6 +22,11 @@ export const routes: Routes = [
           import('../profile/profile.page').then((m) => m.ProfilePage),
       },
       {
+        path: 'browse',
+        loadComponent: () =>
+          import('../browse/browse.page').then((m) => m.BrowsePage),
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full',

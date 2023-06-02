@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/COS301-SE-2023/Meal-Maestro/branch/development/graph/badge.svg?token=TUYXXQO1FK)](https://codecov.io/gh/COS301-SE-2023/Meal-Maestro)
+[![Build&Test Node.js](https://github.com/COS301-SE-2023/Meal-Maestro/actions/workflows/buildAndTest.yml/badge.svg)](https://github.com/COS301-SE-2023/Meal-Maestro/actions/workflows/buildAndTest.yml)
 # Meal Maestro
 ## The Fellowship
 
@@ -9,7 +11,7 @@ ingredients for each meal and generate a grocery list based on the ingredients n
 also includes optional features such as dietary goal tracking, meal ratings, ingredient
 substitutions, budget preferences and gives users the ability to add ingredients to their
 virtual pantry through image recognition. It aims to reduce decision fatigue, helps users
-easily plan meals for the coming week and helps them hit their nutritional goals.
+easily plan meals for the coming week and helps them hit their nutritional goals. 
 
 # Set Up
 ## Install:
@@ -35,7 +37,7 @@ easily plan meals for the coming week and helps them hit their nutritional goals
 # Documentation
 ## Demo 1
 
-
+https://drive.google.com/file/d/10Eq8U3jkWRM08BBfeC6RolvX8edsNR31/view?usp=sharing
 
 ## System Requirements Specification
 
@@ -65,8 +67,8 @@ implementing them. To improve in this area, Theo is dedicating time to relevant 
 and learning resources
 
 Links:
-https://www.linkedin.com/in/theodor-le-roux-123a4a274?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3Butxr%2F8s6RsmhTFZz%2BJK83Q%3D%3D
-https://github.com/theodorleroux
+- https://www.linkedin.com/in/theodor-le-roux-123a4a274
+- https://github.com/theodorleroux
 
 ### Ethan
 Ethan is a proficient team player, adept at completing tasks swiftly and effectively. He has
@@ -87,6 +89,8 @@ committed to integrating these tests at every stage of development, thereby stre
 his skill set in this area.
 
 Links:
+- https://www.linkedin.com/in/ethan-de-beer-257403277
+- https://github.com/SkulderLock
 
 ### Wian
 Wian is a versatile and creative problem solver, able to effectively contribute to a wide
@@ -105,6 +109,8 @@ for growth. By recognizing this tendency, he can continue to refine his approach
 problem-solving and project management
 
 Links:
+- https://github.com/gryffindor-coder
+- https://www.linkedin.com/in/wian-du-toit-995238271
 
 ### Franko
 Franko is an intrigued and determined engineer who finds solutions to counter-intuitive
@@ -129,6 +135,7 @@ and driven, we provide him with clear communication and engaging tasks. This app
 ensures that he stays focused and delivers exceptional results for the project
 
 Links:
+- https://github.com/Krygsmancode
 
 ### Amicke
 Amicke has been actively involved in project designing and web development. Over time,
@@ -152,3 +159,4 @@ working to overcome these shortcomings and constantly seeking opportunities to l
 and grow as a software developer
 
 Links:
+- https://github.com/AmickeC
