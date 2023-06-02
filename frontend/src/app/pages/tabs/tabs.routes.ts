@@ -21,6 +21,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('../profile/profile.page').then((m) => m.ProfilePage),
       },
+      // {
+      //   path: 'signup',
+      //   loadComponent: () =>
+      //     import('../signup/signup.page').then((m) => m.SignupPage),
+      // },
       {
         path: 'browse',
         loadComponent: () =>
@@ -31,6 +36,7 @@ export const routes: Routes = [
         redirectTo: '/tabs/home',
         pathMatch: 'full',
       },
+      
     ],
   },
   {
