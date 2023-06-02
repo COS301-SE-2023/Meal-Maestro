@@ -1,17 +1,93 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>
-      Profile
-    </ion-title>
+    <ion-title>Food Preferences</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Profile</ion-title>
-    </ion-toolbar>
-  </ion-header>
 
-  <app-explore-container name="Profile page"></app-explore-container>
+
+<!-- 
+<ion-card>
+
+  <ion-button shape="round" size="small" (click)="goToProfilePage()">
+    <ion-icon name="person"></ion-icon>
+  </ion-button>
+
+</ion-card> -->
+    
+<ion-content>
+
+  <ion-card>
+    <ion-button 
+     (click)="navToProfile()"><ion-icon name="person-circle" size="small"></ion-icon>
+  </ion-button>
+
+  <ion-label>Franko's profile</ion-label>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Goal</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+    <ion-input label="Eating Goal" label-placement="floating" fill="outline" placeholder="Too Bulk up"></ion-input>
+  </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Food Preferences</ion-card-title>
+      <ion-card-subtitle>What you don't eat</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label>Vegetarian</ion-label>
+          <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Vegan</ion-label>
+          <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Gluten-intolerant</ion-label>
+          <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Lactose-intolerant</ion-label>
+          <ion-toggle (ionChange)="showSaveChanges()" ></ion-toggle>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle><ion-toggle (click)="toggleCardVisibility()">Calorie counter</ion-toggle></ion-card-subtitle>
+     
+    </ion-card-header>
+  <ion-card *ngIf="isCardVisible">
+    <ion-card-content>
+      <ion-range
+      (ionChange)="showSaveChanges()"
+      (ionChange)="onIonChange($event)"
+        aria-label="Range with pin"
+        [pin]="true"
+        max="4000"
+        min="0"
+        [ticks]="true"
+        [snaps]="true"
+        step="200"
+      >Your Average Calorie intake</ion-range>
+    </ion-card-content>
+  </ion-card>
+</ion-card>
+
+
+  <ion-button *ngIf="anyChanges" expand="full" color="primary" shape="round">Save Preferences</ion-button>
 </ion-content>

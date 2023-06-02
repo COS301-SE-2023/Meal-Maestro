@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,7 +18,7 @@ export class LoginPage implements OnInit {
     password: ''
   };
 
-  constructor( private router: Router ) { }
+  constructor( private router: Router, private toastController : ToastController  ) { }
 
   ngOnInit() {
   }
@@ -26,5 +26,28 @@ export class LoginPage implements OnInit {
   login() {
     this.router.navigate(['app/tabs/home']);
     console.log(this.user);
+    this.loginSuccessToast('top');
+  }
+
+  async loginSuccessToast(position: 'bottom' | 'middle' | 'top'){
+    const toast = await this.toastController.create({
+      message: "Login Successful",
+      duration: 1500,
+      position: position,
+      color: 'success',
+      icon: 'checkmark-sharp'
+    });
+    toast.present();
+  }
+
+  async loginFailToast(position: 'bottom' | 'middle' | 'top'){
+    const toast = await this.toastController.create({
+      message: "Login Failed",
+      duration: 1500,
+      position: position,
+      color: 'danger',
+      icon: 'close-sharp'
+    });
+    toast.present();
   }
 }
