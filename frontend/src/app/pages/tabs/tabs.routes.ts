@@ -7,6 +7,11 @@ export const routes: Routes = [
     component: TabsPage,
     children: [
       {
+        path: 'recipe-book',
+        loadComponent: () =>
+          import('../recipe-book/recipe-book.page').then((m) => m.RecipeBookPage),
+      },
+      {
         path: 'home',
         loadComponent: () =>
           import('../home/home.page').then((m) => m.HomePage),

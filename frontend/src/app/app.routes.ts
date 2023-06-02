@@ -26,5 +26,9 @@ export const routes: Routes = [
     path: 'browse',
     loadComponent: () => import('./pages/browse/browse.page').then( m => m.BrowsePage)
   },
+  {
+    path: 'recipe-book',
+    loadComponent: () => import('./pages/recipe-book/recipe-book.page').then( m => m.RecipeBookPage)
+  },
 
 ];
