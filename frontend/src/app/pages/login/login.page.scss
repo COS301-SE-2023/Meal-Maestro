@@ -1,15 +1,50 @@
+body {
+    
+}
+
+.logo {
+    align-items: center;
+    margin-top: 7vh;
+    margin-left: 5vw;
+   // border-radius: 50%;
+    height: 17vh;
+    width: 37vw;
+}
+
+.firstinput {
+    margin-top: 7vh;
+   // text-align: center;
+}
+
 ion-input{
-    --background: #8a8a8a;
-    --border-radius: 20px;
+    //--background: #8a8a8a;
+    --background : var(--ion-color-primary);
+    --border-radius: 25px;
     --color: black;
     --padding-bottom: 20px;
     --padding-top: 20px;
     --padding-start: 20px;
-    max-width: 90%;
+    max-width: 85%;
     margin: 0 auto;
 }
 
-ion-button{
-    max-width: 90%;
-    margin: 0 auto;
+
+ion-button {
+    --background : var(--ion-color-primary);
+    --border-radius: 25px;
+    --color: black;
+    --padding-bottom: 20px;
+    --padding-top: 20px;
+    --padding-start: 20px;
+    width: 50vw;
+    height: 8vh;
+    margin-top: 10vh;
+    font-size: 2.5vh;
+}
+
+
+a {
+   // font-size: 20vh;
+    text-align: center;
+    width: 100%;
 }
