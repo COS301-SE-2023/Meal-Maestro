@@ -13,10 +13,21 @@ import { Router } from '@angular/router';
 export class PantryPage {
 
   constructor(public r : Router) {}
+  
 
   LoadShoppingPage()
   {
     this.r.navigate(['/shopping']);
   }
+
+  // isCardVisible: boolean = false;
+  // toggleCardVisibility() {
+  //   this.isCardVisible = !this.isCardVisible;
+  // }
+
+  // lastEmittedValue: RangeValue | undefined;
+  // onIonChange(ev: Event) {
+  //   this.lastEmittedValue = (ev as RangeCustomEvent).detail.value;
+  // }
 
 }
