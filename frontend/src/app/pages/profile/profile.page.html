@@ -3,17 +3,6 @@
     <ion-title>Food Preferences</ion-title>
   </ion-toolbar>
 </ion-header>
-
-
-
-<!-- 
-<ion-card>
-
-  <ion-button shape="round" size="small" (click)="goToProfilePage()">
-    <ion-icon name="person"></ion-icon>
-  </ion-button>
-
-</ion-card> -->
     
 <ion-content>
 
@@ -24,7 +13,7 @@
 
   <ion-label>Franko's profile</ion-label>
   </ion-card>
-
+<!-- the Goal -->
   <ion-card>
     <ion-card-header>
       <ion-card-title>Goal</ion-card-title>
@@ -33,61 +22,417 @@
     <ion-input label="Eating Goal" label-placement="floating" fill="outline" placeholder="Too Bulk up"></ion-input>
   </ion-card-content>
   </ion-card>
-
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Food Preferences</ion-card-title>
-      <ion-card-subtitle>What you don't eat</ion-card-subtitle>
-    </ion-card-header>
-
-    <ion-card-content>
-      <ion-list>
-        <ion-item>
-          <ion-label>Vegetarian</ion-label>
-          <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
-        </ion-item>
-
-        <ion-item>
-          <ion-label>Vegan</ion-label>
-          <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
-        </ion-item>
-
-        <ion-item>
-          <ion-label>Gluten-intolerant</ion-label>
-          <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
-        </ion-item>
-
-        <ion-item>
-          <ion-label>Lactose-intolerant</ion-label>
-          <ion-toggle (ionChange)="showSaveChanges()" ></ion-toggle>
-        </ion-item>
-      </ion-list>
-    </ion-card-content>
-  </ion-card>
-
-  
-  <ion-card>
-    <ion-card-header>
-      <ion-card-subtitle><ion-toggle (click)="toggleCardVisibility()">Calorie counter</ion-toggle></ion-card-subtitle>
-     
-    </ion-card-header>
-  <ion-card *ngIf="isCardVisible">
-    <ion-card-content>
-      <ion-range
-      (ionChange)="showSaveChanges()"
-      (ionChange)="onIonChange($event)"
-        aria-label="Range with pin"
-        [pin]="true"
-        max="4000"
-        min="0"
-        [ticks]="true"
-        [snaps]="true"
-        step="200"
-      >Your Average Calorie intake</ion-range>
-    </ion-card-content>
-  </ion-card>
+<!-- the shopping interval -->
+<ion-card>
+  <ion-card-header>
+    <ion-card-title></ion-card-title>
+    <ion-card-subtitle>
+      <ion-toggle (click)="setOpenShopping(true)">Shopping Interval</ion-toggle>
+    </ion-card-subtitle>
+  </ion-card-header>
+  <ion-modal [isOpen]="isShoppingModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="setOpenShopping(false)">Cancel</ion-button>
+          </ion-buttons>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpenShopping(false)" [strong]="true">Confirm</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      
+      <ion-content>
+        <ion-card-content>
+          <ion-list>
+            <ion-radio-group [(ngModel)]="shoppingInterval">
+              <ion-item>
+                <ion-label>Weekly</ion-label>
+                <ion-radio slot="start" value="weekly"></ion-radio>
+              </ion-item>
+      
+              <ion-item>
+                <ion-label>Bi-Weekly</ion-label>
+                <ion-radio slot="start" value="biweekly"></ion-radio>
+              </ion-item>
+      
+              <ion-item>
+                <ion-label>Monthly</ion-label>
+                <ion-radio slot="start" value="monthly"></ion-radio>
+              </ion-item>
+      
+              <ion-item>
+                <ion-label>Other</ion-label>
+                <ion-radio slot="start" value="other"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+      
+            <ion-item *ngIf="shoppingInterval === 'other'">
+              <ion-label class="range-label">Every {{ customInterval }} day(s)</ion-label>
+            </ion-item>
+            
+            <ion-item *ngIf="shoppingInterval === 'other'">
+              <ion-grid class="range-grid">
+                <ion-row>
+                  <ion-col size="12">
+                    <ion-range min="1" max="30" step="1" snaps="true" [(ngModel)]="customInterval">
+                      <ion-label slot="start" class="range-start"></ion-label>
+                      <ion-label slot="end" class="range-end"></ion-label>
+                    </ion-range>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-card>
 
+  <!-- -------------------------------------------------- -->
+  <!-- These are just an exmaple -->
+ <!-- -------------------------------------------------- -->
 
+
+<!-- the food preferances -->
+<ion-card>
+  <ion-card-header>
+    <ion-card-subtitle>
+      <ion-toggle (click)="setOpenPreferances(true)">Food Preferences</ion-toggle>
+    </ion-card-subtitle>
+  </ion-card-header>
+</ion-card>
+
+<ion-modal [isOpen]="isPreferancesModalOpen">
+  <ng-template>
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button  (click)="setOpenPreferances(false)" >Cancel</ion-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-button  (click)="setOpenPreferancesSave(false)" [strong]="true">Confirm</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item>
+        <ion-label>Vegetarian</ion-label>
+        <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label>Vegan</ion-label>
+        <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Gluten-intolerant</ion-label>
+        <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Lactose-intolerant</ion-label>
+        <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ng-template>
+</ion-modal>
+
+
+
+  <!-- The Calorie Counter -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>
+        <ion-toggle (click)="setOpenCalorie(true)">Calorie counter</ion-toggle>
+      </ion-card-subtitle>
+    </ion-card-header>
+  
+    <ion-modal [isOpen]="isCalorieModalOpen">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Your preferences</ion-title>
+            <ion-buttons slot="start">
+              <ion-button (click)="setOpenCalorie(false)">Cancel</ion-button>
+            </ion-buttons>
+            <ion-buttons slot="end">
+              <ion-button (click)="setOpenCalorieSave(false)" [strong]="true">Confirm</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <ion-card>
+            <ion-card-content>
+              <ion-range
+                (ionChange)="showSaveChanges()"
+                (ionChange)="onIonChange($event)"
+                aria-label="Range with pin"
+                [pin]="true"
+                max="4000"
+                min="0"
+                [ticks]="true"
+                [snaps]="true"
+                step="200"
+              >
+                Your Average Calorie intake
+              </ion-range>
+            </ion-card-content>
+          </ion-card>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+  </ion-card>
+  
+
+<!-- Budget Range -->
+<ion-card>
+  <ion-card-header>
+    <ion-card-subtitle>
+      <ion-toggle (click)="setOpenBudget(true)">Budget Range</ion-toggle>
+    </ion-card-subtitle>
+  </ion-card-header>
+  <ion-modal [isOpen]="isBudgetModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Your preferences</ion-title>
+          <ion-buttons slot="start">
+            <ion-button (click)="setOpenBudget(false)">Cancel</ion-button>
+          </ion-buttons>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpenBudget(false)" [strong]="true">Confirm</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-card>
+          <ion-card-content>
+            <ion-list>
+              <ion-radio-group [(ngModel)]="selectedPriceRange">
+                <ion-list-header>
+                  Price Range
+                </ion-list-header>
+                <ion-item>
+                  <ion-label>Low Budget</ion-label>
+                  <ion-radio value="low"></ion-radio>
+                </ion-item>
+                <ion-item>
+                  <ion-label>Moderate Budget</ion-label>
+                  <ion-radio value="moderate"></ion-radio>
+                </ion-item>
+                <ion-item>
+                  <ion-label>High Budget</ion-label>
+                  <ion-radio value="high"></ion-radio>
+                </ion-item>
+                <ion-item>
+                  <ion-label>Custom Amount</ion-label>
+                  <ion-radio value="custom"></ion-radio>
+                </ion-item>
+                <ion-item *ngIf="selectedPriceRange === 'custom'">
+                  <ion-label position="floating">Enter Custom Amount:</ion-label>
+                  <ion-input type="number" [(ngModel)]="customAmount" step="0.01" min="0" placeholder="Enter amount"></ion-input>
+                </ion-item>
+              </ion-radio-group>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-card>
+
+<!-- Macro Creator -->
+<ion-card>
+  <ion-card-header>
+    <ion-card-subtitle>
+      <ion-toggle (click)="setOpenMacro(true)">Macro Creator</ion-toggle>
+    </ion-card-subtitle>
+  </ion-card-header>
+  <ion-modal [isOpen]="isMacroModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Your preferences</ion-title>
+          <ion-buttons slot="start">
+            <ion-button (click)="setOpenMacro(false)">Cancel</ion-button>
+          </ion-buttons>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpenMacro(false)" [strong]="true">Confirm</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-card>
+          <ion-card-content>
+            <ion-list>
+              <ion-item>
+                <ion-label>Protein</ion-label>
+                <ion-input type="number" [(ngModel)]="protein" step="0.01" min="0" placeholder="Enter amount"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label>Carbs</ion-label>
+                <ion-input type="number" [(ngModel)]="carbs" step="0.01" min="0" placeholder="Enter amount"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label>Fats</ion-label>
+                <ion-input type="number" [(ngModel)]="fats" step="0.01" min="0" placeholder="Enter amount"></ion-input>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-card>
+
+<!-- Allergies -->
+<ion-card>
+  <ion-card-header>
+    <ion-card-subtitle>
+      <ion-toggle (click)="setOpenAllergies(true)">Allergies</ion-toggle>
+    </ion-card-subtitle>
+  </ion-card-header>
+  <ion-modal [isOpen]="isAllergiesModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Your preferences</ion-title>
+          <ion-buttons slot="start">
+            <ion-button (click)="setOpenAllergies(false)">Cancel</ion-button>
+          </ion-buttons>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpenAllergies(false)" [strong]="true">Confirm</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-card>
+          <ion-card-content>
+            <ion-list>
+              <ion-item>
+                <ion-label>Gluten</ion-label>
+                <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
+              </ion-item>
+              <ion-item>
+                <ion-label>Lactose</ion-label>
+                <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
+              </ion-item>
+              <ion-item>
+                <ion-label>Seafood</ion-label>
+                <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
+              </ion-item>
+              <ion-item>
+                <ion-label>Nuts</ion-label>
+                <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
+              </ion-item>
+              <ion-item>
+                <ion-label>Eggs</ion-label>
+                <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
+              </ion-item>
+              <ion-item>
+                <ion-label>Soy</ion-label>
+                <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-card>
+
+<!-- Cooking time -->
+<ion-card>
+  <ion-card-header>
+    <ion-card-subtitle>
+      <ion-toggle (click)="setOpenCooking(true)">Cooking Time</ion-toggle>
+    </ion-card-subtitle>
+  </ion-card-header>
+  <ion-modal [isOpen]="isCookingModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Your preferences</ion-title>
+          <ion-buttons slot="start">
+            <ion-button (click)="setOpenCooking(false)">Cancel</ion-button>
+          </ion-buttons>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpenCooking(false)" [strong]="true">Confirm</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-card>
+          <ion-card-content>
+            <ion-list>
+              <ion-item>
+                <ion-label>Quick</ion-label>
+                <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
+              </ion-item>
+              <ion-item>
+                <ion-label>Medium</ion-label>
+                <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
+              </ion-item>
+              <ion-item>
+                <ion-label>Long</ion-label>
+                <ion-toggle (ionChange)="showSaveChanges()"></ion-toggle>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-card>
+
+<!-- BMI calculator -->
+<ion-card>
+  <ion-card-header>
+    <ion-card-subtitle>
+      <ion-toggle (click)="setOpenBMI(true)">BMI Calculator</ion-toggle>
+    </ion-card-subtitle>
+  </ion-card-header>
+  <ion-modal [isOpen]="isBMIModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Your preferences</ion-title>
+          <ion-buttons slot="start">
+            <ion-button (click)="setOpenBMI(false)">Cancel</ion-button>
+          </ion-buttons>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpenBMI(false)" [strong]="true">Confirm</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-card>
+          <ion-card-content>
+            <ion-list>
+              <ion-item>
+                <ion-label>Height</ion-label>
+                <ion-input type="number" [(ngModel)]="height" step="0.01" min="0" placeholder="Enter amount"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label>Weight</ion-label>
+                <ion-input type="number" [(ngModel)]="weight" step="0.01" min="0" placeholder="Enter amount"></ion-input>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-card>
+
+ 
+
+
+<!-- the Save Button -->
   <ion-button *ngIf="anyChanges" expand="full" color="primary" shape="round">Save Preferences</ion-button>
 </ion-content>
