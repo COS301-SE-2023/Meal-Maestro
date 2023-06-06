@@ -1,11 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, PickerController } from '@ionic/angular';
 import { ExploreContainerComponent } from '../../components/explore-container/explore-container.component';
 import { FormsModule } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 import { RangeCustomEvent, RangeValue } from '@ionic/core';
 import { Router } from '@angular/router';
+import { h } from 'ionicons/dist/types/stencil-public-runtime';
 
 
 @Component({
@@ -18,14 +19,22 @@ import { Router } from '@angular/router';
 export class ProfilePage {
 height: any;
 weight: any;
+  calorieAmount: number | undefined;
+  cookingAmount: number | undefined;
+selectedCookingTime: string | undefined;
+  selectedBudgetRange: string | undefined;
+  MacroRatio: string | undefined;
+Allergies: any;
+selectedBMICalculator: any;
  
 
-  constructor( private router: Router , ) {this.selectedPriceRange = '';
+  constructor( private router: Router , private pickerController: PickerController ) {this.selectedPriceRange = '';
   this.customAmount = 0;
 }
 
 selectedShoppingInterval: any;
 shoppingInterval: any;
+cookingTime: any;
 customInterval: any;
 protein: any;
 carbs: any;
@@ -35,8 +44,16 @@ fats: any;
   lastEmittedValue: RangeValue | undefined; 
   anyChanges: boolean = false;
   message: string | undefined;
+  selectedCalorieAmount: number | undefined;
 
-  
+  preferences = {
+    vegetarian: false,
+    vegan: false,
+    glutenIntolerant: false,
+    lactoseIntolerant: false
+  };
+  selectedPreferences: string = '';
+
 
   onIonChange(ev: Event) {
     this.lastEmittedValue = (ev as RangeCustomEvent).detail.value;
@@ -67,29 +84,128 @@ fats: any;
   setOpenPreferances(isOpen: boolean) {
     this.isPreferancesModalOpen = isOpen;
   }
-  setOpenPreferancesSave(isOpen: boolean) {
-    //saving logic
-    this.isPreferancesModalOpen = isOpen;
+  setOpenPreferencesSave(isOpen: boolean) {
+    // saving logic
+    if (isOpen) {
+      // Update the selected preferences
+      this.selectedPreferences = this.getSelectedPreferences();
+    }
+    this.isPreferancesModalOpen = false; // Corrected line
   }
+  getSelectedPreferences(): string {
+    const selectedPreferences = [];
+  
+    if (this.preferences.vegetarian) {
+      selectedPreferences.push('Vegetarian');
+    }
+    if (this.preferences.vegan) {
+      selectedPreferences.push('Vegan');
+    }
+    if (this.preferences.glutenIntolerant) {
+      selectedPreferences.push('Gluten-intolerant');
+    }
+    if (this.preferences.lactoseIntolerant) {
+      selectedPreferences.push('Lactose-intolerant');
+    }
+  
+    return selectedPreferences.join(', ');
+  }
+
   setOpenCalorie(isOpen: boolean) {
     this.isCalorieModalOpen = isOpen;
   }
   setOpenCalorieSave(isOpen: boolean) {
     //saving logic
-    this.isCalorieModalOpen = isOpen;
+    if (isOpen) {
+      // Save the changes
+      this.selectedCalorieAmount = this.calorieAmount;
+    }
+    this.isCalorieModalOpen = false;
+  }
+  showSelectedCalorieAmount(event: any) {
+    this.selectedCalorieAmount = event.target.value;
   }
   setOpenBudget(isOpen: boolean) {
     this.isBudgetModalOpen = isOpen;
   }
   setOpenBudgetSave(isOpen: boolean) {
-    //saving logic
-    this.isBudgetModalOpen = isOpen;
+    //   //saving logic
+       if (!isOpen) {
+         this.selectedBudgetRange = this.selectedPriceRange;
+       }
+      this.isBudgetModalOpen = isOpen;
+     
+  }
+
+  async openPicker() {
+    const picker = await this.pickerController.create({
+      columns: [
+        {
+          name: 'protein',
+          options: [
+            { text: '1', value: 1 },
+            { text: '2', value: 2 },
+            { text: '3', value: 3 },
+            { text: '4', value: 4 },
+            { text: '5', value: 5 },
+            // Add more protein options as needed
+          ],
+          selectedIndex: 0, // Set the default selected index
+        },
+        {
+          name: 'carbs',
+          options: [
+            { text: '0', value: 0 },
+            { text: '1', value: 1 },
+            { text: '2', value: 2 },
+            { text: '3', value: 3 },
+            { text: '4', value: 4 },
+            { text: '5', value: 5 },
+            // Add more carbs options as needed
+          ],
+          selectedIndex: 0, // Set the default selected index
+        },
+        {
+          name: 'fats',
+          options: [
+            { text: '0', value: 0 },
+            { text: '1', value: 1 },
+            { text: '2', value: 2 },
+            { text: '3', value: 3 },
+            { text: '4', value: 4 },
+            { text: '5', value: 5 },
+            // Add more fats options as needed
+          ],
+          selectedIndex: 0, // Set the default selected index
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Confirm',
+          handler: (value) => {
+            // Update the selected macro values based on the selected indexes
+            this.protein = value['protein'].value;
+            this.carbs = value['carbs'].value;
+            this.fats = value['fats'].value;
+          },
+        },
+      ],
+    });
+
+    await picker.present();
   }
   setOpenMacro(isOpen: boolean) {
     this.isMacroModalOpen = isOpen;
   }
   setOpenMacroSave(isOpen: boolean) {
     //saving logic
+    if (!isOpen) {
+      this.MacroRatio = this.protein + ' : ' + this.carbs + ' : ' + this.fats;
+    }
     this.isMacroModalOpen = isOpen;
   }
   setOpenAllergies(isOpen: boolean) {
@@ -103,31 +219,49 @@ fats: any;
     this.isCookingModalOpen = isOpen;
   }
   setOpenCookingSave(isOpen: boolean) {
-    //saving logic
+    if (!isOpen) {
+      // Update the selected value of the radio group
+      this.selectedCookingTime = this.cookingTime;
+    }
     this.isCookingModalOpen = isOpen;
   }
+ 
+
   setOpenBMI(isOpen: boolean) {
     this.isBMIModalOpen = isOpen;
   }
   setOpenBMISave(isOpen: boolean) {
     //saving logic
+    if (!isOpen) {
+      this.selectedBMICalculator = this.calculateBMI(this.height, this.weight);
     this.isBMIModalOpen = isOpen;
+  }
   }
   setOpenShopping(isOpen: boolean) {
     this.isShoppingModalOpen = isOpen;
   }
+
   setOpenShoppingSave(isOpen: boolean) {
     //saving logic
+    if (!isOpen) {
+      // Update the selected value of the radio group
+      this.selectedShoppingInterval = this.shoppingInterval;
+    }
     this.isShoppingModalOpen = isOpen;
   }
 
+  //Defintion of Modal answers 
+
 
   //function to calculate and display BMI
-  calculateBMI(){
-    let height = this.height;
-    let weight = this.weight;
-    let bmi = (weight / (height * height)) * 703;
+  calculateBMI(height: number, weight: number): number {
+    const bmi = height / weight;
+    return Number(bmi.toFixed(2));
   }
+  
+  
+  
+  
 
 
 
