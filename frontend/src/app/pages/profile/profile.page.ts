@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicModule, PickerController } from '@ionic/angular';
-import { ExploreContainerComponent } from '../../components/explore-container/explore-container.component';
 import { FormsModule } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
@@ -13,7 +12,7 @@ import { Router } from '@angular/router';
   templateUrl: 'profile.page.html',
   styleUrls: ['profile.page.scss'],
   standalone: true,
-  imports: [IonicModule, ExploreContainerComponent, FormsModule, CommonModule],
+  imports: [IonicModule, FormsModule, CommonModule],
 })
 export class ProfilePage {
 height: any;
@@ -71,7 +70,7 @@ fats: any;
     }
   }
 
-  isPreferancesModalOpen: boolean = false;
+  isPreferencesModalOpen: boolean = false;
   isCalorieModalOpen: boolean = false;
   isBudgetModalOpen: boolean = false;
   isMacroModalOpen: boolean = false;
@@ -80,8 +79,8 @@ fats: any;
   isBMIModalOpen: boolean = false;
   isShoppingModalOpen: boolean = false;
 
-  setOpenPreferances(isOpen: boolean) {
-    this.isPreferancesModalOpen = isOpen;
+  setOpenPreferences(isOpen: boolean) {
+    this.isPreferencesModalOpen = isOpen;
   }
   setOpenPreferencesSave(isOpen: boolean) {
     // saving logic
@@ -89,7 +88,7 @@ fats: any;
       // Update the selected preferences
       this.selectedPreferences = this.getSelectedPreferences();
     }
-    this.isPreferancesModalOpen = false; // Corrected line
+    this.isPreferencesModalOpen = false; // Corrected line
   }
   getSelectedPreferences(): string {
     const selectedPreferences = [];
