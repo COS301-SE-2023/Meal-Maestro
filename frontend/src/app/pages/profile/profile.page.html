@@ -23,14 +23,15 @@
   </ion-card-content>
   </ion-card>
 <!-- the shopping interval -->
-<ion-card>
+<ion-card (click)="setOpenShopping(true)" class="ion-activatable">
+  <ion-ripple-effect></ion-ripple-effect>
   <ion-card-header>
     <ion-card-title></ion-card-title>
     <ion-card-subtitle>
       <div class="card-toggle">
-        <div class="toggle-label">Shopping Interval:</div>
+        <div class="toggle-label">Shopping Interval</div>
         <div class="toggle-value">{{ selectedShoppingInterval }}</div>
-        <ion-toggle (click)="setOpenShopping(true)"></ion-toggle>
+        <ion-icon name="chevron-forward-outline" size="medium"></ion-icon>
       </div>
     </ion-card-subtitle>
   </ion-card-header>
@@ -53,23 +54,19 @@
           <ion-list>
             <ion-radio-group [(ngModel)]="shoppingInterval">
               <ion-item>
-                <ion-label>Weekly</ion-label>
-                <ion-radio slot="start" value="weekly"></ion-radio>
+                <ion-radio label-placement="start" value="weekly">Weekly</ion-radio>
               </ion-item>
       
               <ion-item>
-                <ion-label>Bi-Weekly</ion-label>
-                <ion-radio slot="start" value="biweekly"></ion-radio>
+                <ion-radio label-placement="start" value="biweekly">Bi-Weekly</ion-radio>
               </ion-item>
       
               <ion-item>
-                <ion-label>Monthly</ion-label>
-                <ion-radio slot="start" value="monthly"></ion-radio>
+                <ion-radio label-placement="start" value="monthly">Monthly</ion-radio>
               </ion-item>
       
               <ion-item>
-                <ion-label>Other</ion-label>
-                <ion-radio slot="start" value="other"></ion-radio>
+                <ion-radio label-placement="start" value="other">Other...</ion-radio>
               </ion-item>
             </ion-radio-group>
       
@@ -81,9 +78,9 @@
               <ion-grid class="range-grid">
                 <ion-row>
                   <ion-col size="12">
-                    <ion-range min="1" max="30" step="1" snaps="true" [(ngModel)]="customInterval">
-                      <ion-label slot="start" class="range-start"></ion-label>
-                      <ion-label slot="end" class="range-end"></ion-label>
+                    <ion-range label-placement="end" min="1" max="30" [(ngModel)]="customInterval" pin="true" step="1" snaps="true" ticks="false">
+                      <div slot="end">30</div>
+                      <div slot="start">1</div>
                     </ion-range>
                   </ion-col>
                 </ion-row>

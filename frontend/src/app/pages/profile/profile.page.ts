@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicModule, PickerController } from '@ionic/angular';
 import { ExploreContainerComponent } from '../../components/explore-container/explore-container.component';
 import { FormsModule } from '@angular/forms';
@@ -6,7 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RangeCustomEvent, RangeValue } from '@ionic/core';
 import { Router } from '@angular/router';
-import { h } from 'ionicons/dist/types/stencil-public-runtime';
 
 
 @Component({
