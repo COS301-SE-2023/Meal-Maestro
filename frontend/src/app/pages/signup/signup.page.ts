@@ -29,6 +29,12 @@ export class SignupPage implements OnInit {
     this.signupSuccessToast('top');
   }
 
+  login() {
+    this.router.navigate(['../']);
+    console.log(this.user);
+    // this.loginSuccessToast('top');
+  }
+
   async signupSuccessToast(position: 'bottom' | 'middle' | 'top'){
     const toast = await this.toastController.create({
       message: "Sign Up Successful",
