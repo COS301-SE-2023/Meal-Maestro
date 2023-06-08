@@ -153,7 +153,6 @@ fats: any;
         {
           name: 'carbs',
           options: [
-            { text: '0', value: 0 },
             { text: '1', value: 1 },
             { text: '2', value: 2 },
             { text: '3', value: 3 },
@@ -166,7 +165,6 @@ fats: any;
         {
           name: 'fats',
           options: [
-            { text: '0', value: 0 },
             { text: '1', value: 1 },
             { text: '2', value: 2 },
             { text: '3', value: 3 },
@@ -201,10 +199,12 @@ fats: any;
   }
   setOpenMacroSave(isOpen: boolean) {
     //saving logic
+    if (this.protein && this.carbs && this.fats) {
     if (!isOpen) {
       this.MacroRatio = this.protein + ' : ' + this.carbs + ' : ' + this.fats;
     }
     this.isMacroModalOpen = isOpen;
+    }
   }
   setOpenAllergies(isOpen: boolean) {
     this.isAllergiesModalOpen = isOpen;
@@ -230,9 +230,11 @@ fats: any;
   }
   setOpenBMISave(isOpen: boolean) {
     //saving logic
+    if (this.height && this.weight) {
     if (!isOpen) {
       this.selectedBMICalculator = this.calculateBMI(this.height, this.weight);
     this.isBMIModalOpen = isOpen;
+    }
   }
   }
   setOpenShopping(isOpen: boolean) {
