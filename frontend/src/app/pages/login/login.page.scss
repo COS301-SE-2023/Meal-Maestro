@@ -22,7 +22,7 @@ ion-input{
     --border-radius: 20px;
     --color: black;
     --padding-bottom: 20px;
-    --padding-top: 20px;
+    --padding-top: 15px;
     --padding-start: 20px;
     max-width: 85%;
     margin: 0 auto;
@@ -38,7 +38,7 @@ ion-button {
     --padding-start: 20px;
     width: 85vw;
     height: 7vh;
-    margin-top: 10vh;
+    margin-top: 15vh;
     font-size: 2.5vh;
 }
 
@@ -56,5 +56,5 @@ a {
 .signup {
     width: 100%;
     text-align: center;
-    margin-top: 17vh;
+    margin-top: 15vh;
 }
