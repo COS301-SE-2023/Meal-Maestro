@@ -31,7 +31,7 @@ export class SignupPage implements OnInit {
 
   async signupSuccessToast(position: 'bottom' | 'middle' | 'top'){
     const toast = await this.toastController.create({
-      message: "Login Successful",
+      message: "Sign Up Successful",
       duration: 1500,
       position: position,
       color: 'success',
@@ -42,7 +42,7 @@ export class SignupPage implements OnInit {
 
   async signupFailToast(position: 'bottom' | 'middle' | 'top'){
     const toast = await this.toastController.create({
-      message: "Login Failed",
+      message: "Sign Up Failed",
       duration: 1500,
       position: position,
       color: 'danger',

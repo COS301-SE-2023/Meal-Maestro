@@ -18,11 +18,11 @@ body {
 
 ion-input{
     //--background: #8a8a8a;
-    --background : var(--ion-color-primary);
-    --border-radius: 25px;
+    --background : var(--ion-input-background);
+    --border-radius: 20px;
     --color: black;
     --padding-bottom: 20px;
-    --padding-top: 20px;
+    --padding-top: 15px;
     --padding-start: 20px;
     max-width: 85%;
     margin: 0 auto;
@@ -31,14 +31,14 @@ ion-input{
 
 ion-button {
     --background : var(--ion-color-primary);
-    --border-radius: 25px;
+    --border-radius: 20px;
     --color: black;
     --padding-bottom: 20px;
     --padding-top: 20px;
     --padding-start: 20px;
-    width: 50vw;
-    height: 8vh;
-    margin-top: 10vh;
+    width: 85vw;
+    height: 7vh;
+    margin-top: 8vh;
     font-size: 2.5vh;
 }
 
@@ -47,4 +47,8 @@ a {
    // font-size: 20vh;
     text-align: center;
     width: 100%;
+}
+
+.loginlink {
+    margin-top: 7vh;
 }
