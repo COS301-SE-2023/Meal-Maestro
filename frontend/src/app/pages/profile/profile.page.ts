@@ -24,6 +24,7 @@ selectedCookingTime: string | undefined;
   MacroRatio: string | undefined;
 Allergies: any;
 selectedBMICalculator: any;
+  selectedPreferences: string | any;
  
 
   constructor( private router: Router , private pickerController: PickerController ) {this.selectedPriceRange = '';
@@ -50,7 +51,15 @@ fats: any;
     glutenIntolerant: false,
     lactoseIntolerant: false
   };
-  selectedPreferences: string = '';
+  allergens = {
+    nuts: false,
+    seafood: false,
+    soy: false,
+    eggs: false
+  };
+ displayAllergies: string = '';
+  displayPreferences: string = '';
+
 
 
   onIonChange(ev: Event) {
@@ -83,13 +92,14 @@ fats: any;
     this.isPreferencesModalOpen = isOpen;
   }
   setOpenPreferencesSave(isOpen: boolean) {
-    // saving logic
-    if (isOpen) {
-      // Update the selected preferences
-      this.selectedPreferences = this.getSelectedPreferences();
+    if (this.preferences.vegetarian || this.preferences.vegan || this.preferences.glutenIntolerant || this.preferences.lactoseIntolerant) {
+      if (!isOpen) {
+        this.displayPreferences = this.getSelectedPreferences();
+      }
+      this.isPreferencesModalOpen = isOpen;
     }
-    this.isPreferencesModalOpen = false; // Corrected line
   }
+  
   getSelectedPreferences(): string {
     const selectedPreferences = [];
   
@@ -106,19 +116,33 @@ fats: any;
       selectedPreferences.push('Lactose-intolerant');
     }
   
-    return selectedPreferences.join(', ');
+    if (selectedPreferences.length === 1) {
+      console.log(this.displayPreferences);
+      return selectedPreferences[0];
+    } else if (selectedPreferences.length > 1) {
+      return 'Multiple';
+    } else {
+      console.log(this.displayPreferences);
+      return '';
+     
+    }
+    
   }
 
   setOpenCalorie(isOpen: boolean) {
     this.isCalorieModalOpen = isOpen;
   }
   setOpenCalorieSave(isOpen: boolean) {
+    this.calorieAmount = this.selectedCalorieAmount;
+    if (this.calorieAmount) {
     //saving logic
-    if (isOpen) {
+    if (!isOpen) {
       // Save the changes
       this.selectedCalorieAmount = this.calorieAmount;
     }
-    this.isCalorieModalOpen = false;
+    this.isCalorieModalOpen = isOpen;
+  }
+
   }
   showSelectedCalorieAmount(event: any) {
     this.selectedCalorieAmount = event.target.value;
@@ -127,12 +151,14 @@ fats: any;
     this.isBudgetModalOpen = isOpen;
   }
   setOpenBudgetSave(isOpen: boolean) {
-    //   //saving logic
+     //saving logic
+    if(this.selectedPriceRange){
        if (!isOpen) {
          this.selectedBudgetRange = this.selectedPriceRange;
        }
       this.isBudgetModalOpen = isOpen;
-     
+      }
+  
   }
 
   async openPicker() {
@@ -146,7 +172,7 @@ fats: any;
             { text: '3', value: 3 },
             { text: '4', value: 4 },
             { text: '5', value: 5 },
-            // Add more protein options as needed
+            
           ],
           selectedIndex: 0, // Set the default selected index
         },
@@ -158,7 +184,7 @@ fats: any;
             { text: '3', value: 3 },
             { text: '4', value: 4 },
             { text: '5', value: 5 },
-            // Add more carbs options as needed
+            
           ],
           selectedIndex: 0, // Set the default selected index
         },
@@ -170,7 +196,7 @@ fats: any;
             { text: '3', value: 3 },
             { text: '4', value: 4 },
             { text: '5', value: 5 },
-            // Add more fats options as needed
+            
           ],
           selectedIndex: 0, // Set the default selected index
         },
@@ -211,17 +237,53 @@ fats: any;
   }
   setOpenAllergiesSave(isOpen: boolean) {
     //saving logic
+    if (this.allergens.seafood || this.allergens.nuts || this.allergens.eggs || this.allergens.soy) {
+      
+        if (!isOpen) {
+          this.displayAllergies = this.getSelectedAllergens();
+        }
     this.isAllergiesModalOpen = isOpen;
-  }
+      }
+    }
+      getSelectedAllergens(): string {
+        const selectedAllergens = [];
+      
+        if (this.allergens.seafood) {
+          selectedAllergens.push('Nuts');
+        }
+        if (this.allergens.nuts) {
+          selectedAllergens.push('Nuts');
+        }
+        if (this.allergens.eggs) {
+          selectedAllergens.push('Eggs');
+        }
+        if (this.allergens.soy) {
+          selectedAllergens.push('Soy');
+        }
+      
+        if (selectedAllergens.length === 1) {
+          console.log(this.displayAllergies);
+          return selectedAllergens[0];
+        } else if (selectedAllergens.length > 1) {
+          return 'Multiple';
+        } else {
+          console.log(this.displayAllergies);
+          return '';
+         
+        }
+        
+      }
   setOpenCooking(isOpen: boolean) {
     this.isCookingModalOpen = isOpen;
   }
   setOpenCookingSave(isOpen: boolean) {
+    if (this.cookingTime) {
     if (!isOpen) {
       // Update the selected value of the radio group
       this.selectedCookingTime = this.cookingTime;
     }
     this.isCookingModalOpen = isOpen;
+  }
   }
  
 
@@ -243,11 +305,13 @@ fats: any;
 
   setOpenShoppingSave(isOpen: boolean) {
     //saving logic
+    if (this.shoppingInterval) {
     if (!isOpen) {
       // Update the selected value of the radio group
       this.selectedShoppingInterval = this.shoppingInterval;
     }
     this.isShoppingModalOpen = isOpen;
+  }
   }
 
   //Defintion of Modal answers 
@@ -258,12 +322,6 @@ fats: any;
     const bmi = height / weight;
     return Number(bmi.toFixed(2));
   }
-  
-  
-  
-  
-
-
 
 }
 ////////////////////////////////////////////////////////////////////////////////////////

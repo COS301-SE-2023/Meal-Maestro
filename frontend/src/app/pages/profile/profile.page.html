@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Food Preferences</ion-title>
+    <ion-title> Preferences</ion-title>
   </ion-toolbar>
 </ion-header>
     
@@ -105,11 +105,7 @@
 </ion-card>
 
 
-  <!-- -------------------------------------------------- -->
-  <!-- These are just an exmaple -->
- <!-- -------------------------------------------------- -->
-
-
+ 
 <!-- the food preferences -->
 
 
@@ -119,7 +115,7 @@
     <ion-card-subtitle>
       <div class="card-toggle">
         <div class="toggle-label">Food Preferences</div>
-        <div class="toggle-value">{{ selectedPreferences }}</div>
+        <div class="toggle-value">{{ displayPreferences }}</div>
         <ion-icon name="chevron-forward-outline" size="medium"></ion-icon>
       </div>
     </ion-card-subtitle>
@@ -203,8 +199,7 @@
                 <ion-range [pin]="true" [ticks]="true" [snaps]="true" min="0" max="5000" step="100" [value]="calorieAmount" color="primary" (ionChange)="showSelectedCalorieAmount($event)">
                   <div slot="start">0</div>
                   <div slot="end">5000</div>
-                  <!-- <ion-label>{{ calorieAmount }}</ion-label> -->
-                  <!-- what is this? ^  -->
+              
                 </ion-range>
               </ion-item>
             </ion-list>
@@ -346,18 +341,14 @@
 
 
 <!-- Allergies -->
-<!--  <div class="card-toggle">
-        <div class="toggle-label">Macro Creator:</div>
-        <div class="toggle-value">{{ MacroRatio }} </div>
-        <ion-toggle (click)="setOpenMacro(true)"></ion-toggle>
-      </div> -->
+
 <ion-card (click)="setOpenAllergies(true)" class="ion-activatable">
   <ion-ripple-effect></ion-ripple-effect>
   <ion-card-header>
     <ion-card-subtitle>
       <div class="card-toggle">
         <div class="toggle-label">Allergies</div>
-        <div class="toggle-value">{{ Allergies }} </div>
+        <div class="toggle-value">{{ displayAllergies }} </div>
         <ion-icon name="chevron-forward-outline" size="medium"></ion-icon>
       </div>
     </ion-card-subtitle>
@@ -371,7 +362,7 @@
             <ion-button (click)="setOpenAllergies(false)">Cancel</ion-button>
           </ion-buttons>
           <ion-buttons slot="end">
-            <ion-button (click)="setOpenAllergies(false)" [strong]="true">Confirm</ion-button>
+            <ion-button (click)="setOpenAllergiesSave(false)" [strong]="true">Confirm</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
@@ -380,22 +371,16 @@
           <ion-card-content>
             <ion-list>
               <ion-item>
-                <ion-toggle (ionChange)="showSaveChanges()">Gluten</ion-toggle>
+                <ion-toggle [(ngModel)]="allergens.seafood"(ionChange)="showSaveChanges()">Seafood</ion-toggle>
               </ion-item>
               <ion-item>
-                <ion-toggle (ionChange)="showSaveChanges()">Lactose</ion-toggle>
+                <ion-toggle [(ngModel)]="allergens.nuts"(ionChange)="showSaveChanges()">Nuts</ion-toggle>
               </ion-item>
               <ion-item>
-                <ion-toggle (ionChange)="showSaveChanges()">Seafood</ion-toggle>
+                <ion-toggle [(ngModel)]="allergens.eggs"(ionChange)="showSaveChanges()">Eggs</ion-toggle>
               </ion-item>
               <ion-item>
-                <ion-toggle (ionChange)="showSaveChanges()">Nuts</ion-toggle>
-              </ion-item>
-              <ion-item>
-                <ion-toggle (ionChange)="showSaveChanges()">Eggs</ion-toggle>
-              </ion-item>
-              <ion-item>
-                <ion-toggle (ionChange)="showSaveChanges()">Soy</ion-toggle>
+                <ion-toggle [(ngModel)]="allergens.soy"(ionChange)="showSaveChanges()">Soy</ion-toggle>
               </ion-item>
             </ion-list>
           </ion-card-content>
@@ -529,9 +514,4 @@
 </ion-card>
 
 
- 
-
-
-<!-- the Save Button -->
-  <ion-button *ngIf="anyChanges" expand="full" color="primary" shape="round">Save Preferences</ion-button>
 </ion-content>
