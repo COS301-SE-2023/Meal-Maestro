@@ -27,8 +27,8 @@ public class CategoryRepository {
 
     private static TransactionCallback<List<String>> readCategoriesTransaction() {
         return transaction -> {
-            Result result = transaction.run("MATCH (n:Category) RETURN n LIMIT 25;");
-            return result.list(record -> record.get("n").asNode().get("categoryName").asString());
+            Result result = transaction.run("MATCH (n) RETURN n LIMIT 25");
+            return result.list(record -> record.get("n").asNode().get("name").asString());
         };
     }
 }
