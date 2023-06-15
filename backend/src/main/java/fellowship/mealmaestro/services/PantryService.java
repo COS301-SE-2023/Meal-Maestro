@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fellowship.mealmaestro.models.FoodModel;
+import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.repositories.PantryRepository;
 
 @Service
@@ -26,7 +27,7 @@ public class PantryService {
         pantryRepository.updatePantry(food);
     }
 
-    public List<FoodModel> getPantry(FoodModel food){
-        return pantryRepository.getPantry(food);
+    public List<FoodModel> getPantry(UserModel user){
+        return pantryRepository.getPantry(user);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fellowship.mealmaestro.models.FoodModel;
+import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.services.PantryService;
 import jakarta.validation.Valid;
 
@@ -33,8 +34,8 @@ public class PantryController {
     }
 
     @PostMapping("/getPantry")
-    public List<FoodModel> getPantry(@Valid @RequestBody FoodModel food){
-        return pantryService.getPantry(food);
+    public List<FoodModel> getPantry(@RequestBody UserModel user){
+        return pantryService.getPantry(user);
     }
 
 }
