@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import fellowship.mealmaestro.models.FoodModel;
+import fellowship.mealmaestro.models.ShoppingListRequestModel;
+import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.services.ShoppingListService;
 import jakarta.validation.Valid;
 
@@ -18,22 +20,22 @@ public class ShoppingListController {
     private ShoppingListService shoppingListService;
 
     @PostMapping("/addToShoppingList")
-    public void addToShoppingList(@Valid @RequestBody FoodModel food){
-        shoppingListService.addToShoppingList(food);
+    public void addToShoppingList(@Valid @RequestBody ShoppingListRequestModel request){
+        shoppingListService.addToShoppingList(request);
     }
 
     @PostMapping("/removeFromShoppingList")
-    public void removeFromShoppingList(@Valid @RequestBody FoodModel food){
-        shoppingListService.removeFromShoppingList(food);
+    public void removeFromShoppingList(@Valid @RequestBody ShoppingListRequestModel request){
+        shoppingListService.removeFromShoppingList(request);
     }
 
     @PostMapping("/updateShoppingList")
-    public void updateShoppingList(@Valid @RequestBody FoodModel food){
-        shoppingListService.updateShoppingList(food);
+    public void updateShoppingList(@Valid @RequestBody ShoppingListRequestModel request){
+        shoppingListService.updateShoppingList(request);
     }
 
     @PostMapping("/getShoppingList")
-    public List<FoodModel> getShoppingList(@Valid @RequestBody FoodModel food){
-        return shoppingListService.getShoppingList(food);
+    public List<FoodModel> getShoppingList(@Valid @RequestBody UserModel user){
+        return shoppingListService.getShoppingList(user);
     }
 }

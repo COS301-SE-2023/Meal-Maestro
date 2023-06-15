@@ -1,6 +1,5 @@
 package fellowship.mealmaestro.repositories;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.neo4j.driver.Driver;
@@ -71,12 +70,7 @@ public class PantryRepository {
                         "RETURN f.name AS name, f.quantity AS quantity, f.weight AS weight",
             Values.parameters("username", username, "email", email));
 
-            List<FoodModel> foods = new ArrayList<>();
-            while (result.hasNext()){
-                var record = result.next();
-                foods.add(new FoodModel(record.get("name").asString(), record.get("quantity").asInt(), record.get("weight").asInt()));
-            }
-            return foods;
+            return result.list(record -> new FoodModel(record.get("name").asString(), record.get("quantity").asInt(), record.get("weight").asInt()));
         };
     }
     /*  Example Post data:
