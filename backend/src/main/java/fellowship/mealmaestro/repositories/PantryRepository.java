@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import fellowship.mealmaestro.models.FoodModel;
+import fellowship.mealmaestro.models.PantryRequestModel;
 import fellowship.mealmaestro.models.UserModel;
 
 @Repository
@@ -24,8 +25,9 @@ public class PantryRepository {
     }
 
     //#region Create
-    public void addToPantry(FoodModel food){
-        UserModel user = food.getUser();
+    public void addToPantry(PantryRequestModel pantryRequest){
+        FoodModel food = pantryRequest.getFood();
+        UserModel user = pantryRequest.getUser();
         try (Session session = driver.session()){
             session.executeWrite(addToPantryTransaction(food, user.getUsername(), user.getEmail()));
         }
@@ -43,14 +45,16 @@ public class PantryRepository {
     }
     /*  Example Post data:
      * {
-     *  "name": "Chicken",
-     *  "quantity": 5,
-     *  "weight": 0,
-     *  "user": {
-     *      "username": "Frank",
-     *      "email": "test@example.com"
+     * "food": {
+     *  "name": "Carrot",
+     *  "quantity": "17",
+     *  "weight": "42"
+     * },
+     * "user": {
+     *  "username": "Frank",
+     *  "email": "test@example.com"
      *  }
-     *  }
+     * }
      */
     //#endregion
 
@@ -84,14 +88,41 @@ public class PantryRepository {
     //#endregion
 
     //#region Update
-    public void updatePantry(FoodModel food){
-        //TODO
+    public void updatePantry(PantryRequestModel pantryRequest){
+        FoodModel food = pantryRequest.getFood();
+        UserModel user = pantryRequest.getUser();
+        try (Session session = driver.session()){
+            session.executeWrite(updatePantryTransaction(food, user.getUsername(), user.getEmail()));
+        }
+    }
+
+    public static TransactionCallback<Void> updatePantryTransaction(FoodModel food, String username, String email){
+        return transaction -> {
+            transaction.run("MATCH (User{username: $username, email: $email})-[:HAS_PANTRY]->(p:Pantry)-[:IN_PANTRY]->(f:Food {name: $name}) \r\n" + //
+                        "SET f.quantity = $quantity, f.weight = $weight",
+            Values.parameters("username", username, "email", email, "name", food.getName(),
+                        "quantity", food.getQuantity(), "weight", food.getWeight()));
+            return null;
+        };
     }
     //#endregion
 
     //#region Delete
-    public void removeFromPantry(FoodModel food){
-        //TODO
+    public void removeFromPantry(PantryRequestModel pantryRequest){
+        FoodModel food = pantryRequest.getFood();
+        UserModel user = pantryRequest.getUser();
+        try (Session session = driver.session()){
+            session.executeWrite(removeFromPantryTransaction(food, user.getUsername(), user.getEmail()));
+        }
+    }
+
+    public static TransactionCallback<Void> removeFromPantryTransaction(FoodModel food, String username, String email){
+        return transaction -> {
+            transaction.run("MATCH (User{username: $username, email: $email})-[:HAS_PANTRY]->(p:Pantry)-[r:IN_PANTRY]->(f:Food {name: $name}) \r\n" + //
+                        "DELETE r,f",
+            Values.parameters("username", username, "email", email, "name", food.getName()));
+            return null;
+        };
     }
     //#endregion
 }

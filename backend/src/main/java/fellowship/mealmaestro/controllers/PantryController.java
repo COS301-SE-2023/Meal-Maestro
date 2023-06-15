@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fellowship.mealmaestro.models.FoodModel;
 import fellowship.mealmaestro.models.UserModel;
+import fellowship.mealmaestro.models.PantryRequestModel;
 import fellowship.mealmaestro.services.PantryService;
 import jakarta.validation.Valid;
 
@@ -19,18 +20,18 @@ public class PantryController {
     private PantryService pantryService;
 
     @PostMapping("/addToPantry")
-    public void addToPantry(@Valid @RequestBody FoodModel food){
-        pantryService.addToPantry(food);
+    public void addToPantry(@Valid @RequestBody PantryRequestModel pantryRequest){
+        pantryService.addToPantry(pantryRequest);
     }
     
     @PostMapping("/removeFromPantry")
-    public void removeFromPantry(@Valid @RequestBody FoodModel food){
-        pantryService.removeFromPantry(food);
+    public void removeFromPantry(@Valid @RequestBody PantryRequestModel pantryRequest){
+        pantryService.removeFromPantry(pantryRequest);
     }
 
     @PostMapping("/updatePantry")
-    public void updatePantry(@Valid @RequestBody FoodModel food){
-        pantryService.updatePantry(food);
+    public void updatePantry(@Valid @RequestBody PantryRequestModel pantryRequest){
+        pantryService.updatePantry(pantryRequest);
     }
 
     @PostMapping("/getPantry")
