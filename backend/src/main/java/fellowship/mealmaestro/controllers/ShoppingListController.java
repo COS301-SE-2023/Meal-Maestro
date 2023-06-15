@@ -35,7 +35,7 @@ public class ShoppingListController {
     }
 
     @PostMapping("/getShoppingList")
-    public List<FoodModel> getShoppingList(@Valid @RequestBody UserModel user){
+    public List<FoodModel> getShoppingList(@RequestBody UserModel user){
         return shoppingListService.getShoppingList(user);
     }
 }

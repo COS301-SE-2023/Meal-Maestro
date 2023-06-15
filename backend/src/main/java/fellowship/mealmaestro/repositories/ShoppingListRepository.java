@@ -1,5 +1,6 @@
 package fellowship.mealmaestro.repositories;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.neo4j.driver.Driver;
@@ -71,7 +72,12 @@ public class ShoppingListRepository {
 
             Values.parameters("username", username, "email", email));
             
-            return result.list(record -> new FoodModel(record.get("name").asString(), record.get("quantity").asInt(), record.get("weight").asInt()));
+            List<FoodModel> foods = new ArrayList<>();
+            while (result.hasNext()){
+                var record = result.next();
+                foods.add(new FoodModel(record.get("name").asString(), record.get("quantity").asInt(), record.get("weight").asInt()));
+            }
+            return foods;
         };
     }
     /*  Example Post data:
@@ -84,13 +90,42 @@ public class ShoppingListRepository {
 
     //#region Update
     public void updateShoppingList(ShoppingListRequestModel request){
-        //TODO
+        FoodModel food = request.getFood();
+        UserModel user = request.getUser();
+        try (Session session = driver.session()){
+            session.executeWrite(updateShoppingListTransaction(food, user.getUsername(), user.getEmail()));
+        }
+    }
+
+    public static TransactionCallback<Void> updateShoppingListTransaction(FoodModel food, String username, String email){
+        return transaction -> {
+            transaction.run("MATCH (User{username: $username, email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[:IN_LIST]->(f:Food {name: $name}) \r\n" + //
+                        "SET f.quantity = $quantity, f.weight = $weight",
+
+            Values.parameters("username", username, "email", email, "name", food.getName(),
+                        "quantity", food.getQuantity(), "weight", food.getWeight()));
+            return null;
+        };
     }
     //#endregion
 
     //#region Delete
     public void removeFromShoppingList(ShoppingListRequestModel request){
-        //TODO
+        FoodModel food = request.getFood();
+        UserModel user = request.getUser();
+        try (Session session = driver.session()){
+            session.executeWrite(removeFromShoppingListTransaction(food, user.getUsername(), user.getEmail()));
+        }
+    }
+
+    public static TransactionCallback<Void> removeFromShoppingListTransaction(FoodModel food, String username, String email){
+        return transaction -> {
+            transaction.run("MATCH (User{username: $username, email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[r:IN_LIST]->(f:Food {name: $name}) \r\n" + //
+                        "DELETE r,f",
+
+            Values.parameters("username", username, "email", email, "name", food.getName()));
+            return null;
+        };
     }
     //#endregion
 }
