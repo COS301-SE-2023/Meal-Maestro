@@ -1,135 +1,31 @@
  <body> 
   <ion-content [fullscreen]="true" scrollY="true">
-    
+    <ion-header>
+      <ion-toolbar>
+        <ion-segment [value]="segment" (ionChange)="segmentChanged($event)">
+          <ion-segment-button value="pantry">
+            <ion-label>Pantry</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="shopping">
+            <ion-label>Shopping</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-toolbar>
+    </ion-header>
 
-
-  <ion-grid class="grid">
-    <ion-row>
-      <ion-col></ion-col>
-      <ion-col>
-        <ion-button class="shopbutton" (click)="LoadShoppingPage()">
-          Pantry
-        </ion-button>
-    </ion-col>
-    <ion-col></ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col></ion-col>
-      <ion-col>
-      <ion-card class="card">    
-        <ion-card-content>
-          <ul class="mylist">
-            <li>Pasta</li>
-            <li>Tomato sauce</li>
-            <li>Flour</li>
-            <li>Avocados</li>
-            <li>Brown rice</li>
-            <li>Mixed veggies</li>
-            <li>Peanut butter</li>
-            <li>Carrots</li>
-            <li>Chicken breasts</li>
-            <li>Peri-peri sauce</li>
-            <li>Lean mince</li>
-            <li>Olives</li>
-            <li>Sugar</li>
-            <li>Peppers</li>
-            <li>Canned beans</li>
-          </ul> 
-        </ion-card-content>
-      </ion-card>
-      </ion-col>
-      <ion-col></ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col></ion-col>
-      <ion-col></ion-col>
-      <ion-col>
-        <ion-button shape="round" class="plusbutton">+</ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
-  <ion-grid class="grid">
-    <ion-row>
-      <ion-col></ion-col>
-      <ion-col>
-        <ion-button class="shopbutton2" (click)="LoadShoppingPage()">
-          Shopping List
-        </ion-button>
-    </ion-col>
-    <ion-col></ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col></ion-col>
-      <ion-col>
-      <ion-card class="card">    
-        <ion-card-content>
-          <ion-grid>
-            <ion-row >
-              <ion-col size="4">
-                <ion-avatar class="prent"><img src="https://plus.unsplash.com/premium_photo-1675814316651-3ce3c6409922?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=436&q=80"></ion-avatar>
-              </ion-col>
-              <ion-col class="col">Brown Rice</ion-col>
-                 <ion-toggle ></ion-toggle>
-            </ion-row>
-            <ion-row >
-              <ion-col size="4">
-                <ion-avatar class="prent"><img src="https://images.unsplash.com/photo-1596181525841-8e8bae173eb0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80"></ion-avatar>
-              </ion-col >
-              <ion-col class="col">Lemons</ion-col>
-               <ion-toggle ></ion-toggle>
-            </ion-row>
-            <ion-row >
-              <ion-col size="4">
-                <ion-avatar class="prent"><img src="https://images.unsplash.com/photo-1499125562588-29fb8a56b5d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1332&q=80"></ion-avatar>
-              </ion-col>
-              <ion-col class="col">Salmon</ion-col>
-               <ion-toggle ></ion-toggle>
-            </ion-row>
-            <ion-row >
-              <ion-col size="4">
-                <ion-avatar class="prent"><img src="https://images.unsplash.com/photo-1448293065296-c7e2e5b76ae9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2014&q=80"></ion-avatar>
-              </ion-col>
-              <ion-col class="col">Green beans</ion-col>
-               <ion-toggle ></ion-toggle>
-            </ion-row>
-            <ion-row >
-              <ion-col size="4">
-                <ion-avatar class="prent"><img src="https://images.unsplash.com/photo-1601039641847-7857b994d704?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"></ion-avatar>
-              </ion-col>
-              <ion-col class="col">Avocados</ion-col>
-               <ion-toggle ></ion-toggle>
-            </ion-row>
-            <ion-row >
-              <ion-col size="4">
-                <ion-avatar class="prent"><img src="https://images.unsplash.com/photo-1524593166156-312f362cada0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"></ion-avatar>
-              </ion-col>
-              <ion-col class="col">Tomatoes</ion-col>
-               <ion-toggle ></ion-toggle>
-            </ion-row>
-            <ion-row >
-              <ion-col size="4">
-                <ion-avatar class="prent"><img src="https://images.unsplash.com/photo-1593629718894-e9a8f9f65d01?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"></ion-avatar>
-              </ion-col>
-              <ion-col class="col">Red unions</ion-col>
-               <ion-toggle ></ion-toggle>
-            </ion-row>
-          </ion-grid>
-        </ion-card-content>
-      </ion-card>
-      </ion-col>
-      <ion-col></ion-col>
-    </ion-row>
-    <ion-row>
-      
-      <ion-col class="next">
-        <ion-label>
-          Next shopping day is : 8 June
-        </ion-label>
-      </ion-col>
-    
-    </ion-row>
-  </ion-grid>
+    <ion-grid [ngSwitch]="segment">
+      <ion-row *ngSwitchCase="'pantry'">
+        <ion-col size="12">
+          <app-food-list-item *ngFor="let item of pantryItems"></app-food-list-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngSwitchCase="'shopping'">
+        <ion-col size="12">
+          <app-food-list-item></app-food-list-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  
 
 </ion-content>
 </body>
