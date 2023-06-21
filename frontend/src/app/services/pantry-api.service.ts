@@ -12,6 +12,6 @@ export class PantryApiService {
   constructor(private http: HttpClient) { }
 
   getPantryItems(): Observable<FoodItem[]> {
-    return this.http.get<FoodItem[]>('//catfact.ninja/fact');
+    return this.http.get<FoodItem[]>('https://catfact.ninja/facts?limit=2');
   }
 }

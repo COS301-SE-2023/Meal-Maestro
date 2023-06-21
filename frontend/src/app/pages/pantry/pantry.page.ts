@@ -22,8 +22,10 @@ export class PantryPage implements OnInit{
   constructor(public r : Router, private pantryService: PantryApiService) {}
 
   async ngOnInit() {
-    this.pantryService.getPantryItems().subscribe((data: FoodItem[]) => {
+    this.pantryService.getPantryItems().subscribe((data) => {
       this.pantryItems = data;
+      console.log(data);
+      console.log(this.pantryItems);
     });
   }
   
