@@ -29,10 +29,8 @@ export class LoginPage implements OnInit {
     this.loginSuccessToast('top');
   }
 
-  signup() {
+  goToSignup() {
     this.router.navigate(['../signup']);
-    console.log(this.user);
-    // this.loginSuccessToast('top');
   }
 
   async loginSuccessToast(position: 'bottom' | 'middle' | 'top'){
