@@ -17,14 +17,19 @@ export class RecipeComponent {
 
   @Input() arrayData!: { title: string, description: string, url: string }[];
   isModalOpen = false;
-
-  setOpen(isOpen: boolean) {
+  currentObject :any
+  setOpen(isOpen: boolean, o :any) {
     this.isModalOpen = isOpen;
+    this.setCurrent(o)
   }
   constructor() { 
 
   }
 
   ngOnInit() {}
+
+  setCurrent(o : any) {
+    this.currentObject = o;
+  }
 
 }
