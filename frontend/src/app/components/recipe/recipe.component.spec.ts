@@ -1,13 +1,13 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ExploreContainerComponent } from '../../components/explore-container/explore-container.component';
 import { IonicModule } from '@ionic/angular';
-
 import { RecipeComponent } from './recipe.component';
 
 describe('RecipeComponent', () => {
   let component: RecipeComponent;
   let fixture: ComponentFixture<RecipeComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async() => {
     TestBed.configureTestingModule({
       declarations: [ RecipeComponent ],
       imports: [IonicModule.forRoot()]
@@ -16,7 +16,7 @@ describe('RecipeComponent', () => {
     fixture = TestBed.createComponent(RecipeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
