@@ -1,5 +1,5 @@
  <body> 
-  <ion-content [fullscreen]="true" scrollY="true">
+  <ion-content [fullscreen]="true" scrollY="true" [ngSwitch]="segment">
     <ion-header>
       <ion-toolbar>
         <ion-segment [value]="segment" (ionChange)="segmentChanged($event)">
@@ -13,12 +13,13 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-grid [ngSwitch]="segment">
+    <ion-grid >
       <ion-row *ngSwitchCase="'pantry'">
         <ion-col size="12">
-          <!-- <app-food-list-item *ngFor="let item of pantryItems"></app-food-list-item> -->
+          <app-food-list-item *ngFor="let item of pantryItems" [item]="item"></app-food-list-item>
         </ion-col>
       </ion-row>
+
       <ion-row *ngSwitchCase="'shopping'">
         <ion-col size="12">
           <app-food-list-item></app-food-list-item>
@@ -26,6 +27,11 @@
       </ion-row>
     </ion-grid>
   
+    <ion-fab slot="fixed" vertical="bottom" horizontal="end" *ngSwitchCase="'pantry'">
+      <ion-fab-button (click)="addItem()">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
 
 </ion-content>
 </body>

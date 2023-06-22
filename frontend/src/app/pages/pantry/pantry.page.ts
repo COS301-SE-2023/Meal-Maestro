@@ -24,14 +24,17 @@ export class PantryPage implements OnInit{
   async ngOnInit() {
     this.pantryService.getPantryItems().subscribe((data) => {
       this.pantryItems = data;
+      this.pantryItems = [{name: 'food1', quantity: 1, weight: 1}, {name: 'food2', quantity: 2, weight: 2}, {name: 'food3', quantity: 3, weight: 3}];
       console.log(data);
       console.log(this.pantryItems);
     });
   }
+
+  async addItem(){
+    console.log("add item clicked");
+  }
   
   segmentChanged(event : any){
     this.segment = event.detail.value;
-    console.log(this.segment);
   }
-
 }

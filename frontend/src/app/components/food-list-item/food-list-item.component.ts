@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { FoodItem } from '../../models/fooditem.model';
 
@@ -10,9 +10,16 @@ import { FoodItem } from '../../models/fooditem.model';
   imports: [IonicModule],
 })
 export class FoodListItemComponent  implements OnInit {
-  item! : FoodItem;
+  @Input() item! : FoodItem;
   constructor() { }
 
   ngOnInit() {}
 
+  async deleteItem(){
+    console.log("delete item clicked " + this.item.name);
+  }
+
+  async editItem(){
+    console.log("edit item clicked " + this.item.name);
+  }
 }
