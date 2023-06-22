@@ -195,12 +195,6 @@
     --ion-toolbar-border-color: var(--ion-color-step-250);
   }
 
-  .ios ion-toolbar, .md ion-toolbar {
-    --ion-background-color: #8A4F2D;
-    --ion-color-primary: #FFFFFF;
-    --ion-color-primary-contrast: #000000;
-  }
-
   /*
    * Material Design Dark Theme
    * -------------------------------------------
@@ -245,9 +239,9 @@
   }
 }
 
-.ios ion-toolbar, .md ion-toolbar {
-  --ion-background-color: #8A4F2D;
-  --ion-color-primary: #FFFFFF;
-  --ion-color-primary-contrast: #000000;
-  padding-top: 60px !important;
-}
+// .ios ion-toolbar, .md ion-toolbar {
+//   --ion-background-color: #8A4F2D;
+//   --ion-color-primary: #FFFFFF;
+//   --ion-color-primary-contrast: #000000;
+
+// }

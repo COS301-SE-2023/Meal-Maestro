@@ -3,8 +3,13 @@ ion-item {
 
   ion-label {
     --color: var(--ion-color-primary-shade);
+    font-weight: bold;
+    font-size: medium;
+    text-transform: uppercase;
+    padding: 10px 0 3px 5px;   
   }
 }
+
 
 ion-title {
   color: var(--ion-color-primary);
