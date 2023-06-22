@@ -16,6 +16,11 @@ import { BrowserModule } from '@angular/platform-browser'
 export class RecipeComponent {
 
   @Input() arrayData!: { title: string, description: string, url: string }[];
+  // isModalOpen = false;
+
+  // setOpen(isOpen: boolean) {
+  //   this.isModalOpen = isOpen;
+  // }
   constructor() { 
 
   }
