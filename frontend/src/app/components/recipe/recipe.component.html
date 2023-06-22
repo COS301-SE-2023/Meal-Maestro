@@ -3,8 +3,8 @@
       <ion-row class="rowfirst">
         <ion-col class="cards">
 
-          <ion-card *ngFor="let item of arrayData" button="true" color="primary" >
-            <!-- <ion-modal [isOpen]="isModalOpen">
+          <ion-card *ngFor="let item of arrayData" (click)="setOpen(true)" color="primary" >
+            <ion-modal [isOpen]="isModalOpen">
               <ng-template>
                 <ion-header>
                   <ion-toolbar>
@@ -22,7 +22,7 @@
                   </p>
                 </ion-content>
               </ng-template>
-            </ion-modal> -->
+            </ion-modal>
             <ion-card-header>
               <ion-card-title class="head">{{item.title}}</ion-card-title>
             </ion-card-header>
