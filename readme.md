@@ -40,8 +40,12 @@ easily plan meals for the coming week and helps them hit their nutritional goals
 https://drive.google.com/file/d/10Eq8U3jkWRM08BBfeC6RolvX8edsNR31/view?usp=sharing
 
 ## System Requirements Specification
+### v1:
 
 https://docs.google.com/document/d/1r36yfCPophZftvO_4PcoFPyaN1UonBcP5Fbmt0ypGoI/edit?usp=sharing
+### v2:
+
+https://docs.google.com/document/d/1FmSqFAENVQOZEEr14x5cBBWr9sgkA5lm3mrld0XY0l8/edit?usp=sharing
 
 ## Project Board
 
