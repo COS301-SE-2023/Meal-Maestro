@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -15,6 +15,7 @@ import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
   imports: [IonicModule, CommonModule, FoodListItemComponent],
 })
 export class PantryPage implements OnInit{
+  @ViewChildren(FoodListItemComponent) foodListItem!: QueryList<FoodListItemComponent>;
 
   segment: string = 'pantry';
   pantryItems: FoodItemI[] = [];
@@ -32,8 +33,15 @@ export class PantryPage implements OnInit{
   async addItem(){
     console.log("add item clicked");
   }
-  
+
+  closeSlidingItems(){
+    this.foodListItem.forEach((item) => {
+      item.closeItem();
+    });
+  }
+
   segmentChanged(event : any){
     this.segment = event.detail.value;
+    this.closeSlidingItems();
   }
 }

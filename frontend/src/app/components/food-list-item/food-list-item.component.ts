@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { IonItemSliding, IonicModule } from '@ionic/angular';
 import { FoodItemI } from '../../models/interfaces.model';
 import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
 
@@ -12,6 +12,7 @@ import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
 })
 export class FoodListItemComponent  implements OnInit {
   @Input() item! : FoodItemI;
+  @ViewChild(IonItemSliding, { static: false }) slidingItem!: IonItemSliding;
   constructor(pantryService : PantryApiService) { }
 
   ngOnInit() {}
@@ -22,5 +23,9 @@ export class FoodListItemComponent  implements OnInit {
 
   async editItem(){
     console.log("edit item clicked " + this.item.name);
+  }
+
+  public async closeItem(){
+    this.slidingItem.close();
   }
 }
