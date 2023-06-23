@@ -24,6 +24,7 @@
     "@capacitor/core": "5.0.1",
     "@ionic/angular": "^7.0.0",
     "ionicons": "^7.0.0",
+    "openai": "^3.3.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
