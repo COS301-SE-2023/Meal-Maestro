@@ -6,3 +6,19 @@
     right: 20px;
   }
   
+  .card-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .toggle-label {
+    margin-right: 10px;
+  }
+  
+  .toggle-value {
+    margin-right: 10px;
+    font-weight: bold;
+  }
+  
+  
