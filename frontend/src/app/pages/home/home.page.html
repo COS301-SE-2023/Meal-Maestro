@@ -15,27 +15,11 @@
       <ion-label>Today</ion-label>
     </ion-item>
 
-    <app-daily-meals></app-daily-meals>
+    <app-daily-meals [mealsData]="mealsArray"></app-daily-meals>
 
-    <ion-card button="true" color="primary">
-      <ion-card-header>
-        <ion-card-subtitle>Lunch</ion-card-subtitle>
-        <ion-card-title>Chicken Alfredo</ion-card-title>
-      </ion-card-header>
 
-      <ion-card-content> A savoury filling lunch </ion-card-content>
-    </ion-card>
 
-    <ion-card button="true" color="primary">
-      <ion-card-header>
-        <ion-card-subtitle>Dinner</ion-card-subtitle>
-        <ion-card-title>Butternut soup</ion-card-title>
-      </ion-card-header>
-
-      <ion-card-content>
-        A warm soup to fill you in these winter months
-      </ion-card-content>
-    </ion-card>
+    
   </ion-list>
 
   <ion-list lines="inset" lines-color="secondary">
