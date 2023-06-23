@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { FoodItem } from '../../models/fooditem.model';
+import { PantryApiService } from '../../services/pantry-api.service';
 
 @Component({
   selector: 'app-food-list-item',
@@ -11,7 +12,7 @@ import { FoodItem } from '../../models/fooditem.model';
 })
 export class FoodListItemComponent  implements OnInit {
   @Input() item! : FoodItem;
-  constructor() { }
+  constructor(pantryService : PantryApiService) { }
 
   ngOnInit() {}
 
