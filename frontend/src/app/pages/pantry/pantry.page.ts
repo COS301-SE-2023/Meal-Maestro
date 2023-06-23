@@ -3,8 +3,8 @@ import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FoodListItemComponent } from '../../components/food-list-item/food-list-item.component';
-import { FoodItemI } from '../../models/fooditem.model';
-import { PantryApiService } from '../../services/pantry-api.service';
+import { FoodItemI } from '../../models/interfaces.model';
+import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
 
 
 @Component({
@@ -24,7 +24,6 @@ export class PantryPage implements OnInit{
   async ngOnInit() {
     this.pantryService.getPantryItems().subscribe((data) => {
       this.pantryItems = data;
-      this.pantryItems = [{name: 'food1', quantity: 1, weight: 1}, {name: 'food2', quantity: 2, weight: 2}, {name: 'food3', quantity: 3, weight: 3}];
       console.log(data);
       console.log(this.pantryItems);
     });

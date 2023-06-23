@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { FoodItemI } from '../../models/interfaces.model';
-import { PantryApiService } from '../../services/pantry-api.service';
+import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
 
 @Component({
   selector: 'app-food-list-item',
