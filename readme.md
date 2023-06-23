@@ -1,5 +1,7 @@
 [![codecov](https://codecov.io/gh/COS301-SE-2023/Meal-Maestro/branch/development/graph/badge.svg?token=TUYXXQO1FK)](https://codecov.io/gh/COS301-SE-2023/Meal-Maestro)
 [![Build&Test Node.js](https://github.com/COS301-SE-2023/Meal-Maestro/actions/workflows/buildAndTest.yml/badge.svg)](https://github.com/COS301-SE-2023/Meal-Maestro/actions/workflows/buildAndTest.yml)
+![Static Badge](https://img.shields.io/badge/Red_Bull-Consumed-green)
+
 # Meal Maestro
 ## The Fellowship
 
