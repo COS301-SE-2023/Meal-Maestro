@@ -10,7 +10,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "test:dev": "ng test --browsers=ChromeHeadless --watch=false --code-coverage"
+    "test:dev": "ng test --browsers=ChromeHeadless --watch=false --code-coverage ",
+    "test:unit": ".\\backend\\gradlew.bat -p backend test"
   },
   "private": true,
   "dependencies": {
