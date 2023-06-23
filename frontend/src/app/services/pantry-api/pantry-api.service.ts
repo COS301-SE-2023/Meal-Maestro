@@ -22,4 +22,52 @@ export class PantryApiService {
       });
   }
 
+  addToPantry(item: FoodItemI): Observable<FoodItemI> {
+    return this.http.post<FoodItemI>(
+      this.url+'/addToPantry',
+      {
+        "food": {
+          "name": item.name,
+          "quantity": item.quantity,
+          "weight": item.weight,
+        },
+        "user": {
+          "username": "Frank",
+          "email": "test@example.com"
+        }
+      });
+  }
+
+  updatePantryItem(item: FoodItemI): Observable<FoodItemI> {
+    return this.http.post<FoodItemI>(
+      this.url+'/updatePantry',
+      {
+        "food": {
+          "name": item.name,
+          "quantity": item.quantity,
+          "weight": item.weight,
+        },
+        "user": {
+          "username": "Frank",
+          "email": "test@example.com"
+        }
+      });
+  }
+
+  deletePantryItem(item: FoodItemI): Observable<FoodItemI> {
+    return this.http.post<FoodItemI>(
+      this.url+'/removeFromPantry',
+      {
+        "food": {
+          "name": item.name,
+          "quantity": item.quantity,
+          "weight": item.weight,
+        },
+        "user": {
+          "username": "Frank",
+          "email": "test@example.com"
+        }
+      });
+  }
+  
 }
