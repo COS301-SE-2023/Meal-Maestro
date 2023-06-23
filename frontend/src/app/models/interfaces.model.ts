@@ -1,0 +1,1 @@
+export { FoodItemI } from './../models/fooditem.model';
