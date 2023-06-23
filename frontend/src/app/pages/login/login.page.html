@@ -18,6 +18,7 @@
           type="email"
           required="true"
           shape="round"
+          [(ngModel)]="user.email"
         >
         </ion-input>
         <br>
@@ -27,6 +28,7 @@
           type="password" 
           required="true"
           shape="round"
+          [(ngModel)]="user.password"
           >
         </ion-input>
       </ion-col>
@@ -39,8 +41,12 @@
         <ion-col></ion-col>
       </ion-row>
       <ion-row>
-        <a>Forget Password</a>
+        <a class="firstlink">Forget Password?</a>
       </ion-row>
+      <ion-row>
+        <a class="signup" (click)="goToSignup()">Don't have an account? Sign Up</a>
+      </ion-row>
+      
     </ion-grid>
   </ion-content>
 </body>
