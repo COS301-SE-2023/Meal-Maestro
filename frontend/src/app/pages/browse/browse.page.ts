@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { ExploreContainerComponent } from '../../components/explore-container/explore-container.component';
+//import { ExploreContainerComponent } from '../../components/explore-container/explore-container.component';
 import { Router } from '@angular/router';
 import { RecipeComponent } from '../../components/recipe/recipe.component';
 
@@ -11,7 +11,7 @@ import { RecipeComponent } from '../../components/recipe/recipe.component';
   templateUrl: './browse.page.html',
   styleUrls: ['./browse.page.scss'],
   standalone: true,
-  imports: [IonicModule, ExploreContainerComponent, RecipeComponent], 
+  imports: [IonicModule,  RecipeComponent], 
 })
 export class BrowsePage {
 
