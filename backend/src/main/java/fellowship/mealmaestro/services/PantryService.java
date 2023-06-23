@@ -16,8 +16,8 @@ public class PantryService {
     @Autowired
     private PantryRepository pantryRepository;
 
-    public void addToPantry(PantryRequestModel pantryRequest){
-        pantryRepository.addToPantry(pantryRequest);
+    public FoodModel addToPantry(PantryRequestModel pantryRequest){
+        return pantryRepository.addToPantry(pantryRequest);
     }
 
     public void removeFromPantry(PantryRequestModel pantryRequest){
