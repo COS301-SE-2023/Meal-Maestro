@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FoodItem } from '../models/fooditem.model';
+import { FoodItemI } from '../models/fooditem.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -11,7 +11,7 @@ export class PantryApiService {
 
   constructor(private http: HttpClient) { }
 
-  getPantryItems(): Observable<FoodItem[]> {
-    return this.http.get<FoodItem[]>('https://catfact.ninja/facts?limit=2');
+  getPantryItems(): Observable<FoodItemI[]> {
+    return this.http.get<FoodItemI[]>('https://catfact.ninja/facts?limit=2');
   }
 }
