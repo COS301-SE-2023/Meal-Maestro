@@ -52,6 +52,24 @@ public class openaiApiService {
         return jsonRequest;
     }
 
+    public String buildJsonApiRequest(String prompt){
+        String jsonRequest = "{" 
+
+        + "\"" + "model" + "\":" + "\"" + model + "\","
+        + "\"" + "prompt" + "\":" + "\"" + prompt + "\","
+
+        + "\"" + "temperature" + "\":" + "\"" + temperature + "\","
+        + "\"" + "max_tokens" + "\":" + "\"" + maximumTokenLength + "\","
+        + "\"" + "top_p" + "\":" + "\"" + topP + "\","
+
+        + "\"" + "frequency_penalty" + "\":" + "\"" + freqPenalty + "\","
+        + "\"" + "presence_penalty" + "\":" + "\"" + presencePenalty + "\""
+
+        + "}";
+        
+        return jsonRequest;
+    }
+
     public void setModel(String model){
         this.model = model;
     }
@@ -75,6 +93,8 @@ public class openaiApiService {
     public void setPresencePenalty(double x){
         this.temperature = x;
     }
+
+
 
 
 
