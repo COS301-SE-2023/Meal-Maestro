@@ -32,7 +32,7 @@ public class openaiApiService {
 
     // builds the json styles api request string
     public String buildJsonApiRequest(){
-        
+
         String prompt = buildPrompt("", "", "", "", "");
 
         String jsonRequest = "{" 
@@ -52,7 +52,9 @@ public class openaiApiService {
         return jsonRequest;
     }
 
-    
+    public void setModel(String model){
+        this.model = model;
+    }
 
 
 
