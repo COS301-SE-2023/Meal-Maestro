@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ActionSheetController, IonItemSliding, IonicModule } from '@ionic/angular';
 import { FoodItemI } from '../../models/interfaces.model';
 import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
@@ -12,6 +12,7 @@ import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
 })
 export class FoodListItemComponent  implements OnInit {
   @Input() item! : FoodItemI;
+  @Output() itemDeleted: EventEmitter<FoodItemI> = new EventEmitter<FoodItemI>();
   @ViewChild(IonItemSliding, { static: false }) slidingItem!: IonItemSliding;
 
   constructor(private pantryService : PantryApiService, private actionSheetController: ActionSheetController) { }
@@ -46,13 +47,15 @@ export class FoodListItemComponent  implements OnInit {
     if (role === 'destructive') {
       this.closeItem();
       this.deleteItem(data);
+    }else if(role === 'cancel'){
+      this.closeItem();
     }
   }
 
   async deleteItem(food : FoodItemI){
-     this.pantryService.deletePantryItem(food).subscribe((data) => {
-      console.log(data);
-    });
+     this.pantryService.deletePantryItem(food).subscribe(() => {
+      this.itemDeleted.emit(food)
+     });
   }
 
   async editItem(){

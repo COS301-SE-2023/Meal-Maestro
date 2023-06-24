@@ -16,7 +16,11 @@
     <ion-grid >
       <ion-row *ngSwitchCase="'pantry'">
         <ion-col size="12">
-          <app-food-list-item *ngFor="let item of pantryItems" [item]="item"></app-food-list-item>
+          <app-food-list-item 
+          *ngFor="let item of pantryItems" 
+          [item]="item" 
+          (itemDeleted)="onItemDeleted($event)">
+        </app-food-list-item>
           <div *ngIf="pantryItems.length === 0">Pantry is empty</div>
         </ion-col>
       </ion-row>

@@ -24,8 +24,8 @@ export class PantryPage implements OnInit{
   pantryItems: FoodItemI[] = [];
   newItem: FoodItemI = {
     name: '',
-    quantity: 0,
-    weight: 0,
+    quantity: null,
+    weight: null,
   };
 
   constructor(public r : Router, private pantryService: PantryApiService) {}
@@ -45,11 +45,16 @@ export class PantryPage implements OnInit{
         this.pantryItems.push(data);
         this.newItem = {
           name: '',
-          quantity: 0,
-          weight: 0,
+          quantity: null,
+          weight: null,
         };
       });
     }
+  }
+
+  onItemDeleted(item : FoodItemI){
+    console.log("test" + item.name);
+    this.pantryItems = this.pantryItems.filter((i) => i.name !== item.name);
   }
 
   closeSlidingItems(){
