@@ -1,5 +1,9 @@
 package fellowship.mealmaestro.services;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -8,7 +12,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 @Service
 public class openaiApiService {
     Dotenv dotenv = Dotenv.load();
-    private static final String OPENAI_URL = "";
+    private static final String OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 
     private final String API_KEY = dotenv.get("OPENAI_API_KEY");
     private final RestTemplate restTemplate = new RestTemplate();
@@ -22,16 +26,36 @@ public class openaiApiService {
     private double presencePenalty = 0.0;
 
     private int maximumTokenLength = 300;
-
+    
     // potential vars
-    // will make a few prompts and return best, heavy on token use
-    private int bestOfN = 1;
-    // detect abuse
-    private String user = "";
-    // echo back prompt and its compeletion
-    private boolean echo = false;
-    // stream prompt as it generates
-    private boolean stream = false;
+        // will make a few prompts and return best, heavy on token use
+        private int bestOfN = 1;
+        // detect abuse
+        private String user = "";
+        // echo back prompt and its compeletion
+        private boolean echo = false;
+        // stream prompt as it generates
+        private boolean stream = false;
+
+    public String getJSONResponse(){
+       
+        String prompt;
+        String jsonRequest;
+
+        openaiPromptBuilder pBuilder = new openaiPromptBuilder();
+        prompt = pBuilder.buildPrompt();
+        jsonRequest = buildJsonApiRequest(prompt);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + API_KEY);
+
+        HttpEntity<String> request = new HttpEntity<String>(jsonRequest, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(OPENAI_URL, request, String.class);
+
+        return response.getBody();
+    }
+
 
     // puts together prompt from common best practises
     public String buildPrompt(String context, String goal, String format, String secondaryTasks, String examples) {
