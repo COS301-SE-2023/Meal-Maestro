@@ -91,7 +91,7 @@ export class PantryPage implements OnInit{
   }
 
   segmentChanged(event : any){
-    if (event.detail.value !== 'pantry' || event.detail.value !== 'shopping'){
+    if (event.detail.value !== 'pantry' && event.detail.value !== 'shopping'){
       this.segment = 'pantry';
     }else{
       this.segment = event.detail.value;

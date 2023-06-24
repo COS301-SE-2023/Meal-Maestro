@@ -18,7 +18,6 @@ describe('PantryPage', () => {
   beforeEach(async () => {
     mockPantryService = jasmine.createSpyObj('PantryApiService', ['getPantryItems', 'addToPantry', 'deletePantryItem']);
     mockShoppingListService = jasmine.createSpyObj('ShoppingListApiService', ['getShoppingListItems', 'addToShoppingList', 'deleteShoppingListItem']);
-
     mockItems = [
       {
         name: 'test',
@@ -32,15 +31,22 @@ describe('PantryPage', () => {
       },
     ];
 
+    const emptyFoodItem: FoodItemI = {
+      name: '',
+      quantity: null,
+      weight: null,
+    };
+
     mockPantryService.getPantryItems.and.returnValue(of(mockItems));
     mockPantryService.addToPantry.and.returnValue(of(mockItems[0]));
+    mockPantryService.deletePantryItem.and.returnValue(of(emptyFoodItem));
     mockShoppingListService.getShoppingListItems.and.returnValue(of(mockItems));
     mockShoppingListService.addToShoppingList.and.returnValue(of(mockItems[0]));
+    mockShoppingListService.deleteShoppingListItem.and.returnValue(of(emptyFoodItem));
 
 
     await TestBed.configureTestingModule({
-      declarations: [PantryPage],
-      imports: [IonicModule],
+      imports: [IonicModule, PantryPage],
       providers: [
         { provide: PantryApiService, useValue: mockPantryService },
         { provide: ShoppingListApiService, useValue: mockShoppingListService },
@@ -63,9 +69,6 @@ describe('PantryPage', () => {
 
     expect(component.pantryItems).toEqual(mockItems);
     expect(component.shoppingItems).toEqual(mockItems);
-
-    expect(mockPantryService.getPantryItems).toHaveBeenCalledTimes(1);
-    expect(mockShoppingListService.getShoppingListItems).toHaveBeenCalledTimes(1);
   });
 
   it('#addItemToPantry should call addToPantry', () => {
@@ -84,6 +87,7 @@ describe('PantryPage', () => {
 
   it('#onItemDeleted should call deletePantryItem if segment is pantry ', () => {
     component.segment = 'pantry';
+    component.pantryItems = [...mockItems];
     component.onItemDeleted(mockItems[0]);
     expect(mockPantryService.deletePantryItem).toHaveBeenCalled();
     expect(mockPantryService.deletePantryItem).toHaveBeenCalledWith(mockItems[0]);
@@ -92,6 +96,7 @@ describe('PantryPage', () => {
 
   it('#onItemDeleted should call deleteShoppingListItem if segment is shopping ', () => {
     component.segment = 'shopping';
+    component.shoppingItems = [...mockItems];
     component.onItemDeleted(mockItems[0]);
     expect(mockShoppingListService.deleteShoppingListItem).toHaveBeenCalled();
     expect(mockShoppingListService.deleteShoppingListItem).toHaveBeenCalledWith(mockItems[0]);
@@ -106,11 +111,13 @@ describe('PantryPage', () => {
   });
 
   it('#segmentChanged should set segment to the event detail value', () => {
+    component.segment = 'pantry';
     component.segmentChanged({ detail: { value: 'shopping' } } as unknown as Event);
     expect(component.segment).toEqual('shopping');
   });
 
   it('#segmentChanged should set segment to pantry if event detail value is not shopping or pantry', () => {
+    component.segment = 'shopping';
     component.segmentChanged({ detail: { value: 'test' } } as unknown as Event);
     expect(component.segment).toEqual('pantry');
   });

@@ -9,8 +9,7 @@ describe('FoodListItemComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FoodListItemComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), FoodListItemComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(FoodListItemComponent);

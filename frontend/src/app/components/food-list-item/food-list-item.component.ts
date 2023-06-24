@@ -134,7 +134,9 @@ export class FoodListItemComponent  implements OnInit {
     await picker.present();
   }
 
-  public async closeItem(){
-    this.slidingItem.close();
+  public closeItem(){
+    if (this.slidingItem) {
+      this.slidingItem.close();
+    }
   }
 }
