@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import io.github.cdimascio.dotenv.Dotenv;
 
 @Service
-public class openaiApiService {
+public class OpenaiApiService {
     Dotenv dotenv = Dotenv.load();
     private static final String OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 
@@ -42,7 +42,7 @@ public class openaiApiService {
         String prompt;
         String jsonRequest;
 
-        openaiPromptBuilder pBuilder = new openaiPromptBuilder();
+        OpenaiPromptBuilder pBuilder = new OpenaiPromptBuilder();
         prompt = pBuilder.buildPrompt();
         jsonRequest = buildJsonApiRequest(prompt);
 

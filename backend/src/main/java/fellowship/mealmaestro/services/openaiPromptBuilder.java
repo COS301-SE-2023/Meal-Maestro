@@ -3,7 +3,7 @@ package fellowship.mealmaestro.services;
 import org.springframework.stereotype.Service;
 
 @Service
-public class openaiPromptBuilder {
+public class OpenaiPromptBuilder {
 
     public String buildPrompt(){
         String prompt = "";
