@@ -60,6 +60,22 @@ public class openaiApiService {
         this.stop = Stop;
     }
 
+    public void setTemperature(double x){
+        this.temperature = x;
+    }
+
+    public void setTopP(double x){
+        this.topP = x;
+    }
+
+    public void setfreqPenalty(double x){
+        this.temperature = x;
+    }
+
+    public void setPresencePenalty(double x){
+        this.temperature = x;
+    }
+
 
 
 }
