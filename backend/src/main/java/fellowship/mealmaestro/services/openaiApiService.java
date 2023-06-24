@@ -19,14 +19,41 @@ public class openaiApiService {
     private String stop = "";
     private double temperature = 0.3;
     private double topP = 0.9;
-    private double freqPenalty;
-    private double presencePenalty;
-    private int maximumLength = 300;
+    private double freqPenalty = 0.0;
+    private double presencePenalty = 0.0;
+    private int maximumTokenLength = 300;
 
+    //puts together prompt from common best practises
     public String buildPrompt(String context, String goal, String format, String secondaryTasks, String examples) {
-        String Prompt =context + "\r\n\r\n" + goal + "\r\n\r\n" + format + "\r\n\r\n" + secondaryTasks + "\r\n\r\n" + examples;
+        String Prompt = context + "\r\n\r\n" + goal + "\r\n\r\n" + format + "\r\n\r\n" + secondaryTasks + "\r\n\r\n" + examples;
        
         return Prompt;
     }
+
+    // builds the json styles api request string
+    public String buildJsonApiRequest(){
+        
+        String prompt = buildPrompt("", "", "", "", "");
+
+        String jsonRequest = "{" 
+
+        + "\"" + "model" + "\":" + "\"" + model + "\","
+        + "\"" + "prompt" + "\":" + "\"" + prompt + "\","
+
+        + "\"" + "temperature" + "\":" + "\"" + temperature + "\","
+        + "\"" + "max_tokens" + "\":" + "\"" + maximumTokenLength + "\","
+        + "\"" + "top_p" + "\":" + "\"" + topP + "\","
+
+        + "\"" + "frequency_penalty" + "\":" + "\"" + freqPenalty + "\","
+        + "\"" + "presence_penalty" + "\":" + "\"" + presencePenalty + "\""
+
+        + "}";
+        
+        return jsonRequest;
+    }
+
+    
+
+
 
 }
