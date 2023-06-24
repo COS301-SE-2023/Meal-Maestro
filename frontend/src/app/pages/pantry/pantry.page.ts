@@ -1,13 +1,14 @@
 import { Component, OnInit, QueryList, ViewChildren, ViewChild } from '@angular/core';
-import { IonModal, IonicModule } from '@ionic/angular';
+import { IonModal, IonicModule, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FoodListItemComponent } from '../../components/food-list-item/food-list-item.component';
 import { FoodItemI } from '../../models/interfaces.model';
 import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
-import { OverlayEventDetail } from '@ionic/core/components';
 import { ShoppingListApiService } from '../../services/shopping-list-api/shopping-list-api.service';
+import { OverlayEventDetail } from '@ionic/core/components';
+import { ErrorHandlerService } from '../../services/error-handler/error-handler.service';
 
 
 @Component({
@@ -30,14 +31,33 @@ export class PantryPage implements OnInit{
     weight: null,
   };
 
-  constructor(public r : Router, private pantryService: PantryApiService, private shoppingListService: ShoppingListApiService) {}
+  constructor(public r : Router, 
+              private pantryService: PantryApiService, 
+              private shoppingListService: ShoppingListApiService,
+              private errorHandlerService: ErrorHandlerService) {}
 
   async ngOnInit() {
-    this.pantryService.getPantryItems().subscribe((data) => {
-      this.pantryItems = data;
-    });
-    this.shoppingListService.getShoppingListItems().subscribe((data) => {
-      this.shoppingItems = data;
+    this.pantryService.getPantryItems().subscribe({
+      next: (data) => {
+        this.pantryItems = data;
+      },
+      error: (err) => {
+        this.errorHandlerService.presentErrorToast(
+          'Error loading pantry items',
+          err
+        )
+      }
+    })
+    this.shoppingListService.getShoppingListItems().subscribe({
+      next: (data) => {
+        this.shoppingItems = data;
+      },
+      error: (err) => {
+        this.errorHandlerService.presentErrorToast(
+          'Error loading shopping list items',
+          err
+        )
+      }
     });
   }
 
@@ -45,14 +65,22 @@ export class PantryPage implements OnInit{
     var ev = event as CustomEvent<OverlayEventDetail<FoodItemI>>;
 
     if (ev.detail.role === 'confirm') {
-      this.pantryService.addToPantry(ev.detail.data!).subscribe((data) => {
-        console.log(data);
-        this.pantryItems.push(data);
-        this.newItem = {
-          name: '',
-          quantity: null,
-          weight: null,
-        };
+      this.pantryService.addToPantry(ev.detail.data!).subscribe({
+        next: (data) => {
+          console.log(data);
+          this.pantryItems.push(data);
+          this.newItem = {
+            name: '',
+            quantity: null,
+            weight: null,
+          };
+        },
+        error: (err) => {
+          this.errorHandlerService.presentErrorToast(
+            'Error adding item to pantry',
+            err
+          )
+        }
       });
     }
   }
@@ -60,26 +88,50 @@ export class PantryPage implements OnInit{
   async addItemToShoppingList(event : Event){
     var ev = event as CustomEvent<OverlayEventDetail<FoodItemI>>;
     if (ev.detail.role === 'confirm') {
-      this.shoppingListService.addToShoppingList(ev.detail.data!).subscribe((data) => {
-        console.log(data);
-        this.shoppingItems.push(data);
-        this.newItem = {
-          name: '',
-          quantity: null,
-          weight: null,
-        };
+      this.shoppingListService.addToShoppingList(ev.detail.data!).subscribe({
+        next: (data) => {
+          console.log(data);
+          this.shoppingItems.push(data);
+          this.newItem = {
+            name: '',
+            quantity: null,
+            weight: null,
+          };
+        },
+        error: (err) => {
+          this.errorHandlerService.presentErrorToast(
+            'Error adding item to shopping list',
+            err
+          )
+        }
       });
     }
   }
 
   onItemDeleted(item : FoodItemI){
     if (this.segment === 'pantry'){
-      this.pantryService.deletePantryItem(item).subscribe(() => {
-        this.pantryItems = this.pantryItems.filter((i) => i.name !== item.name);
+      this.pantryService.deletePantryItem(item).subscribe({
+        next: () => {
+          this.pantryItems = this.pantryItems.filter((i) => i.name !== item.name);
+        },
+        error: (err) => {
+          this.errorHandlerService.presentErrorToast(
+            'Error deleting item from pantry',
+            err
+          )
+        }
       });
     } else if (this.segment === 'shopping'){
-      this.shoppingListService.deleteShoppingListItem(item).subscribe(() => {
-        this.shoppingItems = this.shoppingItems.filter((i) => i.name !== item.name);
+      this.shoppingListService.deleteShoppingListItem(item).subscribe({
+        next: () => {
+          this.shoppingItems = this.shoppingItems.filter((i) => i.name !== item.name);
+        },
+        error: (err) => {
+          this.errorHandlerService.presentErrorToast(
+            'Error deleting item from shopping list',
+            err
+          )
+        }
       });
     }
   }
@@ -106,5 +158,4 @@ export class PantryPage implements OnInit{
   confirmModal(){
     this.modal.dismiss(this.newItem, 'confirm');
   }
-
 }

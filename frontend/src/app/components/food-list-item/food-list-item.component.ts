@@ -3,6 +3,7 @@ import { ActionSheetController, IonItemSliding, IonicModule, PickerController } 
 import { FoodItemI } from '../../models/interfaces.model';
 import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
 import { ShoppingListApiService } from '../../services/shopping-list-api/shopping-list-api.service';
+import { ErrorHandlerService } from '../../services/error-handler/error-handler.service';
 
 @Component({
   selector: 'app-food-list-item',
@@ -20,7 +21,8 @@ export class FoodListItemComponent  implements OnInit {
   constructor(private pantryService : PantryApiService, 
               private actionSheetController: ActionSheetController, 
               private pickerController: PickerController,
-              private shoppingListService: ShoppingListApiService) { }
+              private shoppingListService: ShoppingListApiService,
+              private errorHandlerService: ErrorHandlerService) { }
 
   ngOnInit() {}
 
@@ -115,16 +117,26 @@ export class FoodListItemComponent  implements OnInit {
               weight: value.weight.value,
             }
             if(this.segment === 'pantry') {
-              this.pantryService.updatePantryItem(updatedItem).subscribe(() => {
-                this.item.quantity = value.quantity.value;
-                this.item.weight = value.weight.value;
-                this.closeItem();
+              this.pantryService.updatePantryItem(updatedItem).subscribe({
+                next: () => {
+                  this.item.quantity = value.quantity.value;
+                  this.item.weight = value.weight.value;
+                  this.closeItem();
+                },
+                error: (err) => {
+                  this.errorHandlerService.presentErrorToast('Error updating item', err);
+                }
               });
             } else if (this.segment === 'shopping') {
-              this.shoppingListService.updateShoppingListItem(updatedItem).subscribe(() => {
-                this.item.quantity = value.quantity.value;
-                this.item.weight = value.weight.value;
-                this.closeItem();
+              this.shoppingListService.updateShoppingListItem(updatedItem).subscribe({
+                next: () => {
+                  this.item.quantity = value.quantity.value;
+                  this.item.weight = value.weight.value;
+                  this.closeItem();
+                },
+                error: (err) => {
+                  this.errorHandlerService.presentErrorToast('Error updating item', err);
+                }
               });
             }
           },
