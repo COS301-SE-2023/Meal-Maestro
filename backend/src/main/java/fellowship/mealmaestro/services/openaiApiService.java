@@ -37,13 +37,13 @@ public class OpenaiApiService {
         // stream prompt as it generates
         private boolean stream = false;
 
-    public String getJSONResponse(){
+    public String getJSONResponse(String Type){
        
         String prompt;
         String jsonRequest;
 
         OpenaiPromptBuilder pBuilder = new OpenaiPromptBuilder();
-        prompt = pBuilder.buildPrompt();
+        prompt = pBuilder.buildPrompt(Type);
         jsonRequest = buildJsonApiRequest(prompt);
 
         HttpHeaders headers = new HttpHeaders();

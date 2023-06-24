@@ -5,23 +5,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class OpenaiPromptBuilder {
 
-    public String buildPrompt(){
+    public String buildPrompt(String Type){
         String prompt = "";
         
-        prompt += buildContext();
+        prompt += buildContext(Type);
         prompt += buildGoal();
         prompt += buildFormat();
         prompt += buildSubtasks();
         prompt += buildExample();
-        
+
         prompt +="\r\n";
         return prompt;
     }
     
-    public String buildContext(){
+    public String buildContext(String Type){
         String res = "";
         res = "Act as a system that creates a meal for a user.\n"
-        +"The meal should be a dinner and should not be difficult to cook.\n";
+        +"The meal should be a "+ Type +" and should not be difficult to cook.\n";
         return res;
     }
 
