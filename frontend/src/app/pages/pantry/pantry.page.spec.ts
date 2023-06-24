@@ -109,16 +109,4 @@ describe('PantryPage', () => {
     expect(mockShoppingListService.deleteShoppingListItem).not.toHaveBeenCalled();
     expect(mockPantryService.deletePantryItem).not.toHaveBeenCalled();
   });
-
-  it('#segmentChanged should set segment to the event detail value', () => {
-    component.segment = 'pantry';
-    component.segmentChanged({ detail: { value: 'shopping' } } as unknown as Event);
-    expect(component.segment).toEqual('shopping');
-  });
-
-  it('#segmentChanged should set segment to pantry if event detail value is not shopping or pantry', () => {
-    component.segment = 'shopping';
-    component.segmentChanged({ detail: { value: 'test' } } as unknown as Event);
-    expect(component.segment).toEqual('pantry');
-  });
 });

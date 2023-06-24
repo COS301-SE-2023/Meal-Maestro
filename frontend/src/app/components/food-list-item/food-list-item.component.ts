@@ -46,6 +46,7 @@ export class FoodListItemComponent  implements OnInit {
         },
       ],
     });
+    console.log("actionSheet: ", actionSheet);
     await actionSheet.present();
 
     const { data, role } = await actionSheet.onDidDismiss();
