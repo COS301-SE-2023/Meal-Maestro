@@ -7,6 +7,7 @@ import { FoodListItemComponent } from '../../components/food-list-item/food-list
 import { FoodItemI } from '../../models/interfaces.model';
 import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
 import { OverlayEventDetail } from '@ionic/core/components';
+import { ShoppingListApiService } from '../../services/shopping-list-api/shopping-list-api.service';
 
 
 @Component({
@@ -20,19 +21,23 @@ export class PantryPage implements OnInit{
   @ViewChildren(FoodListItemComponent) foodListItem!: QueryList<FoodListItemComponent>;
   @ViewChild(IonModal) modal!: IonModal;
 
-  segment: string = 'pantry';
+  segment: 'pantry'|'shopping' = 'pantry';
   pantryItems: FoodItemI[] = [];
+  shoppingItems: FoodItemI[] = [];
   newItem: FoodItemI = {
     name: '',
     quantity: null,
     weight: null,
   };
 
-  constructor(public r : Router, private pantryService: PantryApiService) {}
+  constructor(public r : Router, private pantryService: PantryApiService, private shoppingListService: ShoppingListApiService) {}
 
   async ngOnInit() {
     this.pantryService.getPantryItems().subscribe((data) => {
       this.pantryItems = data;
+    });
+    this.shoppingListService.getShoppingListItems().subscribe((data) => {
+      this.shoppingItems = data;
     });
   }
 
@@ -52,9 +57,31 @@ export class PantryPage implements OnInit{
     }
   }
 
+  async addItemToShoppingList(event : Event){
+    var ev = event as CustomEvent<OverlayEventDetail<FoodItemI>>;
+    if (ev.detail.role === 'confirm') {
+      this.shoppingListService.addToShoppingList(ev.detail.data!).subscribe((data) => {
+        console.log(data);
+        this.shoppingItems.push(data);
+        this.newItem = {
+          name: '',
+          quantity: null,
+          weight: null,
+        };
+      });
+    }
+  }
+
   onItemDeleted(item : FoodItemI){
-    console.log("test" + item.name);
-    this.pantryItems = this.pantryItems.filter((i) => i.name !== item.name);
+    if (this.segment === 'pantry'){
+      this.pantryService.deletePantryItem(item).subscribe(() => {
+        this.pantryItems = this.pantryItems.filter((i) => i.name !== item.name);
+      });
+    } else if (this.segment === 'shopping'){
+      this.shoppingListService.deleteShoppingListItem(item).subscribe(() => {
+        this.shoppingItems = this.shoppingItems.filter((i) => i.name !== item.name);
+      });
+    }
   }
 
   closeSlidingItems(){

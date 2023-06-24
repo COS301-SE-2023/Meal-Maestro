@@ -16,8 +16,8 @@ public class ShoppingListService {
     @Autowired
     private ShoppingListRepository shoppingListRepository;
 
-    public void addToShoppingList(ShoppingListRequestModel request){
-        shoppingListRepository.addToShoppingList(request);
+    public FoodModel addToShoppingList(ShoppingListRequestModel request){
+        return shoppingListRepository.addToShoppingList(request);
     }
 
     public void removeFromShoppingList(ShoppingListRequestModel request){

@@ -25,22 +25,24 @@ public class ShoppingListRepository {
     }
 
     //#region Create
-    public void addToShoppingList(ShoppingListRequestModel request){
+    public FoodModel addToShoppingList(ShoppingListRequestModel request){
         FoodModel food = request.getFood();
         UserModel user = request.getUser();
         try (Session session = driver.session()){
-            session.executeWrite(addToShoppingListTransaction(food, user.getUsername(), user.getEmail()));
+            return session.executeWrite(addToShoppingListTransaction(food, user.getUsername(), user.getEmail()));
         }
     }
 
-    public static TransactionCallback<Void> addToShoppingListTransaction(FoodModel food, String username, String email){
+    public static TransactionCallback<FoodModel> addToShoppingListTransaction(FoodModel food, String username, String email){
         return transaction -> {
             transaction.run("MATCH (User{username: $username, email: $email})-[:HAS_LIST]->(s:`Shopping List`) \r\n" + //
                         "CREATE (s)-[:IN_LIST]->(:Food {name: $name, quantity: $quantity, weight: $weight})",
 
             Values.parameters("username", username, "email", email, "name", food.getName(),
                         "quantity", food.getQuantity(), "weight", food.getWeight()));
-            return null;
+
+            FoodModel addedFood = new FoodModel(food.getName(), food.getQuantity(), food.getWeight());
+            return addedFood;
         };
     }
     /*  Example Post data:

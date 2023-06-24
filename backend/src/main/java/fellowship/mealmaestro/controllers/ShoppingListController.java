@@ -20,8 +20,8 @@ public class ShoppingListController {
     private ShoppingListService shoppingListService;
 
     @PostMapping("/addToShoppingList")
-    public void addToShoppingList(@Valid @RequestBody ShoppingListRequestModel request){
-        shoppingListService.addToShoppingList(request);
+    public FoodModel addToShoppingList(@Valid @RequestBody ShoppingListRequestModel request){
+        return shoppingListService.addToShoppingList(request);
     }
 
     @PostMapping("/removeFromShoppingList")

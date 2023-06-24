@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { ActionSheetController, IonItemSliding, IonicModule, PickerController } from '@ionic/angular';
 import { FoodItemI } from '../../models/interfaces.model';
 import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
+import { ShoppingListApiService } from '../../services/shopping-list-api/shopping-list-api.service';
 
 @Component({
   selector: 'app-food-list-item',
@@ -12,10 +13,14 @@ import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
 })
 export class FoodListItemComponent  implements OnInit {
   @Input() item! : FoodItemI;
+  @Input() segment! : 'pantry' | 'shopping';
   @Output() itemDeleted: EventEmitter<FoodItemI> = new EventEmitter<FoodItemI>();
   @ViewChild(IonItemSliding, { static: false }) slidingItem!: IonItemSliding;
 
-  constructor(private pantryService : PantryApiService, private actionSheetController: ActionSheetController, private pickerController: PickerController) { }
+  constructor(private pantryService : PantryApiService, 
+              private actionSheetController: ActionSheetController, 
+              private pickerController: PickerController,
+              private shoppingListService: ShoppingListApiService) { }
 
   ngOnInit() {}
 
@@ -46,16 +51,10 @@ export class FoodListItemComponent  implements OnInit {
     const { data, role } = await actionSheet.onDidDismiss();
     if (role === 'destructive') {
       this.closeItem();
-      this.deleteItem(data);
+      this.itemDeleted.emit(data)
     }else if(role === 'cancel'){
       this.closeItem();
     }
-  }
-
-  async deleteItem(food : FoodItemI){
-     this.pantryService.deletePantryItem(food).subscribe(() => {
-      this.itemDeleted.emit(food)
-     });
   }
 
   async openEditPicker(){
@@ -114,21 +113,25 @@ export class FoodListItemComponent  implements OnInit {
               quantity: value.quantity.value,
               weight: value.weight.value,
             }
-            this.pantryService.updatePantryItem(updatedItem).subscribe(() => {
-              this.item.quantity = value.quantity.value;
-              this.item.weight = value.weight.value;
-              this.closeItem();
-            });
+            if(this.segment === 'pantry') {
+              this.pantryService.updatePantryItem(updatedItem).subscribe(() => {
+                this.item.quantity = value.quantity.value;
+                this.item.weight = value.weight.value;
+                this.closeItem();
+              });
+            } else if (this.segment === 'shopping') {
+              this.shoppingListService.updateShoppingListItem(updatedItem).subscribe(() => {
+                this.item.quantity = value.quantity.value;
+                this.item.weight = value.weight.value;
+                this.closeItem();
+              });
+            }
           },
         },
       ],
       backdropDismiss: true,
     });
     await picker.present();
-  }
-
-  async editItem(){
-    console.log("edit item clicked " + this.item.name);
   }
 
   public async closeItem(){
