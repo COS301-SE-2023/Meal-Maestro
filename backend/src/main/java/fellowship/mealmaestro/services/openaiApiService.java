@@ -12,16 +12,30 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class openaiApiService {
     Dotenv dotenv = Dotenv.load();
     private static final String OPENAI_URL = "";
+
     private final String API_KEY = dotenv.get("OPENAI_API_KEY");
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private String model = "gpt-3.5-turbo-0613";
+    private String model = "text-davinci-003";
     private String stop = "";
+
     private double temperature = 0.3;
     private double topP = 0.9;
     private double freqPenalty = 0.0;
     private double presencePenalty = 0.0;
+
     private int maximumTokenLength = 300;
+
+    //potential vars
+    //will make a few prompts and return best, heavy on token use
+    private int bestOfN = 1;
+    //detect abuse
+    private String user = "";
+    //echo back prompt and its compeletion
+    private boolean echo = false;
+    //stream prompt as it generates
+    private boolean stream = false;
+
 
     //puts together prompt from common best practises
     public String buildPrompt(String context, String goal, String format, String secondaryTasks, String examples) {
@@ -30,7 +44,7 @@ public class openaiApiService {
         return Prompt;
     }
 
-    // builds the json styles api request string
+    // builds the json styles api request string /////////////////
     public String buildJsonApiRequest(){
 
         String prompt = buildPrompt("", "", "", "", "");
@@ -40,36 +54,40 @@ public class openaiApiService {
         + "\"" + "model" + "\":" + "\"" + model + "\","
         + "\"" + "prompt" + "\":" + "\"" + prompt + "\","
 
-        + "\"" + "temperature" + "\":" + "\"" + temperature + "\","
-        + "\"" + "max_tokens" + "\":" + "\"" + maximumTokenLength + "\","
-        + "\"" + "top_p" + "\":" + "\"" + topP + "\","
+        + "\"" + "temperature" + "\":" + temperature + ","
+        + "\"" + "max_tokens" + "\":" + maximumTokenLength + ","
+        + "\"" + "top_p" + "\":" + topP + ","
 
-        + "\"" + "frequency_penalty" + "\":" + "\"" + freqPenalty + "\","
-        + "\"" + "presence_penalty" + "\":" + "\"" + presencePenalty + "\""
+        + "\"" + "frequency_penalty" + "\":"  + freqPenalty + ","
+        + "\"" + "presence_penalty" + "\":"  + presencePenalty + ","
+
+        + "\"" + "n" + "\":"  + bestOfN + ""
 
         + "}";
         
         return jsonRequest;
     }
-
+    // build on predetermined prompt
     public String buildJsonApiRequest(String prompt){
         String jsonRequest = "{" 
 
         + "\"" + "model" + "\":" + "\"" + model + "\","
         + "\"" + "prompt" + "\":" + "\"" + prompt + "\","
+        // doubles and ints dont get qouted
+        + "\"" + "temperature" + "\":"  + temperature + ","
+        + "\"" + "max_tokens" + "\":"  + maximumTokenLength + ","
+        + "\"" + "top_p" + "\":"  + topP + ","
 
-        + "\"" + "temperature" + "\":" + "\"" + temperature + "\","
-        + "\"" + "max_tokens" + "\":" + "\"" + maximumTokenLength + "\","
-        + "\"" + "top_p" + "\":" + "\"" + topP + "\","
-
-        + "\"" + "frequency_penalty" + "\":" + "\"" + freqPenalty + "\","
-        + "\"" + "presence_penalty" + "\":" + "\"" + presencePenalty + "\""
+        + "\"" + "frequency_penalty" + "\":" + freqPenalty + ","
+        + "\"" + "presence_penalty" + "\":" + presencePenalty 
 
         + "}";
         
         return jsonRequest;
     }
+    ///////////////////////////////////////////////////////////
 
+    // setters ////////////////////////////////////////////////
     public void setModel(String model){
         this.model = model;
     }
@@ -93,7 +111,7 @@ public class openaiApiService {
     public void setPresencePenalty(double x){
         this.temperature = x;
     }
-
+    //////////////////////////////////////////////////////////////
 
 
 
