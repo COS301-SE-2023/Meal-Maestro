@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { FoodItem } from '../../models/fooditem.model';
+import { FoodItemI } from '../../models/interfaces.model';
 import { PantryApiService } from '../../services/pantry-api.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { PantryApiService } from '../../services/pantry-api.service';
   imports: [IonicModule],
 })
 export class FoodListItemComponent  implements OnInit {
-  @Input() item! : FoodItem;
+  @Input() item! : FoodItemI;
   constructor(pantryService : PantryApiService) { }
 
   ngOnInit() {}

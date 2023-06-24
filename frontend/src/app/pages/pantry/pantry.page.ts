@@ -3,7 +3,7 @@ import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FoodListItemComponent } from '../../components/food-list-item/food-list-item.component';
-import { FoodItem } from '../../models/fooditem.model';
+import { FoodItemI } from '../../models/fooditem.model';
 import { PantryApiService } from '../../services/pantry-api.service';
 
 
@@ -17,7 +17,7 @@ import { PantryApiService } from '../../services/pantry-api.service';
 export class PantryPage implements OnInit{
 
   segment: string = 'pantry';
-  pantryItems: FoodItem[] = [];
+  pantryItems: FoodItemI[] = [];
 
   constructor(public r : Router, private pantryService: PantryApiService) {}
 
