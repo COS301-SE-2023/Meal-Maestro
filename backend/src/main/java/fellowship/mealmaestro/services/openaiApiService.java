@@ -56,6 +56,10 @@ public class openaiApiService {
         this.model = model;
     }
 
+    public void setStop(String Stop){
+        this.stop = Stop;
+    }
+
 
 
 }
