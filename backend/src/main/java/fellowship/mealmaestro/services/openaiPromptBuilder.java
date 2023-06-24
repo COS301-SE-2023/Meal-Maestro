@@ -13,6 +13,7 @@ public class OpenaiPromptBuilder {
         prompt += buildFormat();
         prompt += buildSubtasks();
         prompt += buildExample();
+        
         prompt +="\r\n";
         return prompt;
     }
