@@ -21,7 +21,7 @@ export class PantryPage implements OnInit{
   @ViewChildren(FoodListItemComponent) foodListItem!: QueryList<FoodListItemComponent>;
   @ViewChild(IonModal) modal!: IonModal;
 
-  segment: 'pantry'|'shopping' = 'pantry';
+  segment: 'pantry'|'shopping'| null = 'pantry';
   pantryItems: FoodItemI[] = [];
   shoppingItems: FoodItemI[] = [];
   newItem: FoodItemI = {
@@ -91,7 +91,11 @@ export class PantryPage implements OnInit{
   }
 
   segmentChanged(event : any){
-    this.segment = event.detail.value;
+    if (event.detail.value !== 'pantry' || event.detail.value !== 'shopping'){
+      this.segment = 'pantry';
+    }else{
+      this.segment = event.detail.value;
+    }
     this.closeSlidingItems();
   }
 
