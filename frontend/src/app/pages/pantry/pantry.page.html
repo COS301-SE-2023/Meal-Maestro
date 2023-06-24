@@ -1,17 +1,21 @@
- <body> 
-  <ion-content [fullscreen]="true" scrollY="true" [ngSwitch]="segment">
-    <ion-header>
-      <ion-toolbar>
-        <ion-segment [value]="segment" (ionChange)="segmentChanged($event)">
-          <ion-segment-button value="pantry">
-            <ion-label>Pantry</ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="shopping">
-            <ion-label>Shopping</ion-label>
-          </ion-segment-button>
-        </ion-segment>
-      </ion-toolbar>
-    </ion-header>
+   <ion-header>
+     <ion-toolbar color="tertiary">
+       <ion-segment [value]="segment" (ionChange)="segmentChanged($event)" >
+         <ion-segment-button value="pantry">
+           <ion-label>Pantry</ion-label>
+         </ion-segment-button>
+         <ion-segment-button value="shopping">
+           <ion-label>Shopping</ion-label>
+         </ion-segment-button>
+       </ion-segment>
+     </ion-toolbar>
+   </ion-header>
+   
+<ion-content [fullscreen]="true" scrollY="true" [ngSwitch]="segment">
+    <ion-item color="tertiary" class="header" slot="fixed">
+      <ion-label slot="start">Name</ion-label>
+      <ion-label slot="end">Quantity</ion-label>
+    </ion-item>
 
     <ion-grid >
       <ion-row *ngSwitchCase="'pantry'">
@@ -22,7 +26,7 @@
           [segment]="'pantry'"
           (itemDeleted)="onItemDeleted($event)">
           </app-food-list-item>
-          <div *ngIf="pantryItems.length === 0">Pantry is empty</div>
+          <div class="empty-list" *ngIf="pantryItems.length === 0">Pantry is empty :(</div>
         </ion-col>
       </ion-row>
 
@@ -34,7 +38,7 @@
           [segment]="'shopping'"
           (itemDeleted)="onItemDeleted($event)">
           ></app-food-list-item>
-          <div *ngIf="shoppingItems.length === 0">Shopping list is empty</div>
+          <div class="empty-list" *ngIf="shoppingItems.length === 0">Shopping list is empty :(</div>
         </ion-col>
       </ion-row>
     </ion-grid>
@@ -118,6 +122,5 @@
     </ion-modal>
 
 </ion-content>
-</body>
 
 
