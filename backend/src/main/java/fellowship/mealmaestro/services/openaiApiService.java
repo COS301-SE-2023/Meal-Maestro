@@ -20,12 +20,12 @@ public class OpenaiApiService {
     private String model = "text-davinci-003";
     private String stop = "";
 
-    private double temperature = 0.3;
-    private double topP = 0.9;
+    private double temperature = 0.2;
+    private double topP = 1.0;
     private double freqPenalty = 0.0;
     private double presencePenalty = 0.0;
 
-    private int maximumTokenLength = 300;
+    private int maximumTokenLength = 500;
     
     // potential vars
         // will make a few prompts and return best, heavy on token use
