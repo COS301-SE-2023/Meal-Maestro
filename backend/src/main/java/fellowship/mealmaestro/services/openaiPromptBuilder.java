@@ -4,6 +4,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class openaiPromptBuilder {
+
+    public String buildPrompt(){
+        String prompt = "";
+        
+        prompt += buildContext();
+        prompt += buildGoal();
+        prompt += buildFormat();
+        prompt += buildSubtasks();
+        prompt += buildExample();
+
+        return prompt;
+    }
+    
     public String buildContext(){
         String res = "";
 
