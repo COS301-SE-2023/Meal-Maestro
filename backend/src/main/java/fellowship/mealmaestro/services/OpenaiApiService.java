@@ -40,11 +40,11 @@ public class OpenaiApiService {
         // will make a few prompts and return best, heavy on token use
         private int bestOfN = 1;
         // detect abuse
-        private String user = "";
+       // private String user = "";
         // echo back prompt and its compeletion
-        private boolean echo = false;
+       // private boolean echo = false;
         // stream prompt as it generates
-        private boolean stream = false;
+       // private boolean stream = false;
 
     @Autowired private ObjectMapper jsonMapper = new ObjectMapper();
     @Autowired private OpenaiPromptBuilder pBuilder = new OpenaiPromptBuilder();

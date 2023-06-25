@@ -6,9 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import fellowship.mealmaestro.services.MealManagementService;
-import fellowship.mealmaestro.services.OpenaiApiService;
-
 @SpringBootApplication
 public class MealmaestroApplication {
 
