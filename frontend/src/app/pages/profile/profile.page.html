@@ -19,10 +19,11 @@
       <ion-card-title>Goal</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-    <ion-input label="Eating Goal" label-placement="floating" fill="outline" placeholder="Too Bulk up"  [(ngModel)]="userpreferances.goal"></ion-input>
+    <ion-input label="Eating Goal" label-placement="floating" fill="outline" placeholder="Too Bulk up"  [(ngModel)]="userpreferences.goal"></ion-input>
   </ion-card-content>
   </ion-card>
 <!-- the shopping interval -->
+
 <ion-card (click)="setOpenShopping(true)" class="ion-activatable">
   <ion-ripple-effect></ion-ripple-effect>
   <ion-card-header>
@@ -30,7 +31,7 @@
     <ion-card-subtitle>
       <div class="card-toggle">
         <div class="toggle-label">Shopping Interval</div>
-        <div class="toggle-value">{{ userpreferances.shopping_interval }}</div>
+        <div class="toggle-value">{{ userpreferences.shopping_interval }}</div>
         <ion-icon name="chevron-forward-outline" size="medium"></ion-icon>
       </div>
     </ion-card-subtitle>
@@ -51,44 +52,52 @@
       </ion-header>
       
       <ion-content>
-        <ion-card-content>
-          <ion-list>
-            <ion-radio-group [(ngModel)]="shopping_interval">
-              <ion-item>
-                <ion-radio label-placement="start" value="weekly">Weekly</ion-radio>
+        <ion-card>
+          <ion-card-content>
+            <ion-card-subtitle>
+            <div class="toggle-container">
+              <ion-label label-placement="start" class="toggle-label">Set shopping interval</ion-label>
+              <ion-toggle [(ngModel)]="shoppingintervalToggle" (ionChange)="shoppingInterval_Toggle()"></ion-toggle>
+            </div>
+          </ion-card-subtitle>
+            <ion-list>
+              <ion-radio-group [(ngModel)]="shopping_interval" >
+                <ion-item>
+                  <ion-radio label-placement="start" value="weekly" [disabled]="!userpreferences.shoppinginterfval_set">Weekly</ion-radio>
+                </ion-item>
+        
+                <ion-item>
+                  <ion-radio label-placement="start" value="biweekly"  [disabled]="!userpreferences.shoppinginterfval_set">Bi-Weekly</ion-radio>
+                </ion-item>
+        
+                <ion-item>
+                  <ion-radio label-placement="start" value="monthly" [disabled]="!userpreferences.shoppinginterfval_set">Monthly</ion-radio>
+                </ion-item>
+        
+                <ion-item>
+                  <ion-radio label-placement="start" value="other"  [disabled]="!userpreferences.shoppinginterfval_set">Other...</ion-radio>
+                </ion-item>
+              </ion-radio-group>
+        
+              <ion-item *ngIf="shopping_interval === 'other'">
+                <ion-label class="range-label">Every {{ shoppingIntervalOtherValue }} day(s)</ion-label>
               </ion-item>
-      
-              <ion-item>
-                <ion-radio label-placement="start" value="biweekly">Bi-Weekly</ion-radio>
+              
+              <ion-item *ngIf="shopping_interval === 'other'">
+                <ion-grid class="range-grid">
+                  <ion-row>
+                    <ion-col size="12">
+                      <ion-range min="1" max="30" [(ngModel)]="shoppingIntervalOtherValue" pin="true" step="1" snaps="true" ticks="false">
+                        <div slot="end">30</div>
+                        <div slot="start">1</div>
+                      </ion-range>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
               </ion-item>
-      
-              <ion-item>
-                <ion-radio label-placement="start" value="monthly">Monthly</ion-radio>
-              </ion-item>
-      
-              <ion-item>
-                <ion-radio label-placement="start" value="other">Other...</ion-radio>
-              </ion-item>
-            </ion-radio-group>
-      
-            <ion-item *ngIf="shopping_interval === 'other'">
-              <ion-label class="range-label">Every {{ shoppingIntervalOtherValue }} day(s)</ion-label>
-            </ion-item>
-            
-            <ion-item *ngIf="shopping_interval === 'other'">
-              <ion-grid class="range-grid">
-                <ion-row>
-                  <ion-col size="12">
-                    <ion-range min="1" max="30" [(ngModel)]="shoppingIntervalOtherValue" pin="true" step="1" snaps="true" ticks="false">
-                      <div slot="end">30</div>
-                      <div slot="start">1</div>
-                    </ion-range>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-            </ion-item>
-          </ion-list>
-        </ion-card-content>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
         <ion-card>
           <ion-card-content>
             <ion-text>
@@ -103,10 +112,8 @@
   </ion-modal>
 </ion-card>
 
-
  
 <!-- the food preferences -->
-
 
 <ion-card (click)="setOpenPreferences(true)" class="ion-activatable">
   <ion-ripple-effect></ion-ripple-effect>
@@ -133,21 +140,31 @@
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      <ion-content>
-        <ion-list>
-          <ion-item>
-            <ion-toggle [(ngModel)]="preferences.vegetarian">Vegetarian</ion-toggle>
-          </ion-item>
-          <ion-item>
-            <ion-toggle [(ngModel)]="preferences.vegan" >Vegan</ion-toggle>
-          </ion-item>
-          <ion-item>
-            <ion-toggle [(ngModel)]="preferences.glutenIntolerant">Gluten-intolerant</ion-toggle>
-          </ion-item>
-          <ion-item>
-            <ion-toggle [(ngModel)]="preferences.lactoseIntolerant">Lactose-intolerant</ion-toggle>
-          </ion-item>
-        </ion-list>
+      <ion-content> 
+        <ion-card>
+          <ion-card-content>
+            <ion-card-subtitle>
+            <div class="toggle-container">
+              <ion-label class="toggle-label">Set Preferences </ion-label>
+              <ion-toggle [(ngModel)]="preferenceToggle" (ionChange)="pereference_Toggle()"></ion-toggle>
+            </div>
+          </ion-card-subtitle>
+            <ion-list>
+              <ion-item>
+                <ion-toggle [disabled]="!userpreferences.foodpreferance_set" [(ngModel)]="preferences.vegetarian">Vegetarian</ion-toggle>
+              </ion-item>
+              <ion-item>
+                <ion-toggle [disabled]="!userpreferences.foodpreferance_set" [(ngModel)]="preferences.vegan" >Vegan</ion-toggle>
+              </ion-item>
+              <ion-item>
+                <ion-toggle [disabled]="!userpreferences.foodpreferance_set" [(ngModel)]="preferences.glutenIntolerant">Gluten-intolerant</ion-toggle>
+              </ion-item>
+              <ion-item>
+                <ion-toggle [disabled]="!userpreferences.foodpreferance_set" [(ngModel)]="preferences.lactoseIntolerant">Lactose-intolerant</ion-toggle>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
         <ion-card>
           <ion-card-content>
             <ion-text>
@@ -163,15 +180,16 @@
 </ion-card>
 
 
+
   <!-- The Calorie Counter -->
   <ion-card (click)="setOpenCalorie(true)" class="ion-activatable">
-  <ion-ripple-effect></ion-ripple-effect>
+    <ion-ripple-effect></ion-ripple-effect>
     <ion-card-header>
       <ion-card-title></ion-card-title>
       <ion-card-subtitle>
         <div class="card-toggle">
           <div class="toggle-label">Calorie Amount</div>
-          <div class="toggle-value">{{ userpreferances.calorie_amount }}</div>
+          <div class="toggle-value">{{ userpreferences.calorie_amount }}</div>
           <ion-icon name="chevron-forward-outline" size="medium"></ion-icon>
         </div>
       </ion-card-subtitle>
@@ -192,17 +210,24 @@
         </ion-header>
   
         <ion-content>
-          <ion-card-content>
-            <ion-list>
-              <ion-item>
-                <ion-range [pin]="true" [ticks]="true" [snaps]="true" min="0" max="5000" step="100" [value]="userpreferances.calorie_amount" color="primary" (ionChange)="showSelectedCalorieAmount($event)">
-                  <div slot="start">0</div>
-                  <div slot="end">5000</div>
-              
-                </ion-range>
-              </ion-item>
-            </ion-list>
-          </ion-card-content>
+          <ion-card>
+            <ion-card-content>
+              <ion-card-subtitle>
+              <div class="toggle-container">
+                <ion-label class="toggle-label">Set Calorie goal</ion-label>
+                <ion-toggle [(ngModel)]="calorieToggle" (ionChange)="calorieAmount_Toggle()"></ion-toggle>
+              </div>
+            </ion-card-subtitle>
+              <ion-list>
+                <ion-item [disabled]="!userpreferences.calorie_set">
+                  <ion-range [pin]="true" [ticks]="true" [snaps]="true" min="0" max="5000" step="100" [value]="userpreferences.calorie_amount" color="primary" (ionChange)="showSelectedCalorieAmount($event)">
+                    <div slot="start">0</div>
+                    <div slot="end">5000</div>
+                  </ion-range>
+                </ion-item>
+              </ion-list>
+            </ion-card-content>
+          </ion-card>
           <ion-card>
             <ion-card-content>
               <ion-text>
@@ -225,7 +250,7 @@
     <ion-card-subtitle>
       <div class="card-toggle">
         <div class="toggle-label">Budget Range</div>
-        <div class="toggle-value">{{ userpreferances.budget_range }}</div>
+        <div class="toggle-value">{{ userpreferences.budget_range }}</div>
         <ion-icon name="chevron-forward-outline" size="medium"></ion-icon>
       </div>
     </ion-card-subtitle>
@@ -246,42 +271,47 @@
       <ion-content>
         <ion-card>
           <ion-card-content>
+            <ion-card-subtitle>
+              <div class="toggle-container">
+                <ion-label class="toggle-label">Set up budget</ion-label>
+                <ion-toggle [(ngModel)]="budgetToggle" (ionChange)="budgetRange_Toggle()"></ion-toggle>
+              </div>
+            </ion-card-subtitle>
             <ion-list>
               <ion-radio-group [(ngModel)]="selectedPriceRange">
-                <ion-list-header>
-                  Price Range
-                </ion-list-header>
                 <ion-item>
-                  <ion-radio value="low">Low Budget</ion-radio>
+                  <ion-radio [disabled]="!userpreferences.budget_set" value="low">Low Budget</ion-radio>
                 </ion-item>
                 <ion-item>
-                  <ion-radio value="moderate">Moderate Budget</ion-radio>
+                  <ion-radio [disabled]="!userpreferences.budget_set" value="moderate">Moderate Budget</ion-radio>
                 </ion-item>
                 <ion-item>
-                  <ion-radio value="high">High Budget</ion-radio>
+                  <ion-radio [disabled]="!userpreferences.budget_set" value="high">High Budget</ion-radio>
                 </ion-item>
                 <ion-item>
-                  <ion-radio value="custom">Custom Amount</ion-radio>
+                  <ion-radio [disabled]="!userpreferences.budget_set" value="custom">Custom Amount</ion-radio>
                 </ion-item>
                 <ion-item *ngIf="selectedPriceRange === 'custom'">
-                  <ion-input type="number" label="Enter Custom Amount:" labelPlacement="floating" [(ngModel)]="userpreferances.budget_range" step="0.01" min="0" placeholder="Enter amount"></ion-input>
+                  <ion-input type="number" label="Enter Custom Amount:" labelPlacement="floating" [(ngModel)]="userpreferences.budget_range" step="0.01" min="0" placeholder="Enter amount"></ion-input>
                 </ion-item>
               </ion-radio-group>
             </ion-list>
           </ion-card-content>
         </ion-card>
         <ion-card>
-          <!-- discription of what the Budget range is is -->
           <ion-card-content>
             <ion-text>
               <p>
-                A weekly food budget for one person is the allocated amount of money specifically set aside for purchasing food for that individual throughout the week. It helps in planning grocery expenses and ensuring nutritional needs are met within a set financial limit.              </ion-text>
+                A weekly food budget for one person is the allocated amount of money specifically set aside for purchasing food for that individual throughout the week. It helps in planning grocery expenses and ensuring nutritional needs are met within a set financial limit.
+              </p>
+            </ion-text>
           </ion-card-content>
         </ion-card>
       </ion-content>
     </ng-template>
   </ion-modal>
 </ion-card>
+
 
 <!-- Macro Creator -->
 
@@ -291,7 +321,7 @@
     <ion-card-subtitle>
       <div class="card-toggle">
         <div class="toggle-label">Macro Creator</div>
-        <div class="toggle-value">{{ displaying_Macroratio }} </div>
+        <div class="toggle-value">{{ displaying_Macroratio }}</div>
         <ion-icon name="chevron-forward-outline" size="medium"></ion-icon>
       </div>
     </ion-card-subtitle>
@@ -312,11 +342,17 @@
       <ion-content>
         <ion-card>
           <ion-card-content>
+            <ion-card-subtitle>
+              <div class="toggle-container">
+                <ion-label class="toggle-label">Set up macros</ion-label>
+                <ion-toggle [(ngModel)]="macroToggle" (ionChange)="macro_Toggle()"></ion-toggle>
+              </div>
+            </ion-card-subtitle>
             <ion-list>
               <ion-item>
                 <ion-label>Macro Ratio:</ion-label>
-                <ion-button fill="clear" (click)="openPicker()">
-                  {{ userpreferances.macro_ratio.protien }} : {{ userpreferances.macro_ratio.carbs }} : {{ userpreferances.macro_ratio.fats }}
+                <ion-button fill="clear" (click)="openPicker()" [disabled]="!userpreferences.macro_set">
+                  {{ userpreferences.macro_ratio.protein }} : {{ userpreferences.macro_ratio.carbs }} : {{ userpreferences.macro_ratio.fats }}
                 </ion-button>
               </ion-item>
             </ion-list>
@@ -326,7 +362,7 @@
           <ion-card-content>
             <ion-text>
               <p>
-                A macro ratio is the proportion of carbohydrates, proteins, and fats in a person's diet. It describes how much of each macronutrient contributes to the total calorie intake. Common ratios, like the "40-30-30" ratio, specify the percentage of calories from each macronutrient. It helps customize nutrition for goals like weight loss, muscle gain, or performance. Consulting a professional is advised for personalized macro ratios.        
+                A macro ratio is the proportion of carbohydrates, proteins, and fats in a person's diet. It describes how much of each macronutrient contributes to the total calorie intake. Common ratios, like the "40-30-30" ratio, specify the percentage of calories from each macronutrient. It helps customize nutrition for goals like weight loss, muscle gain, or performance. Consulting a professional is advised for personalized macro ratios.
               </p>
             </ion-text>
           </ion-card-content>
@@ -335,7 +371,6 @@
     </ng-template>
   </ion-modal>
 </ion-card>
-
 
 
 <!-- Allergies -->
@@ -367,18 +402,24 @@
       <ion-content>
         <ion-card>
           <ion-card-content>
+            <ion-card-subtitle>
+            <div class="toggle-container">
+              <ion-label class="toggle-label">Set up allegies</ion-label>
+              <ion-toggle [(ngModel)]="allergiesToggle"  (ionChange)="allergies_Toggle()"></ion-toggle>
+            </div>
+          </ion-card-subtitle>
             <ion-list>
               <ion-item>
-                <ion-toggle [(ngModel)]="allergens.seafood">Seafood</ion-toggle>
+                <ion-toggle [disabled]="!userpreferences.allergies_set" [(ngModel)]="allergens.seafood">Seafood</ion-toggle>
               </ion-item>
               <ion-item>
-                <ion-toggle [(ngModel)]="allergens.nuts">Nuts</ion-toggle>
+                <ion-toggle [disabled]="!userpreferences.allergies_set" [(ngModel)]="allergens.nuts">Nuts</ion-toggle>
               </ion-item>
               <ion-item>
-                <ion-toggle [(ngModel)]="allergens.eggs">Eggs</ion-toggle>
+                <ion-toggle [disabled]="!userpreferences.allergies_set" [(ngModel)]="allergens.eggs">Eggs</ion-toggle>
               </ion-item>
               <ion-item>
-                <ion-toggle [(ngModel)]="allergens.soy">Soy</ion-toggle>
+                <ion-toggle [disabled]="!userpreferences.allergies_set" [(ngModel)]="allergens.soy">Soy</ion-toggle>
               </ion-item>
             </ion-list>
           </ion-card-content>
@@ -404,7 +445,7 @@
     <ion-card-subtitle>
       <div class="card-toggle">
         <div class="toggle-label">Cooking Time</div>
-        <div class="toggle-value">{{ userpreferances.cooking_time }}</div>
+        <div class="toggle-value">{{ userpreferences.cooking_time }}</div>
         <ion-icon name="chevron-forward-outline" size="medium"></ion-icon>
       </div>
     </ion-card-subtitle>
@@ -426,16 +467,22 @@
       <ion-content>
         <ion-card>
           <ion-card-content>
+            <ion-card-subtitle>
+            <div class="toggle-container">
+              <ion-label class="toggle-label">Set cooking time</ion-label>
+              <ion-toggle [(ngModel)]="cookingToggle"  (ionChange)="cookingtime_Toggle()"></ion-toggle>
+            </div>
+          </ion-card-subtitle>
             <ion-list>
-              <ion-radio-group [(ngModel)]="userpreferances.cooking_time">
+              <ion-radio-group [(ngModel)]="userpreferences.cooking_time">
                 <ion-item>
-                  <ion-radio label-placement="start" value="quick">Quick</ion-radio>
+                  <ion-radio [disabled]="!userpreferences.cookingtime_set" label-placement="start" value="quick">Quick</ion-radio>
                 </ion-item>
                 <ion-item>
-                  <ion-radio label-placement="start" value="medium">Medium</ion-radio>
+                  <ion-radio [disabled]="!userpreferences.cookingtime_set" label-placement="start" value="medium">Medium</ion-radio>
                 </ion-item>
                 <ion-item>
-                  <ion-radio label-placement="start" value="long">Long</ion-radio>
+                  <ion-radio [disabled]="!userpreferences.cookingtime_set" label-placement="start" value="long">Long</ion-radio>
                 </ion-item>
               </ion-radio-group>
             </ion-list>
@@ -465,7 +512,7 @@
     <ion-card-subtitle>
       <div class="card-toggle">
         <div class="toggle-label">BMI Calculator</div>
-        <div class="toggle-value">{{ userpreferances.user_BMI }}</div>
+        <div class="toggle-value">{{ userpreferences.user_BMI }}</div>
         <ion-icon name="chevron-forward-outline" size="medium"></ion-icon>
       </div>
     </ion-card-subtitle>
@@ -485,13 +532,19 @@
       </ion-header>
       <ion-content>
         <ion-card>
-          <ion-card-content>
+          <ion-card-content> 
+            <ion-card-subtitle>
+             <div class="toggle-container">
+              <ion-label class="toggle-label">Set up BMI </ion-label>
+            <ion-toggle [(ngModel)]="BMIToggle"  (ionChange)="BMI_Toggle()"></ion-toggle>
+          </div>
+        </ion-card-subtitle>
             <ion-list>
               <ion-item>
-                <ion-input type="number" [(ngModel)]="userpreferances.user_height" step="0.01" min="0" placeholder="Enter amount">Height (cm)</ion-input>
+                <ion-input [disabled]="!userpreferences.BMI_set" type="number" [(ngModel)]="userpreferences.user_height" step="0.01" min="0" placeholder="Enter amount">Height (cm)</ion-input>
               </ion-item>
               <ion-item>
-                <ion-input type="number" [(ngModel)]="userpreferances.user_weight" step="0.01" min="0" placeholder="Enter amount">Weight (kg)</ion-input>
+                <ion-input [disabled]="!userpreferences.BMI_set" type="number" [(ngModel)]="userpreferences.user_weight" step="0.01" min="0" placeholder="Enter amount">Weight (kg)</ion-input>
               </ion-item>
             </ion-list>
           </ion-card-content>
