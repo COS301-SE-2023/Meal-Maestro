@@ -1,52 +1,73 @@
 package fellowship.mealmaestro.services;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 
 @Service
 public class OpenaiPromptBuilder {
 
-    public String buildPrompt(String Type){
+    public String buildPrompt(String Type) throws JsonProcessingException {
         String prompt = "";
-        
+
         prompt += buildContext(Type);
         prompt += buildGoal();
         prompt += buildFormat();
         prompt += buildSubtasks();
         prompt += buildExample();
-
-        prompt +="\r\n";
+        prompt += " ";
+        
         return prompt;
     }
-    
-    public String buildContext(String Type){
+
+    public String buildContext(String Type) {
         String res = "";
-        res = "Act as a system that creates a meal for a user.\n"
-        +"The meal should be a "+ Type +" and should not be difficult to cook.\n";
+        res = ("Act as a system that creates a meal for a user.The meal should be a " + Type
+                + " and should not be difficult to cook.");
         return res;
     }
 
-    public String buildGoal(){
+    public String buildGoal() {
         String res = "";
-        res = "Pick a meal based on this information and use the following format, a JSON object:\n";
+        res = "Pick a meal based on this information and use the following format, a JSON object:";
         return res;
     }
 
-    public String buildFormat(){
+    public String buildFormat() throws JsonProcessingException {
+       
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "meal name");
+        params.put("description", "short description of meal");
+        params.put("cookingTime", "meal cooking time");
+        params.put("ingredients", "list of ingredients seperated by a new line");
+         params.put("instructions", "step by step instructions, numbered, and seperated by new lines");
+        
+        return new ObjectMapper().writeValueAsString(params.toString());
+
+        
+    }
+
+    public String buildSubtasks() {
         String res = "";
-        res = "{\n    \"name\":\"meal name\",\n    \"description\":\"short meal description\",\n    \"cookingTime\":\"meal cooking time\",\n"
-        + "\n    \"ingredients\":\"list of ingredients seperated by a new line\",\n    \"instructions\":\"step by step instructions, numbered, and seperated by new lines\"\n}\n";
+        res = "Then add that meals ingredients, and cooking instructions";
         return res;
     }
 
-    public String buildSubtasks(){
-        String res = "";
-        res = "Then add that meals ingredients, and cooking instructions\n";
-        return res;
-    }
-
-    public String buildExample(){
-        String res = "";
-        res = "Example:\n{\n    \"name\":\"Spaghetti\",\n    \"description\":\"a classic hearty italian dish of mince tomato and pasta\",\n    \"cookingTime\":\"40 minutes\",\n    \"ingredients\":\"Linguini/r/nMince/r/nTomato Pasta Sauce\",\n    \"instructions\":\"1. Bring a pot of water to a boil and then add a dash of salt and the Pasta/r/n2. Brown the mince in a pan/r/n3. Add the tomato sauce to the mince and set to simmer/r/n4. Safely remove and strain the pasta/r/n5. Turn off the mince and sauce when ready\"\n}";
-        return res;
+    public String buildExample() throws JsonProcessingException {
+       
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "Spaghetti");
+        params.put("description", "a classic hearty italian dish of mince tomato and pasta");
+        params.put("cookingTime", "40 minutes");
+        params.put("ingredients", "Linguini/r/nMince/r/nTomato Pasta Sauce");
+        params.put("instructions", "1. Bring a pot of water to a boil and then add a dash of salt and the Pasta/r/n2. Brown the mince in a pan/r/n3. Add the tomato sauce to the mince and set to simmer/r/n4. Safely remove and strain the pasta/r/n5. Turn off the mince and sauce when ready");
+        
+        return new ObjectMapper().writeValueAsString(params);
     }
 }
