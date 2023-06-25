@@ -47,13 +47,13 @@ public class OpenaiApiService {
         private boolean stream = false;
 
     @Autowired private ObjectMapper jsonMapper;
-    
+    @Autowired private OpenaiPromptBuilder pBuilder = new OpenaiPromptBuilder();
     public String getJSONResponse(String Type) throws JsonProcessingException{
        
         String prompt;
         String jsonRequest;
 
-        OpenaiPromptBuilder pBuilder = new OpenaiPromptBuilder();
+        
         prompt = pBuilder.buildPrompt(Type);
         jsonRequest = buildJsonApiRequest(prompt);
         
