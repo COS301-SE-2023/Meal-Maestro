@@ -23,11 +23,29 @@ public class OpenaiPromptBuilder {
         
         return prompt;
     }
+    public String buildPrompt(String Type, String extendedPrompt) throws JsonProcessingException {
+        String prompt = "";
+
+        prompt += buildContext(Type,extendedPrompt);
+        prompt += buildGoal();
+        prompt += buildFormat();
+        prompt += buildSubtasks();
+        prompt += buildExample();
+        prompt += " ";
+        
+        return prompt;
+    }
 
     public String buildContext(String Type) {
         String res = "";
         res = ("Act as a system that creates a meal for a user.The meal should be a " + Type
                 + " and should not be difficult to cook.");
+        return res;
+    }
+    public String buildContext(String Type, String extendedPropmpt) {
+        String res = "";
+        res = ("Act as a system that creates a meal for a user.The meal should be a " + Type
+                + " and should not be difficult to cook." + extendedPropmpt);
         return res;
     }
 

@@ -64,6 +64,24 @@ public class OpenaiApiService {
         
         return response.getBody().replace("\\\"", "\"");
     }
+    public String getJSONResponse(String Type, String extendedPrompt) throws JsonProcessingException{
+       
+        String prompt;
+        String jsonRequest;
+
+        
+        prompt = pBuilder.buildPrompt(Type,extendedPrompt);
+        jsonRequest = buildJsonApiRequest(prompt);
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + API_KEY);
+
+        HttpEntity<String> request = new HttpEntity<String>(jsonRequest, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(OPENAI_URL, request, String.class);
+        
+        return response.getBody().replace("\\\"", "\"");
+    }
 
     // build on predetermined prompt
     public String buildJsonApiRequest(String prompt) throws JsonProcessingException {
