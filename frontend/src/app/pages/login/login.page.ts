@@ -24,10 +24,18 @@ export class LoginPage {
   constructor( private router: Router, private errorHandlerService: ErrorHandlerService, private auth: AuthenticationService ) { }
 
   login(form: any) {
-    this.auth.login(form.value).subscribe({
+
+    const loginUser: UserI = {
+      username: '',
+      password: form.password,
+      email: form.email,
+    }
+
+    this.auth.login(loginUser).subscribe({
       next: (result) => {
         if (result) {
           this.errorHandlerService.presentSuccessToast('Login successful');
+          
           this.router.navigate(['app/tabs/home']);
         }
       },
