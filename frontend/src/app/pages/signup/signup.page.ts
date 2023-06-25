@@ -25,8 +25,38 @@ export class SignupPage {
   constructor(private router: Router, private errorHandlerService: ErrorHandlerService, private auth: AuthenticationService ) { }
 
   async signup(form: any) {
-    this.router.navigate(['app/tabs/home']);
     console.log(form);
+    if (form.initial !== form.verify) {
+      this.errorHandlerService.presentErrorToast('Passwords do not match', 'Passwords do not match');
+      return;
+    }
+
+    const newUser: UserI = {
+      username: form.username,
+      password: form.verify,
+      email: form.email,
+    }
+
+    this.auth.checkUser(newUser).subscribe({
+      next: data => {
+        if (data) {
+          this.errorHandlerService.presentErrorToast('Username or email already exists', 'Username or email already exists');
+        } else {
+          this.auth.createUser(newUser).subscribe({
+            next: () => {
+            this.errorHandlerService.presentSuccessToast('Signup successful');
+            this.router.navigate(['app/tabs/home']);
+            },
+            error: error => {
+            this.errorHandlerService.presentErrorToast('Signup failed', error);
+            }
+          });
+        }
+      },
+      error: error => {
+        this.errorHandlerService.presentErrorToast('Signup failed', error);
+      }
+    });
   }
 
   goToLogin() {
