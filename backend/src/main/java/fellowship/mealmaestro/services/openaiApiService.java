@@ -29,7 +29,7 @@ public class OpenaiApiService {
     private String model = "text-davinci-003";
     private String stop = "";
 
-    private double temperature = 0.6;
+    private double temperature = 0.5;
     private double topP = 1.0;
     private double freqPenalty = 0.0;
     private double presencePenalty = 0.0;
