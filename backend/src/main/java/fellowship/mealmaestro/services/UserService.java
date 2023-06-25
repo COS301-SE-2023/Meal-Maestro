@@ -24,4 +24,8 @@ public class UserService {
     public boolean login(UserModel user){
         return userRepository.login(user);
     }
+
+    public UserModel getUser(UserModel user){
+        return userRepository.getUser(user);
+    }
 }

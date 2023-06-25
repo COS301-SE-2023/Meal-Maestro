@@ -16,8 +16,8 @@ import { UserI } from '../../models/user.model';
 export class LoginPage {
   user: UserI = {
     username: '',
-    password: '',
     email: '',
+    password: '',
   }
   
 
@@ -27,16 +27,28 @@ export class LoginPage {
 
     const loginUser: UserI = {
       username: '',
-      password: form.password,
       email: form.email,
+      password: form.password,
     }
-
+    console.log(loginUser);
     this.auth.login(loginUser).subscribe({
       next: (result) => {
         if (result) {
+          this.auth.getUser(loginUser.email).subscribe({
+            next: (user) => {
+              localStorage.setItem('user', user.username);
+              localStorage.setItem('email', user.email);
+            },
+            error: error => {
+              this.errorHandlerService.presentErrorToast('Login failed', error);
+            }
+          });
+
           this.errorHandlerService.presentSuccessToast('Login successful');
-          
           this.router.navigate(['app/tabs/home']);
+        }
+        else {
+          this.errorHandlerService.presentErrorToast('Invalid credentials', 'Invalid credentials');
         }
       },
       error: error => {

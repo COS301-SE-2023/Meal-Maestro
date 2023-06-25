@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { FoodItemI } from '../../models/interfaces';
+import { FoodItemI, UserI } from '../../models/interfaces';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class PantryApiService {
+
+  user: UserI = {
+    username: localStorage.getItem('user') ?? '',
+    email: localStorage.getItem('email') ?? '',
+    password: '', 
+  }
 
   url : String = 'http://localhost:8080';
 
@@ -17,8 +23,8 @@ export class PantryApiService {
     return this.http.post<FoodItemI[]>(
       this.url+'/getPantry',
       {
-      "username": "Frank",
-      "email": "test@example.com"
+      "username": this.user.username,
+      "email": this.user.email
       });
   }
 
@@ -32,8 +38,8 @@ export class PantryApiService {
           "weight": item.weight,
         },
         "user": {
-          "username": "Frank",
-          "email": "test@example.com"
+          "username": this.user.username,
+          "email": this.user.email
         }
       });
   }
@@ -48,8 +54,8 @@ export class PantryApiService {
           "weight": item.weight,
         },
         "user": {
-          "username": "Frank",
-          "email": "test@example.com"
+          "username": this.user.username,
+          "email": this.user.email
         }
       });
   }
@@ -64,8 +70,8 @@ export class PantryApiService {
           "weight": item.weight,
         },
         "user": {
-          "username": "Frank",
-          "email": "test@example.com"
+          "username": this.user.username,
+          "email": this.user.email
         }
       });
   }

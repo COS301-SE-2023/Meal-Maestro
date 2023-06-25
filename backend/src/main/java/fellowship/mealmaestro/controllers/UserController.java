@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.services.UserService;
-import jakarta.validation.Valid;
 
 @RestController
 public class UserController {
@@ -16,17 +15,22 @@ public class UserController {
     private UserService userService;
     
     @PostMapping("/createUser")
-    public void createUser(@Valid @RequestBody UserModel user){
+    public void createUser(@RequestBody UserModel user){
         userService.createUser(user);
     }
 
     @PostMapping("/checkUser")
-    public boolean checkUser(@Valid @RequestBody UserModel user){
+    public boolean checkUser(@RequestBody UserModel user){
         return userService.checkUser(user);
     }
 
     @PostMapping("/login")
-    public boolean login(@Valid @RequestBody UserModel user){
+    public boolean login(@RequestBody UserModel user){
         return userService.login(user);
+    }
+
+    @PostMapping("/getUser")
+    public UserModel getUser(@RequestBody UserModel user){
+        return userService.getUser(user);
     }
 }

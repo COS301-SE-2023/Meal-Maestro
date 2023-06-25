@@ -41,4 +41,14 @@ export class AuthenticationService {
         "password": user.password
       });
   }
+
+  getUser(email: string): Observable<UserI> {
+    return this.http.post<UserI>(
+      this.url+'/getUser',
+      {
+        "username": '',
+        "email": email,
+        "password": ''
+      });
+  }
 }

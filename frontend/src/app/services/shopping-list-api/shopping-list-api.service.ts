@@ -1,12 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FoodItemI } from '../../models/interfaces';
+import { FoodItemI, UserI } from '../../models/interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShoppingListApiService {
+
+  user: UserI = {
+    username: localStorage.getItem('user') ?? '',
+    email: localStorage.getItem('email') ?? '',
+    password: '', 
+  }
 
   url: String = 'http://localhost:8080';
 
@@ -16,8 +22,8 @@ export class ShoppingListApiService {
     return this.http.post<FoodItemI[]>(
       this.url + '/getShoppingList',
       {
-        "username": "Frank",
-        "email": "test@example.com"
+        "username": this.user.username,
+        "email": this.user.email
       });
   }
 
@@ -31,8 +37,8 @@ export class ShoppingListApiService {
           "weight": item.weight,
         },
         "user": {
-          "username": "Frank",
-          "email": "test@example.com"
+          "username": this.user.username,
+          "email": this.user.email
         }
       });
   }
@@ -47,8 +53,8 @@ export class ShoppingListApiService {
           "weight": item.weight,
         },
         "user": {
-          "username": "Frank",
-          "email": "test@example.com"
+          "username": this.user.username,
+          "email": this.user.email
         }
       });
   }
@@ -63,8 +69,8 @@ export class ShoppingListApiService {
           "weight": item.weight,
         },
         "user": {
-          "username": "Frank",
-          "email": "test@example.com"
+          "username": this.user.username,
+          "email": this.user.email
         }
       });
   }
