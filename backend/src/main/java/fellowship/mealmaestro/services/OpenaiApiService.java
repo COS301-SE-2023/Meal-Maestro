@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.cdimascio.dotenv.Dotenv;
@@ -46,6 +48,18 @@ public class OpenaiApiService {
 
     @Autowired private ObjectMapper jsonMapper;
     @Autowired private OpenaiPromptBuilder pBuilder = new OpenaiPromptBuilder();
+    
+    public String fetchMealResponse(String Type) throws JsonMappingException, JsonProcessingException{
+        JsonNode jsonNode = jsonMapper.readTree(getJSONResponse(Type));
+        return jsonNode.get("text").asText();
+    }
+
+    public String fetchMealResponse(String Type,String extendedPrompt) throws JsonMappingException, JsonProcessingException{
+        JsonNode jsonNode = jsonMapper.readTree(getJSONResponse(Type,extendedPrompt));
+        return jsonNode.get("text").asText();
+    }
+   
+   
     public String getJSONResponse(String Type) throws JsonProcessingException{
        
         String prompt;
