@@ -11,11 +11,13 @@ import { IonicModule } from '@ionic/angular';
 })
 export class DailyMealsComponent  implements OnInit {
 
-  @Input() todayData!: {identifier: string,  title: string, description: string, url: string }[];
-  @Input() tomorrowData!: {identifier: string,  title: string, description: string, url: string }[];
+  @Input() todayData!: {identifier: string,  title: string, description: string, url: string, ingredients:string, instructions:string, cookingTime:string }[];
+  @Input() tomorrowData!: {identifier: string,  title: string, description: string, url: string,ingredients:string, instructions:string, cookingTime:string  }[];
   isModalOpen = false;
   currentObject :any
   setOpen(isOpen: boolean, o :any) {
+    if(o==null)
+      o = this.currentObject
     this.isModalOpen = isOpen;
     this.setCurrent(o)
   }
