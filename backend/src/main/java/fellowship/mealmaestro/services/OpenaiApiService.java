@@ -38,7 +38,7 @@ public class OpenaiApiService {
     
     // potential vars
         // will make a few prompts and return best, heavy on token use
-        private int bestOfN = 2;
+        private int bestOfN = 1;
         // detect abuse
         private String user = "";
         // echo back prompt and its compeletion
