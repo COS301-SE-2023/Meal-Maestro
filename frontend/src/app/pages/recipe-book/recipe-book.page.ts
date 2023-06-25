@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
+import { RecipeItemComponent } from '../../components/recipe-item/recipe-item.component';
 
 @Component({
   selector: 'app-recipe-book',
@@ -18,7 +20,18 @@ export class RecipeBookPage implements OnInit {
     { image: '/assets/img3.jpg', title: 'Raspberry Fruit Salad' }
   ];
 
-  constructor() { }
+  async openModal(item: any) {
+    const modal = await this.modalController.create({
+      component: RecipeItemComponent,
+      componentProps: {
+        image: item.image,
+        title: item.title
+      }
+    });
+    await modal.present();
+  }
+
+  constructor(private modalController: ModalController) { }
 
   ngOnInit() {
   }
