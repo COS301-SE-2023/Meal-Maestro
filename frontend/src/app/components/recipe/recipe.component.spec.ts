@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowsePage } from './browse.page';
 //import { ExploreContainerComponent } from '../../components/explore-container/explore-container.component';
 import { IonicModule } from '@ionic/angular';
-import { RecipeComponent } from '../../components/recipe/recipe.component';
+import { RecipeComponent } from './recipe.component';
 
-describe('BrowsePage', () => {
-  let component: BrowsePage;
-  let fixture: ComponentFixture<BrowsePage>;
+describe('RecipeComponent', () => {
+  let component: RecipeComponent;
+  let fixture: ComponentFixture<RecipeComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [BrowsePage, IonicModule, RecipeComponent],
+  beforeEach(async() => {
+    TestBed.configureTestingModule({
+      declarations: [ RecipeComponent ],
+      imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(BrowsePage);
+    fixture = TestBed.createComponent(RecipeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
