@@ -20,9 +20,47 @@ public class MealManagementService {
 
     public String generateDaysMeals() throws JsonMappingException, JsonProcessingException {
         JsonNode breakfastJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
+        if(breakfastJson.isMissingNode())
+        {
+            int prevBestOfN = openaiApiService.getBestofN();
+            Boolean success = false;
+            openaiApiService.setBestofN(prevBestOfN + 1);
+            while(!success)
+            {
+                breakfastJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
+                if(!breakfastJson.isMissingNode())
+                    success = true;
+            }
+            openaiApiService.setBestofN(prevBestOfN);
+        }
         JsonNode lunchJson = objectMapper.readTree(openaiApiService.fetchMealResponse("lunch"));
+        if(lunchJson.isMissingNode())
+        {
+            int prevBestOfN = openaiApiService.getBestofN();
+            Boolean success = false;
+            openaiApiService.setBestofN(prevBestOfN + 1);
+            while(!success)
+            {
+                lunchJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
+                if(!lunchJson.isMissingNode())
+                    success = true;
+            }
+            openaiApiService.setBestofN(prevBestOfN);
+        }
         JsonNode dinnerJson = objectMapper.readTree(openaiApiService.fetchMealResponse("dinner"));
-
+        if(dinnerJson.isMissingNode())
+        {
+            int prevBestOfN = openaiApiService.getBestofN();
+            Boolean success = false;
+            openaiApiService.setBestofN(prevBestOfN + 1);
+            while(!success)
+            {
+                dinnerJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
+                if(!dinnerJson.isMissingNode())
+                    success = true;
+            }
+            openaiApiService.setBestofN(prevBestOfN);
+        }
         ObjectNode combinedNode = JsonNodeFactory.instance.objectNode();
         combinedNode.set("breakfast", breakfastJson);
         combinedNode.set("lunch", lunchJson);
@@ -34,7 +72,19 @@ public class MealManagementService {
 
     public String generateMeal() throws JsonMappingException, JsonProcessingException {
         JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast lunch or dinner"));
-        
+        if(mealJson.isMissingNode())
+        {
+            int prevBestOfN = openaiApiService.getBestofN();
+            Boolean success = false;
+            openaiApiService.setBestofN(prevBestOfN + 1);
+            while(!success)
+            {
+                mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
+                if(!mealJson.isMissingNode())
+                    success = true;
+            }
+            openaiApiService.setBestofN(prevBestOfN);
+        }
         return mealJson.toString();
     }
 }
