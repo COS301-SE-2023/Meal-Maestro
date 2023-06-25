@@ -16,44 +16,10 @@
       <ion-label>Today</ion-label>
     </ion-item>
 
-    <ion-card button="true" color="primary">
-      <div>
-        <ion-card-header>
-          <ion-card-subtitle>Breakfast</ion-card-subtitle>
-          <ion-card-title>Muesli & Yogurt</ion-card-title>
-        </ion-card-header>
+    <app-daily-meals [todayData]="todayArray"></app-daily-meals>
 
-        <ion-card-content>
-          A classic Nutritious breakfast with a low gi to sustain you through
-          your busy day
-        </ion-card-content>
-      </div>
-  
+
     
-        <img src="https://www.jessicagavin.com/wp-content/uploads/2016/06/berry-muesli-breakfast-bowls.jpg">
-
-
-    </ion-card>
-
-    <ion-card button="true" color="primary">
-      <ion-card-header>
-        <ion-card-subtitle>Lunch</ion-card-subtitle>
-        <ion-card-title>Chicken Alfredo</ion-card-title>
-      </ion-card-header>
-
-      <ion-card-content> A savoury filling lunch </ion-card-content>
-    </ion-card>
-
-    <ion-card button="true" color="primary">
-      <ion-card-header>
-        <ion-card-subtitle>Dinner</ion-card-subtitle>
-        <ion-card-title>Butternut soup</ion-card-title>
-      </ion-card-header>
-
-      <ion-card-content>
-        A warm soup to fill you in these winter months
-      </ion-card-content>
-    </ion-card>
   </ion-list>
 
   <ion-list lines="inset" lines-color="secondary">
@@ -61,6 +27,9 @@
       <ion-label>Tomorrow</ion-label>
     </ion-item>
 
+
+    <app-daily-meals [tomorrowData]="tomorrowArray"></app-daily-meals>
+<!-- 
     <ion-card button="true" color="primary">
       <ion-card-header>
         <ion-card-subtitle>Breakfast</ion-card-subtitle>
@@ -91,7 +60,7 @@
       <ion-card-content>
         A warm soup to fill you in these winter months
       </ion-card-content>
-    </ion-card>
+    </ion-card> -->
   </ion-list>
 
 </ion-content>
