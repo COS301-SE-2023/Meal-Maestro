@@ -10,9 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import fellowship.mealmaestro.models.DaysMeals;
-import fellowship.mealmaestro.models.Meal;
-
 @Service
 public class MealManagementService {
 
