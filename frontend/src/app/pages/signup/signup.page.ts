@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { AuthenticationService, ErrorHandlerService } from '../../services/services';
+import { UserI } from '../../models/interfaces';
 
 @Component({
   selector: 'app-signup',
@@ -11,48 +13,23 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
-export class SignupPage implements OnInit {
-
-  user = {
+export class SignupPage {
+  initial: string = '';
+  verify: string = '';
+  user: UserI = {
+    username: '',
+    password: '',
     email: '',
-    password: ''
-  };
-
-  constructor(private router: Router, private toastController : ToastController ) { }
-
-  ngOnInit() {
   }
 
-  signup() {
+  constructor(private router: Router, private errorHandlerService: ErrorHandlerService, private auth: AuthenticationService ) { }
+
+  async signup(form: any) {
     this.router.navigate(['app/tabs/home']);
-    console.log(this.user);
-    this.signupSuccessToast('top');
+    console.log(form);
   }
 
   goToLogin() {
     this.router.navigate(['../']);
   }
-
-  async signupSuccessToast(position: 'bottom' | 'middle' | 'top'){
-    const toast = await this.toastController.create({
-      message: "Sign Up Successful",
-      duration: 1500,
-      position: position,
-      color: 'success',
-      icon: 'checkmark-sharp'
-    });
-    toast.present();
-  }
-
-  async signupFailToast(position: 'bottom' | 'middle' | 'top'){
-    const toast = await this.toastController.create({
-      message: "Sign Up Failed",
-      duration: 1500,
-      position: position,
-      color: 'danger',
-      icon: 'close-sharp'
-    });
-    toast.present();
-  }
-
 }

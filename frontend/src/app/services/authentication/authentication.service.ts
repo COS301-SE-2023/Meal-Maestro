@@ -22,5 +22,23 @@ export class AuthenticationService {
       });
   }
 
-  checkUser()
+  checkUser(user: UserI): Observable<boolean> {
+    return this.http.post<boolean>(
+      this.url+'/checkUser',
+      {
+        "username": user.username,
+        "email":user.email,
+        "password": user.password
+      });
+  }
+
+  createUser(user: UserI): Observable<void> {
+    return this.http.post<void>(
+      this.url+'/createUser',
+      {
+        "username": user.username,
+        "email":user.email,
+        "password": user.password
+      });
+  }
 }

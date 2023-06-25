@@ -19,4 +19,15 @@ export class ErrorHandlerService {
     toast.present();
     console.error(error);
   }
+
+  async presentSuccessToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      color: 'success',
+      position: 'top',
+      icon: 'checkmark-circle-outline'
+    });
+    toast.present();
+  }
 }
