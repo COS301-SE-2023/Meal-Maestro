@@ -15,8 +15,7 @@
       <ion-label>Today</ion-label>
     </ion-item>
 
-    <app-daily-meals [mealsData]="mealsArray"></app-daily-meals>
-
+    <app-daily-meals [todayData]="todayArray"></app-daily-meals>
 
 
     
@@ -27,6 +26,9 @@
       <ion-label>Tomorow</ion-label>
     </ion-item>
 
+
+    <app-daily-meals [tomorrowData]="tomorrowArray"></app-daily-meals>
+<!-- 
     <ion-card button="true" color="primary">
       <ion-card-header>
         <ion-card-subtitle>Breakfast</ion-card-subtitle>
@@ -57,7 +59,7 @@
       <ion-card-content>
         A warm soup to fill you in these winter months
       </ion-card-content>
-    </ion-card>
+    </ion-card> -->
   </ion-list>
 
 </ion-content>
