@@ -1,27 +1,37 @@
-<ion-header>
+<body>
+  <ion-header [translucent]="true">
     <ion-toolbar>
-      <ion-title>Recommended Meals</ion-title>
-    </ion-toolbar>
-    <ion-toolbar style="padding: 0px !important;">
       <ion-searchbar class="search"></ion-searchbar>
     </ion-toolbar>
   </ion-header>
 
-   <ion-content [fullscreen]="true"> 
+  <ion-content [fullscreen]="true" scrollY="true">
     <!-- <ion-searchbar class="search"></ion-searchbar> -->
     <ion-grid>
       
-       <app-recipe [arrayData]="myArray"></app-recipe> 
-    </ion-grid>
+      <ion-row>
+      
+        <ion-col>
 
-    </ion-content> 
-        
-<!--       
-      <ion-row class="row1">
+          <app-browse-meals [mealsData]="mealsArray"></app-browse-meals>
+          <!-- <ion-card button="true" color="primary">
+              <ion-card-header>
+                <ion-card-title class="head">Greek Salad with Chicken</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                A light and refreshing salad featuring a flavorful and protein-packed option for a healthy meal prep.
+              </ion-card-content>
+            <ion-avatar>
+              <img src="https://images.unsplash.com/photo-1580013759032-c96505e24c1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1818&q=80">
+            </ion-avatar>
+          </ion-card> -->
+        </ion-col>
+    
+      </ion-row>
+
+      <!-- <ion-row class="row1">
         <ion-col></ion-col>
-        <ion-col> -->
-
-          <!-- <app-recipe></app-recipe>
+        <ion-col>
           <ion-card button="true" color="primary">
               <ion-card-header>
                 <ion-card-title class="head"> Curry Tofu Stir-Fry</ion-card-title>
@@ -33,14 +43,14 @@
               <img src="https://images.unsplash.com/photo-1564834724105-918b73d1b9e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=388&q=80">
             </ion-avatar>
           </ion-card>
-       </ion-col>
+        </ion-col>
         <ion-col></ion-col>
       </ion-row>
 
       <ion-row>
         <ion-col></ion-col>
         <ion-col>
-         <ion-card button="true" color="primary">
+          <ion-card button="true" color="primary">
               <ion-card-header>
                 <ion-card-title class="head">Fried Chicken Tenders</ion-card-title>
               </ion-card-header>
@@ -50,7 +60,7 @@
             <ion-avatar>
               <img src="https://images.unsplash.com/photo-1614398751058-eb2e0bf63e53?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1014&q=80">
             </ion-avatar>
-          </ion-card> 
+          </ion-card>
         </ion-col>
         <ion-col></ion-col>
       </ion-row>
@@ -68,12 +78,12 @@
             <ion-avatar>
               <img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80">
             </ion-avatar>
-          </ion-card> 
-         </ion-col>
+          </ion-card>
+        </ion-col>
         <ion-col></ion-col>
       </ion-row> -->
-    <!-- </ion-grid>
+    </ion-grid>
 
-  </ion-content>  -->
-
+  </ion-content>
+</body>
 
