@@ -11,7 +11,7 @@ import { IonicModule } from '@ionic/angular';
 })
 export class DailyMealsComponent  implements OnInit {
 
-  @Input() mealsData!: { title: string, description: string, url: string }[];
+  @Input() mealsData!: {identifier: string,  title: string, description: string, url: string }[];
   isModalOpen = false;
   currentObject :any
   setOpen(isOpen: boolean, o :any) {

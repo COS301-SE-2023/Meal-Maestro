@@ -1,41 +1,38 @@
-<ion-card button="true" color="primary">
-  <div>
+
+<ion-card *ngFor="let item of mealsData" (click)="setOpen(true, item)" color="primary">
     <ion-card-header>
       <ion-card-subtitle>Breakfast</ion-card-subtitle>
-      <ion-card-title>Muesli & Yogurt</ion-card-title>
+      <ion-card-title>{{item.title}}</ion-card-title>
     </ion-card-header>
-
     <ion-card-content>
-      A classic Nutritious breakfast with a low gi to sustain you through
-      your busy day
+      {{item.description}}
     </ion-card-content>
-  </div>
     <ion-avatar>
-      <img src="https://www.jessicagavin.com/wp-content/uploads/2016/06/berry-muesli-breakfast-bowls.jpg">
+      <img src="{{item.url}}">
     </ion-avatar>
 </ion-card>
 
-<ion-card button="true" color="primary">
+<ion-card *ngFor="let item of mealsData" (click)="setOpen(true, item)" color="primary">
   <ion-card-header>
     <ion-card-subtitle>Lunch</ion-card-subtitle>
-    <ion-card-title>Chicken Alfredo</ion-card-title>
+    <ion-card-title>{{item.title}}</ion-card-title>
   </ion-card-header>
-  <ion-card-content> A savoury filling lunch </ion-card-content>
+  <ion-card-content>{{item.description}}</ion-card-content>
   <ion-avatar>
-    <img src="https://images.unsplash.com/photo-1645112411341-6c4fd023714a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80">
+    <img src="{{item.url}}">
   </ion-avatar>
 </ion-card>
 
-<ion-card button="true" color="primary">
+<ion-card *ngFor="let item of mealsData" (click)="setOpen(true, item)" color="primary">
   <ion-card-header>
     <ion-card-subtitle>Dinner</ion-card-subtitle>
-    <ion-card-title>Butternut soup</ion-card-title>
+    <ion-card-title>{{item.title}}</ion-card-title>
   </ion-card-header>
 
   <ion-card-content>
-    A warm soup to fill you in these winter months
+    {{item.description}}
   </ion-card-content>
   <ion-avatar>
-    <img src="https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80">
+    <img src="{{item.url}}">
   </ion-avatar>
 </ion-card>
