@@ -4,9 +4,8 @@ import { IonicModule } from '@ionic/angular';
 
 import { PantryPage } from './pantry.page';
 import { of } from 'rxjs';
-import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
-import { ShoppingListApiService } from '../../services/shopping-list-api/shopping-list-api.service';
-import { FoodItemI } from '../../models/interfaces.model';
+import { FoodItemI } from '../../models/interfaces';
+import { PantryApiService, ShoppingListApiService } from '../../services/services';
 
 describe('PantryPage', () => {
   let component: PantryPage;

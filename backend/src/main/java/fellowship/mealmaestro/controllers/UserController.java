@@ -24,4 +24,9 @@ public class UserController {
     public boolean checkUser(@Valid @RequestBody UserModel user){
         return userService.checkUser(user);
     }
+
+    @PostMapping("/login")
+    public boolean login(@Valid @RequestBody UserModel user){
+        return userService.login(user);
+    }
 }

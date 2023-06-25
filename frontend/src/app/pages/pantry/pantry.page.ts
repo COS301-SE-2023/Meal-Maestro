@@ -1,14 +1,12 @@
 import { Component, OnInit, QueryList, ViewChildren, ViewChild } from '@angular/core';
-import { IonModal, IonicModule, ToastController } from '@ionic/angular';
+import { IonModal, IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FoodListItemComponent } from '../../components/food-list-item/food-list-item.component';
-import { FoodItemI } from '../../models/interfaces.model';
-import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
-import { ShoppingListApiService } from '../../services/shopping-list-api/shopping-list-api.service';
+import { FoodItemI } from '../../models/interfaces';
 import { OverlayEventDetail } from '@ionic/core/components';
-import { ErrorHandlerService } from '../../services/error-handler/error-handler.service';
+import { ErrorHandlerService, PantryApiService, ShoppingListApiService } from '../../services/services';
 
 
 @Component({

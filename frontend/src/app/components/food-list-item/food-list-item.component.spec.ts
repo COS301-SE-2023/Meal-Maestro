@@ -4,7 +4,7 @@ import { ActionSheetController, IonicModule, PickerController } from '@ionic/ang
 import { FoodListItemComponent } from './food-list-item.component';
 import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
 import { ShoppingListApiService } from '../../services/shopping-list-api/shopping-list-api.service';
-import { FoodItemI } from '../../models/interfaces.model';
+import { FoodItemI } from '../../models/interfaces';
 import { of } from 'rxjs';
 
 describe('FoodListItemComponent', () => {

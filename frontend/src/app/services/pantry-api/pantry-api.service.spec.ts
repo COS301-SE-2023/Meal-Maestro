@@ -1,5 +1,5 @@
 import { of } from 'rxjs';
-import { FoodItemI } from '../../models/interfaces.model';
+import { FoodItemI } from '../../models/interfaces';
 import { PantryApiService } from './pantry-api.service';
 import { HttpClient } from '@angular/common/http';
 

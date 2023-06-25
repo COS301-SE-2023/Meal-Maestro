@@ -1,9 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ActionSheetController, IonItemSliding, IonicModule, PickerController } from '@ionic/angular';
-import { FoodItemI } from '../../models/interfaces.model';
-import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
-import { ShoppingListApiService } from '../../services/shopping-list-api/shopping-list-api.service';
-import { ErrorHandlerService } from '../../services/error-handler/error-handler.service';
+import { FoodItemI } from '../../models/interfaces';
+import { ErrorHandlerService, PantryApiService, ShoppingListApiService } from '../../services/services';
 
 @Component({
   selector: 'app-food-list-item',

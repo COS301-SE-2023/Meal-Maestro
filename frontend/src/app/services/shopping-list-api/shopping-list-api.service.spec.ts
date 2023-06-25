@@ -1,6 +1,6 @@
 import { ShoppingListApiService } from './shopping-list-api.service';
 import { HttpClient } from '@angular/common/http';
-import { FoodItemI } from '../../models/interfaces.model';
+import { FoodItemI } from '../../models/interfaces';
 import { of } from 'rxjs';
 
 describe('ShoppingListApiService', () => {

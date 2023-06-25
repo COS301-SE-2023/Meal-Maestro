@@ -53,6 +53,22 @@ public class UserRepository {
         };
     }
     //#endregion
+
+    //#region Login
+    public boolean login(UserModel user){
+        try (Session session = driver.session()){
+            return session.executeRead(loginTransaction(user.getEmail(), user.getPassword()));
+        }
+    }
+
+    public static TransactionCallback<Boolean> loginTransaction(String email, String password) {
+        return transaction -> {
+            var result = transaction.run("MATCH (n0:User {email: $email, password: $password}) RETURN n0",
+            Values.parameters("email", email, "password", password));
+            return result.hasNext();
+        };
+    }
+    //#endregion
 }
 
  
