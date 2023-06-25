@@ -9,10 +9,12 @@
     <!-- <ion-searchbar class="search"></ion-searchbar> -->
     <ion-grid>
       
-      <ion-row class="rowfirst">
-        <ion-col></ion-col>
+      <ion-row>
+      
         <ion-col>
-          <ion-card button="true" color="primary">
+
+          <app-browse-meals [mealsData]="mealsArray"></app-browse-meals>
+          <!-- <ion-card button="true" color="primary">
               <ion-card-header>
                 <ion-card-title class="head">Greek Salad with Chicken</ion-card-title>
               </ion-card-header>
@@ -22,12 +24,12 @@
             <ion-avatar>
               <img src="https://images.unsplash.com/photo-1580013759032-c96505e24c1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1818&q=80">
             </ion-avatar>
-          </ion-card>
+          </ion-card> -->
         </ion-col>
-        <ion-col></ion-col>
+    
       </ion-row>
 
-      <ion-row class="row1">
+      <!-- <ion-row class="row1">
         <ion-col></ion-col>
         <ion-col>
           <ion-card button="true" color="primary">
@@ -79,7 +81,7 @@
           </ion-card>
         </ion-col>
         <ion-col></ion-col>
-      </ion-row>
+      </ion-row> -->
     </ion-grid>
 
   </ion-content>

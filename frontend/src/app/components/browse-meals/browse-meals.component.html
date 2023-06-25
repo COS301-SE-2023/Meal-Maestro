@@ -1,3 +1,11 @@
-<p>
-  browse-meals works!
-</p>
+<ion-card *ngFor="let item of mealsData" (click)="setOpen(true, item)" color="primary">
+  <ion-card-header>
+    <ion-card-title class="head">{{item.title}}</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+   {{item.description}}
+  </ion-card-content>
+<ion-avatar>
+  <img src="{{item.url}}">
+</ion-avatar>
+</ion-card>
