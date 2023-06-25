@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { AuthenticationService, ErrorHandlerService } from '../../services/services';
+import { UserI } from '../../models/user.model';
 
 @Component({
   selector: 'app-login',
@@ -11,47 +13,31 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
-export class LoginPage implements OnInit {
-
-  user = {
+export class LoginPage {
+  user: UserI = {
+    username: '',
+    password: '',
     email: '',
-    password: ''
-  };
-
-  constructor( private router: Router, private toastController : ToastController  ) { }
-
-  ngOnInit() {
   }
+  
 
-  login() {
-    this.router.navigate(['app/tabs/home']);
-    console.log(this.user);
-    this.loginSuccessToast('top');
+  constructor( private router: Router, private errorHandlerService: ErrorHandlerService, private auth: AuthenticationService ) { }
+
+  login(form: any) {
+    this.auth.login(form.value).subscribe({
+      next: (result) => {
+        if (result) {
+          this.errorHandlerService.presentSuccessToast('Login successful');
+          this.router.navigate(['app/tabs/home']);
+        }
+      },
+      error: error => {
+        this.errorHandlerService.presentErrorToast('Login failed', error);
+      }
+    });
   }
 
   goToSignup() {
     this.router.navigate(['../signup']);
-  }
-
-  async loginSuccessToast(position: 'bottom' | 'middle' | 'top'){
-    const toast = await this.toastController.create({
-      message: "Login Successful",
-      duration: 1500,
-      position: position,
-      color: 'success',
-      icon: 'checkmark-sharp'
-    });
-    toast.present();
-  }
-
-  async loginFailToast(position: 'bottom' | 'middle' | 'top'){
-    const toast = await this.toastController.create({
-      message: "Login Failed",
-      duration: 1500,
-      position: position,
-      color: 'danger',
-      icon: 'close-sharp'
-    });
-    toast.present();
   }
 }

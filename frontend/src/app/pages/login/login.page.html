@@ -10,36 +10,48 @@
         </ion-col>
         <ion-col></ion-col>
       </ion-row>
-      <ion-col></ion-col>
+      <br>
+      <form #form="ngForm" (ngSubmit)="login(form.value)">
       <ion-col>
         <ion-input class="firstinput"
           id="login-email"
           placeholder="Email"
           type="email"
-          required="true"
+          required
+          email
           shape="round"
+          name="email"
           [(ngModel)]="user.email"
+          #email="ngModel"
         >
         </ion-input>
-        <br>
+        <div [class.hidden]="!(email.invalid && email.touched)" class="alert">
+          Please enter a valid email.
+        </div>
         <ion-input class="secondinput"
           id="login-password"
           placeholder="Password"
           type="password" 
-          required="true"
+          required
           shape="round"
+          name="password"
           [(ngModel)]="user.password"
+          #password="ngModel"
           >
         </ion-input>
+        <div [class.hidden]="!(password.invalid && password.touched)" class="alert">
+          Please enter a password.
+        </div>
       </ion-col>
-      <ion-col></ion-col>
       <ion-row>
         <ion-col></ion-col>
         <ion-col>
-          <ion-button expand="block" (click)="login()">Login</ion-button>
+          <ion-button id="login-button" expand="block" type="submit" [disabled]="form.invalid" >Login</ion-button>
         </ion-col>
         <ion-col></ion-col>
       </ion-row>
+      </form>
+
       <ion-row>
         <a class="firstlink">Forget Password?</a>
       </ion-row>
@@ -50,47 +62,3 @@
     </ion-grid>
   </ion-content>
 </body>
-
-
-<!-- <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>login</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-content>
-    <ion-grid>
-      <ion-row>
-        <ion-col size="12">
-          <ion-item>
-            <ion-input 
-              label="Email" 
-              labelPlacement="floating" 
-              type="email" 
-              [(ngModel)]="user.email">
-            </ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="12">
-          <ion-item>
-            <ion-input 
-              label="Password" 
-              labelPlacement="floating" 
-              type="password" 
-              [(ngModel)]="user.password">
-            </ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="12">
-          <ion-button expand="block" (click)="login()">Login</ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-content>
-</ion-content>
- -->
