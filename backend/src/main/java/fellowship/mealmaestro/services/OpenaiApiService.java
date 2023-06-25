@@ -144,6 +144,13 @@ public class OpenaiApiService {
     public void setPresencePenalty(double x) {
         this.temperature = x;
     }
+
+    public void setBestofN(int x) {
+        this.bestOfN = x;
+    }
+    public int getBestofN() {
+        return this.bestOfN;
+    }
     //////////////////////////////////////////////////////////////
 
 }
