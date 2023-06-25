@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Input } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
+import { MealBrowse } from '../../models/mealBrowse.model';
 
 @Component({
   selector: 'app-browse-meals',
@@ -11,7 +12,7 @@ import { IonicModule } from '@ionic/angular';
 })
 export class BrowseMealsComponent  implements OnInit {
 
-  @Input() mealsData!: {title: string, description: string, url: string, ingredients:string, instructions:string, cookingTime:string }[];
+  @Input() mealsData!: MealBrowse[];
   isModalOpen = false;
   currentObject :any
   setOpen(isOpen: boolean, o :any) {
