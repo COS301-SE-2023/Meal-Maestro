@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { AuthenticationService, ErrorHandlerService } from '../../services/services';
+import { UserI } from '../../models/user.model';
 
 @Component({
   selector: 'app-login',
@@ -11,47 +13,51 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
-export class LoginPage implements OnInit {
-
-  user = {
+export class LoginPage {
+  user: UserI = {
+    username: '',
     email: '',
-    password: ''
-  };
-
-  constructor( private router: Router, private toastController : ToastController  ) { }
-
-  ngOnInit() {
+    password: '',
   }
+  
 
-  login() {
-    this.router.navigate(['app/tabs/home']);
-    console.log(this.user);
-    this.loginSuccessToast('top');
+  constructor( private router: Router, private errorHandlerService: ErrorHandlerService, private auth: AuthenticationService ) { }
+
+  login(form: any) {
+
+    const loginUser: UserI = {
+      username: '',
+      email: form.email,
+      password: form.password,
+    }
+    console.log(loginUser);
+    this.auth.login(loginUser).subscribe({
+      next: (result) => {
+        if (result) {
+          this.auth.getUser(loginUser.email).subscribe({
+            next: (user) => {
+              localStorage.setItem('user', user.username);
+              localStorage.setItem('email', user.email);
+            },
+            error: error => {
+              this.errorHandlerService.presentErrorToast('Login failed', error);
+            }
+          });
+
+          this.errorHandlerService.presentSuccessToast('Login successful');
+          this.router.navigate(['app/tabs/home']);
+        }
+        else {
+          this.errorHandlerService.presentErrorToast('Invalid credentials', 'Invalid credentials');
+        }
+      },
+      error: error => {
+        this.errorHandlerService.presentErrorToast('Login failed', error);
+      }
+    });
   }
 
   goToSignup() {
     this.router.navigate(['../signup']);
-  }
-
-  async loginSuccessToast(position: 'bottom' | 'middle' | 'top'){
-    const toast = await this.toastController.create({
-      message: "Login Successful",
-      duration: 1500,
-      position: position,
-      color: 'success',
-      icon: 'checkmark-sharp'
-    });
-    toast.present();
-  }
-
-  async loginFailToast(position: 'bottom' | 'middle' | 'top'){
-    const toast = await this.toastController.create({
-      message: "Login Failed",
-      duration: 1500,
-      position: position,
-      color: 'danger',
-      icon: 'close-sharp'
-    });
-    toast.present();
   }
 }

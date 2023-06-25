@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PantryApiService } from './pantry-api.service';
+import { ErrorHandlerService } from './error-handler.service';
 
-describe('PantryApiService', () => {
-  let service: PantryApiService;
+describe('ErrorHandlerService', () => {
+  let service: ErrorHandlerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(PantryApiService);
+    service = TestBed.inject(ErrorHandlerService);
   });
 
   it('should be created', () => {

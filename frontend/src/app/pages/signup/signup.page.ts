@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { AuthenticationService, ErrorHandlerService } from '../../services/services';
+import { UserI } from '../../models/interfaces';
 
 @Component({
   selector: 'app-signup',
@@ -11,48 +13,53 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
-export class SignupPage implements OnInit {
-
-  user = {
+export class SignupPage {
+  initial: string = '';
+  verify: string = '';
+  user: UserI = {
+    username: '',
+    password: '',
     email: '',
-    password: ''
-  };
-
-  constructor(private router: Router, private toastController : ToastController ) { }
-
-  ngOnInit() {
   }
 
-  signup() {
-    this.router.navigate(['app/tabs/home']);
-    console.log(this.user);
-    this.signupSuccessToast('top');
+  constructor(private router: Router, private errorHandlerService: ErrorHandlerService, private auth: AuthenticationService ) { }
+
+  async signup(form: any) {
+    console.log(form);
+    if (form.initial !== form.verify) {
+      this.errorHandlerService.presentErrorToast('Passwords do not match', 'Passwords do not match');
+      return;
+    }
+
+    const newUser: UserI = {
+      username: form.username,
+      password: form.verify,
+      email: form.email,
+    }
+
+    this.auth.checkUser(newUser).subscribe({
+      next: data => {
+        if (data) {
+          this.errorHandlerService.presentErrorToast('Username or email already exists', 'Username or email already exists');
+        } else {
+          this.auth.createUser(newUser).subscribe({
+            next: () => {
+            this.errorHandlerService.presentSuccessToast('Signup successful');
+            this.router.navigate(['app/tabs/home']);
+            },
+            error: error => {
+            this.errorHandlerService.presentErrorToast('Signup failed', error);
+            }
+          });
+        }
+      },
+      error: error => {
+        this.errorHandlerService.presentErrorToast('Signup failed', error);
+      }
+    });
   }
 
   goToLogin() {
     this.router.navigate(['../']);
   }
-
-  async signupSuccessToast(position: 'bottom' | 'middle' | 'top'){
-    const toast = await this.toastController.create({
-      message: "Sign Up Successful",
-      duration: 1500,
-      position: position,
-      color: 'success',
-      icon: 'checkmark-sharp'
-    });
-    toast.present();
-  }
-
-  async signupFailToast(position: 'bottom' | 'middle' | 'top'){
-    const toast = await this.toastController.create({
-      message: "Sign Up Failed",
-      duration: 1500,
-      position: position,
-      color: 'danger',
-      icon: 'close-sharp'
-    });
-    toast.present();
-  }
-
 }

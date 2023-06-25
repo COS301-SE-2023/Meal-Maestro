@@ -20,8 +20,8 @@ public class PantryController {
     private PantryService pantryService;
 
     @PostMapping("/addToPantry")
-    public void addToPantry(@Valid @RequestBody PantryRequestModel pantryRequest){
-        pantryService.addToPantry(pantryRequest);
+    public FoodModel addToPantry(@Valid @RequestBody PantryRequestModel pantryRequest){
+        return pantryService.addToPantry(pantryRequest);
     }
     
     @PostMapping("/removeFromPantry")

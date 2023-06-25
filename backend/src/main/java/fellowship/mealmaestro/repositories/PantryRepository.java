@@ -25,22 +25,23 @@ public class PantryRepository {
     }
 
     //#region Create
-    public void addToPantry(PantryRequestModel pantryRequest){
+    public FoodModel addToPantry(PantryRequestModel pantryRequest){
         FoodModel food = pantryRequest.getFood();
         UserModel user = pantryRequest.getUser();
         try (Session session = driver.session()){
-            session.executeWrite(addToPantryTransaction(food, user.getUsername(), user.getEmail()));
+            return session.executeWrite(addToPantryTransaction(food, user.getUsername(), user.getEmail()));
         }
     }
 
-    public static TransactionCallback<Void> addToPantryTransaction(FoodModel food, String username, String email){
+    public static TransactionCallback<FoodModel> addToPantryTransaction(FoodModel food, String username, String email){
         return transaction -> {
             transaction.run("MATCH (User{username: $username, email: $email})-[:HAS_PANTRY]->(p:Pantry) \r\n" + //
                         "CREATE (p)-[:IN_PANTRY]->(:Food {name: $name, quantity: $quantity, weight: $weight})",
 
             Values.parameters("username", username, "email", email, "name", food.getName(),
                         "quantity", food.getQuantity(), "weight", food.getWeight()));
-            return null;
+            FoodModel addedFood = new FoodModel(food.getName(), food.getQuantity(), food.getWeight());
+            return addedFood;
         };
     }
     /*  Example Post data:

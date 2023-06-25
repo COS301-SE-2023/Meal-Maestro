@@ -9,8 +9,7 @@ describe('DailyMealsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DailyMealsComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), DailyMealsComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DailyMealsComponent);

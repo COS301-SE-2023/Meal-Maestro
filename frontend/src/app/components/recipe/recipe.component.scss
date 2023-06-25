@@ -1,0 +1,28 @@
+// .rowfirst {
+//     margin-top:-2vh;
+//     height: 2vh;
+// }
+
+.background {
+    width: auto;
+    height: 25vh;
+    --border-radius:5%;
+}
+
+.head {
+    font-size: 3ch;
+}
+
+ion-card {
+    width: 85vw;
+    height: 30vh;
+    margin-bottom: 1.5vh;
+    margin-top: 1vh;
+    --border-radius:5%;
+}
+
+ion-avatar {
+    width: auto;
+    height: 15vh;
+    --border-radius:5%;
+}

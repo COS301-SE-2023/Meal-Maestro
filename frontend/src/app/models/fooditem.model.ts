@@ -1,5 +1,5 @@
-export interface FoodItem {
+export interface FoodItemI {
     name: string;
-    quantity: number;
-    weight: number;
+    quantity: number | null;
+    weight: number | null;
 }

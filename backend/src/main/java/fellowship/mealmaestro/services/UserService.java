@@ -17,6 +17,15 @@ public class UserService {
     }
 
     public boolean checkUser(UserModel user){
+        //TODO: hash password
         return userRepository.checkUser(user);
+    }
+
+    public boolean login(UserModel user){
+        return userRepository.login(user);
+    }
+
+    public UserModel getUser(UserModel user){
+        return userRepository.getUser(user);
     }
 }
