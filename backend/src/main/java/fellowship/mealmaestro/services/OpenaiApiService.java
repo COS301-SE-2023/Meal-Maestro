@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.cdimascio.dotenv.Dotenv;
@@ -38,14 +40,31 @@ public class OpenaiApiService {
         // will make a few prompts and return best, heavy on token use
         private int bestOfN = 1;
         // detect abuse
-        private String user = "";
+       // private String user = "";
         // echo back prompt and its compeletion
-        private boolean echo = false;
+       // private boolean echo = false;
         // stream prompt as it generates
-        private boolean stream = false;
+       // private boolean stream = false;
 
-    @Autowired private ObjectMapper jsonMapper;
+    @Autowired private ObjectMapper jsonMapper = new ObjectMapper();
     @Autowired private OpenaiPromptBuilder pBuilder = new OpenaiPromptBuilder();
+    
+    public String fetchMealResponse(String Type) throws JsonMappingException, JsonProcessingException{
+        String jsonResponse = getJSONResponse(Type);
+        JsonNode jsonNode = jsonMapper.readTree(jsonResponse);
+       
+        String text = jsonNode.get("choices").get(0).get("text").asText();
+       text = text.replace("\\\"", "\"");
+        text = text.replace("\n", "");
+        return text;
+    }
+
+    public String fetchMealResponse(String Type,String extendedPrompt) throws JsonMappingException, JsonProcessingException{
+        JsonNode jsonNode = jsonMapper.readTree(getJSONResponse(Type,extendedPrompt));
+        return jsonNode.get("text").asText();
+    }
+   
+   
     public String getJSONResponse(String Type) throws JsonProcessingException{
        
         String prompt;
@@ -53,6 +72,24 @@ public class OpenaiApiService {
 
         
         prompt = pBuilder.buildPrompt(Type);
+        jsonRequest = buildJsonApiRequest(prompt);
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + API_KEY);
+
+        HttpEntity<String> request = new HttpEntity<String>(jsonRequest, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(OPENAI_URL, request, String.class);
+        
+        return response.getBody();
+    }
+    public String getJSONResponse(String Type, String extendedPrompt) throws JsonProcessingException{
+       
+        String prompt;
+        String jsonRequest;
+
+        
+        prompt = pBuilder.buildPrompt(Type,extendedPrompt);
         jsonRequest = buildJsonApiRequest(prompt);
         
         HttpHeaders headers = new HttpHeaders();
@@ -78,7 +115,7 @@ public class OpenaiApiService {
         params.put("presence_penalty", presencePenalty);
         params.put("n", bestOfN);
         String res = new ObjectMapper().writeValueAsString(params);
-        res += "\r\n\r\n";
+        res += "\r\n";
         return res;
     }
     ///////////////////////////////////////////////////////////
