@@ -67,36 +67,6 @@ public class OpenaiApiService {
         return response.getBody().replace("\\\"", "\"");
     }
 
-
-    // puts together prompt from common best practises
-    public String buildPrompt(String context, String goal, String format, String secondaryTasks, String examples) {
-        String Prompt = context + "\r\r" + goal + "\r\r" + format + "\r\r" + secondaryTasks + "\r\r"
-                + examples;
-
-        return Prompt;
-    }
-
-    // builds the json styles api request string /////////////////
-    public String buildJsonApiRequest() throws JsonProcessingException {
-
-        String prompt = buildPrompt("", "", "", "", "");
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("model", model);
-        params.put("prompt", prompt);
-        params.put("temperature", temperature);
-        params.put("max_tokens", maximumTokenLength);
-        params.put("stream", false);
-        params.put("stop", "###");
-        
-      //  params.put("top_p", topP);
-        params.put("frequency_penalty", freqPenalty);
-        params.put("presence_penalty", presencePenalty);
-      //  params.put("n", bestOfN);
-
-        return new ObjectMapper().writeValueAsString(params);
-    }
-
     // build on predetermined prompt
     public String buildJsonApiRequest(String prompt) throws JsonProcessingException {
         Map<String, Object> params = new HashMap<>();
