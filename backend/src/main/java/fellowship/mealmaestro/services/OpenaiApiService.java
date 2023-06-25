@@ -38,7 +38,7 @@ public class OpenaiApiService {
     
     // potential vars
         // will make a few prompts and return best, heavy on token use
-        private int bestOfN = 1;
+        private int bestOfN = 2;
         // detect abuse
         private String user = "";
         // echo back prompt and its compeletion
@@ -46,12 +46,17 @@ public class OpenaiApiService {
         // stream prompt as it generates
         private boolean stream = false;
 
-    @Autowired private ObjectMapper jsonMapper;
+    @Autowired private ObjectMapper jsonMapper = new ObjectMapper();
     @Autowired private OpenaiPromptBuilder pBuilder = new OpenaiPromptBuilder();
     
     public String fetchMealResponse(String Type) throws JsonMappingException, JsonProcessingException{
-        JsonNode jsonNode = jsonMapper.readTree(getJSONResponse(Type));
-        return jsonNode.get("text").asText();
+        String jsonResponse = getJSONResponse(Type);
+        JsonNode jsonNode = jsonMapper.readTree(jsonResponse);
+       
+        String text = jsonNode.get("choices").get(0).get("text").asText();
+       text = text.replace("\\\"", "\"");
+        text = text.replace("\n", "");
+        return text;
     }
 
     public String fetchMealResponse(String Type,String extendedPrompt) throws JsonMappingException, JsonProcessingException{
@@ -76,7 +81,7 @@ public class OpenaiApiService {
         HttpEntity<String> request = new HttpEntity<String>(jsonRequest, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(OPENAI_URL, request, String.class);
         
-        return response.getBody().replace("\\\"", "\"");
+        return response.getBody();
     }
     public String getJSONResponse(String Type, String extendedPrompt) throws JsonProcessingException{
        
@@ -110,7 +115,7 @@ public class OpenaiApiService {
         params.put("presence_penalty", presencePenalty);
         params.put("n", bestOfN);
         String res = new ObjectMapper().writeValueAsString(params);
-        res += "\r\n\r\n";
+        res += "\r\n";
         return res;
     }
     ///////////////////////////////////////////////////////////

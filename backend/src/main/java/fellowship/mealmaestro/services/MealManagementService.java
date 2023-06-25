@@ -17,9 +17,9 @@ import fellowship.mealmaestro.models.Meal;
 public class MealManagementService {
 
     @Autowired
-    private OpenaiApiService openaiApiService;
+    private OpenaiApiService openaiApiService = new OpenaiApiService();
     @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public String generateDaysMeals() throws JsonMappingException, JsonProcessingException {
         JsonNode breakfastJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
@@ -30,13 +30,14 @@ public class MealManagementService {
         combinedNode.set("breakfast", breakfastJson);
         combinedNode.set("lunch", lunchJson);
         combinedNode.set("dinner", dinnerJson);
-        DaysMeals daysMeals = objectMapper.treeToValue(combinedNode, DaysMeals.class);
-        return daysMeals.toString();
+        //
+        // DaysMeals daysMeals = objectMapper.treeToValue(combinedNode, DaysMeals.class);
+        return combinedNode.toString();
     }
 
     public String generateMeal() throws JsonMappingException, JsonProcessingException {
         JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast lunch or dinner"));
-        Meal meal = objectMapper.treeToValue(mealJson, Meal.class);
-        return "";
+        
+        return mealJson.toString();
     }
 }
