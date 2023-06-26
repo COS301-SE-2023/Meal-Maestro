@@ -17,39 +17,39 @@ import { ErrorHandlerService } from '../../services/services';
 export class DailyMealsComponent  implements OnInit {
 
  // @Input() todayData!: MealI[];
-  @Input() dayData!: DaysMealsI[];
+  @Input() dayData!: DaysMealsI;
   // daysMeals: DaysMealsI[] = [] ;
   // meals:MealI[] = [];
   isModalOpen = false;
- // currentObject :any
-  // setOpen(isOpen: boolean, o :any) {
-  //   if(o==null)
-  //     o = this.currentObject
-  //   this.isModalOpen = isOpen;
-  //  // this.setCurrent(o)
-  // }
+ currentObject :any
+  setOpen(isOpen: boolean, o :any) {
+    if(o==null)
+      o = this.currentObject
+    this.isModalOpen = isOpen;
+    this.setCurrent(o)
+  }
   constructor(public r : Router
     , private mealGenerationservice:MealGenerationService
     , private errorHandlerService:ErrorHandlerService) {}
 
   ngOnInit() {
-    this.mealGenerationservice.getDailyMeals().subscribe({
-      next: (data) => {
-        this.dayData = data;
+    // this.mealGenerationservice.getDailyMeals().subscribe({
+    //   next: (data) => {
+    //     this.dayData = data;
         
-      },
-      error: (err) => {
-        this.errorHandlerService.presentErrorToast(
-          'Error loading meal items', err
-        )
-      }
-    })
+    //   },
+    //   error: (err) => {
+    //     this.errorHandlerService.presentErrorToast(
+    //       'Error loading meal items', err
+    //     )
+    //   }
+    // })
 
 
   }
 
-  // setCurrent(o : any) {
-  //   this.currentObject = o;
-  // }
+  setCurrent(o : any) {
+    this.currentObject = o;
+  }
 
 }

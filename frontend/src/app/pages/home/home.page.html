@@ -1,4 +1,4 @@
-<ion-header >
+<ion-header>
   <ion-toolbar>
     <ion-title>Your Meals</ion-title>
   </ion-toolbar>
@@ -10,57 +10,9 @@
       <ion-title size="large" style="color: black">Your Meals</ion-title>
     </ion-toolbar>
   </ion-header>
-
+  
   <ion-list lines="inset">
-    <ion-item>
-      <ion-label>Today</ion-label>
-    </ion-item>
-
-    <app-daily-meals [todayData]="todayArray"></app-daily-meals>
-
-
-    
+    <app-daily-meals *ngFor="let item of daysMeals" [item]="item">
+    </app-daily-meals>
   </ion-list>
-
-  <ion-list lines="inset" lines-color="secondary">
-    <ion-item>
-      <ion-label>Tomorrow</ion-label>
-    </ion-item>
-
-
-    <app-daily-meals [tomorrowData]="tomorrowArray"></app-daily-meals>
-<!-- 
-    <ion-card button="true" color="primary">
-      <ion-card-header>
-        <ion-card-subtitle>Breakfast</ion-card-subtitle>
-        <ion-card-title>Muesli & Yogurt</ion-card-title>
-      </ion-card-header>
-
-      <ion-card-content>
-        A classic Nutritious breakfast with a low gi to sustain you through your
-        busy day
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card button="true" color="primary">
-      <ion-card-header>
-        <ion-card-subtitle>Lunch</ion-card-subtitle>
-        <ion-card-title>Chicken Alfredo</ion-card-title>
-      </ion-card-header>
-
-      <ion-card-content> A savoury filling lunch </ion-card-content>
-    </ion-card>
-
-    <ion-card button="true" color="primary">
-      <ion-card-header>
-        <ion-card-subtitle>Dinner</ion-card-subtitle>
-        <ion-card-title>Butternut soup</ion-card-title>
-      </ion-card-header>
-
-      <ion-card-content>
-        A warm soup to fill you in these winter months
-      </ion-card-content>
-    </ion-card> -->
-  </ion-list>
-
 </ion-content>
