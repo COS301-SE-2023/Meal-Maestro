@@ -21,12 +21,8 @@ export class MealGenerationService {
   constructor(private http: HttpClient) { }
 
   getDailyMeals():Observable<DaysMealsI[]> {
-    return this.http.post<DaysMealsI[]>(
-      this.url+'/getDaysMeals',
-      {
-      "username": this.user.username,
-      "email": this.user.email
-      }
+    return this.http.get<DaysMealsI[]>(
+      this.url+'/getDaysMeals'
     );
   }
 
