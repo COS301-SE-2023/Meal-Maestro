@@ -1,21 +1,11 @@
-
-<ion-card class="ion-no-margin" (click)="setOpen(true, null)">
-  <ion-icon name="close" class="close-icon"></ion-icon>
-  <div class="image-container" [style.background-image]="'url(' + meal.url + ')'">
-    <div class="card-title">{{ meal.name }}</div>
-  </div>
-
-<ion-modal [isOpen]="isModalOpen">
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{ meal.name }}</ion-title>
+    <ion-title>{{ title }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="setOpen(false, null)">Close</ion-button>
+      <ion-button (click)="closeModal()">Close</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-img [src]="meal.url" [alt]="meal.name"></ion-img>
+  <ion-img [src]="image" [alt]="title"></ion-img>
 </ion-content>
-</ion-modal>
-</ion-card>

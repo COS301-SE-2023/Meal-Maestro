@@ -9,8 +9,7 @@ import { Router } from '@angular/router';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [ CommonModule, IonicModule, DailyMealsComponent
-  ]
+  imports: [IonicModule, DailyMealsComponent],
 })
 export class HomePage implements OnInit{
   daysMeals: DaysMealsI[] = [];
@@ -21,14 +20,8 @@ export class HomePage implements OnInit{
   async ngOnInit() {
     this.mealGenerationservice.getDailyMeals().subscribe({
       next: (data) => {
-        if(Array.isArray(data)){
-          this.daysMeals = data;
-        }
-        else {
-          this.daysMeals = [data];
-        }
+        this.daysMeals = data;
         
-        console.log(this.daysMeals);
       },
       error: (err) => {
         this.errorHandlerService.presentErrorToast(
@@ -36,24 +29,6 @@ export class HomePage implements OnInit{
         )
       }
     })
-    this.mealGenerationservice.getDailyMeals().subscribe({
-      next: (data) => {
-        if(Array.isArray(data)){
-          this.daysMeals.push(...data);
-        }
-        else {
-          this.daysMeals.push(data);
-        }
-        
-        console.log(this.daysMeals);
-      },
-      error: (err) => {
-        this.errorHandlerService.presentErrorToast(
-          'Error loading meal items', err
-        )
-      }
-    })
-
 
   }
 
@@ -84,5 +59,4 @@ export class HomePage implements OnInit{
   
 }import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
 import { ErrorHandlerService } from '../../services/services';
-import { CommonModule } from '@angular/common';
 
