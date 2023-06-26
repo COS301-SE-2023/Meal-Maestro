@@ -20,7 +20,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 @Service
 public class OpenaiApiService {
-    Dotenv dotenv = Dotenv.load();
+    Dotenv dotenv = Dotenv.configure().directory("backend\\.env").load();
     private static final String OPENAI_URL = "https://api.openai.com/v1/completions";
 
     private final String API_KEY = dotenv.get("OPENAI_API_KEY");
@@ -29,7 +29,7 @@ public class OpenaiApiService {
     private String model = "text-davinci-003";
     private String stop = "";
 
-    private double temperature = 0.2;
+    private double temperature = 0.5;
     private double topP = 1.0;
     private double freqPenalty = 0.0;
     private double presencePenalty = 0.0;
