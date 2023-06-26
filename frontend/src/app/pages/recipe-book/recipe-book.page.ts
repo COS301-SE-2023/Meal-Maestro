@@ -45,24 +45,24 @@ export class RecipeBookPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    for (let index = 0; index < 4; index++) {
-      this.mealGenerationservice.getMeal().subscribe({
-        next: (data) => {
-          if (Array.isArray(data)) {
-            this.meals.push(...data);
-          } else {
-            this.meals.push(data);
-          }
+    // for (let index = 0; index < 4; index++) {
+    //   this.mealGenerationservice.getMeal().subscribe({
+    //     next: (data) => {
+    //       if (Array.isArray(data)) {
+    //         this.meals.push(...data);
+    //       } else {
+    //         this.meals.push(data);
+    //       }
 
-          console.log(this.meals);
-        },
-        error: (err) => {
-          this.errorHandlerService.presentErrorToast(
-            'Error loading recipe items',
-            err
-          );
-        },
-      });
-    }
+    //       console.log(this.meals);
+    //     },
+    //     error: (err) => {
+    //       this.errorHandlerService.presentErrorToast(
+    //         'Error loading recipe items',
+    //         err
+    //       );
+    //     },
+    //   });
+    // }
   }
 }

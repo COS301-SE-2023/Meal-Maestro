@@ -1,9 +1,10 @@
+
 <ion-card class="ion-no-margin" (click)="setOpen(true, null)">
   <ion-icon name="close" class="close-icon"></ion-icon>
   <div class="image-container" [style.background-image]="'url(' + meal.url + ')'">
     <div class="card-title">{{ meal.name }}</div>
   </div>
-</ion-card>
+
 <ion-modal [isOpen]="isModalOpen">
 <ion-header>
   <ion-toolbar>
@@ -17,3 +18,4 @@
   <ion-img [src]="meal.url" [alt]="meal.name"></ion-img>
 </ion-content>
 </ion-modal>
+</ion-card>
