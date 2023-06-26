@@ -36,6 +36,24 @@ export class HomePage implements OnInit{
         )
       }
     })
+    this.mealGenerationservice.getDailyMeals().subscribe({
+      next: (data) => {
+        if(Array.isArray(data)){
+          this.daysMeals.push(...data);
+        }
+        else {
+          this.daysMeals.push(data);
+        }
+        
+        console.log(this.daysMeals);
+      },
+      error: (err) => {
+        this.errorHandlerService.presentErrorToast(
+          'Error loading meal items', err
+        )
+      }
+    })
+
 
   }
 
