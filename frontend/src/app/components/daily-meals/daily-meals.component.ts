@@ -17,7 +17,7 @@ import { ErrorHandlerService } from '../../services/services';
 export class DailyMealsComponent  implements OnInit {
 
  // @Input() todayData!: MealI[];
-  @Input() dayData!: DaysMealsI;
+  @Input() dayData!: DaysMealsI[];
   // daysMeals: DaysMealsI[] = [] ;
   // meals:MealI[] = [];
   isModalOpen = false;
