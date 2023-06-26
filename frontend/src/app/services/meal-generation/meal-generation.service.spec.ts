@@ -1,13 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 
 import { MealGenerationService } from './meal-generation.service';
+import { HttpClient } from '@angular/common/http';
 
 describe('MealGenerationService', () => {
   let service: MealGenerationService;
+  let httpClientSpy: jasmine.SpyObj<HttpClient>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(MealGenerationService);
+    httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
+    service = new MealGenerationService(httpClientSpy as any);
   });
 
   it('should be created', () => {
