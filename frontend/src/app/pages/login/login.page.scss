@@ -1,10 +1,15 @@
 .logo {
-    align-items: center;
-    margin-top: 7vh;
-    margin-left: 5vw;
+    align-items: center;  
    // border-radius: 50%;
-    height: 17vh;
-    width: 37vw;
+    height: 230px;
+    width: 230px;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 7vh;
 }
 
 .firstinput {
