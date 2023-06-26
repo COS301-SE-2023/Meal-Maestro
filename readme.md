@@ -52,6 +52,9 @@ easily plan meals for the coming week and helps them hit their nutritional goals
 ## Coding Standards Document
 - 📃 https://docs.google.com/document/d/1Prh1NJkLCubiySVKyEGGlkWgBTonqnkokMo-sBYGPYw/edit?usp=sharing
 
+## Architectural Requirements Document
+- 📃 https://docs.google.com/document/d/1GADUq8VWsgqLFTfSPIBHwsFnrli8AbZGp7uwuRqVZu8/edit?usp=sharing
+
 ## Project Board
 
 - 📋 https://github.com/orgs/COS301-SE-2023/projects/38
