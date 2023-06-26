@@ -20,9 +20,19 @@ export class MealGenerationService {
   url : String = 'http://localhost:8080';
   constructor(private http: HttpClient) { }
 
-  getDailyMeals():Observable<DaysMealsI> {
-    return this.http.post<DaysMealsI>(
+  getDailyMeals():Observable<DaysMealsI[]> {
+    return this.http.post<DaysMealsI[]>(
       this.url+'/getDaysMeals',
+      {
+      "username": this.user.username,
+      "email": this.user.email
+      }
+    );
+  }
+
+  getMeal():Observable<MealI> {
+    return this.http.post<MealI>(
+      this.url+'/getMeal',
       {
       "username": this.user.username,
       "email": this.user.email

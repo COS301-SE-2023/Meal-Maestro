@@ -1,12 +1,11 @@
-<ion-card *ngFor="let item of todayData" (click)="setOpen(true, item)" color="primary">
-  <div *ngIf="item.identifier === 'Breakfast'">
-   
+<ion-card *ngFor="let item of dayData" (click)="setOpen(true, item)" color="primary">
+  <div>
     <ion-card-header>
       <ion-card-subtitle>Breakfast</ion-card-subtitle>
-      <ion-card-title>{{item.title}}</ion-card-title>
+      <ion-card-title>{{item.breakfast.title}}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      {{item.description}}
+      {{item.breakfast.description}}
     </ion-card-content>
     <ion-avatar>
       <img src="{{item.url}}">
@@ -16,31 +15,31 @@
       <ng-template>
         <ion-header>
           <ion-toolbar>
-            <ion-title>{{currentObject.title}}</ion-title>
+            <ion-title>{{item.breakfast.title}}</ion-title>
             <ion-buttons slot="end">
               <ion-button (click)="setOpen(false,null)">Close</ion-button>
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
         <ion-avatar class="background">
-          <img  src= "{{currentObject.url}}">
+          <img  src= "{{item.breakfast.url}}">
         </ion-avatar>
         <ion-content class="ion-padding">
-          <p>{{currentObject.ingredients}}</p> 
-         <p>{{currentObject.instructions}}</p> 
-         <p>{{currentObject.cookingTime}}</p> 
+          <p>{{item.breakfast.ingredients}}</p> 
+         <p>{{item.breakfast.instructions}}</p> 
+         <p>{{item.breakfast.cookingTime}}</p> 
         </ion-content>
       </ng-template>
     </ion-modal>
 
   </div>
 
-  <div  *ngIf="item.identifier === 'Lunch'">
+  <div>
     <ion-card-header>
       <ion-card-subtitle>Lunch</ion-card-subtitle>
-      <ion-card-title>{{item.title}}</ion-card-title>
+      <ion-card-title>{{item.lunch.title}}</ion-card-title>
     </ion-card-header>
-    <ion-card-content>{{item.description}}</ion-card-content>
+    <ion-card-content>{{item.lunch.description}}</ion-card-content>
     <ion-avatar>
       <img src="{{item.url}}">
     </ion-avatar>
@@ -49,42 +48,42 @@
       <ng-template>
         <ion-header>
           <ion-toolbar>
-            <ion-title>{{currentObject.title}}</ion-title>
+            <ion-title>{{item.lunch.title}}</ion-title>
             <ion-buttons slot="end">
               <ion-button (click)="setOpen(false,null)">Close</ion-button>
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
         <ion-avatar class="background">
-          <img  src= "{{currentObject.url}}">
+          <img  src= "{{item.lunch.url}}">
         </ion-avatar>
         <ion-content class="ion-padding">
-         <p>{{currentObject.ingredients}}</p> 
-         <p>{{currentObject.instructions}}</p> 
-         <p>{{currentObject.cookingTime}}</p> 
+         <p>{{item.lunch.ingredients}}</p> 
+         <p>{{item.lunch.instructions}}</p> 
+         <p>{{item.lunch.cookingTime}}</p> 
         </ion-content>
       </ng-template>
     </ion-modal>
   </div>
 
-  <div  *ngIf="item.identifier === 'Dinner'">
+  <div>
     <ion-card-header>
       <ion-card-subtitle>Dinner</ion-card-subtitle>
-      <ion-card-title>{{item.title}}</ion-card-title>
+      <ion-card-title>{{item.dinner.title}}</ion-card-title>
     </ion-card-header>
   
     <ion-card-content>
-      {{item.description}}
+      {{item.dinner.description}}
     </ion-card-content>
     <ion-avatar>
-      <img src="{{item.url}}">
+      <img src="{{item.dinner.url}}">
     </ion-avatar>
   
     <ion-modal [isOpen]="isModalOpen">
       <ng-template>
         <ion-header>
           <ion-toolbar>
-            <ion-title>{{currentObject.title}}</ion-title>
+            <ion-title>{{item.dinner.title}}</ion-title>
             <ion-buttons slot="end">
               <ion-button (click)="setOpen(false,null)">Close</ion-button>
             </ion-buttons>
@@ -94,75 +93,11 @@
           <img  src= "{{currentObject.url}}">
         </ion-avatar>
         <ion-content class="ion-padding">
-          <p>{{currentObject.ingredients}}</p> 
-         <p>{{currentObject.instructions}}</p> 
-         <p>{{currentObject.cookingTime}}</p> 
+          <p>{{item.dinner.ingredients}}</p> 
+         <p>{{item.dinner.instructions}}</p> 
+         <p>{{item.dinner.cookingTime}}</p> 
         </ion-content>
       </ng-template>
     </ion-modal>
   </div>
 </ion-card>
-
-
-
-<!-- <ion-card *ngFor="let item of mealsData" (click)="setOpen(true, item)" color="primary">
-  <ion-card-header>
-    <ion-card-subtitle>Lunch</ion-card-subtitle>
-    <ion-card-title>{{item.title}}</ion-card-title>
-  </ion-card-header>
-  <ion-card-content>{{item.description}}</ion-card-content>
-  <ion-avatar>
-    <img src="{{item.url}}">
-  </ion-avatar>
-  <ion-modal [isOpen]="isModalOpen">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>{{currentObject.title}}</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="setOpen(false, null)">Close</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-avatar class="background">
-        <img  src= "{{currentObject.url}}">
-      </ion-avatar>
-      <ion-content class="ion-padding">
-        {{currentObject.recipe}}
-      </ion-content>
-    </ng-template>
-  </ion-modal>
-</ion-card>
-
-<ion-card *ngFor="let item of mealsData" (click)="setOpen(true, item)" color="primary">
-  <ion-card-header>
-    <ion-card-subtitle>Dinner</ion-card-subtitle>
-    <ion-card-title>{{item.title}}</ion-card-title>
-  </ion-card-header>
-
-  <ion-card-content>
-    {{item.description}}
-  </ion-card-content>
-  <ion-avatar>
-    <img src="{{item.url}}">
-  </ion-avatar>
-
-  <ion-modal [isOpen]="isModalOpen">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>{{currentObject.title}}</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="setOpen(false, null)">Close</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-avatar class="background">
-        <img  src= "{{currentObject.url}}">
-      </ion-avatar>
-      <ion-content class="ion-padding">
-        {{currentObject.recipe}}
-      </ion-content>
-    </ng-template>
-  </ion-modal>
-</ion-card> -->
