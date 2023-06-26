@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MealI } from '../../models/meal.model';
-import { DaysMealsI, FoodItemI, UserI } from '../../models/interfaces';
-import { title } from 'process';
+import { DaysMealsI, UserI } from '../../models/interfaces';
 @Injectable({
   providedIn: 'root'
 })
