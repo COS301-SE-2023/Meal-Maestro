@@ -1,4 +1,4 @@
-export interface MealBrowse {
+export interface MealBrowseI {
     title: string;
     description: string; 
     url: string;

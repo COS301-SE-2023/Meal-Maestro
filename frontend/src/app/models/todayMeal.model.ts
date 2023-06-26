@@ -1,4 +1,4 @@
-export interface TodayMeal {
+export interface TodayMealI {
     identifier:string;
     title: string;
     description: string; 
