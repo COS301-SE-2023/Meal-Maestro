@@ -1,9 +1,15 @@
-
+body {
+    overflow: auto;
+  }
 
 .search {
-    
-    margin-bottom: 1vh;
-    color: white;
+    margin-top: 2vh;
+    margin-bottom: 0.5vh;
+   //--background: var(--ion-color-secondary-shade);
+   // color: var(--ion-color-primary);
+   // position: fixed;
+   // --height: 5vh;
+ //  --background-color: var(--ion-color-primary-shade);;
 }
 
 .rowfirst {
@@ -30,4 +36,3 @@ ion-avatar {
 .rowlast {
     margin-bottom: 10vh;
 }
-  
