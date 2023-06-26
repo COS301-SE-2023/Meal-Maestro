@@ -2,14 +2,14 @@ export interface UserPreferencesI {
     goal: string;
     shopping_interval: string;
     food_preferences: string[];
-    calorie_amount: number;
+    calorie_amount: number | null;
     budget_range: string;
-    macro_ratio: {protein: number, carbs: number, fats: number};
+    macro_ratio: {protein: number | null, carbs: number | null, fats: number | null};
     allergies: string[];
-    cooking_time: number;
-    user_height: number; //consider moving to account
-    user_weight: number; //consider moving to account
-    user_BMI: number;
+    cooking_time: number | null;
+    user_height: number | null; //consider moving to account
+    user_weight: number | null; //consider moving to account
+    user_BMI: number | null;
 
     BMI_set : boolean;
     cookingtime_set : boolean;

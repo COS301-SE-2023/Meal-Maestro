@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { UserPreferencesI } from '../../models/userpreference.model';
 
 import { CommonModule } from '@angular/common';
-import { RangeCustomEvent, RangeValue } from '@ionic/core';
 import { Router } from '@angular/router';
 
 
@@ -22,14 +21,14 @@ export class ProfilePage {
     goal: '',
     shopping_interval: '',
     food_preferences: [],
-    calorie_amount: 0,
+    calorie_amount: null,
     budget_range: '',
-    macro_ratio: {protein: 0, carbs: 0, fats: 0},
+    macro_ratio: {protein: null, carbs: null, fats: null},
     allergies: [],
-    cooking_time: 0,
-    user_height: 0,
-    user_weight: 0,
-    user_BMI: 0,
+    cooking_time: null,
+    user_height: null,
+    user_weight: null,
+    user_BMI: null,
 
     BMI_set : false,
     cookingtime_set : false,
