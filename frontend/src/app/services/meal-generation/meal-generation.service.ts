@@ -27,12 +27,8 @@ export class MealGenerationService {
   }
 
   getMeal():Observable<MealI> {
-    return this.http.post<MealI>(
-      this.url+'/getMeal',
-      {
-      "username": this.user.username,
-      "email": this.user.email
-      }
+    return this.http.get<MealI>(
+      this.url+'/getMeal'
     );
   }
 
