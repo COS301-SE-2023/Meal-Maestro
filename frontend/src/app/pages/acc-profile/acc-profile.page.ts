@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 export class AccProfilePage implements OnInit {
 
   goBack() {
-    this.router.navigate(['tabs/profile'])
+    this.router.navigate(['app/tabs/profile'])
   }
 
   constructor(private router: Router) { }

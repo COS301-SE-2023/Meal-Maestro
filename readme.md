@@ -1,5 +1,5 @@
 [![codecov](https://codecov.io/gh/COS301-SE-2023/Meal-Maestro/branch/development/graph/badge.svg?token=TUYXXQO1FK)](https://codecov.io/gh/COS301-SE-2023/Meal-Maestro)
-[![Build&Test Node.js](https://github.com/COS301-SE-2023/Meal-Maestro/actions/workflows/buildAndTest.yml/badge.svg?branch=main)](https://github.com/COS301-SE-2023/Meal-Maestro/actions/workflows/buildAndTest.yml)
+[![Build&Test Node.js](https://github.com/COS301-SE-2023/Meal-Maestro/actions/workflows/buildAndTest.yml/badge.svg)](https://github.com/COS301-SE-2023/Meal-Maestro/actions/workflows/buildAndTest.yml)
 # Meal Maestro
 ## The Fellowship
 
@@ -11,7 +11,7 @@ ingredients for each meal and generate a grocery list based on the ingredients n
 also includes optional features such as dietary goal tracking, meal ratings, ingredient
 substitutions, budget preferences and gives users the ability to add ingredients to their
 virtual pantry through image recognition. It aims to reduce decision fatigue, helps users
-easily plan meals for the coming week and helps them hit their nutritional goals.
+easily plan meals for the coming week and helps them hit their nutritional goals. 
 
 # Set Up
 ## Install:
@@ -37,7 +37,7 @@ easily plan meals for the coming week and helps them hit their nutritional goals
 # Documentation
 ## Demo 1
 
-
+https://drive.google.com/file/d/10Eq8U3jkWRM08BBfeC6RolvX8edsNR31/view?usp=sharing
 
 ## System Requirements Specification
 
@@ -135,6 +135,7 @@ and driven, we provide him with clear communication and engaging tasks. This app
 ensures that he stays focused and delivers exceptional results for the project
 
 Links:
+- https://www.linkedin.com/in/franko-swanepoel-1071b3277/
 - https://github.com/Krygsmancode
 
 ### Amicke
