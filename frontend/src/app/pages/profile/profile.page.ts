@@ -36,7 +36,7 @@ export class ProfilePage {
     macro_set : false,
     budget_set : false,
     calorie_set : false,
-    foodpreferance_set : false,
+    foodpreference_set : false,
     shoppinginterfval_set : false,
   };
   //Variables for displaying
@@ -101,7 +101,7 @@ export class ProfilePage {
     this.isPreferencesModalOpen = isOpen;
   }
   setOpenPreferencesSave(isOpen: boolean) {
-  if (this.userpreferences.foodpreferance_set === true) {
+  if (this.userpreferences.foodpreference_set === true) {
     if (this.preferences.vegetarian || this.preferences.vegan || this.preferences.glutenIntolerant || this.preferences.lactoseIntolerant) {
       if (!isOpen) {
         this.displayPreferences = this.getSelectedPreferences();
@@ -109,15 +109,15 @@ export class ProfilePage {
       this.isPreferencesModalOpen = isOpen;
     }
   }
-  else if (this.userpreferences.foodpreferance_set === false) {
+  else if (this.userpreferences.foodpreference_set === false) {
     this.userpreferences.food_preferences = [];
     this.displayPreferences = '';
     this.isPreferencesModalOpen = isOpen;
   }
   }
-  pereference_Toggle()
+  preference_Toggle()
 {
-  this.userpreferences.foodpreferance_set = !this.userpreferences.foodpreferance_set;
+  this.userpreferences.foodpreference_set = !this.userpreferences.foodpreference_set;
 }
   
   getSelectedPreferences(): string {

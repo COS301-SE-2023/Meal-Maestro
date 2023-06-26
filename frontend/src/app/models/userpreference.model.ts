@@ -17,7 +17,7 @@ export interface UserPreferencesI {
     macro_set : boolean;
     budget_set : boolean;
     calorie_set : boolean;
-    foodpreferance_set : boolean;
+    foodpreference_set : boolean;
     shoppinginterfval_set : boolean;
 
     

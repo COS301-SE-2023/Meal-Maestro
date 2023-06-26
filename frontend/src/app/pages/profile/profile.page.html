@@ -150,21 +150,21 @@
             <ion-card-subtitle>
             <div class="toggle-container">
               <ion-label class="toggle-label">Set Preferences </ion-label>
-              <ion-toggle [(ngModel)]="preferenceToggle" (ionChange)="pereference_Toggle()"></ion-toggle>
+              <ion-toggle [(ngModel)]="preferenceToggle" (ionChange)="preference_Toggle()"></ion-toggle>
             </div>
           </ion-card-subtitle>
             <ion-list>
               <ion-item>
-                <ion-toggle [disabled]="!userpreferences.foodpreferance_set" [(ngModel)]="preferences.vegetarian">Vegetarian</ion-toggle>
+                <ion-toggle [disabled]="!userpreferences.foodpreference_set" [(ngModel)]="preferences.vegetarian">Vegetarian</ion-toggle>
               </ion-item>
               <ion-item>
-                <ion-toggle [disabled]="!userpreferences.foodpreferance_set" [(ngModel)]="preferences.vegan" >Vegan</ion-toggle>
+                <ion-toggle [disabled]="!userpreferences.foodpreference_set" [(ngModel)]="preferences.vegan" >Vegan</ion-toggle>
               </ion-item>
               <ion-item>
-                <ion-toggle [disabled]="!userpreferences.foodpreferance_set" [(ngModel)]="preferences.glutenIntolerant">Gluten-intolerant</ion-toggle>
+                <ion-toggle [disabled]="!userpreferences.foodpreference_set" [(ngModel)]="preferences.glutenIntolerant">Gluten-intolerant</ion-toggle>
               </ion-item>
               <ion-item>
-                <ion-toggle [disabled]="!userpreferences.foodpreferance_set" [(ngModel)]="preferences.lactoseIntolerant">Lactose-intolerant</ion-toggle>
+                <ion-toggle [disabled]="!userpreferences.foodpreference_set" [(ngModel)]="preferences.lactoseIntolerant">Lactose-intolerant</ion-toggle>
               </ion-item>
             </ion-list>
           </ion-card-content>
