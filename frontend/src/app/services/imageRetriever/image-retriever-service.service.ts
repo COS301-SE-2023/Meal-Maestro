@@ -7,9 +7,9 @@ import { Observable, map } from 'rxjs';
   providedIn: 'root'
 })
 export class ImageRetrieverServiceService {
-  private apiKey = 'AIzaSyCtlVkqnRcjsDGAwHbKfO85Tqic8D-o4uc'; // Replace with your Google Custom Search API key
- // private cx = '95dcdf9417b3b4831'; // Replace with your Custom Search Engine ID
-  private apiUrl = 'https://customsearch.googleapis.com/customsearch/v1';
+  private apiKey = ''; // Replace with your Google Custom Search API key
+ // private cx = ''; // Replace with your Custom Search Engine ID
+  private apiUrl = '';
 
   constructor(private http: HttpClient) {}
 
