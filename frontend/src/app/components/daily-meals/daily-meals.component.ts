@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Input } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { TodayMeal } from '../../models/todayMeal.model';
-import { TomorrowMeal } from '../../models/tomorrowMeal.model';
+import { TodayMealI } from '../../models/todayMeal.model';
+import { TomorrowMealI } from '../../models/tomorrowMeal.model';
 
 @Component({
   selector: 'app-daily-meals',
@@ -13,8 +13,8 @@ import { TomorrowMeal } from '../../models/tomorrowMeal.model';
 })
 export class DailyMealsComponent  implements OnInit {
 
-  @Input() todayData!: TodayMeal[];
-  @Input() tomorrowData!: TomorrowMeal[];
+  @Input() todayData!: TodayMealI[];
+  @Input() tomorrowData!: TomorrowMealI[];
   isModalOpen = false;
   currentObject :any
   setOpen(isOpen: boolean, o :any) {
