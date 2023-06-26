@@ -71,7 +71,10 @@ public class MealManagementService {
         combinedNode.set("dinner", dinnerJson);
         //
         // DaysMeals daysMeals = objectMapper.treeToValue(combinedNode, DaysMeals.class);
-        return combinedNode.toString();
+        
+        String res = combinedNode.toString();
+        res = res.replace("/r/n", "\\r\\n");
+        return res;
     }
 
     public String generateMeal() throws JsonMappingException, JsonProcessingException {

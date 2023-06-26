@@ -12,13 +12,14 @@
   </ion-header>
   <ion-grid style="padding-top: 30px; padding-left: 20px; padding-right: 20px;">
     <ion-row>
-      <ion-col size="6" *ngFor="let item of items">
-        <ion-card class="ion-no-margin" (click)="openModal(item)">
+      <ion-col size="6" >
+        <app-recipe-item *ngFor="let item of meals" [meal]="item"></app-recipe-item>
+        <!-- <ion-card class="ion-no-margin" (click)="openModal(item)">
           <ion-icon name="close" class="close-icon"></ion-icon>
-          <div class="image-container" [style.background-image]="'url(' + item.image + ')'">
-            <div class="card-title">{{ item.title }}</div>
+          <div class="image-container" [style.background-image]="'url(' + item.url + ')'">
+            <div class="card-title">{{ item.name }}</div>
           </div>
-        </ion-card>
+        </ion-card> -->
       </ion-col>
     </ion-row>
   </ion-grid>
