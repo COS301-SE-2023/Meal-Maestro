@@ -49,6 +49,9 @@ easily plan meals for the coming week and helps them hit their nutritional goals
 
 - 📃 https://docs.google.com/document/d/1FmSqFAENVQOZEEr14x5cBBWr9sgkA5lm3mrld0XY0l8/edit?usp=sharing
 
+## User Manual Document
+- 📃 https://docs.google.com/document/d/1Cvxc9UgSUuXDbWwugPlxlK7Dh_KO7xvwuzCKtDzu1sM/edit?usp=sharing
+
 ## Coding Standards Document
 - 📃 https://docs.google.com/document/d/1Prh1NJkLCubiySVKyEGGlkWgBTonqnkokMo-sBYGPYw/edit?usp=sharing
 
