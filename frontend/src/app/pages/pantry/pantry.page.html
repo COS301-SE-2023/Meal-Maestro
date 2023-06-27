@@ -1,5 +1,5 @@
    <ion-header>
-     <ion-toolbar color="tertiary">
+     <ion-toolbar color="primary">
        <ion-segment [value]="segment" (ionChange)="segmentChanged($event)" >
          <ion-segment-button value="pantry">
            <ion-label>Pantry</ion-label>
@@ -12,7 +12,7 @@
    </ion-header>
    
 <ion-content [fullscreen]="true" scrollY="true" [ngSwitch]="segment">
-    <ion-item color="tertiary" class="header" slot="fixed">
+    <ion-item color="primary" class="header" slot="fixed">
       <ion-label slot="start">Name</ion-label>
       <ion-label slot="end">Quantity</ion-label>
     </ion-item>
