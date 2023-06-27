@@ -13,15 +13,16 @@ import { ErrorHandlerService } from '../../services/services';
   styleUrls: ['./daily-meals.component.scss'],
   standalone : true,
   imports: [CommonModule, IonicModule],
-
 })
-export class DailyMealsComponent {
+export class DailyMealsComponent  implements OnInit {
+
 
   @Input() todayData!: MealI[];
   @Input() dayData!: DaysMealsI;
   item: DaysMealsI | undefined;
   daysMeals: DaysMealsI[] = [] ;
   meals:MealI[] = [];
+
   isModalOpen = false;
   currentObject :any
   setOpen(isOpen: boolean, o :any) {
@@ -30,7 +31,9 @@ export class DailyMealsComponent {
     this.isModalOpen = isOpen;
     this.setCurrent(o)
   }
-  constructor() {}
+  constructor(public r : Router
+    , private mealGenerationservice:MealGenerationService
+    , private errorHandlerService:ErrorHandlerService) {}
 
   ngOnInit() {
     // this.mealGenerationservice.getDailyMeals().subscribe({
