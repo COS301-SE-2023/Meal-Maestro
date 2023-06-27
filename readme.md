@@ -150,6 +150,7 @@ and driven, we provide him with clear communication and engaging tasks. This app
 ensures that he stays focused and delivers exceptional results for the project
 
 Links:
+- https://www.linkedin.com/in/franko-swanepoel-1071b3277/
 - https://github.com/Krygsmancode
 
 ### Amicke
