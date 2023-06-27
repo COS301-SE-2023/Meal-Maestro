@@ -4,7 +4,7 @@ import { Observable, catchError, concatMap, forkJoin, from, map, switchMap, tap 
 import { MealI } from '../../models/meal.model';
 import { DaysMealsI, FoodItemI, UserI } from '../../models/interfaces';
 import { title } from 'process';
-import { ImageRetrieverServiceService } from '../imageRetriever/image-retriever-service.service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -19,7 +19,7 @@ export class MealGenerationService {
 
 
   url : String = 'http://localhost:8080';
-  constructor(private http: HttpClient, private imageRetriever: ImageRetrieverServiceService) { }
+  constructor(private http: HttpClient) { }
 
   getDailyMeals():Observable<DaysMealsI[]> {
     return this.http.get<DaysMealsI[]>(
@@ -40,38 +40,38 @@ export class MealGenerationService {
       this.url+'/getMeal'
     );
   }
-  private retrieveImageUrls(daysMeals: DaysMealsI[]): Observable<string[]> {
-    const imageRequests: Observable<string>[] = [];
+  // private retrieveImageUrls(daysMeals: DaysMealsI[]): Observable<string[]> {
+  //   const imageRequests: Observable<string>[] = [];
 
-    for (const dayMeal of daysMeals) {
-      imageRequests.push(from(this.imageRetriever.getImageUrl(dayMeal.breakfast.name)));
-      imageRequests.push(from(this.imageRetriever.getImageUrl(dayMeal.lunch.name)));
-      imageRequests.push(from(this.imageRetriever.getImageUrl(dayMeal.dinner.name)));
-    }
+  //   for (const dayMeal of daysMeals) {
+  //     imageRequests.push(from(this.imageRetriever.getImageUrl(dayMeal.breakfast.name)));
+  //     imageRequests.push(from(this.imageRetriever.getImageUrl(dayMeal.lunch.name)));
+  //     imageRequests.push(from(this.imageRetriever.getImageUrl(dayMeal.dinner.name)));
+  //   }
 
-    return forkJoin(imageRequests);
-  }
+  //   return forkJoin(imageRequests);
+  // }
 
 
-  private updateMealUrls(originalMeals: DaysMealsI[], updatedUrls: string[]): DaysMealsI[] {
-    let index = 0;
+  // private updateMealUrls(originalMeals: DaysMealsI[], updatedUrls: string[]): DaysMealsI[] {
+  //   let index = 0;
 
-    return originalMeals.map((dayMeal: DaysMealsI) => ({
-      ...dayMeal,
-      breakfast: {
-        ...dayMeal.breakfast,
-        url: updatedUrls[index++]
-      },
-      lunch: {
-        ...dayMeal.lunch,
-        url: updatedUrls[index++]
-      },
-      dinner: {
-        ...dayMeal.dinner,
-        url: updatedUrls[index++]
-      }
-    }));
-  }
+  //   return originalMeals.map((dayMeal: DaysMealsI) => ({
+  //     ...dayMeal,
+  //     breakfast: {
+  //       ...dayMeal.breakfast,
+  //       url: updatedUrls[index++]
+  //     },
+  //     lunch: {
+  //       ...dayMeal.lunch,
+  //       url: updatedUrls[index++]
+  //     },
+  //     dinner: {
+  //       ...dayMeal.dinner,
+  //       url: updatedUrls[index++]
+  //     }
+  //   }));
+  // }
 
 
 }
