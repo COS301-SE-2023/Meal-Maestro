@@ -1,5 +1,7 @@
 [![codecov](https://codecov.io/gh/COS301-SE-2023/Meal-Maestro/branch/development/graph/badge.svg?token=TUYXXQO1FK)](https://codecov.io/gh/COS301-SE-2023/Meal-Maestro)
 [![Build&Test Node.js](https://github.com/COS301-SE-2023/Meal-Maestro/actions/workflows/buildAndTest.yml/badge.svg)](https://github.com/COS301-SE-2023/Meal-Maestro/actions/workflows/buildAndTest.yml)
+![Static Badge](https://img.shields.io/badge/Red_Bull-Consumed-green)
+
 # Meal Maestro
 ## The Fellowship
 
@@ -37,15 +39,28 @@ easily plan meals for the coming week and helps them hit their nutritional goals
 # Documentation
 ## Demo 1
 
-https://drive.google.com/file/d/10Eq8U3jkWRM08BBfeC6RolvX8edsNR31/view?usp=sharing
+- 🎥 https://drive.google.com/file/d/10Eq8U3jkWRM08BBfeC6RolvX8edsNR31/view?usp=sharing
 
 ## System Requirements Specification
+### v1:
 
-https://docs.google.com/document/d/1r36yfCPophZftvO_4PcoFPyaN1UonBcP5Fbmt0ypGoI/edit?usp=sharing
+- 📃 https://docs.google.com/document/d/1r36yfCPophZftvO_4PcoFPyaN1UonBcP5Fbmt0ypGoI/edit?usp=sharing
+### v2:
+
+- 📃 https://docs.google.com/document/d/1FmSqFAENVQOZEEr14x5cBBWr9sgkA5lm3mrld0XY0l8/edit?usp=sharing
+
+## User Manual Document
+- 📃 https://docs.google.com/document/d/1Cvxc9UgSUuXDbWwugPlxlK7Dh_KO7xvwuzCKtDzu1sM/edit?usp=sharing
+
+## Coding Standards Document
+- 📃 https://docs.google.com/document/d/1Prh1NJkLCubiySVKyEGGlkWgBTonqnkokMo-sBYGPYw/edit?usp=sharing
+
+## Architectural Requirements Document
+- 📃 https://docs.google.com/document/d/1GADUq8VWsgqLFTfSPIBHwsFnrli8AbZGp7uwuRqVZu8/edit?usp=sharing
 
 ## Project Board
 
-https://github.com/orgs/COS301-SE-2023/projects/38
+- 📋 https://github.com/orgs/COS301-SE-2023/projects/38
 
 ## Individuals
 
