@@ -26,6 +26,13 @@ export class RecipeBookPage implements OnInit {
 
   meals: MealI[] = [];
 
+  constructor(
+    private modalController: ModalController,
+    public r: Router,
+    private mealGenerationservice: MealGenerationService,
+    private errorHandlerService: ErrorHandlerService
+  ) {}
+
   async openModal(item: any) {
     const modal = await this.modalController.create({
       component: RecipeItemComponent,
@@ -36,13 +43,7 @@ export class RecipeBookPage implements OnInit {
     });
     await modal.present();
   }
-
-  constructor(
-    private modalController: ModalController,
-    public r: Router,
-    private mealGenerationservice: MealGenerationService,
-    private errorHandlerService: ErrorHandlerService
-  ) {}
+  
 
   async ngOnInit() {
     for (let index = 0; index < 4; index++) {

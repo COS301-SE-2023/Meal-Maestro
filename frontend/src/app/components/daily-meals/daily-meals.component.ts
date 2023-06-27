@@ -17,13 +17,13 @@ import { ErrorHandlerService } from '../../services/services';
 })
 export class DailyMealsComponent {
 
- // @Input() todayData!: MealI[];
+  @Input() todayData!: MealI[];
   @Input() dayData!: DaysMealsI;
- // item: DaysMealsI | undefined;
-  // daysMeals: DaysMealsI[] = [] ;
-  // meals:MealI[] = [];
+  item: DaysMealsI | undefined;
+  daysMeals: DaysMealsI[] = [] ;
+  meals:MealI[] = [];
   isModalOpen = false;
- currentObject :any
+  currentObject :any
   setOpen(isOpen: boolean, o :any) {
     if(o==null)
       o = this.currentObject

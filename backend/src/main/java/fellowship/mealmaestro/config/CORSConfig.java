@@ -15,7 +15,7 @@ public class CORSConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                 .allowedMethods("*")
-                .allowedOrigins("http://localhost:4200");
+                .allowedOrigins("http://localhost:4200", "http://localhost:8100");
             }
         };
     }
