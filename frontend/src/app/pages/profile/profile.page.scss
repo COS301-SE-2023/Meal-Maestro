@@ -1,8 +1,35 @@
 .button-container {
-    display: flex;
-    justify-content: flex-end;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-  }
-  
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.card-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggle-label {
+  margin-right: 10px;
+  flex: 1;
+  text-align: left;
+}
+
+.toggle-value {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-label {
+  margin-right: 10px;
+  flex: 1;
+  text-align: left;
+}

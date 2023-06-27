@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
-import { ExploreContainerComponent } from '../../components/explore-container/explore-container.component';
-
+import { DailyMealsComponent } from '../../components/daily-meals/daily-meals.component';
 import { HomePage } from './home.page';
 
 describe('HomePage', () => {
@@ -10,7 +9,7 @@ describe('HomePage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HomePage, IonicModule, ExploreContainerComponent],
+      imports: [HomePage, IonicModule, DailyMealsComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomePage);
