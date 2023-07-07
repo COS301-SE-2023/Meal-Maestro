@@ -23,7 +23,7 @@ public class UserRepository {
     public void createUser(UserModel user){
         try (Session session = driver.session()){
 
-            session.executeWrite(createUserTransaction(user.getUsername(), user.getPassword(), user.getEmail()));
+            session.executeWrite(createUserTransaction(user.getName(), user.getPassword(), user.getEmail()));
         }
     }
 
@@ -41,7 +41,7 @@ public class UserRepository {
     //#region Check User
     public boolean checkUser(UserModel user){
         try (Session session = driver.session()){
-            return session.executeRead(checkUserTransaction(user.getUsername(), user.getEmail()));
+            return session.executeRead(checkUserTransaction(user.getName(), user.getEmail()));
         }
     }
 
