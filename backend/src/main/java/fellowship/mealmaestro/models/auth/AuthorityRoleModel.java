@@ -1,4 +1,4 @@
-package fellowship.mealmaestro.models;
+package fellowship.mealmaestro.models.auth;
 
 public enum AuthorityRoleModel {
     ADMIN,

@@ -1,4 +1,4 @@
-package fellowship.mealmaestro.services;
+package fellowship.mealmaestro.services.auth;
 
 import java.security.Key;
 import java.util.Date;

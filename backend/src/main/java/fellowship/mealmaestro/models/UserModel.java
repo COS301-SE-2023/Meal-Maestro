@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import fellowship.mealmaestro.models.auth.AuthorityRoleModel;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -25,10 +26,11 @@ public class UserModel implements UserDetails{
 
     private AuthorityRoleModel authorityRole;
 
-    public UserModel(String name, String password, String email){
+    public UserModel(String name, String password, String email, AuthorityRoleModel authorityRole){
         this.name = name;
         this.password = password;
         this.email = email;
+        this.authorityRole = AuthorityRoleModel.USER;
     }
 
     public String getName(){
@@ -49,6 +51,14 @@ public class UserModel implements UserDetails{
 
     public void setEmail(String email){
         this.email = email;
+    }
+
+    public AuthorityRoleModel getAuthorityRole(){
+        return this.authorityRole;
+    }
+
+    public void setAuthorityRole(AuthorityRoleModel authorityRole){
+        this.authorityRole = authorityRole;
     }
 
     @Override
