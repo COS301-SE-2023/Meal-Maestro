@@ -30,7 +30,6 @@ export class LoginPage {
       email: form.email,
       password: form.password,
     }
-    console.log(loginUser);
     this.auth.login(loginUser).subscribe({
       next: (result) => {
         if (result) {

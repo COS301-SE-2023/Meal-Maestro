@@ -14,27 +14,16 @@ export class AuthenticationService {
 
   login(user: UserI): Observable<boolean> {
     return this.http.post<boolean>(
-      this.url+'/login',
+      this.url+'/authenticate',
       {
-        "username": user.username,
         "email":user.email,
         "password": user.password
       });
   }
 
-  checkUser(user: UserI): Observable<boolean> {
-    return this.http.post<boolean>(
-      this.url+'/checkUser',
-      {
-        "username": user.username,
-        "email":user.email,
-        "password": user.password
-      });
-  }
-
-  createUser(user: UserI): Observable<void> {
+  register(user: UserI): Observable<void> {
     return this.http.post<void>(
-      this.url+'/createUser',
+      this.url+'/register',
       {
         "username": user.username,
         "email":user.email,
@@ -42,9 +31,9 @@ export class AuthenticationService {
       });
   }
 
-  getUser(email: string): Observable<UserI> {
+  findUser(email: string): Observable<UserI> {
     return this.http.post<UserI>(
-      this.url+'/getUser',
+      this.url+'/findByEmail',
       {
         "username": '',
         "email": email,
