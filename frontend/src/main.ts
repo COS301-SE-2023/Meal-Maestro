@@ -6,8 +6,9 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { JwtInterceptor } from './app/services/authentication/jwt.interceptor';
 
 if (environment.production) {
   enableProdMode();
@@ -20,5 +21,6 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(HttpClientModule),
     importProvidersFrom(FormsModule),
     provideRouter(routes),
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
 });
