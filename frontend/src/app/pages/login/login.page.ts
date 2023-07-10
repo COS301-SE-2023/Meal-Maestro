@@ -31,27 +31,22 @@ export class LoginPage {
       password: form.password,
     }
     this.auth.login(loginUser).subscribe({
-      next: (result) => {
-        if (result) {
-          this.auth.getUser(loginUser.email).subscribe({
-            next: (user) => {
-              localStorage.setItem('user', user.username);
-              localStorage.setItem('email', user.email);
-            },
-            error: error => {
-              this.errorHandlerService.presentErrorToast('Login failed', error);
-            }
-          });
-
-          this.errorHandlerService.presentSuccessToast('Login successful');
-          this.router.navigate(['app/tabs/home']);
-        }
-        else {
-          this.errorHandlerService.presentErrorToast('Invalid credentials', 'Invalid credentials');
+      next: (response) => {
+        console.log(response);
+        if (response.status == 200) {
+          if (response.body) {
+            this.auth.setToken(response.body);
+            this.errorHandlerService.presentSuccessToast('Login successful');
+            this.router.navigate(['app/tabs/home']);
+          }
         }
       },
-      error: error => {
-        this.errorHandlerService.presentErrorToast('Login failed', error);
+      error: (error) => {
+        if (error.status == 403){
+          this.errorHandlerService.presentErrorToast('Invalid credentials', 'Invalid credentials');
+        }else{
+          this.errorHandlerService.presentErrorToast('Unexpected error. Please try again', error);
+        }
       }
     });
   }

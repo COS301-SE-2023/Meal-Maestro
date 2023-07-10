@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserI } from '../../models/interfaces';
@@ -12,32 +12,39 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient) { }
 
-  login(user: UserI): Observable<boolean> {
-    return this.http.post<boolean>(
+  login(user: UserI): Observable<HttpResponse<string>> {
+    return this.http.post<string>(
       this.url+'/authenticate',
       {
         "email":user.email,
         "password": user.password
-      });
+      },
+      {observe: 'response'});
   }
 
-  register(user: UserI): Observable<void> {
+  register(user: UserI): Observable<HttpResponse<void>> {
     return this.http.post<void>(
       this.url+'/register',
       {
         "username": user.username,
         "email":user.email,
         "password": user.password
-      });
+      },
+      {observe: 'response'});
   }
 
-  findUser(email: string): Observable<UserI> {
+  findUser(email: string): Observable<HttpResponse<UserI>> {
     return this.http.post<UserI>(
       this.url+'/findByEmail',
       {
         "username": '',
         "email": email,
         "password": ''
-      });
+      },
+      {observe: 'response'});
+  }
+
+  setToken(token: string): void {
+    localStorage.setItem('token', token);
   }
 }

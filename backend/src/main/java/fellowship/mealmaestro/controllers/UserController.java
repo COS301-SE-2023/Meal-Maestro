@@ -1,5 +1,7 @@
 package fellowship.mealmaestro.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +36,11 @@ public class UserController {
     public ResponseEntity<AuthenticationResponseModel> register(
         @RequestBody RegisterRequestModel request
     ){
-        return ResponseEntity.ok(authenticationService.register(request));
+        Optional<AuthenticationResponseModel> response = authenticationService.register(request);
+        if(response.isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(response.get());
     }
 
     @PostMapping("/authenticate")

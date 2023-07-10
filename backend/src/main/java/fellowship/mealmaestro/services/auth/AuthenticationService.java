@@ -1,5 +1,7 @@
 package fellowship.mealmaestro.services.auth;
 
+import java.util.Optional;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +32,7 @@ public class AuthenticationService {
         this.authenticationManager = authenticationManager;
     }
 
-    public AuthenticationResponseModel register(RegisterRequestModel request){
+    public Optional<AuthenticationResponseModel> register(RegisterRequestModel request){
         var user = new UserModel(
             request.getFirstname(),
             passwordEncoder.encode(request.getPassword()),
@@ -38,10 +40,16 @@ public class AuthenticationService {
             AuthorityRoleModel.USER
         );
 
+        boolean userExists = userRepository.findByEmail(request.getEmail()).isPresent();
+
+        if(userExists){
+            return Optional.empty();
+        }
+
         userRepository.createUser(user);
 
         var jwt = jwtService.generateToken(user);
-        return new AuthenticationResponseModel(jwt);
+        return Optional.of(new AuthenticationResponseModel(jwt));
     }
 
     public AuthenticationResponseModel authenticate(AuthenticationRequestModel request){
