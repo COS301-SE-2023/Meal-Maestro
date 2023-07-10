@@ -32,10 +32,9 @@ export class LoginPage {
     }
     this.auth.login(loginUser).subscribe({
       next: (response) => {
-        console.log(response);
         if (response.status == 200) {
           if (response.body) {
-            this.auth.setToken(response.body);
+            this.auth.setToken(response.body.token);
             this.errorHandlerService.presentSuccessToast('Login successful');
             this.router.navigate(['app/tabs/home']);
           }

@@ -41,7 +41,7 @@ export class SignupPage {
       next: (response) => {
         if (response.status == 200) {
           if (response.body) {
-            this.auth.setToken(response.body);
+            this.auth.setToken(response.body.token);
             this.errorHandlerService.presentSuccessToast('Registration successful');
             this.router.navigate(['app/tabs/home']);
           }
@@ -59,6 +59,5 @@ export class SignupPage {
 
   goToLogin() {
     this.router.navigate(['../']);
-    localStorage.clear();
   }
 }

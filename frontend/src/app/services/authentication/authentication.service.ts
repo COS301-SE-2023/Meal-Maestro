@@ -2,6 +2,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserI } from '../../models/interfaces';
+import { AuthResponseI } from '../../models/authResponse.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,8 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient) { }
 
-  login(user: UserI): Observable<HttpResponse<string>> {
-    return this.http.post<string>(
+  login(user: UserI): Observable<HttpResponse<AuthResponseI>> {
+    return this.http.post<AuthResponseI>(
       this.url+'/authenticate',
       {
         "email":user.email,
@@ -22,8 +23,8 @@ export class AuthenticationService {
       {observe: 'response'});
   }
 
-  register(user: UserI): Observable<HttpResponse<void>> {
-    return this.http.post<void>(
+  register(user: UserI): Observable<HttpResponse<AuthResponseI>> {
+    return this.http.post<AuthResponseI>(
       this.url+'/register',
       {
         "username": user.username,
@@ -45,6 +46,8 @@ export class AuthenticationService {
   }
 
   setToken(token: string): void {
-    localStorage.setItem('token', token);
+    if (token){
+      localStorage.setItem('token', token);
+    }
   }
 }
