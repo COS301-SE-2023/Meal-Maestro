@@ -15,57 +15,40 @@ export class ShoppingListApiService {
   getShoppingListItems(): Observable<HttpResponse<FoodItemI[]>> {
     return this.http.post<FoodItemI[]>(
       this.url + '/getShoppingList',
+      {},
+      { observe: 'response' });
+  }
+
+  addToShoppingList(item: FoodItemI): Observable<HttpResponse<FoodItemI>> {
+    return this.http.post<FoodItemI>(
+      this.url + '/addToShoppingList',
       {
-        "token": localStorage.getItem('token')
+        "name": item.name,
+        "quantity": item.quantity,
+        "weight": item.weight,
       },
       { observe: 'response' });
   }
 
-  addToShoppingList(item: FoodItemI): Observable<FoodItemI> {
-    return this.http.post<FoodItemI>(
-      this.url + '/addToShoppingList',
-      {
-        "food": {
-          "name": item.name,
-          "quantity": item.quantity,
-          "weight": item.weight,
-        },
-        "user": {
-          "username": this.user.username,
-          "email": this.user.email
-        }
-      });
-  }
-
-  updateShoppingListItem(item: FoodItemI): Observable<FoodItemI> {
+  updateShoppingListItem(item: FoodItemI): Observable<HttpResponse<FoodItemI>> {
     return this.http.post<FoodItemI>(
       this.url + '/updateShoppingList',
       {
-        "food": {
-          "name": item.name,
-          "quantity": item.quantity,
-          "weight": item.weight,
-        },
-        "user": {
-          "username": this.user.username,
-          "email": this.user.email
-        }
-      });
+        "name": item.name,
+        "quantity": item.quantity,
+        "weight": item.weight,
+      },
+      { observe: 'response' });
   }
 
-  deleteShoppingListItem(item: FoodItemI): Observable<FoodItemI> {
+  deleteShoppingListItem(item: FoodItemI): Observable<HttpResponse<FoodItemI>> {
     return this.http.post<FoodItemI>(
       this.url + '/removeFromShoppingList',
       {
-        "food": {
-          "name": item.name,
-          "quantity": item.quantity,
-          "weight": item.weight,
-        },
-        "user": {
-          "username": this.user.username,
-          "email": this.user.email
-        }
-      });
+        "name": item.name,
+        "quantity": item.quantity,
+        "weight": item.weight,
+      },
+      { observe: 'response' });
   }
 }

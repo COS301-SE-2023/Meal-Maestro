@@ -16,9 +16,7 @@ export class PantryApiService {
   getPantryItems(): Observable<HttpResponse<FoodItemI[]>> {
     return this.http.post<FoodItemI[]>(
       this.url+'/getPantry',
-      {
-        "token": localStorage.getItem('token')
-      },
+      {},
       {observe: 'response'});
   }
 
@@ -26,12 +24,9 @@ export class PantryApiService {
     return this.http.post<FoodItemI>(
       this.url+'/addToPantry',
       {
-        "food": {
-          "name": item.name,
-          "quantity": item.quantity,
-          "weight": item.weight,
-        },
-        "token": localStorage.getItem('token')
+        "name": item.name,
+        "quantity": item.quantity,
+        "weight": item.weight,
       },
       {observe: 'response'});
   }
@@ -40,12 +35,9 @@ export class PantryApiService {
     return this.http.post<void>(
       this.url+'/updatePantry',
       {
-        "food": {
-          "name": item.name,
-          "quantity": item.quantity,
-          "weight": item.weight,
-        },
-        "token": localStorage.getItem('token')
+        "name": item.name,
+        "quantity": item.quantity,
+        "weight": item.weight,
       },
       {observe: 'response'});
   }
@@ -54,12 +46,9 @@ export class PantryApiService {
     return this.http.post<void>(
       this.url+'/removeFromPantry',
       {
-        "food": {
-          "name": item.name,
-          "quantity": item.quantity,
-          "weight": item.weight,
-        },
-        "token": localStorage.getItem('token')
+        "name": item.name,
+        "quantity": item.quantity,
+        "weight": item.weight,
       },
       {observe: 'response'});
   }
