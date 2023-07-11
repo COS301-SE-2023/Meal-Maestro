@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import fellowship.mealmaestro.models.FoodModel;
 import fellowship.mealmaestro.models.PantryRequestModel;
-import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.repositories.PantryRepository;
 
 @Service
@@ -16,19 +15,19 @@ public class PantryService {
     @Autowired
     private PantryRepository pantryRepository;
 
-    public FoodModel addToPantry(PantryRequestModel pantryRequest){
-        return pantryRepository.addToPantry(pantryRequest);
+    public FoodModel addToPantry(PantryRequestModel request){
+        return pantryRepository.addToPantry(request);
     }
 
-    public void removeFromPantry(PantryRequestModel pantryRequest){
-        pantryRepository.removeFromPantry(pantryRequest);
+    public void removeFromPantry(PantryRequestModel request){
+        pantryRepository.removeFromPantry(request);
     }
 
-    public void updatePantry(PantryRequestModel pantryRequest){
-        pantryRepository.updatePantry(pantryRequest);
+    public void updatePantry(PantryRequestModel request){
+        pantryRepository.updatePantry(request);
     }
 
-    public List<FoodModel> getPantry(UserModel user){
-        return pantryRepository.getPantry(user);
+    public List<FoodModel> getPantry(String token){
+        return pantryRepository.getPantry(token);
     }
 }

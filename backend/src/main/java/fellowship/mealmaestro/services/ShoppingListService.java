@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import fellowship.mealmaestro.models.FoodModel;
 import fellowship.mealmaestro.models.ShoppingListRequestModel;
-import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.repositories.ShoppingListRepository;
 
 @Service
@@ -28,7 +27,7 @@ public class ShoppingListService {
         shoppingListRepository.updateShoppingList(request);
     }
 
-    public List<FoodModel> getShoppingList(UserModel user){
-        return shoppingListRepository.getShoppingList(user);
+    public List<FoodModel> getShoppingList(String token){
+        return shoppingListRepository.getShoppingList(token);
     }
 }

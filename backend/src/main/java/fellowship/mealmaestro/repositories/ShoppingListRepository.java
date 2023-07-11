@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import fellowship.mealmaestro.models.FoodModel;
 import fellowship.mealmaestro.models.ShoppingListRequestModel;
-import fellowship.mealmaestro.models.UserModel;
+import fellowship.mealmaestro.services.auth.JwtService;
 
 @Repository
 public class ShoppingListRepository {
@@ -20,25 +20,29 @@ public class ShoppingListRepository {
     @Autowired
     private final Driver driver;
 
-    public ShoppingListRepository(Driver driver){
+    @Autowired
+    private final JwtService jwtService;
+
+    public ShoppingListRepository(Driver driver, JwtService jwtService){
         this.driver = driver;
+        this.jwtService = jwtService;
     }
 
     //#region Create
     public FoodModel addToShoppingList(ShoppingListRequestModel request){
         FoodModel food = request.getFood();
-        UserModel user = request.getUser();
+        String email = jwtService.extractUserEmail(request.getToken());
         try (Session session = driver.session()){
-            return session.executeWrite(addToShoppingListTransaction(food, user.getUsername(), user.getEmail()));
+            return session.executeWrite(addToShoppingListTransaction(food, email));
         }
     }
 
-    public static TransactionCallback<FoodModel> addToShoppingListTransaction(FoodModel food, String username, String email){
+    public static TransactionCallback<FoodModel> addToShoppingListTransaction(FoodModel food, String email){
         return transaction -> {
-            transaction.run("MATCH (User{username: $username, email: $email})-[:HAS_LIST]->(s:`Shopping List`) \r\n" + //
+            transaction.run("MATCH (User{email: $email})-[:HAS_LIST]->(s:`Shopping List`) \r\n" + //
                         "CREATE (s)-[:IN_LIST]->(:Food {name: $name, quantity: $quantity, weight: $weight})",
 
-            Values.parameters("username", username, "email", email, "name", food.getName(),
+            Values.parameters("email", email, "name", food.getName(),
                         "quantity", food.getQuantity(), "weight", food.getWeight()));
 
             FoodModel addedFood = new FoodModel(food.getName(), food.getQuantity(), food.getWeight());
@@ -52,27 +56,24 @@ public class ShoppingListRepository {
      *  "quantity": "0",
      *  "weight": "0"
      * },
-     * "user": {
-     *  "username": "Frank",
-     *  "email": "test@example.com"
-     *  }
+     * "token": "secretToken"
      * }
      */
     //#endregion
 
     //#region Read
-    public List<FoodModel> getShoppingList(UserModel user){
+    public List<FoodModel> getShoppingList(String token){
         try (Session session = driver.session()){
-            return session.executeRead(getShoppingListTransaction(user.getUsername(), user.getEmail()));
+            return session.executeRead(getShoppingListTransaction(jwtService.extractUserEmail(token)));
         }
     }
 
-    public static TransactionCallback<List<FoodModel>> getShoppingListTransaction(String username, String email){
+    public static TransactionCallback<List<FoodModel>> getShoppingListTransaction(String email){
         return transaction -> {
-            var result = transaction.run("MATCH (User{username: $username, email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[:IN_LIST]->(f:Food) \r\n" + //
+            var result = transaction.run("MATCH (User{email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[:IN_LIST]->(f:Food) \r\n" + //
                         "RETURN f.name AS name, f.quantity AS quantity, f.weight AS weight",
 
-            Values.parameters("username", username, "email", email));
+            Values.parameters("email", email));
             
             List<FoodModel> foods = new ArrayList<>();
             while (result.hasNext()){
@@ -84,8 +85,7 @@ public class ShoppingListRepository {
     }
     /*  Example Post data:
      * {
-     * "username": "Frank",
-     * "email": "test@example.com"
+     * "token": "secretToken"
      * }
      */
     //#endregion
@@ -93,18 +93,18 @@ public class ShoppingListRepository {
     //#region Update
     public void updateShoppingList(ShoppingListRequestModel request){
         FoodModel food = request.getFood();
-        UserModel user = request.getUser();
+        String email = jwtService.extractUserEmail(request.getToken());
         try (Session session = driver.session()){
-            session.executeWrite(updateShoppingListTransaction(food, user.getUsername(), user.getEmail()));
+            session.executeWrite(updateShoppingListTransaction(food, email));
         }
     }
 
-    public static TransactionCallback<Void> updateShoppingListTransaction(FoodModel food, String username, String email){
+    public static TransactionCallback<Void> updateShoppingListTransaction(FoodModel food, String email){
         return transaction -> {
-            transaction.run("MATCH (User{username: $username, email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[:IN_LIST]->(f:Food {name: $name}) \r\n" + //
+            transaction.run("MATCH (User{email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[:IN_LIST]->(f:Food {name: $name}) \r\n" + //
                         "SET f.quantity = $quantity, f.weight = $weight",
 
-            Values.parameters("username", username, "email", email, "name", food.getName(),
+            Values.parameters("email", email, "name", food.getName(),
                         "quantity", food.getQuantity(), "weight", food.getWeight()));
             return null;
         };
@@ -114,18 +114,18 @@ public class ShoppingListRepository {
     //#region Delete
     public void removeFromShoppingList(ShoppingListRequestModel request){
         FoodModel food = request.getFood();
-        UserModel user = request.getUser();
+        String email = jwtService.extractUserEmail(request.getToken());
         try (Session session = driver.session()){
-            session.executeWrite(removeFromShoppingListTransaction(food, user.getUsername(), user.getEmail()));
+            session.executeWrite(removeFromShoppingListTransaction(food, email));
         }
     }
 
-    public static TransactionCallback<Void> removeFromShoppingListTransaction(FoodModel food, String username, String email){
+    public static TransactionCallback<Void> removeFromShoppingListTransaction(FoodModel food, String email){
         return transaction -> {
-            transaction.run("MATCH (User{username: $username, email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[r:IN_LIST]->(f:Food {name: $name}) \r\n" + //
+            transaction.run("MATCH (User{email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[r:IN_LIST]->(f:Food {name: $name}) \r\n" + //
                         "DELETE r,f",
 
-            Values.parameters("username", username, "email", email, "name", food.getName()));
+            Values.parameters("email", email, "name", food.getName()));
             return null;
         };
     }

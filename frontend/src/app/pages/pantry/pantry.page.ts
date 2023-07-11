@@ -36,25 +36,50 @@ export class PantryPage implements OnInit{
 
   async ngOnInit() {
     this.pantryService.getPantryItems().subscribe({
-      next: (data) => {
-        this.pantryItems = data;
+      next: (response) => {
+        if (response.status === 200) {
+          if (response.body){
+            this.pantryItems = response.body;
+          }
+        }
       },
       error: (err) => {
-        this.errorHandlerService.presentErrorToast(
-          'Error loading pantry items',
-          err
-        )
+        if (err.status === 403){
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorized access. Please login again.',
+            err
+          )
+          this.r.navigateByUrl('../');
+        }else{
+          this.errorHandlerService.presentErrorToast(
+            'Error loading pantry items',
+            err
+          )
+        }
       }
     })
+
     this.shoppingListService.getShoppingListItems().subscribe({
-      next: (data) => {
-        this.shoppingItems = data;
+      next: (response) => {
+        if (response.status === 200) {
+          if (response.body){
+            this.shoppingItems = response.body;
+          }
+        }
       },
       error: (err) => {
-        this.errorHandlerService.presentErrorToast(
-          'Error loading shopping list items',
-          err
-        )
+        if (err.status === 403){
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorized access. Please login again.',
+            err
+          )
+          this.r.navigateByUrl('../');
+        }else{
+          this.errorHandlerService.presentErrorToast(
+            'Error loading shopping list items',
+            err
+          )
+        }
       }
     });
   }
