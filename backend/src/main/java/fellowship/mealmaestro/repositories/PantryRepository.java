@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import fellowship.mealmaestro.models.FoodModel;
-import fellowship.mealmaestro.models.PantryRequestModel;
-import fellowship.mealmaestro.services.auth.JwtService;
 
 @Repository
 public class PantryRepository {
@@ -20,18 +18,12 @@ public class PantryRepository {
     @Autowired
     private final Driver driver;
 
-    @Autowired
-    private final JwtService jwtService;
-
-    public PantryRepository(Driver driver, JwtService jwtService){
+    public PantryRepository(Driver driver){
         this.driver = driver;
-        this.jwtService = jwtService;
     }
 
     //#region Create
-    public FoodModel addToPantry(PantryRequestModel pantryRequest){
-        FoodModel food = pantryRequest.getFood();
-        String email = jwtService.extractUserEmail(pantryRequest.getToken());
+    public FoodModel addToPantry(FoodModel food, String email){
         try (Session session = driver.session()){
             return session.executeWrite(addToPantryTransaction(food, email));
         }
@@ -55,15 +47,14 @@ public class PantryRepository {
      *  "quantity": "17",
      *  "weight": "42"
      * },
-     * "token": "secretToken"
      * }
      */
     //#endregion
 
     //#region Read
-    public List<FoodModel> getPantry(String token){
+    public List<FoodModel> getPantry(String email){
         try (Session session = driver.session()){
-            return session.executeRead(getPantryTransaction(jwtService.extractUserEmail(token)));
+            return session.executeRead(getPantryTransaction(email));
         }
     }
 
@@ -83,15 +74,12 @@ public class PantryRepository {
     }
     /*  Example Post data:
      * {
-     * "token": "secretToken"
      * }
      */
     //#endregion
 
     //#region Update
-    public void updatePantry(PantryRequestModel pantryRequest){
-        FoodModel food = pantryRequest.getFood();
-        String email = jwtService.extractUserEmail(pantryRequest.getToken());
+    public void updatePantry(FoodModel food, String email){
         try (Session session = driver.session()){
             session.executeWrite(updatePantryTransaction(food, email));
         }
@@ -109,9 +97,7 @@ public class PantryRepository {
     //#endregion
 
     //#region Delete
-    public void removeFromPantry(PantryRequestModel pantryRequest){
-        FoodModel food = pantryRequest.getFood();
-        String email = jwtService.extractUserEmail(pantryRequest.getToken());
+    public void removeFromPantry(FoodModel food, String email){
         try (Session session = driver.session()){
             session.executeWrite(removeFromPantryTransaction(food, email));
         }

@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import fellowship.mealmaestro.models.FoodModel;
-import fellowship.mealmaestro.models.ShoppingListRequestModel;
-import fellowship.mealmaestro.services.auth.JwtService;
 
 @Repository
 public class ShoppingListRepository {
@@ -20,18 +18,12 @@ public class ShoppingListRepository {
     @Autowired
     private final Driver driver;
 
-    @Autowired
-    private final JwtService jwtService;
-
-    public ShoppingListRepository(Driver driver, JwtService jwtService){
+    public ShoppingListRepository(Driver driver){
         this.driver = driver;
-        this.jwtService = jwtService;
     }
 
     //#region Create
-    public FoodModel addToShoppingList(ShoppingListRequestModel request){
-        FoodModel food = request.getFood();
-        String email = jwtService.extractUserEmail(request.getToken());
+    public FoodModel addToShoppingList(FoodModel food, String email){
         try (Session session = driver.session()){
             return session.executeWrite(addToShoppingListTransaction(food, email));
         }
@@ -62,9 +54,9 @@ public class ShoppingListRepository {
     //#endregion
 
     //#region Read
-    public List<FoodModel> getShoppingList(String token){
+    public List<FoodModel> getShoppingList(String email){
         try (Session session = driver.session()){
-            return session.executeRead(getShoppingListTransaction(jwtService.extractUserEmail(token)));
+            return session.executeRead(getShoppingListTransaction(email));
         }
     }
 
@@ -91,9 +83,7 @@ public class ShoppingListRepository {
     //#endregion
 
     //#region Update
-    public void updateShoppingList(ShoppingListRequestModel request){
-        FoodModel food = request.getFood();
-        String email = jwtService.extractUserEmail(request.getToken());
+    public void updateShoppingList(FoodModel food, String email){
         try (Session session = driver.session()){
             session.executeWrite(updateShoppingListTransaction(food, email));
         }
@@ -112,9 +102,7 @@ public class ShoppingListRepository {
     //#endregion
 
     //#region Delete
-    public void removeFromShoppingList(ShoppingListRequestModel request){
-        FoodModel food = request.getFood();
-        String email = jwtService.extractUserEmail(request.getToken());
+    public void removeFromShoppingList(FoodModel food, String email){
         try (Session session = driver.session()){
             session.executeWrite(removeFromShoppingListTransaction(food, email));
         }
