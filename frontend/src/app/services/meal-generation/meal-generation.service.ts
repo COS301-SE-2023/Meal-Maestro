@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, concatMap, forkJoin, from, map, switchMap, tap } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { MealI } from '../../models/meal.model';
 import { DaysMealsI, FoodItemI, UserI } from '../../models/interfaces';
 import { title } from 'process';
@@ -23,23 +23,10 @@ export class MealGenerationService {
 
   getDailyMeals():Observable<DaysMealsI[]> {
     return this.http.get<DaysMealsI[]>(
-      this.url+'/getDaysMeals')
-    // .pipe(
-    //   // Adjust the property name according to the actual response structure
-    //   map((daysMeals: DaysMealsI[]) => {
-    //     return this.retrieveImageUrls(daysMeals).pipe(
-    //       map((updatedUrls: string[]) => this.updateMealUrls(daysMeals, updatedUrls))
-    //     );
-    //   })
-    // );
-  }
-
-
-  getMeal():Observable<MealI> {
-    return this.http.get<MealI>(
-      this.url+'/getMeal'
+      this.url+'/getDaysMeals'
     );
   }
+
   // private retrieveImageUrls(daysMeals: DaysMealsI[]): Observable<string[]> {
   //   const imageRequests: Observable<string>[] = [];
 
@@ -72,6 +59,14 @@ export class MealGenerationService {
   //     }
   //   }));
   // }
+
+
+  getMeal():Observable<MealI> {
+    return this.http.get<MealI>(
+      this.url+'/getMeal'
+    );
+  }
+
 
 
 }
