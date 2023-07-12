@@ -14,9 +14,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class MealManagementService {
 
     @Autowired
-    private OpenaiApiService openaiApiService = new OpenaiApiService();
+    private OpenaiApiService openaiApiService;
     @Autowired
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper;
 
     public String generateDaysMeals() throws JsonMappingException, JsonProcessingException {
         int i = 0;

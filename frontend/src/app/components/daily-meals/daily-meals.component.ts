@@ -18,7 +18,7 @@ export class DailyMealsComponent  implements OnInit {
 
 
   @Input() todayData!: MealI[];
-  @Input() dayData!: DaysMealsI;
+  @Input() dayData!: DaysMealsI[];
   item: DaysMealsI | undefined;
   daysMeals: DaysMealsI[] = [] ;
   meals:MealI[] = [];

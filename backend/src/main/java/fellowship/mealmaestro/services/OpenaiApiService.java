@@ -20,7 +20,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 @Service
 public class OpenaiApiService {
-    Dotenv dotenv = Dotenv.configure().directory("backend\\.env").load();
+    Dotenv dotenv = Dotenv.load();
     private static final String OPENAI_URL = "https://api.openai.com/v1/completions";
 
     private final String API_KEY = dotenv.get("OPENAI_API_KEY");

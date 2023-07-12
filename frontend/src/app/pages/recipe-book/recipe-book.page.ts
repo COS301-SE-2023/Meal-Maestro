@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ModalController } from '@ionic/angular';
 import { RecipeItemComponent } from '../../components/recipe-item/recipe-item.component';
+import { Router } from '@angular/router';
+import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
+import { ErrorHandlerService } from '../../services/services';
 
 @Component({
   selector: 'app-recipe-book',
@@ -40,25 +43,25 @@ export class RecipeBookPage implements OnInit {
 
 
   async ngOnInit() {
-    for (let index = 0; index < 4; index++) {
-      this.mealGenerationservice.getMeal().subscribe({
-        next: (data) => {
-          if (Array.isArray(data)) {
-            this.meals.push(...data);
-          } else {
-            this.meals.push(data);
-          }
+    // for (let index = 0; index < 4; index++) {
+    //   this.mealGenerationservice.getMeal().subscribe({
+    //     next: (data) => {
+    //       if (Array.isArray(data)) {
+    //         this.meals.push(...data);
+    //       } else {
+    //         this.meals.push(data);
+    //       }
 
-          console.log(this.meals);
-        },
-        error: (err) => {
-          this.errorHandlerService.presentErrorToast(
-            'Error loading recipe items',
-            err
-          );
-        },
-      });
-    }
+    //       console.log(this.meals);
+    //     },
+    //     error: (err) => {
+    //       this.errorHandlerService.presentErrorToast(
+    //         'Error loading recipe items',
+    //         err
+    //       );
+    //     },
+    //   });
+    // }
 
   }
 
