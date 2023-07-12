@@ -11,9 +11,10 @@
     </ion-toolbar>
   </ion-header>
   <ion-grid style="padding-top: 30px; padding-left: 20px; padding-right: 20px;">
+    <app-recipe-item #recipeItem></app-recipe-item>
     <ion-row>
-      <ion-col size="6" *ngFor="let item of items">
-        <ion-card class="ion-no-margin" (click)="openModal(item)">
+      <ion-col size="6" *ngFor="let item of items">        
+        <ion-card class="ion-no-margin" (click)="recipeItem.openModal(item)">
           <ion-icon name="close" class="close-icon"></ion-icon>
           <div class="image-container" [style.background-image]="'url(' + item.image + ')'">
             <div class="card-title">{{ item.title }}</div>
