@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
+import { RecipeDetailsComponent } from '../recipe-details/recipe-details.component';
 
 @Component({
   selector: 'app-recipe-item',
@@ -24,8 +25,4 @@ export class RecipeItemComponent {
   }
 
   constructor(private modalController: ModalController) { }
-
-  closeModal() {
-    this.modalController.dismiss();
-  }
 }
