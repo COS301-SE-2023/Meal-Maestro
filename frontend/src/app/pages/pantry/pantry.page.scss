@@ -7,8 +7,9 @@
     font-family: 'Roboto', sans-serif;
 }
 
-.header{
-    width: 100%;
+.list{
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 ion-toolbar{
@@ -17,6 +18,4 @@ ion-toolbar{
 
 ion-content{
     --padding-bottom: 80px;
-    --padding-top: 50px;
-
 }

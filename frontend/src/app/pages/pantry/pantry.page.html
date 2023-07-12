@@ -9,17 +9,22 @@
          </ion-segment-button>
        </ion-segment>
      </ion-toolbar>
+     <ion-toolbar color="primary">
+      <ion-label slot="start">Name</ion-label>
+      <ion-label slot="end">Amount</ion-label>
+     </ion-toolbar>
    </ion-header>
    
-<ion-content [fullscreen]="true" scrollY="true" [ngSwitch]="segment">
-    <ion-item color="primary" class="header" slot="fixed">
-      <ion-label slot="start">Name</ion-label>
-      <ion-label slot="end">Quantity</ion-label>
-    </ion-item>
+<ion-content [scrollY]="true" [ngSwitch]="segment">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
 
-    <ion-grid >
-      <ion-row *ngSwitchCase="'pantry'">
-        <ion-col size="12">
+      <div class="list" *ngSwitchCase="'pantry'">
           <app-food-list-item 
           *ngFor="let item of pantryItems" 
           [item]="item" 
@@ -27,11 +32,9 @@
           (itemDeleted)="onItemDeleted($event)">
           </app-food-list-item>
           <div class="empty-list" *ngIf="pantryItems.length === 0">Pantry is empty :(</div>
-        </ion-col>
-      </ion-row>
+      </div>
 
-      <ion-row *ngSwitchCase="'shopping'">
-        <ion-col size="12">
+      <div class="list" *ngSwitchCase="'shopping'">
           <app-food-list-item
           *ngFor="let item of shoppingItems"
           [item]="item"
@@ -39,9 +42,7 @@
           (itemDeleted)="onItemDeleted($event)">
           ></app-food-list-item>
           <div class="empty-list" *ngIf="shoppingItems.length === 0">Shopping list is empty :(</div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+      </div>
   
     <ion-fab slot="fixed" vertical="bottom" horizontal="end" *ngSwitchCase="'pantry'">
       <ion-fab-button id="open-add-modal">

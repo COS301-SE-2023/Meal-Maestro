@@ -35,6 +35,10 @@ export class PantryPage implements OnInit{
               private errorHandlerService: ErrorHandlerService) {}
 
   async ngOnInit() {
+    this.fetchItems();
+  }
+
+  async fetchItems(){
     this.pantryService.getPantryItems().subscribe({
       next: (response) => {
         if (response.status === 200) {
@@ -224,5 +228,12 @@ export class PantryPage implements OnInit{
 
   confirmModal(){
     this.modal.dismiss(this.newItem, 'confirm');
+  }
+
+  doRefresh(event : any){
+    setTimeout(() => {
+      this.fetchItems();
+      event.target.complete();
+    }, 2000);
   }
 }
