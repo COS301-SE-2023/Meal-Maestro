@@ -6,6 +6,7 @@ import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
 import { ShoppingListApiService } from '../../services/shopping-list-api/shopping-list-api.service';
 import { FoodItemI } from '../../models/interfaces';
 import { of } from 'rxjs';
+import { HttpResponse } from '@angular/common/http';
 
 describe('FoodListItemComponent', () => {
   let component: FoodListItemComponent;
@@ -27,14 +28,10 @@ describe('FoodListItemComponent', () => {
       weight: 1,
     };
 
-    const emptyFoodItem: FoodItemI = {
-      name: '',
-      quantity: null,
-      weight: null,
-    };
+    const emptyResponse = new HttpResponse<void>({ body: null, status: 200 });
 
-    mockPantryService.updatePantryItem.and.returnValue(of(emptyFoodItem));
-    mockShoppingListService.updateShoppingListItem.and.returnValue(of(emptyFoodItem));
+    mockPantryService.updatePantryItem.and.returnValue(of(emptyResponse));
+    mockShoppingListService.updateShoppingListItem.and.returnValue(of(emptyResponse));
     mockActionSheetController.create.calls.reset();
 
     TestBed.configureTestingModule({

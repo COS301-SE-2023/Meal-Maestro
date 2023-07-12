@@ -30,8 +30,8 @@ export class ShoppingListApiService {
       { observe: 'response' });
   }
 
-  updateShoppingListItem(item: FoodItemI): Observable<HttpResponse<FoodItemI>> {
-    return this.http.post<FoodItemI>(
+  updateShoppingListItem(item: FoodItemI): Observable<HttpResponse<void>> {
+    return this.http.post<void>(
       this.url + '/updateShoppingList',
       {
         "name": item.name,
@@ -41,8 +41,8 @@ export class ShoppingListApiService {
       { observe: 'response' });
   }
 
-  deleteShoppingListItem(item: FoodItemI): Observable<HttpResponse<FoodItemI>> {
-    return this.http.post<FoodItemI>(
+  deleteShoppingListItem(item: FoodItemI): Observable<HttpResponse<void>> {
+    return this.http.post<void>(
       this.url + '/removeFromShoppingList',
       {
         "name": item.name,
