@@ -1,5 +1,7 @@
 package fellowship.mealmaestro.repositories;
 
+import java.util.Optional;
+
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionCallback;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import fellowship.mealmaestro.models.UserModel;
+import fellowship.mealmaestro.models.auth.AuthorityRoleModel;
 
 @Repository
 public class UserRepository {
@@ -23,7 +26,7 @@ public class UserRepository {
     public void createUser(UserModel user){
         try (Session session = driver.session()){
 
-            session.executeWrite(createUserTransaction(user.getUsername(), user.getPassword(), user.getEmail()));
+            session.executeWrite(createUserTransaction(user.getName(), user.getPassword(), user.getEmail()));
         }
     }
 
@@ -38,52 +41,31 @@ public class UserRepository {
     }
     //#endregion
 
-    //#region Check User
-    public boolean checkUser(UserModel user){
-        try (Session session = driver.session()){
-            return session.executeRead(checkUserTransaction(user.getUsername(), user.getEmail()));
-        }
-    }
-
-    public static TransactionCallback<Boolean> checkUserTransaction(String username, String email) {
-        return transaction -> {
-            var result = transaction.run("MATCH (n0:User {username: $username, email: $email}) RETURN n0",
-            Values.parameters("username", username, "email", email));
-            return result.hasNext();
-        };
-    }
-    //#endregion
-
-    //#region Login
-    public boolean login(UserModel user){
-        try (Session session = driver.session()){
-            return session.executeRead(loginTransaction(user.getEmail(), user.getPassword()));
-        }
-    }
-
-    public static TransactionCallback<Boolean> loginTransaction(String email, String password) {
-        return transaction -> {
-            var result = transaction.run("MATCH (n0:User {email: $email, password: $password}) RETURN n0",
-            Values.parameters("email", email, "password", password));
-            return result.hasNext();
-        };
-    }
-    //#endregion
-
     //#region Get User
-    public UserModel getUser(UserModel user){
+    public Optional<UserModel> findByEmail(String email){
         try (Session session = driver.session()){
-            return session.executeRead(getUserTransaction(user.getEmail()));
+            UserModel user = session.executeRead(findByEmailTransaction(email));
+            return Optional.ofNullable(user);
         }
     }
 
-    public static TransactionCallback<UserModel> getUserTransaction(String email) {
+    public static TransactionCallback<UserModel> findByEmailTransaction(String email) {
         return transaction -> {
             var result = transaction.run("MATCH (n0:User {email: $email}) RETURN n0",
             Values.parameters("email", email));
+
+            if (!result.hasNext()) {
+                return null;
+            }
+
             var record = result.single();
             var node = record.get("n0");
-            UserModel user = new UserModel(node.get("username").asString(), node.get("password").asString(), node.get("email").asString());
+            UserModel user = new UserModel(
+                node.get("username").asString(), 
+                node.get("password").asString(), 
+                node.get("email").asString(), 
+                AuthorityRoleModel.USER
+            );
             return user;
         };
     }

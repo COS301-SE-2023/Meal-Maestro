@@ -1,77 +1,54 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FoodItemI, UserI } from '../../models/interfaces';
+import { FoodItemI } from '../../models/interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShoppingListApiService {
 
-  user: UserI = {
-    username: localStorage.getItem('user') ?? '',
-    email: localStorage.getItem('email') ?? '',
-    password: '', 
-  }
-
   url: String = 'http://localhost:8080';
 
   constructor(private http: HttpClient) { }
 
-  getShoppingListItems(): Observable<FoodItemI[]> {
+  getShoppingListItems(): Observable<HttpResponse<FoodItemI[]>> {
     return this.http.post<FoodItemI[]>(
       this.url + '/getShoppingList',
-      {
-        "username": this.user.username,
-        "email": this.user.email
-      });
+      {},
+      { observe: 'response' });
   }
 
-  addToShoppingList(item: FoodItemI): Observable<FoodItemI> {
+  addToShoppingList(item: FoodItemI): Observable<HttpResponse<FoodItemI>> {
     return this.http.post<FoodItemI>(
       this.url + '/addToShoppingList',
       {
-        "food": {
-          "name": item.name,
-          "quantity": item.quantity,
-          "weight": item.weight,
-        },
-        "user": {
-          "username": this.user.username,
-          "email": this.user.email
-        }
-      });
+        "name": item.name,
+        "quantity": item.quantity,
+        "weight": item.weight,
+      },
+      { observe: 'response' });
   }
 
-  updateShoppingListItem(item: FoodItemI): Observable<FoodItemI> {
+  updateShoppingListItem(item: FoodItemI): Observable<HttpResponse<FoodItemI>> {
     return this.http.post<FoodItemI>(
       this.url + '/updateShoppingList',
       {
-        "food": {
-          "name": item.name,
-          "quantity": item.quantity,
-          "weight": item.weight,
-        },
-        "user": {
-          "username": this.user.username,
-          "email": this.user.email
-        }
-      });
+        "name": item.name,
+        "quantity": item.quantity,
+        "weight": item.weight,
+      },
+      { observe: 'response' });
   }
 
-  deleteShoppingListItem(item: FoodItemI): Observable<FoodItemI> {
+  deleteShoppingListItem(item: FoodItemI): Observable<HttpResponse<FoodItemI>> {
     return this.http.post<FoodItemI>(
       this.url + '/removeFromShoppingList',
       {
-        "food": {
-          "name": item.name,
-          "quantity": item.quantity,
-          "weight": item.weight,
-        },
-        "user": {
-          "username": this.user.username,
-          "email": this.user.email
-        }
-      });
+        "name": item.name,
+        "quantity": item.quantity,
+        "weight": item.weight,
+      },
+      { observe: 'response' });
   }
 }

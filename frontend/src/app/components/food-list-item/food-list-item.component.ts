@@ -46,7 +46,6 @@ export class FoodListItemComponent  implements OnInit {
         },
       ],
     });
-    console.log("actionSheet: ", actionSheet);
     await actionSheet.present();
 
     const { data, role } = await actionSheet.onDidDismiss();
@@ -116,24 +115,36 @@ export class FoodListItemComponent  implements OnInit {
             }
             if(this.segment === 'pantry') {
               this.pantryService.updatePantryItem(updatedItem).subscribe({
-                next: () => {
-                  this.item.quantity = value.quantity.value;
-                  this.item.weight = value.weight.value;
-                  this.closeItem();
+                next: (response) => {
+                  if (response.status === 200) {
+                    this.item.quantity = value.quantity.value;
+                    this.item.weight = value.weight.value;
+                    this.closeItem();
+                  }
                 },
                 error: (err) => {
-                  this.errorHandlerService.presentErrorToast('Error updating item', err);
+                  if (err.status === 403){
+                    this.errorHandlerService.presentErrorToast('Unauthorized access. Please login again.', err);
+                  } else {
+                    this.errorHandlerService.presentErrorToast('Error updating item', err);
+                  }
                 }
               });
             } else if (this.segment === 'shopping') {
               this.shoppingListService.updateShoppingListItem(updatedItem).subscribe({
-                next: () => {
-                  this.item.quantity = value.quantity.value;
-                  this.item.weight = value.weight.value;
-                  this.closeItem();
+                next: (response) => {
+                  if (response.status === 200) {
+                    this.item.quantity = value.quantity.value;
+                    this.item.weight = value.weight.value;
+                    this.closeItem();
+                  }
                 },
                 error: (err) => {
-                  this.errorHandlerService.presentErrorToast('Error updating item', err);
+                  if (err.status === 403){
+                    this.errorHandlerService.presentErrorToast('Unauthorized access. Please login again.', err);
+                  } else {
+                    this.errorHandlerService.presentErrorToast('Error updating item', err);
+                  }
                 }
               });
             }

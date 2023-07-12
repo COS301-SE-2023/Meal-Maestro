@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserI } from '../../models/interfaces';
+import { AuthResponseI } from '../../models/authResponse.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,43 +13,41 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient) { }
 
-  login(user: UserI): Observable<boolean> {
-    return this.http.post<boolean>(
-      this.url+'/login',
+  login(user: UserI): Observable<HttpResponse<AuthResponseI>> {
+    return this.http.post<AuthResponseI>(
+      this.url+'/authenticate',
+      {
+        "email":user.email,
+        "password": user.password
+      },
+      {observe: 'response'});
+  }
+
+  register(user: UserI): Observable<HttpResponse<AuthResponseI>> {
+    return this.http.post<AuthResponseI>(
+      this.url+'/register',
       {
         "username": user.username,
         "email":user.email,
         "password": user.password
-      });
+      },
+      {observe: 'response'});
   }
 
-  checkUser(user: UserI): Observable<boolean> {
-    return this.http.post<boolean>(
-      this.url+'/checkUser',
-      {
-        "username": user.username,
-        "email":user.email,
-        "password": user.password
-      });
-  }
-
-  createUser(user: UserI): Observable<void> {
-    return this.http.post<void>(
-      this.url+'/createUser',
-      {
-        "username": user.username,
-        "email":user.email,
-        "password": user.password
-      });
-  }
-
-  getUser(email: string): Observable<UserI> {
+  findUser(email: string): Observable<HttpResponse<UserI>> {
     return this.http.post<UserI>(
-      this.url+'/getUser',
+      this.url+'/findByEmail',
       {
         "username": '',
         "email": email,
         "password": ''
-      });
+      },
+      {observe: 'response'});
+  }
+
+  setToken(token: string): void {
+    if (token){
+      localStorage.setItem('token', token);
+    }
   }
 }

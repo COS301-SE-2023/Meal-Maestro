@@ -36,25 +36,50 @@ export class PantryPage implements OnInit{
 
   async ngOnInit() {
     this.pantryService.getPantryItems().subscribe({
-      next: (data) => {
-        this.pantryItems = data;
+      next: (response) => {
+        if (response.status === 200) {
+          if (response.body){
+            this.pantryItems = response.body;
+          }
+        }
       },
       error: (err) => {
-        this.errorHandlerService.presentErrorToast(
-          'Error loading pantry items',
-          err
-        )
+        if (err.status === 403){
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorized access. Please login again.',
+            err
+          )
+          this.r.navigate(['../']);
+        }else{
+          this.errorHandlerService.presentErrorToast(
+            'Error loading pantry items',
+            err
+          )
+        }
       }
     })
+
     this.shoppingListService.getShoppingListItems().subscribe({
-      next: (data) => {
-        this.shoppingItems = data;
+      next: (response) => {
+        if (response.status === 200) {
+          if (response.body){
+            this.shoppingItems = response.body;
+          }
+        }
       },
       error: (err) => {
-        this.errorHandlerService.presentErrorToast(
-          'Error loading shopping list items',
-          err
-        )
+        if (err.status === 403){
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorized access. Please login again.',
+            err
+          )
+          this.r.navigate(['../']);
+        }else{
+          this.errorHandlerService.presentErrorToast(
+            'Error loading shopping list items',
+            err
+          )
+        }
       }
     });
   }
@@ -63,21 +88,33 @@ export class PantryPage implements OnInit{
     var ev = event as CustomEvent<OverlayEventDetail<FoodItemI>>;
 
     if (ev.detail.role === 'confirm') {
+      console.log(ev.detail.data);
       this.pantryService.addToPantry(ev.detail.data!).subscribe({
-        next: (data) => {
-          console.log(data);
-          this.pantryItems.push(data);
-          this.newItem = {
-            name: '',
-            quantity: null,
-            weight: null,
-          };
+        next: (response) => {
+          if (response.status === 200) {
+            if (response.body){
+              this.pantryItems.push(response.body);
+              this.newItem = {
+                name: '',
+                quantity: null,
+                weight: null,
+              };
+            }
+          }
         },
         error: (err) => {
-          this.errorHandlerService.presentErrorToast(
-            'Error adding item to pantry',
-            err
-          )
+          if (err.status === 403){
+            this.errorHandlerService.presentErrorToast(
+              'Unauthorized access. Please login again.',
+              err
+            )
+            this.r.navigate(['../']);
+          }else{
+            this.errorHandlerService.presentErrorToast(
+              'Error adding item to pantry',
+              err
+            )
+          }
         }
       });
     }
@@ -87,20 +124,32 @@ export class PantryPage implements OnInit{
     var ev = event as CustomEvent<OverlayEventDetail<FoodItemI>>;
     if (ev.detail.role === 'confirm') {
       this.shoppingListService.addToShoppingList(ev.detail.data!).subscribe({
-        next: (data) => {
-          console.log(data);
-          this.shoppingItems.push(data);
-          this.newItem = {
-            name: '',
-            quantity: null,
-            weight: null,
-          };
+        next: (response) => {
+          if (response.status === 200) {
+            if (response.body){
+              this.shoppingItems.push(response.body);
+              this.newItem = {
+                name: '',
+                quantity: null,
+                weight: null,
+              };
+            }
+          }
+          
         },
         error: (err) => {
-          this.errorHandlerService.presentErrorToast(
-            'Error adding item to shopping list',
-            err
-          )
+          if (err.status === 403){
+            this.errorHandlerService.presentErrorToast(
+              'Unauthorized access. Please login again.',
+              err
+            )
+            this.r.navigate(['../']);
+          }else{
+            this.errorHandlerService.presentErrorToast(
+              'Error adding item to shopping list',
+              err
+            )
+          }
         }
       });
     }
@@ -109,26 +158,46 @@ export class PantryPage implements OnInit{
   onItemDeleted(item : FoodItemI){
     if (this.segment === 'pantry'){
       this.pantryService.deletePantryItem(item).subscribe({
-        next: () => {
-          this.pantryItems = this.pantryItems.filter((i) => i.name !== item.name);
+        next: (response) => {
+          if (response.status === 200) {
+            this.pantryItems = this.pantryItems.filter((i) => i.name !== item.name);
+          }
         },
         error: (err) => {
-          this.errorHandlerService.presentErrorToast(
-            'Error deleting item from pantry',
-            err
-          )
+          if (err.status === 403){
+            this.errorHandlerService.presentErrorToast(
+              'Unauthorized access. Please login again.',
+              err
+            )
+            this.r.navigate(['../']);
+          }else{
+            this.errorHandlerService.presentErrorToast(
+              'Error deleting item from pantry',
+              err
+            )
+          }
         }
       });
     } else if (this.segment === 'shopping'){
       this.shoppingListService.deleteShoppingListItem(item).subscribe({
-        next: () => {
-          this.shoppingItems = this.shoppingItems.filter((i) => i.name !== item.name);
+        next: (response) => {
+          if (response.status === 200) {
+            this.shoppingItems = this.shoppingItems.filter((i) => i.name !== item.name);
+          }
         },
         error: (err) => {
-          this.errorHandlerService.presentErrorToast(
-            'Error deleting item from shopping list',
-            err
-          )
+          if (err.status === 403){
+            this.errorHandlerService.presentErrorToast(
+              'Unauthorized access. Please login again.',
+              err
+            )
+            this.r.navigate(['../']);
+          }else{
+            this.errorHandlerService.presentErrorToast(
+              'Error deleting item from shopping list',
+              err
+            )
+          }
         }
       });
     }
