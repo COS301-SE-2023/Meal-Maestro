@@ -1,4 +1,4 @@
-<ion-item-sliding>
+<ion-item-sliding *ngIf="isVisible">
   <ion-item-options side="start">
     <ion-item-option color="primary" (click)="openEditPicker()">
       <ion-icon slot="icon-only" name="ellipsis-horizontal-outline"></ion-icon>

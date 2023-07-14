@@ -1,5 +1,5 @@
 import { Component, OnInit, QueryList, ViewChildren, ViewChild } from '@angular/core';
-import { IonModal, IonicModule } from '@ionic/angular';
+import { IonModal, IonicModule, SearchbarChangeEventDetail } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -23,6 +23,7 @@ export class PantryPage implements OnInit{
   segment: 'pantry'|'shopping'| null = 'pantry';
   pantryItems: FoodItemI[] = [];
   shoppingItems: FoodItemI[] = [];
+  searchTerm: string = '';
   newItem: FoodItemI = {
     name: '',
     quantity: null,
@@ -236,5 +237,16 @@ export class PantryPage implements OnInit{
       this.fetchItems();
       event.target.complete();
     }, 2000);
+  }
+
+  search(event: any) {
+    this.searchTerm = event.detail.value;
+  }
+
+  isVisible(itemName: String){ 
+    // decides whether to show item based on search term
+    
+    if (!this.searchTerm) return true;
+    return itemName.toLowerCase().includes(this.searchTerm.toLowerCase());
   }
 }

@@ -2,17 +2,19 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { ActionSheetController, IonItemSliding, IonicModule, PickerController } from '@ionic/angular';
 import { FoodItemI } from '../../models/interfaces';
 import { ErrorHandlerService, PantryApiService, ShoppingListApiService } from '../../services/services';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-food-list-item',
   templateUrl: './food-list-item.component.html',
   styleUrls: ['./food-list-item.component.scss'],
   standalone: true,
-  imports: [IonicModule],
+  imports: [IonicModule, CommonModule],
 })
 export class FoodListItemComponent  implements OnInit {
   @Input() item! : FoodItemI;
   @Input() segment! : 'pantry' | 'shopping';
+  @Input() isVisible! : boolean;
   @Output() itemDeleted: EventEmitter<FoodItemI> = new EventEmitter<FoodItemI>();
   @ViewChild(IonItemSliding, { static: false }) slidingItem!: IonItemSliding;
 
