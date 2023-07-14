@@ -161,7 +161,7 @@ export class PantryPage implements OnInit{
     }
   }
 
-  onItemDeleted(item : FoodItemI){
+  async onItemDeleted(item : FoodItemI){
     if (this.segment === 'pantry'){
       this.pantryService.deletePantryItem(item).subscribe({
         next: (response) => {
@@ -209,6 +209,10 @@ export class PantryPage implements OnInit{
     }
   }
 
+ async onItemBought(item : FoodItemI){
+  console.log(item);
+ }
+
   closeSlidingItems(){
     this.foodListItem.forEach((item) => {
       item.closeItem();
@@ -245,7 +249,7 @@ export class PantryPage implements OnInit{
 
   isVisible(itemName: String){ 
     // decides whether to show item based on search term
-    
+
     if (!this.searchTerm) return true;
     return itemName.toLowerCase().includes(this.searchTerm.toLowerCase());
   }

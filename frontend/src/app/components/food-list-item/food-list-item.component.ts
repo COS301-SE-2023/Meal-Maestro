@@ -16,6 +16,7 @@ export class FoodListItemComponent  implements OnInit {
   @Input() segment! : 'pantry' | 'shopping';
   @Input() isVisible! : boolean;
   @Output() itemDeleted: EventEmitter<FoodItemI> = new EventEmitter<FoodItemI>();
+  @Output() itemBought: EventEmitter<FoodItemI> = new EventEmitter<FoodItemI>();
   @ViewChild(IonItemSliding, { static: false }) slidingItem!: IonItemSliding;
 
   constructor(private pantryService : PantryApiService, 
@@ -54,6 +55,44 @@ export class FoodListItemComponent  implements OnInit {
     if (role === 'destructive') {
       this.closeItem();
       this.itemDeleted.emit(data)
+    }else if(role === 'cancel'){
+      this.closeItem();
+    }
+  }
+
+  async openAddToPantrySheet(){
+    if(this.segment === 'pantry'){
+      return;
+    }
+
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Add to Pantry?',
+      buttons: [
+        {
+          text: 'Add',
+          role: 'destructive',
+          data: {
+            name: this.item.name,
+            quantity: this.item.quantity,
+            weight: this.item.weight,
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          data: {
+            action: 'cancel',
+          },
+        },
+      ]
+    });
+    await actionSheet.present();
+
+    const { data, role } = await actionSheet.onDidDismiss();
+    if (role === 'destructive') {
+      this.closeItem();
+      this.itemBought.emit(data)
+      console.log('Bought');
     }else if(role === 'cancel'){
       this.closeItem();
     }

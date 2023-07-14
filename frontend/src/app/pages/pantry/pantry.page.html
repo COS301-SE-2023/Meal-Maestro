@@ -44,7 +44,8 @@
           [item]="item"
           [segment]="'shopping'"
           [isVisible]="isVisible(item.name)"
-          (itemDeleted)="onItemDeleted($event)">
+          (itemDeleted)="onItemDeleted($event)"
+          (itemBought)="onItemBought($event)">
           ></app-food-list-item>
           <div class="empty-list" *ngIf="shoppingItems.length === 0">Shopping list is empty :(</div>
       </div>
