@@ -1,19 +1,19 @@
-   <ion-header>
-     <ion-toolbar color="primary">
-       <ion-segment [value]="segment" (ionChange)="segmentChanged($event)" >
-         <ion-segment-button value="pantry">
-           <ion-label>Pantry</ion-label>
-         </ion-segment-button>
-         <ion-segment-button value="shopping">
-           <ion-label>Shopping</ion-label>
-         </ion-segment-button>
-       </ion-segment>
-     </ion-toolbar>
-     <ion-toolbar color="primary">
-      <ion-label slot="start">Name</ion-label>
-      <ion-label slot="end">Amount</ion-label>
-     </ion-toolbar>
-   </ion-header>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-segment [value]="segment" (ionChange)="segmentChanged($event)" >
+      <ion-segment-button value="pantry">
+        <ion-label>Pantry</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="shopping">
+        <ion-label>Shopping</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  <ion-toolbar class="labels" color="primary">
+    <ion-label slot="start">Name</ion-label>
+    <ion-label slot="end">Amount</ion-label>
+  </ion-toolbar>
+</ion-header>
    
 <ion-content [scrollY]="true" [ngSwitch]="segment">
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">

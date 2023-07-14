@@ -14,6 +14,13 @@
 
 ion-toolbar{
     --border-width: 0px;
+    --border-color: transparent;
+}
+
+ion-toolbar.labels{
+    --min-height: 10px;
+    --padding-start: 4vw;
+    --padding-end: 4vw;
 }
 
 ion-content{
