@@ -38,8 +38,8 @@ public class ShoppingListService {
         return shoppingListRepository.getShoppingList(email);
     }
 
-    public void buyItem(FoodModel request, String token){
+    public List<FoodModel> buyItem(FoodModel request, String token){
         String email = jwtService.extractUserEmail(token);
-        shoppingListRepository.buyItem(request, email);
+        return shoppingListRepository.buyItem(request, email);
     }
 }

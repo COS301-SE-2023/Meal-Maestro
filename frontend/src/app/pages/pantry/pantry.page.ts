@@ -210,7 +210,32 @@ export class PantryPage implements OnInit{
   }
 
  async onItemBought(item : FoodItemI){
-  console.log(item);
+  this.shoppingListService.buyItem(item).subscribe({
+    next: (response) => {
+      if (response.status === 200) {
+        if (response.body){
+          this.pantryItems = response.body;
+          this.shoppingItems = this.shoppingItems.filter((i) => i.name !== item.name);
+
+          this.errorHandlerService.presentSuccessToast("Item Bought!");
+        }
+      }
+    },
+    error: (err) => {
+      if (err.status === 403){
+        this.errorHandlerService.presentErrorToast(
+          'Unauthorize access. Please login again.',
+          err
+        )
+        this.auth.logout();
+      } else {
+        this.errorHandlerService.presentErrorToast(
+          'Error buying item.',
+          err
+        )
+      }
+    }
+  })
  }
 
   closeSlidingItems(){

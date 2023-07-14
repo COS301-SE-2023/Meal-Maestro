@@ -57,13 +57,14 @@ public class ShoppingListController {
         return ResponseEntity.ok(shoppingListService.getShoppingList(authToken));
     }
 
-    @PostMapping("/buyItem") //Will move item from shopping list to pantry
-    public ResponseEntity<Void> buyItem(@Valid @RequestBody FoodModel request, @RequestHeader("Authorization") String token){
+    @PostMapping("/buyItem") 
+    public ResponseEntity<List<FoodModel>> buyItem(@Valid @RequestBody FoodModel request, @RequestHeader("Authorization") String token){
+        //Will move item from shopping list to pantry and return updated pantry
+        
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
         String authToken = token.substring(7);
-        shoppingListService.buyItem(request, authToken);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(shoppingListService.buyItem(request, authToken));
     }
 }
