@@ -43,12 +43,9 @@ public class ShoppingListRepository {
     }
     /*  Example Post data:
      * {
-     * "food": {
      *  "name": "Carrot",
      *  "quantity": "0",
      *  "weight": "0"
-     * },
-     * "token": "secretToken"
      * }
      */
     //#endregion
@@ -77,7 +74,6 @@ public class ShoppingListRepository {
     }
     /*  Example Post data:
      * {
-     * "token": "secretToken"
      * }
      */
     //#endregion
@@ -118,4 +114,36 @@ public class ShoppingListRepository {
         };
     }
     //#endregion
+
+    //#region Move to Pantry
+    public List<FoodModel> buyItem(FoodModel food, String email){
+        try (Session session = driver.session()){
+            return session.executeWrite(buyItemTransaction(food, email));
+        }
+    }
+
+    public static TransactionCallback<List<FoodModel>> buyItemTransaction(FoodModel food, String email){
+        return transaction -> {
+            var result = transaction.run("MATCH (u: User{email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[r:IN_LIST]->(f:Food {name: $name}) \r\n" + //
+                        "OPTIONAL MATCH (u)-[:HAS_PANTRY]->(:`Pantry`)-[:IN_PANTRY]->(p:Food {name: $name}) \r\n" + //
+                        "DELETE r \r\n" + //
+                        "WITH COALESCE(p, f) AS food, u \r\n" + //
+                        "MERGE (u)-[:HAS_PANTRY]->(:`Pantry`)-[rel:IN_PANTRY]->(food) \r\n" + //
+                        "ON CREATE SET food.weight = $weight, food.quantity = $quantity \r\n" + //
+                        "ON MATCH SET food.weight = food.weight + $weight, food.quantity = food.quantity + $quantity \r\n" + //
+                        "WITH u \r\n" + //
+                        "MATCH (u)-[:HAS_PANTRY]->(:`Pantry`)-[:IN_PANTRY]->(q:Food) \r\n" + //
+                        "RETURN q.name AS name, q.quantity AS quantity, q.weight AS weight",
+
+            Values.parameters("email", email, "name", food.getName(),
+                        "quantity", food.getQuantity(), "weight", food.getWeight()));
+
+            List<FoodModel> foods = new ArrayList<>();
+            while (result.hasNext()){
+                var record = result.next();
+                foods.add(new FoodModel(record.get("name").asString(), record.get("quantity").asInt(), record.get("weight").asInt()));
+            }
+            return foods;
+        };
+    }
 }
