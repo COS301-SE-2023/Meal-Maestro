@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserI } from '../../models/interfaces';
 import { AuthResponseI } from '../../models/authResponse.model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class AuthenticationService {
 
   url : String = 'http://localhost:8080';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public r: Router) { }
 
   login(user: UserI): Observable<HttpResponse<AuthResponseI>> {
     return this.http.post<AuthResponseI>(
@@ -50,4 +51,10 @@ export class AuthenticationService {
       localStorage.setItem('token', token);
     }
   }
+
+  logout(): void {
+    localStorage.removeItem('token');
+    this.r.navigate(['../']);
+  }
+
 }

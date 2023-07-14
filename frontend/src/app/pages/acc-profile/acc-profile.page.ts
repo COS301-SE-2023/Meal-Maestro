@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { AuthenticationService } from '../../services/services';
 
 @Component({
   selector: 'app-acc-profile',
@@ -17,14 +18,13 @@ export class AccProfilePage implements OnInit {
     this.router.navigate(['app/tabs/profile'])
   }
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private auth: AuthenticationService) { }
 
   ngOnInit() {
   }
 
   logout() {
-    this.router.navigate(['../']);
-    localStorage.clear();
+    this.auth.logout();
   }
 
 }

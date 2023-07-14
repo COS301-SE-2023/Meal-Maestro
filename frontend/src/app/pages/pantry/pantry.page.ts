@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { FoodListItemComponent } from '../../components/food-list-item/food-list-item.component';
 import { FoodItemI } from '../../models/interfaces';
 import { OverlayEventDetail } from '@ionic/core/components';
-import { ErrorHandlerService, PantryApiService, ShoppingListApiService } from '../../services/services';
+import { AuthenticationService, ErrorHandlerService, PantryApiService, ShoppingListApiService } from '../../services/services';
 
 
 @Component({
@@ -32,7 +32,8 @@ export class PantryPage implements OnInit{
   constructor(public r : Router, 
               private pantryService: PantryApiService, 
               private shoppingListService: ShoppingListApiService,
-              private errorHandlerService: ErrorHandlerService) {}
+              private errorHandlerService: ErrorHandlerService,
+              private auth: AuthenticationService) {}
 
   async ngOnInit() {
     this.fetchItems();
@@ -53,7 +54,7 @@ export class PantryPage implements OnInit{
             'Unauthorized access. Please login again.',
             err
           )
-          this.r.navigate(['../']);
+          this.auth.logout();
         }else{
           this.errorHandlerService.presentErrorToast(
             'Error loading pantry items',
@@ -77,7 +78,7 @@ export class PantryPage implements OnInit{
             'Unauthorized access. Please login again.',
             err
           )
-          this.r.navigate(['../']);
+          this.auth.logout();
         }else{
           this.errorHandlerService.presentErrorToast(
             'Error loading shopping list items',
@@ -112,7 +113,7 @@ export class PantryPage implements OnInit{
               'Unauthorized access. Please login again.',
               err
             )
-            this.r.navigate(['../']);
+            this.auth.logout();
           }else{
             this.errorHandlerService.presentErrorToast(
               'Error adding item to pantry',
@@ -147,7 +148,7 @@ export class PantryPage implements OnInit{
               'Unauthorized access. Please login again.',
               err
             )
-            this.r.navigate(['../']);
+            this.auth.logout();
           }else{
             this.errorHandlerService.presentErrorToast(
               'Error adding item to shopping list',
@@ -173,7 +174,7 @@ export class PantryPage implements OnInit{
               'Unauthorized access. Please login again.',
               err
             )
-            this.r.navigate(['../']);
+            this.auth.logout();
           }else{
             this.errorHandlerService.presentErrorToast(
               'Error deleting item from pantry',
@@ -195,7 +196,7 @@ export class PantryPage implements OnInit{
               'Unauthorized access. Please login again.',
               err
             )
-            this.r.navigate(['../']);
+            this.auth.logout();
           }else{
             this.errorHandlerService.presentErrorToast(
               'Error deleting item from shopping list',
