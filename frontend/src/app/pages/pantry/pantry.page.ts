@@ -21,6 +21,7 @@ export class PantryPage implements OnInit{
   @ViewChild(IonModal) modal!: IonModal;
 
   segment: 'pantry'|'shopping'| null = 'pantry';
+  isQuantity: boolean = true;
   pantryItems: FoodItemI[] = [];
   shoppingItems: FoodItemI[] = [];
   searchTerm: string = '';
@@ -99,12 +100,13 @@ export class PantryPage implements OnInit{
         next: (response) => {
           if (response.status === 200) {
             if (response.body){
-              this.pantryItems.push(response.body);
+              this.pantryItems.unshift(response.body);
               this.newItem = {
                 name: '',
                 quantity: null,
                 weight: null,
               };
+              this.isQuantity = true;
             }
           }
         },
@@ -133,12 +135,13 @@ export class PantryPage implements OnInit{
         next: (response) => {
           if (response.status === 200) {
             if (response.body){
-              this.shoppingItems.push(response.body);
+              this.shoppingItems.unshift(response.body);
               this.newItem = {
                 name: '',
                 quantity: null,
                 weight: null,
               };
+              this.isQuantity = true;
             }
           }
           
@@ -260,9 +263,23 @@ export class PantryPage implements OnInit{
       quantity: null,
       weight: null,
     };
+    this.isQuantity = true;
   }
 
   confirmModal(){
+    if (this.newItem.name === ''){
+      this.errorHandlerService.presentErrorToast('Please enter a name for the item', 'No name entered');
+      return;
+    }
+    if ((this.newItem.quantity !== null && this.newItem.quantity < 0) || 
+          (this.newItem.weight !== null && this.newItem.weight < 0)){
+      this.errorHandlerService.presentErrorToast('Please enter a valid quantity or weight', 'Invalid quantity or weight');
+      return;
+    }
+    if (this.newItem.quantity === null && this.newItem.weight === null){
+      this.errorHandlerService.presentErrorToast('Please enter a quantity or weight', 'No quantity or weight entered');
+      return;
+    }
     this.modal.dismiss(this.newItem, 'confirm');
   }
 

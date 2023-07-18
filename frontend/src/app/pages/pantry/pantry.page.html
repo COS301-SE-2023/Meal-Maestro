@@ -73,17 +73,28 @@
         </ion-header>
 
         <ion-content class="ion-padding">
-          <ion-list>
-            <ion-item>
-              <ion-input type="text" label="Name" labelPlacement="floating" placeholder="Enter name" [(ngModel)]="newItem.name"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input label="Quantity" labelPlacement="floating" placeholder="Enter quantity" [(ngModel)]="newItem.quantity"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input label="Weight" labelPlacement="floating" placeholder="Enter weight" [(ngModel)]="newItem.weight"></ion-input>
-            </ion-item>
-          </ion-list>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="9">
+                <ion-item>
+                  <ion-input type="text" label="Name" labelPlacement="floating" placeholder="Enter name" [(ngModel)]="newItem.name"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="9">
+                <ion-item *ngIf="isQuantity">
+                  <ion-input label="Quantity" labelPlacement="floating" placeholder="Enter quantity" type="number" [(ngModel)]="newItem.quantity"></ion-input>
+                </ion-item>
+                <ion-item *ngIf="!isQuantity">
+                  <ion-input label="Weight" labelPlacement="floating" placeholder="Enter weight" type="number" [(ngModel)]="newItem.weight"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="3">
+                  <ion-toggle [(ngModel)]="isQuantity"></ion-toggle>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </ion-content>
 
       </ng-template>
@@ -112,17 +123,28 @@
         </ion-header>
 
         <ion-content class="ion-padding">
-          <ion-list>
-            <ion-item>
-              <ion-input type="text" label="Name" labelPlacement="floating" placeholder="Enter name" [(ngModel)]="newItem.name"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input label="Quantity" labelPlacement="floating" placeholder="Enter quantity" [(ngModel)]="newItem.quantity"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input label="Weight" labelPlacement="floating" placeholder="Enter weight" [(ngModel)]="newItem.weight"></ion-input>
-            </ion-item>
-          </ion-list>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="9">
+                <ion-item>
+                  <ion-input type="text" label="Name" labelPlacement="floating" placeholder="Enter name" [(ngModel)]="newItem.name"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="9">
+                <ion-item *ngIf="isQuantity">
+                  <ion-input label="Quantity" labelPlacement="floating" placeholder="Enter quantity" type="number" [(ngModel)]="newItem.quantity"></ion-input>
+                </ion-item>
+                <ion-item *ngIf="!isQuantity">
+                  <ion-input label="Weight" labelPlacement="floating" placeholder="Enter weight" type="number" [(ngModel)]="newItem.weight"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="3">
+                  <ion-toggle [(ngModel)]="isQuantity"></ion-toggle>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </ion-content>
 
       </ng-template>
