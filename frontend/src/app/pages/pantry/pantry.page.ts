@@ -255,6 +255,11 @@ export class PantryPage implements OnInit{
 
   dismissModal(){
     this.modal.dismiss(null, 'cancel');
+    this.newItem = {
+      name: '',
+      quantity: null,
+      weight: null,
+    };
   }
 
   confirmModal(){

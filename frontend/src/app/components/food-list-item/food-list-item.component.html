@@ -6,7 +6,8 @@
     
   </ion-item-options>
 
-  <ion-item lines="full">
+  <ion-item lines="full" [ngClass]="{'low-quantity': item.quantity !== null && item.quantity < 5,
+                                    'low-weight': item.weight !== null && item.weight < 100}">
     <ion-label slot="start">
       {{ item.name }}
     </ion-label>
