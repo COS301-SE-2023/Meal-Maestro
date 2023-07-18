@@ -34,8 +34,8 @@ ion-toggle {
     --track-background: #ddd;
     --track-background-checked: #ddd;
   
-    --handle-background: #ff7f50;
-    --handle-background-checked: #53bb63;
+    --handle-background: var(--ion-color-secondary);
+    --handle-background-checked: var(--ion-color-primary);
   
     --handle-width: 25px;
     --handle-height: 27px;
@@ -52,4 +52,19 @@ ion-toggle::part(track) {
   
     /* Required for iOS handle to overflow the height of the track */
     overflow: visible;
+}
+
+ion-segment-button{
+    --indicator-color: var(--ion-color-primary);
+}
+
+ion-segment-button.ios {
+    --color: black;
+    --color-checked: white;
+}
+
+ion-segment-button.md {
+    --color: #000;
+    --color-checked: var(--ion-color-primary);
+    --indicator-height: 4px;
 }

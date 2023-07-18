@@ -21,7 +21,7 @@ export class PantryPage implements OnInit{
   @ViewChild(IonModal) modal!: IonModal;
 
   segment: 'pantry'|'shopping'| null = 'pantry';
-  isQuantity: boolean = true;
+  isQuantity: boolean = false;
   pantryItems: FoodItemI[] = [];
   shoppingItems: FoodItemI[] = [];
   searchTerm: string = '';
@@ -106,7 +106,7 @@ export class PantryPage implements OnInit{
                 quantity: null,
                 weight: null,
               };
-              this.isQuantity = true;
+              this.isQuantity = false;
             }
           }
         },
@@ -141,7 +141,7 @@ export class PantryPage implements OnInit{
                 quantity: null,
                 weight: null,
               };
-              this.isQuantity = true;
+              this.isQuantity = false;
             }
           }
           
@@ -263,7 +263,7 @@ export class PantryPage implements OnInit{
       quantity: null,
       weight: null,
     };
-    this.isQuantity = true;
+    this.isQuantity = false;
   }
 
   confirmModal(){
