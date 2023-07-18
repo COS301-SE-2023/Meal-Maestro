@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonicModule, DailyMealsComponent],
+  imports: [IonicModule, DailyMealsComponent, CommonModule],
 })
 export class HomePage implements OnInit{
   daysMeals: DaysMealsI[] = [];
@@ -20,7 +20,12 @@ export class HomePage implements OnInit{
   async ngOnInit() {
     this.mealGenerationservice.getDailyMeals().subscribe({
       next: (data) => {
-        this.daysMeals = data;
+        if (Array.isArray(data)) {
+          this.daysMeals = data;
+        } else {
+          // Convert the single item to an array
+          this.daysMeals = [data];
+        }
         
       },
       error: (err) => {
@@ -29,6 +34,7 @@ export class HomePage implements OnInit{
         )
       }
     })
+    
 
   }
 
@@ -59,4 +65,6 @@ export class HomePage implements OnInit{
   
 }import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
 import { ErrorHandlerService } from '../../services/services';
+import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 
