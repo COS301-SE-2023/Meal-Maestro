@@ -127,9 +127,9 @@ public class ShoppingListRepository {
             var result = transaction.run("MATCH (u: User{email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[r:IN_LIST]->(f:Food {name: $name}) \r\n" + //
                         "OPTIONAL MATCH (u)-[:HAS_PANTRY]->(p:`Pantry`)-[:IN_PANTRY]->(fp:Food {name: $name}) \r\n" + //
                         "DELETE r \r\n" + //
-                        "WITH u, p, CASE WHEN fp IS NULL THEN f ELSE fp END AS food \r\n" + //
+                        "WITH u, p, f.weight AS oldWeight, f.quantity AS oldQuantity \r\n" + //
                         "MERGE (u)-[:HAS_PANTRY]->(p) \r\n" + // 
-                        "MERGE (p)-[:IN_PANTRY]->(food) \r\n" + //
+                        "MERGE (p)-[:IN_PANTRY]->(food:Food {name: $name}) \r\n" + //
                         "ON CREATE SET food.weight = $weight, food.quantity = $quantity \r\n" + //
                         "ON MATCH SET food.weight = food.weight + $weight, food.quantity = food.quantity + $quantity \r\n" + //
                         "WITH u \r\n" + //
