@@ -1,5 +1,10 @@
 import org.springframework.web.bind.annotation.*;
 
+import fellowship.mealmaestro.models.RecipeModel;
+import fellowship.mealmaestro.models.UserModel;
+
+import java.util.List;
+
 @RestController
 public class RecipeBookController {
 

@@ -1,5 +1,9 @@
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import fellowship.mealmaestro.models.RecipeModel;
+
 @Service
 public class RecipeBookService {
     
@@ -9,7 +13,7 @@ public class RecipeBookService {
         this.recipeBookRepository = recipeBookRepository;
     }
 
-    public RecipeModel addRecipe(RecipeModel recipe) {
+    public void addRecipe(RecipeModel recipe) {
         return recipeBookRepository.addRecipe(recipe);
     }
 
@@ -19,9 +23,5 @@ public class RecipeBookService {
 
     public List<RecipeModel> getAllRecipes() {
         return recipeBookRepository.getAllRecipes();
-    }
-
-    public RecipeModel getRecipeById(String recipeId) {
-        return recipeBookRepository.getRecipeById(recipeId);
     }
 }
