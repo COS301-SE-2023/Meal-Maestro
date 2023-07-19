@@ -7,8 +7,6 @@ public class FoodModel {
     @NotBlank(message = "A Food Name is required")
     private String name;
 
-    // private String category;
-
     @PositiveOrZero(message = "Quantity must be a positive number")
     private int quantity;
 
@@ -21,14 +19,9 @@ public class FoodModel {
         this.weight = weight;
     }
 
-
     public String getName(){
         return this.name;
     }
-
-    // public String getCategory(){
-    //     return this.category;
-    // }
 
     public int getQuantity(){
         return this.quantity;
@@ -41,10 +34,6 @@ public class FoodModel {
     public void setName(String name){
         this.name = name;
     }
-
-    // public void setCategory(String category){
-    //     this.category = category;
-    // }
 
     public void setQuantity(int quantity){
         this.quantity = quantity;

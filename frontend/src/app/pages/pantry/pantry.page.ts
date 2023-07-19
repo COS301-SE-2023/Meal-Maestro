@@ -1,5 +1,5 @@
 import { Component, OnInit, QueryList, ViewChildren, ViewChild } from '@angular/core';
-import { IonModal, IonicModule, SearchbarChangeEventDetail } from '@ionic/angular';
+import { IonModal, IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
