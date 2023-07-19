@@ -15,9 +15,13 @@ import fellowship.mealmaestro.repositories.SettingsRepository;
 @Service
 public class SettingsService {
 
-
-    public SettingsModel getPantry(String token){
+    public SettingsModel getSettings(String token){
         String email = jwtService.extractUserEmail(token);
         return SettingsRepository.getSettings(email);
+    }
+
+    public void updateSettings(SettingsModel request, String token){
+        String email = jwtService.extractUserEmail(token);
+        SettingsRepository.updateSettings(request, email);
     }
 }
