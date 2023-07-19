@@ -14,7 +14,7 @@ public class RecipeBookService {
     }
 
     public void addRecipe(RecipeModel recipe) {
-        return recipeBookRepository.addRecipe(recipe);
+        recipeBookRepository.addRecipe(recipe);
     }
 
     public void removeRecipe(RecipeModel recipe) {
