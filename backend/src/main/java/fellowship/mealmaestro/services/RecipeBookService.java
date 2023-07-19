@@ -3,6 +3,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import fellowship.mealmaestro.models.RecipeModel;
+import fellowship.mealmaestro.models.UserModel;
 
 @Service
 public class RecipeBookService {
@@ -21,7 +22,7 @@ public class RecipeBookService {
         recipeBookRepository.removeRecipe(recipe);
     }
 
-    public List<RecipeModel> getAllRecipes() {
-        return recipeBookRepository.getAllRecipes();
+    public List<RecipeModel> getAllRecipes(UserModel user) {
+        return recipeBookRepository.getAllRecipes(user);
     }
 }
