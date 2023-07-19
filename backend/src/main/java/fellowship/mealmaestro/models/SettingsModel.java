@@ -2,6 +2,9 @@ package fellowship.mealmaestro.models;
 
 import java.util.List;
 
+
+import java.util.Map;
+
 public class SettingsModel{
 
     private String goal; 
@@ -9,8 +12,7 @@ public class SettingsModel{
     private List<String> foodPreferences;
     private int calorieAmount;
     private String budgetRange;
-    //private Map<String, Integer> macroRatio;
-    private List<Number> macroRatio;
+    private Map<String, Integer> macroRatio;
     private List<String> allergies;
     private int cookingTime;
     private int userHeight; // consider moving to account
@@ -27,7 +29,7 @@ public class SettingsModel{
     private boolean shoppingIntervalSet;
 
     public SettingsModel(String goal, String shoppingInterval, List<String> foodPreferences, int calorieAmount,
-    String budgetRange, List<Number> macroRatio, List<String> allergies, int cookingTime,
+    String budgetRange, Map<String, Integer> macroRatio, List<String> allergies, int cookingTime,
     int userHeight, int userWeight, int userBMI, boolean BMISet, boolean cookingTimeSet,
     boolean allergiesSet, boolean macroSet, boolean budgetSet, boolean calorieSet,
     boolean foodPreferenceSet, boolean shoppingIntervalSet) {
@@ -94,11 +96,11 @@ this.shoppingIntervalSet = shoppingIntervalSet;
         this.budgetRange = budgetRange;
     }
 
-    public List<Number> getMacroRatio() {
+    public Map<String, Integer> getMacroRatio() {
         return macroRatio;
     }
 
-    public void setMacroRatio(List<Number> macroRatio) {
+    public void setMacroRatio(Map<String, Integer> macroRatio) {
         this.macroRatio = macroRatio;
     }
 

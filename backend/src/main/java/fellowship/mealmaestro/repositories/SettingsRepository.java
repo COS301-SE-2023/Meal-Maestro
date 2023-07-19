@@ -44,7 +44,7 @@ public static TransactionCallback<SettingsModel> getSettingsTransaction(String e
                 record.get("foodPreferences").asList(Value::asString),
                 record.get("calorieAmount").asInt(),
                 record.get("budgetRange").asString(),
-                record.get("macroRatio").asList(Value::asNumber), //need to convert to map somehow
+                record.get("macroRatio").asMap(Value::asString,Value::asInt), 
                 record.get("allergies").asList(Value::asString),
                 record.get("cookingTime").asInt(),
                 record.get("userHeight").asInt(),
@@ -66,7 +66,7 @@ public static TransactionCallback<SettingsModel> getSettingsTransaction(String e
 }
 
 public void updateSettings(SettingsModel request, String email) {
-    
+
 }
 
 }
