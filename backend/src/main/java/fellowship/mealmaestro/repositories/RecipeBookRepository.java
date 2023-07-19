@@ -31,7 +31,7 @@ public class RecipeBookRepository {
     public static TransactionCallback<Void> addRecipeTransaction(RecipeModel recipe) {
         return transaction -> {
             transaction.run("CREATE (:RecipeBook)-[:CONTAINS]->(:Recipe {name: $name, description: $description})",
-                Values.parameters("name", recipe.getName(), "description", recipe.getDescription()));
+                Values.parameters("title", recipe.getTitle(), "image", recipe.getImage()));
             return null;
         };
     }
@@ -46,12 +46,12 @@ public class RecipeBookRepository {
 
     public static TransactionCallback<List<RecipeModel>> getAllRecipesTransaction() {
         return transaction -> {
-            var result = transaction.run("MATCH (:RecipeBook)-[:CONTAINS]->(r:Recipe) RETURN r.name AS name, r.description AS description");
+            var result = transaction.run("MATCH (:RecipeBook)-[:CONTAINS]->(r:Recipe) RETURN r.title AS title, r.image AS image");
             
             List<RecipeModel> recipes = new ArrayList<>();
             while (result.hasNext()){
                 var record = result.next();
-                recipes.add(new RecipeModel(record.get("name").asString(), record.get("description").asString()));
+                recipes.add(new RecipeModel(record.get("title").asString(), record.get("image").asString()));
             }
             return recipes;
         };

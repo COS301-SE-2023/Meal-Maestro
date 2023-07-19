@@ -11,25 +11,16 @@ public class RecipeModel {
     @NotBlank(message = "An image is required")
     private String image;
 
-    private List<RecipeModel> recipes;
-
-    public RecipeModel(List<RecipeModel> recipes) {
-        this.recipes = recipes;
-    }
-
-    public List<RecipeModel> getRecipes() {
-        return recipes;
-    }
-
-    public void setRecipes(List<RecipeModel> recipes) {
-        this.recipes = recipes;
+    public RecipeModel(String title, String image) {
+        this.title = title;
+        this.image = image;
     }
 
     public String getTitle() {
         return this.title;
     }
 
-    public getImage() {
+    public String getImage() {
         return this.getImage;
     }
 
