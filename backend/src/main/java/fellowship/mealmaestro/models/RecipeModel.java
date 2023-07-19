@@ -21,7 +21,7 @@ public class RecipeModel {
     }
 
     public String getImage() {
-        return this.getImage;
+        return this.image;
     }
 
     public void setTitle(String title) {

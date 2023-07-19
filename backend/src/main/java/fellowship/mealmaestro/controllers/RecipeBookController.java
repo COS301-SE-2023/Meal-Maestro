@@ -14,18 +14,18 @@ public class RecipeBookController {
         this.recipeBookService = recipeBookService;
     }
 
-    @PostMapping("/addToRecipeBook")
-    public void addToRecipeBook(@RequestBody RecipeModel recipe) {
-        recipeBookService.addToRecipeBook(recipe);
+    @PostMapping("/addRecipe")
+    public void addRecipe(@RequestBody RecipeModel recipe) {
+        recipeBookService.addRecipe(recipe);
     }
 
-    @PostMapping("/removeFromRecipeBook")
-    public void removeFromRecipeBook(@RequestBody RecipeModel recipe) {
-        recipeBookService.removeFromRecipeBook(recipe);
+    @PostMapping("/removeRecipe")
+    public void removeRecipe(@RequestBody RecipeModel recipe) {
+        recipeBookService.removeRecipe(recipe);
     }
 
-    @PostMapping("/getRecipeBook")
-    public List<RecipeModel> getRecipeBook(@RequestBody UserModel user) {
-        return recipeBookService.getRecipeBook(user);
+    @PostMapping("/getAllRecipes")
+    public List<RecipeModel> getAllRecipes(@RequestBody UserModel user) {
+        return recipeBookService.getAllRecipes(user);
     }
 }
