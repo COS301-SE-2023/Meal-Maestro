@@ -9,11 +9,20 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import fellowship.mealmaestro.models.SettingsModel;
 import fellowship.mealmaestro.repositories.SettingsRepository;
+import fellowship.mealmaestro.services.auth.JwtService;
 
 
 @Service
 public class SettingsService {
+
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private SettingsRepository SettingsRepository;
 
     public SettingsModel getSettings(String token){
         String email = jwtService.extractUserEmail(token);

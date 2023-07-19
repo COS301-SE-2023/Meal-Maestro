@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class SettingsModel{
 
-    private String goal;
+    private String goal; 
     private String shoppingInterval;
     private List<String> foodPreferences;
     private int calorieAmount;

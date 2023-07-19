@@ -15,6 +15,13 @@ import fellowship.mealmaestro.models.SettingsModel;
 @Repository
 public class SettingsRepository {
 
+    @Autowired
+    private final Driver driver;
+
+    public SettingsRepository(Driver driver){
+        this.driver = driver;
+    }
+
     public List<SettingsModel> getSettings(String email){
         try (Session session = driver.session()){
             return session.executeRead(getSettingsTransaction(email));
