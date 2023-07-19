@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import fellowship.mealmaestro.models.RecipeModel;
+import fellowship.mealmaestro.models.UserModel;
 
 @Repository
 public class RecipeBookRepository {
@@ -37,14 +38,14 @@ public class RecipeBookRepository {
     }
     //#endregion
 
-    //#region Read
-    public List<RecipeModel> getAllRecipes(){
+    //#region Read               UPDATE!
+    public List<RecipeModel> getAllRecipes(UserModel user){
         try (Session session = driver.session()){
-            return session.executeRead(getAllRecipesTransaction());
+            return session.executeRead(getAllRecipesTransaction(user));
         }
     }
 
-    public static TransactionCallback<List<RecipeModel>> getAllRecipesTransaction() {
+    public static TransactionCallback<List<RecipeModel>> getAllRecipesTransaction(UserModel user) {
         return transaction -> {
             var result = transaction.run("MATCH (:RecipeBook)-[:CONTAINS]->(r:Recipe) RETURN r.title AS title, r.image AS image");
             
