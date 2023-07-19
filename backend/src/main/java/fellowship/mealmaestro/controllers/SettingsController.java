@@ -17,6 +17,16 @@ public class SettingsController {
         return ResponseEntity.ok(SettingsService.getSettings(authToken));
     }
 
+    @PostMapping("/updateSettings")
+    public ResponseEntity<Void> updateSettings(@Valid @RequestBody SettingsModel request, @RequestHeader("Authorization") String token){
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        String authToken = token.substring(7);
+        SettingsService.updateSettings(request, authToken);
+        return ResponseEntity.ok().build();
+    }
+
 
     }
 
