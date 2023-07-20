@@ -67,6 +67,14 @@ export class MealGenerationService {
     );
   }
 
+  getPopularMeals():Observable<MealI[]> {
+    return this.http.get<MealI[]>(
+      this.url+'/getPopularMeals'
+    );
+  }
+
+  
+
 
 
 }
