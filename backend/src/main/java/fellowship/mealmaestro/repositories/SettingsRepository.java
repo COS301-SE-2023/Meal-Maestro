@@ -1,13 +1,20 @@
 package fellowship.mealmaestro.repositories;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionCallback;
 import org.neo4j.driver.Values;
+import org.neo4j.driver.internal.value.MapValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.neo4j.driver.Value;
 import fellowship.mealmaestro.models.SettingsModel;
+import org.neo4j.driver.Record;
+
+
 
 @Repository
 public class SettingsRepository {
@@ -44,7 +51,7 @@ public static TransactionCallback<SettingsModel> getSettingsTransaction(String e
                 record.get("foodPreferences").asList(Value::asString),
                 record.get("calorieAmount").asInt(),
                 record.get("budgetRange").asString(),
-                record.get("macroRatio").asMap(Value::asString,Value::asInt), 
+                getMacroRatioFromRecord(record),
                 record.get("allergies").asList(Value::asString),
                 record.get("cookingTime").asInt(),
                 record.get("userHeight").asInt(),
@@ -65,9 +72,66 @@ public static TransactionCallback<SettingsModel> getSettingsTransaction(String e
     };
 }
 
-public void updateSettings(SettingsModel request, String email) {
+//helper function for getSettingsTransaction
 
+private static Map<String, Integer> getMacroRatioFromRecord(Record record) {
+    Map<String, Object> macroRatioValue = record.get("macroRatio").asMap();
+    Map<String, Integer> macroRatioMap = new HashMap<>();
+
+    for (Map.Entry<String, Object> entry : macroRatioValue.entrySet()) {
+        String key = entry.getKey();
+        Integer value = ((Number) entry.getValue()).intValue();
+        macroRatioMap.put(key, value);
+    }
+
+    return macroRatioMap;
 }
+
+
+
+
+
+public void updateSettings(SettingsModel request, String email) {
+    try (Session session = driver.session()) {
+        session.executeWrite(updateSettingsTransaction(request, email));
+    }
+}
+
+public static TransactionCallback<Void> updateSettingsTransaction(SettingsModel request, String email) {
+    return transaction -> {
+        transaction.run("MATCH (User {email: $email})-[:HAS_PREFERENCES]->(s:Settings) " +
+                "SET s.goal = $goal, s.shoppingInterval = $shoppingInterval, s.foodPreferences = $foodPreferences, " +
+                "s.calorieAmount = $calorieAmount, s.budgetRange = $budgetRange, s.macroRatio = $macroRatio, " +
+                "s.allergies = $allergies, s.cookingTime = $cookingTime, s.userHeight = $userHeight, s.userWeight = $userWeight, " +
+                "s.userBMI = $userBMI, s.BMISet = $BMISet, s.cookingTimeSet = $cookingTimeSet, s.allergiesSet = $allergiesSet, " +
+                "s.macroSet = $macroSet, s.budgetSet = $budgetSet, s.calorieSet = $calorieSet, s.foodPreferenceSet = $foodPreferenceSet, " +
+                "s.shoppingIntervalSet = $shoppingIntervalSet",
+                Values.parameters("email", email,
+                        "goal", request.getGoal(),
+                        "shoppingInterval", request.getShoppingInterval(),
+                        "foodPreferences", request.getFoodPreferences(),
+                        "calorieAmount", request.getCalorieAmount(),
+                        "budgetRange", request.getBudgetRange(),
+                        "macroRatio", request.getMacroRatio(),
+                        "allergies", request.getAllergies(),
+                        "cookingTime", request.getCookingTime(),
+                        "userHeight", request.getUserHeight(),
+                        "userWeight", request.getUserWeight(),
+                        "userBMI", request.getUserBMI(),
+                        "BMISet", request.isBMISet(),
+                        "cookingTimeSet", request.isCookingTimeSet(),
+                        "allergiesSet", request.isAllergiesSet(),
+                        "macroSet", request.isMacroSet(),
+                        "budgetSet", request.isBudgetSet(),
+                        "calorieSet", request.isCalorieSet(),
+                        "foodPreferenceSet", request.isFoodPreferenceSet(),
+                        "shoppingIntervalSet", request.isShoppingIntervalSet()
+                ));
+        return null;
+    };
+}
+
+
 
 }
 
