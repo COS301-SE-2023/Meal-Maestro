@@ -93,4 +93,13 @@ public class MealManagementService {
         }
         return mealJson.toString();
     }
+
+    // public String generatePopularMeals() throws JsonMappingException, JsonProcessingException {
+        // Fetch popular meals in JSON form
+
+
+        // Return as string
+
+        // return popularMealsJSON.toString();
+   // }
 }
