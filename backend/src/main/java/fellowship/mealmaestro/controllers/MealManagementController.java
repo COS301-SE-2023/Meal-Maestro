@@ -31,8 +31,8 @@ public class MealManagementController {
         return mealManagementService.generatePopularMeals();
     }
 
-    @GetMapping("/searchMeals")
-    public String searchMeals(@RequestParam String query) throws JsonMappingException, JsonProcessingException {
+    @GetMapping("/getSearchedMeals")
+    public String searchedMeals(@RequestParam String query) throws JsonMappingException, JsonProcessingException {
         // Call the mealManagementService to search meals based on the query
         return mealManagementService.searchMeals(query);
     }

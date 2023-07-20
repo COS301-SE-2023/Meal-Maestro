@@ -73,10 +73,10 @@ export class MealGenerationService {
     );
   }
 
-  getSearchMeals(query: string): Observable<MealBrowseI[]> {
+  getSearchedMeals(query: string): Observable<MealBrowseI[]> {
     const params = { query: query }; // backend expects the query parameter
     return this.http.get<MealBrowseI[]>(
-      this.url + '/searchMeals', 
+      this.url + '/getSearchedMeals', 
       { params: params });
   }
 
