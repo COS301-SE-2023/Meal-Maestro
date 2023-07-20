@@ -34,7 +34,7 @@ public class MealManagementController {
     @GetMapping("/getSearchedMeals")
     public String searchedMeals(@RequestParam String query) throws JsonMappingException, JsonProcessingException {
         // Call the mealManagementService to search meals based on the query
-        return mealManagementService.searchMeals(query);
+        return mealManagementService.generateSearchedMeals(query);
     }
     // public ResponseEntity<?> searchDatabase(@RequestParam String query) {
     //     // Call the service method to search the database and get the result

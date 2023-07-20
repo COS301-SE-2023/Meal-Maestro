@@ -1,5 +1,8 @@
 package fellowship.mealmaestro.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -115,4 +118,55 @@ public class MealManagementService {
          return popularMealJson.toString();
 
     }
+
+    public String generateSearchedMeals(String query) throws JsonProcessingException {
+        int i = 0;
+        JsonNode searchedMeal = objectMapper.readTree(openaiApiService.fetchMealResponse(query));
+        if (searchedMeal.isMissingNode()) {
+            int prevBestOfN = openaiApiService.getBestofN();
+            boolean success = false;
+            openaiApiService.setBestofN(prevBestOfN + 1);
+            while (!success && i < 5) {
+                searchedMeal = objectMapper.readTree(openaiApiService.fetchMealResponse(query));
+                if (!searchedMeal.isMissingNode())
+                    success = true;
+                i++;
+            }
+            openaiApiService.setBestofN(prevBestOfN);
+        }
+        return searchedMeal.toString();
+    }
+
+    // public List<Meal> generateSearchedMeals(String query) throws JsonProcessingException {
+    //     int i = 0;
+    //     List<Meal> searchedMeals = new ArrayList<>();
+
+    //     JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(query));
+    //     if (!mealJson.isMissingNode()) {
+    //         searchedMeals.add(parseMealFromJson(mealJson));
+    //     } else {
+    //         int prevBestOfN = openaiApiService.getBestofN();
+    //         boolean success = false;
+    //         openaiApiService.setBestofN(prevBestOfN + 1);
+    //         while (!success && i < 5) {
+    //             mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(query));
+    //             if (!mealJson.isMissingNode()) {
+    //                 searchedMeals.add(parseMealFromJson(mealJson));
+    //                 success = true;
+    //             }
+    //             i++;
+    //         }
+    //         openaiApiService.setBestofN(prevBestOfN);
+    //     }
+
+    //     return searchedMeals;
+    // }
+
+    // private Meal parseMealFromJson(JsonNode mealJson) {
+    //     // Implement the logic to parse the JSON response and construct a Meal object
+    //     // based on the data received from the OpenAI API.
+    //     // You'll need to extract the necessary information from mealJson and create the Meal object.
+    //     // Replace Meal with the appropriate class representing a meal in your application.
+    //     return new Meal(/* meal properties from mealJson */);
+    // }
 }
