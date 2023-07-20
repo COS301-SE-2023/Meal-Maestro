@@ -1,7 +1,9 @@
 package fellowship.mealmaestro.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,4 +30,20 @@ public class MealManagementController {
     public String popularMeals() throws JsonMappingException, JsonProcessingException{
         return mealManagementService.generatePopularMeals();
     }
+
+    @GetMapping("/searchMeals")
+    public String searchMeals(@RequestParam String query) throws JsonMappingException, JsonProcessingException {
+        // Call the mealManagementService to search meals based on the query
+        return mealManagementService.searchMeals(query);
+    }
+    // public ResponseEntity<?> searchDatabase(@RequestParam String query) {
+    //     // Call the service method to search the database and get the result
+    //     SearchResponse response = searchService.searchDatabase(query);
+
+    //     if (response != null) {
+    //         return ResponseEntity.ok(response);
+    //     } else {
+    //         return ResponseEntity.notFound().build();
+    //     }
+    // }
 }

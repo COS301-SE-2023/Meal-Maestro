@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, NO_ERRORS_SCHEMA } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { MealBrowseI } from '../../models/mealBrowse.model';
 
@@ -9,6 +9,10 @@ import { MealBrowseI } from '../../models/mealBrowse.model';
   styleUrls: ['./browse-meals.component.scss'],
   standalone:true,
   imports: [CommonModule, IonicModule],
+  // template: `
+  //   <app-browse-meals *ngFor="let meal of meals"></app-browse-meals>
+  // `,
+  // schemas: [NO_ERRORS_SCHEMA],
 })
 export class BrowseMealsComponent  implements OnInit {
 

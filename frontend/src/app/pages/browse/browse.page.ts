@@ -47,8 +47,6 @@ export class BrowsePage implements OnInit{
     })
     
   }
-
-
-  }
+}
 
 }
