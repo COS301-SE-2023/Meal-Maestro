@@ -24,8 +24,8 @@ public class MealManagementController {
         return mealManagementService.generateMeal();
     }
 
-    // @GetMapping("/getPopularMeals")
-    // public String popularMeals() throws JsonMappingException, JsonProcessingException{
-    //     return mealManagementService.generatePopularMeals();
-    // }
+    @GetMapping("/getPopularMeals")
+    public String popularMeals() throws JsonMappingException, JsonProcessingException{
+        return mealManagementService.generatePopularMeals();
+    }
 }
