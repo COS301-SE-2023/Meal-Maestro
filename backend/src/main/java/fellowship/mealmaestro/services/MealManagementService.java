@@ -94,12 +94,25 @@ public class MealManagementService {
         return mealJson.toString();
     }
 
-     public String generatePopularMeals() {
+     public String generatePopularMeals()throws JsonMappingException, JsonProcessingException {
         // Fetch popular meals in JSON form
+        int i = 0;
+        JsonNode popularMealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast lunch or dinner"));
+        if(popularMealJson.isMissingNode())
+        {
+            int prevBestOfN = openaiApiService.getBestofN();
+            Boolean success = false;
+            openaiApiService.setBestofN(prevBestOfN + 1);
+            while(!success&& i < 5)
+            {
+                popularMealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
+                if(!popularMealJson.isMissingNode())
+                    success = true;
+                    i++;
+            }
+            openaiApiService.setBestofN(prevBestOfN);
+        }
+         return popularMealJson.toString();
 
-
-         
-
-        // return popularMealsJSON.toString();
     }
 }
