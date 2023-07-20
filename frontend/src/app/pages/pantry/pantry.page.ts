@@ -22,6 +22,7 @@ export class PantryPage implements OnInit{
 
   segment: 'pantry'|'shopping'| null = 'pantry';
   isQuantity: boolean = false;
+  isLoading: boolean = false;
   pantryItems: FoodItemI[] = [];
   shoppingItems: FoodItemI[] = [];
   searchTerm: string = '';
@@ -42,11 +43,13 @@ export class PantryPage implements OnInit{
   }
 
   async fetchItems(){
+    this.isLoading = true;
     this.pantryService.getPantryItems().subscribe({
       next: (response) => {
         if (response.status === 200) {
           if (response.body){
             this.pantryItems = response.body;
+            this.isLoading = false;
           }
         }
       },
@@ -56,12 +59,14 @@ export class PantryPage implements OnInit{
             'Unauthorized access. Please login again.',
             err
           )
+          this.isLoading = false;
           this.auth.logout();
         }else{
           this.errorHandlerService.presentErrorToast(
             'Error loading pantry items',
             err
           )
+          this.isLoading = false;
         }
       }
     })
@@ -284,8 +289,10 @@ export class PantryPage implements OnInit{
   }
 
   doRefresh(event : any){
+    this.isLoading = true;
     setTimeout(() => {
       this.fetchItems();
+      this.isLoading = false;
       event.target.complete();
     }, 2000);
   }

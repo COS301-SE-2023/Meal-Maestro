@@ -16,14 +16,13 @@
     <ion-label slot="start">Name</ion-label>
     <ion-label slot="end">Amount</ion-label>
   </ion-toolbar>
+  <ion-progress-bar  *ngIf="isLoading===true" type="indeterminate"></ion-progress-bar>
 </ion-header>
    
 <ion-content [scrollY]="true" [ngSwitch]="segment">
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content
-      pullingText="Pull to refresh"
-      refreshingSpinner="circles"
-      refreshingText="Refreshing...">
+      refreshingSpinner=null>
     </ion-refresher-content>
   </ion-refresher>
 
@@ -51,9 +50,17 @@
       </div>
   
     <ion-fab slot="fixed" vertical="bottom" horizontal="end" *ngSwitchCase="'pantry'">
-      <ion-fab-button id="open-add-modal">
-        <ion-icon name="add"></ion-icon>
+      <ion-fab-button>
+        <ion-icon name="menu"></ion-icon>
       </ion-fab-button>
+      <ion-fab-list side="top">
+        <ion-fab-button id="open-add-modal">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button>
+          <ion-icon name="filter"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
     </ion-fab>
 
     <ion-modal trigger="open-add-modal" (willDismiss)="addItemToPantry($event)" *ngSwitchCase="'pantry'">
@@ -101,9 +108,17 @@
     </ion-modal>
 
     <ion-fab slot="fixed" vertical="bottom" horizontal="end" *ngSwitchCase="'shopping'">
-      <ion-fab-button id="open-add-modal-shopping">
-        <ion-icon name="add"></ion-icon>
+      <ion-fab-button>
+        <ion-icon name="menu"></ion-icon>
       </ion-fab-button>
+      <ion-fab-list side="top">
+        <ion-fab-button id="open-add-modal-shopping">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button>
+          <ion-icon name="filter"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
     </ion-fab>
 
     <ion-modal trigger="open-add-modal-shopping" (willDismiss)="addItemToShoppingList($event)" *ngSwitchCase="'shopping'">
