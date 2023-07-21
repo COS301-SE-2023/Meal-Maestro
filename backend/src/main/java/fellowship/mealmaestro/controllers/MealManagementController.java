@@ -12,7 +12,7 @@ import fellowship.mealmaestro.services.MealManagementService;
 @RestController
 public class MealManagementController {
     @Autowired
-    private MealManagementService mealManagementService = new MealManagementService;
+    private MealManagementService mealManagementService = new MealManagementService();
 
     @GetMapping("/getDaysMeals")
     public String dailyMeals() throws JsonMappingException, JsonProcessingException{
