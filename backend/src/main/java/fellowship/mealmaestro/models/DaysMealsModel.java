@@ -2,12 +2,14 @@ package fellowship.mealmaestro.models;
 
 import java.util.Date;
 
+import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.validation.constraints.NotBlank;
 
+@Node
 public class DaysMealsModel {
     @Relationship(type = "breakfast")
     @NotBlank(message = "breakfast meal required")
@@ -25,12 +27,16 @@ public class DaysMealsModel {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date mealDate;
    
+    @Relationship(type = "date")
+    @NotBlank(message = "user required")
+    private UserModel user;
 
-    public DaysMealsModel(MealModel breakfast, MealModel lunch, MealModel dinner, Date mealDate){
+    public DaysMealsModel(MealModel breakfast, MealModel lunch, MealModel dinner, Date mealDate, UserModel user){
         this.breakfast = breakfast;
         this.lunch = lunch;
         this.dinner = dinner;
         this.mealDate = mealDate;
+        this.user = user;
     }
 
     public MealModel getBreakfast(){
