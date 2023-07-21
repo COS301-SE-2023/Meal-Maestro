@@ -47,7 +47,7 @@ public class MealModel {
     }
 
     public String getdescription(){
-        return this.instructions;
+        return this.description;
     }
 
     public void setdescription(String description){
@@ -55,7 +55,7 @@ public class MealModel {
     }
 
     public String geturl(){
-        return this.instructions;
+        return this.url;
     }
 
     public void seturl(String url){
@@ -63,7 +63,7 @@ public class MealModel {
     }
 
     public String getingredients(){
-        return this.instructions;
+        return this.ingredients;
     }
 
     public void setingredients(String ingredients){
@@ -71,7 +71,7 @@ public class MealModel {
     }
 
     public String getcookingTime(){
-        return this.instructions;
+        return this.cookingTime;
     }
 
     public void setcookingTime(String cookingTime){
