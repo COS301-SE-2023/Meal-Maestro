@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Input } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, IonicSlides } from '@ionic/angular';
 import { MealI } from '../../models/meal.model';
 import { Router } from '@angular/router';
 import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
