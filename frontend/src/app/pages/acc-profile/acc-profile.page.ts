@@ -22,4 +22,9 @@ export class AccProfilePage implements OnInit {
   ngOnInit() {
   }
 
+  logout() {
+    this.router.navigate(['../']);
+    localStorage.clear();
+  }
+
 }

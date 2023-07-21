@@ -9,7 +9,7 @@ describe('BrowseMealsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [IonicModule.forRoot(), BrowseMealsComponent ]
+      imports: [IonicModule.forRoot(), BrowseMealsComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(BrowseMealsComponent);

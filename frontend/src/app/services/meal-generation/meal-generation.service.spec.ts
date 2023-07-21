@@ -8,7 +8,7 @@ describe('MealGenerationService', () => {
   let httpClientSpy: jasmine.SpyObj<HttpClient>;
 
   beforeEach(() => {
-    httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
+    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
     service = new MealGenerationService(httpClientSpy as any);
   });
 

@@ -1,5 +1,7 @@
 package fellowship.mealmaestro.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,20 +14,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public void createUser(UserModel user){
-        userRepository.createUser(user);
-    }
-
-    public boolean checkUser(UserModel user){
-        //TODO: hash password
-        return userRepository.checkUser(user);
-    }
-
-    public boolean login(UserModel user){
-        return userRepository.login(user);
-    }
-
-    public UserModel getUser(UserModel user){
-        return userRepository.getUser(user);
+    public Optional<UserModel> findByEmail(String email){
+        return userRepository.findByEmail(email);
     }
 }
