@@ -26,6 +26,7 @@ export class PantryPage implements OnInit{
   pantryItems: FoodItemI[] = [];
   shoppingItems: FoodItemI[] = [];
   searchTerm: string = '';
+  currentSort: string = 'name-down';
   newItem: FoodItemI = {
     name: '',
     quantity: null,
@@ -306,5 +307,30 @@ export class PantryPage implements OnInit{
 
     if (!this.searchTerm) return true;
     return itemName.toLowerCase().includes(this.searchTerm.toLowerCase());
+  }
+
+  changeSort(sort1: string, sort2: string){
+    this.currentSort = this.currentSort === sort1 ? sort2 : sort1;
+    this.sortChanged();
+  }
+
+  sortChanged(): void {
+    switch (this.currentSort) {
+      case 'name-down':
+        // sort by name descending
+        
+        break;
+      case 'name-up':
+        // sort by name ascending
+        break;
+      case 'amount-down':
+        // sort by amount descending
+        break;
+      case 'amount-up':
+        // sort by amount ascending
+        break;
+      default:
+        break;
+    }
   }
 }
