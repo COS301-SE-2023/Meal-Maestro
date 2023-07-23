@@ -27,4 +27,10 @@ public class UserService {
         String email = jwtService.extractUserEmail(authToken);
         return userRepository.updateUser(user, email);
     }
+
+    public UserModel getUser(String token) {
+        String authToken = token.substring(7);
+        String email = jwtService.extractUserEmail(authToken);
+        return userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+    }
 }

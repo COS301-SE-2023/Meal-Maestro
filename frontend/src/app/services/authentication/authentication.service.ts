@@ -57,6 +57,12 @@ export class AuthenticationService {
       {observe: 'response'});
   }
 
+  getUser(): Observable<HttpResponse<UserI>> {
+    return this.http.get<UserI>(
+      this.url+'/getUser',
+      {observe: 'response'});
+  }
+
   setToken(token: string): void {
     if (token){
       localStorage.setItem('token', token);

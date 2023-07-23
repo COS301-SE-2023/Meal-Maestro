@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,5 +59,12 @@ public class UserController {
         @RequestHeader("Authorization") String token
     ){
         return ResponseEntity.ok(userService.updateUser(user, token));
+    }
+
+    @GetMapping("/getUser")
+    public ResponseEntity<UserModel> getUser(
+        @RequestHeader("Authorization") String token
+    ){
+        return ResponseEntity.ok(userService.getUser(token));
     }
 }

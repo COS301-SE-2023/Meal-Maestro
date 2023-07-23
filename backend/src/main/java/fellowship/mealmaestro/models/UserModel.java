@@ -41,7 +41,7 @@ public class UserModel implements UserDetails{
         return this.email;
     }
 
-    public void setname(String name){
+    public void setName(String name){
         this.name = name;
     }
 
