@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { RecipeItemComponent } from '../../components/recipe-item/recipe-item.component';
 import { RecipeItemI } from '../../models/recipeItem.model';
 import { RecipeBookApiService } from '../../services/services';
+import { catchError, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-book',
@@ -14,14 +15,33 @@ import { RecipeBookApiService } from '../../services/services';
   imports: [IonicModule, CommonModule, FormsModule, RecipeItemComponent]
 })
 export class RecipeBookPage implements OnInit {
-  items: RecipeItemI[] = [
-    { image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80', title: 'Salmon' },
-    { image: '/assets/img2.jpg', title: 'Stir-fry' },
-    { image: '/assets/img4.jpg', title: 'Pancakes' },
-    { image: '/assets/img3.jpg', title: 'Raspberry Fruit Salad' }
-  ];
+  items: RecipeItemI[] = [];
 
   constructor(private recipeService: RecipeBookApiService) { }
+
+  async ionViewWillEnter() {
+    try {
+      const recipes = await this.getRecipes();
+      this.items = recipes;
+    } catch (error) {
+      console.log("An error in ionViewWillEnter rb.page: " + error);
+    }
+  }
+
+  async getRecipes() {
+    try {
+      const recipes = await firstValueFrom(
+        this.recipeService.getAllRecipes().pipe(
+          catchError((error) => {
+            throw error;
+          })
+        )
+      );
+      return recipes;
+    } catch (error) {
+      throw error;
+    }
+  }
 
   ngOnInit() {
   }
