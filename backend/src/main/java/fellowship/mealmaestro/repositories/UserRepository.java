@@ -79,6 +79,21 @@ public class UserRepository {
             return user;
         };
     }
+
+    public UserModel updateUser(UserModel user) {
+        try (Session session = driver.session()){
+            session.executeWrite(updateUserTransaction(user));
+            return user;
+        }
+    }
+
+    public static TransactionCallback<Void> updateUserTransaction(UserModel user) {
+        return transaction -> {
+            transaction.run("MATCH (n0:User {email: $email}) SET n0.username = $username",
+            Values.parameters("email", user.getEmail(), "username", user.getName()));
+            return null;
+        };
+    }
 }
 
  

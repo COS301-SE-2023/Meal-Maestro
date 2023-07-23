@@ -17,4 +17,8 @@ public class UserService {
     public Optional<UserModel> findByEmail(String email){
         return userRepository.findByEmail(email);
     }
+
+    public UserModel updateUser(UserModel user) {
+        return userRepository.updateUser(user);
+    }
 }
