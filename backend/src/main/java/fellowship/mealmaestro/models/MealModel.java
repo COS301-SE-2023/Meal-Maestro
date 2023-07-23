@@ -1,11 +1,14 @@
 package fellowship.mealmaestro.models;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
 import jakarta.validation.constraints.NotBlank;
 
 @Node
 public class MealModel {
+
+    @Id
     @NotBlank(message = "A Meal Name is required")
     private String name;
 
