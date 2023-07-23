@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { RecipeItemComponent } from '../../components/recipe-item/recipe-item.component';
 import { RecipeItemI } from '../../models/recipeItem.model';
+import { RecipeBookApiService } from '../../services/services';
 
 @Component({
   selector: 'app-recipe-book',
@@ -20,7 +21,7 @@ export class RecipeBookPage implements OnInit {
     { image: '/assets/img3.jpg', title: 'Raspberry Fruit Salad' }
   ];
 
-  constructor() { }
+  constructor(private recipeService: RecipeBookApiService) { }
 
   ngOnInit() {
   }
