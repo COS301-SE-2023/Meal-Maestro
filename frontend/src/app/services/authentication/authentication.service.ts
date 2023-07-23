@@ -46,6 +46,17 @@ export class AuthenticationService {
       {observe: 'response'});
   }
 
+  updateUser(user: UserI): Observable<HttpResponse<UserI>> {
+    return this.http.post<UserI>(
+      this.url+'/updateUser',
+      {
+        "username": user.username,
+        "email": '',
+        "password": ''
+      },
+      {observe: 'response'});
+  }
+
   setToken(token: string): void {
     if (token){
       localStorage.setItem('token', token);

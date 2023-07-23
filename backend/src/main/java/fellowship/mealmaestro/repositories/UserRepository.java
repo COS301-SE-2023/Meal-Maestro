@@ -80,17 +80,17 @@ public class UserRepository {
         };
     }
 
-    public UserModel updateUser(UserModel user) {
+    public UserModel updateUser(UserModel user, String email) {
         try (Session session = driver.session()){
-            session.executeWrite(updateUserTransaction(user));
+            session.executeWrite(updateUserTransaction(user.getName(), email));
             return user;
         }
     }
 
-    public static TransactionCallback<Void> updateUserTransaction(UserModel user) {
+    public static TransactionCallback<Void> updateUserTransaction(String username, String email) {
         return transaction -> {
             transaction.run("MATCH (n0:User {email: $email}) SET n0.username = $username",
-            Values.parameters("email", user.getEmail(), "username", user.getName()));
+            Values.parameters("email", email, "username", username));
             return null;
         };
     }
