@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ActionSheetController, IonItemSliding, IonicModule, PickerController } from '@ionic/angular';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, NgZone, Output, ViewChild } from '@angular/core';
+import { ActionSheetController, Animation, AnimationController, IonItemSliding, IonicModule, PickerController } from '@ionic/angular';
 import { FoodItemI } from '../../models/interfaces';
 import { ErrorHandlerService, PantryApiService, ShoppingListApiService } from '../../services/services';
 import { CommonModule } from '@angular/common';
@@ -11,21 +11,62 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [IonicModule, CommonModule],
 })
-export class FoodListItemComponent  implements OnInit {
+export class FoodListItemComponent  implements AfterViewInit {
   @Input() item! : FoodItemI;
   @Input() segment! : 'pantry' | 'shopping';
   @Input() isVisible! : boolean;
   @Output() itemDeleted: EventEmitter<FoodItemI> = new EventEmitter<FoodItemI>();
   @Output() itemBought: EventEmitter<FoodItemI> = new EventEmitter<FoodItemI>();
   @ViewChild(IonItemSliding, { static: false }) slidingItem!: IonItemSliding;
+  @ViewChild(IonItemSliding, { read: ElementRef }) slidingItemRef!: ElementRef<HTMLIonItemSlidingElement>;
+
+  private buyAnimation!: Animation;
+  private deleteAnimation!: Animation;
+  private boughtItem?: FoodItemI;
+  private deletedItem?: FoodItemI;
 
   constructor(private pantryService : PantryApiService, 
               private actionSheetController: ActionSheetController, 
               private pickerController: PickerController,
               private shoppingListService: ShoppingListApiService,
-              private errorHandlerService: ErrorHandlerService) { }
+              private errorHandlerService: ErrorHandlerService,
+              private animationCtrl: AnimationController,
+              private ngZone: NgZone) { }
 
-  ngOnInit() {}
+  ngAfterViewInit() {
+    this.buyAnimation = this.animationCtrl
+      .create()
+      .addElement(this.slidingItemRef.nativeElement)
+      .duration(200)
+      .iterations(1)
+      .keyframes([
+        { offset: 0, transform: 'translateX(0px)' },
+        { offset: 0.4, transform: 'translateX(10%)' },
+        { offset: 1, transform: 'translateX(-100%)' },
+      ])
+      .onFinish(() => {
+        this.ngZone.run(() => {
+          this.itemBought.emit(this.boughtItem);
+        });
+      });
+
+
+    this.deleteAnimation = this.animationCtrl
+    .create()
+    .addElement(this.slidingItemRef.nativeElement)
+    .duration(200)
+    .iterations(1)
+    .keyframes([
+      { offset: 0, transform: 'translateX(0px)' },
+      { offset: 0.4, transform: 'translateX(-10%)' },
+      { offset: 1, transform: 'translateX(100%)' },
+    ])
+    .onFinish(() => {
+      this.ngZone.run(() => {
+        this.itemDeleted.emit(this.deletedItem);
+      });
+    });
+  }
 
   async openDeleteSheet() {
     const actionSheet = await this.actionSheetController.create({
@@ -54,7 +95,8 @@ export class FoodListItemComponent  implements OnInit {
     const { data, role } = await actionSheet.onDidDismiss();
     if (role === 'destructive') {
       this.closeItem();
-      this.itemDeleted.emit(data)
+      this.deletedItem = data;
+      this.deleteAnimation.play();
     }else if(role === 'cancel'){
       this.closeItem();
     }
@@ -91,8 +133,9 @@ export class FoodListItemComponent  implements OnInit {
     const { data, role } = await actionSheet.onDidDismiss();
     if (role === 'destructive') {
       this.closeItem();
-      this.itemBought.emit(data)
-      console.log('Bought');
+      this.boughtItem = data;
+      this.buyAnimation.play();
+      // this.itemBought.emit(data);
     }else if(role === 'cancel'){
       this.closeItem();
     }

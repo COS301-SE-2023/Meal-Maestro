@@ -228,7 +228,7 @@ export class PantryPage implements OnInit{
         if (response.body){
           this.pantryItems = response.body;
           this.shoppingItems = this.shoppingItems.filter((i) => i.name !== item.name);
-
+          console.log(this.shoppingItems);
           this.errorHandlerService.presentSuccessToast("Item Bought!");
         }
       }
