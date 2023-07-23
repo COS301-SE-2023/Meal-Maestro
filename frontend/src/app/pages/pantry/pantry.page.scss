@@ -17,10 +17,13 @@ ion-toolbar{
 }
 
 ion-toolbar.labels{
-    --min-height: 10px;
+    --min-height: 12px;
     --padding-start: 4vw;
     --padding-end: 4vw;
     --padding-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
 }
 
 ion-content{

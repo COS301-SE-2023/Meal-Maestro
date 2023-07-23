@@ -13,8 +13,30 @@
     <ion-searchbar [debounce]="250" (ionInput)="search($event)"></ion-searchbar>
   </ion-toolbar>
   <ion-toolbar class="labels">
-    <ion-label slot="start">Name</ion-label>
-    <ion-label slot="end">Amount</ion-label>
+    <ion-label slot="start" (click)="changeSort('name-down', 'name-up')">
+      Name
+      <ng-container *ngIf="currentSort === 'name-down'; else nameUpIcon">
+        <ion-icon name="caret-down"></ion-icon>
+      </ng-container>
+      <ng-template #nameUpIcon>
+        <ion-icon name="caret-up" *ngIf="currentSort === 'name-up'; else placeholderIcon"></ion-icon>
+      </ng-template>
+      <ng-template #placeholderIcon>
+        <ion-icon style="color: transparent;" name="caret-down"></ion-icon>
+      </ng-template>
+    </ion-label>
+    <ion-label class="amount-label" slot="end" (click)="changeSort('amount-down','amount-up')">
+      Amount
+      <ng-container *ngIf="currentSort === 'amount-down'; else amountUpIcon">
+        <ion-icon name="caret-down"></ion-icon>
+      </ng-container>
+      <ng-template #amountUpIcon>
+        <ion-icon name="caret-up" *ngIf="currentSort === 'amount-up'; else placeholderIcon"></ion-icon>
+      </ng-template>
+      <ng-template #placeholderIcon>
+        <ion-icon style="color: transparent;" name="caret-down"></ion-icon>
+      </ng-template>
+    </ion-label>
   </ion-toolbar>
   <ion-progress-bar  *ngIf="isLoading===true" type="indeterminate"></ion-progress-bar>
 </ion-header>
