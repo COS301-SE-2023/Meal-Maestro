@@ -51,6 +51,7 @@ export class PantryPage implements OnInit{
           if (response.body){
             this.pantryItems = response.body;
             this.isLoading = false;
+            this.sortNameDescending();
           }
         }
       },
@@ -77,6 +78,8 @@ export class PantryPage implements OnInit{
         if (response.status === 200) {
           if (response.body){
             this.shoppingItems = response.body;
+            this.isLoading = false;
+            this.sortNameDescending();
           }
         }
       },
@@ -318,19 +321,71 @@ export class PantryPage implements OnInit{
     switch (this.currentSort) {
       case 'name-down':
         // sort by name descending
-        
+        this.sortNameDescending();
         break;
       case 'name-up':
         // sort by name ascending
+        this.sortNameAscending();
         break;
       case 'amount-down':
         // sort by amount descending
+        this.sortAmountDescending();
         break;
       case 'amount-up':
         // sort by amount ascending
+        this.sortAmountAscending();
         break;
       default:
         break;
     }
   }
+
+  sortNameDescending(): void {
+    if (this.segment === 'pantry'){
+      this.pantryItems.sort((a, b) => {
+        return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
+      });
+    } else if (this.segment === 'shopping'){
+      this.shoppingItems.sort((a, b) => {
+        return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
+      });
+    }
+  }
+
+  sortNameAscending(): void {
+    if (this.segment === 'pantry'){
+      this.pantryItems.sort((a, b) => {
+        return a.name.toLowerCase() > b.name.toLowerCase() ? -1 : 1;
+      });
+    } else if (this.segment === 'shopping'){
+      this.shoppingItems.sort((a, b) => {
+        return a.name.toLowerCase() > b.name.toLowerCase() ? -1 : 1;
+      });
+    }
+  }
+
+  sortAmountDescending(): void {
+    if (this.segment === 'pantry'){
+      this.pantryItems.sort((a, b) => {
+        return (a.quantity! + a.weight!) > (b.quantity! + b.weight!) ? -1 : 1;
+      });
+    } else if (this.segment === 'shopping'){
+      this.shoppingItems.sort((a, b) => {
+        return (a.quantity! + a.weight!) > (b.quantity! + b.weight!) ? -1 : 1;
+      });
+    }
+  }
+
+  sortAmountAscending(): void {
+    if (this.segment === 'pantry'){
+      this.pantryItems.sort((a, b) => {
+        return (a.quantity! + a.weight!) < (b.quantity! + b.weight!) ? -1 : 1;
+      });
+    } else if (this.segment === 'shopping'){
+      this.shoppingItems.sort((a, b) => {
+        return (a.quantity! + a.weight!) < (b.quantity! + b.weight!) ? -1 : 1;
+      });
+    }
+  }
+
 }
