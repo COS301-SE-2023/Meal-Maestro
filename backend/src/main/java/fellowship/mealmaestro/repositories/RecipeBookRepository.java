@@ -23,15 +23,17 @@ public class RecipeBookRepository {
     }
 
     //#region Create
-    public void addRecipe(RecipeModel recipe){
+    public void addRecipe(UserModel user, RecipeModel recipe){
         try (Session session = driver.session()){
-            session.executeWrite(addRecipeTransaction(recipe));
+            session.executeWrite(addRecipeTransaction(user, recipe));
         }
     }
 
-    public static TransactionCallback<Void> addRecipeTransaction(RecipeModel recipe) {
+    public static TransactionCallback<Void> addRecipeTransaction(UserModel user, RecipeModel recipe) {
         return transaction -> {
-            transaction.run("CREATE (:RecipeBook)-[:CONTAINS]->(:Recipe {name: $name, description: $description})",
+            transaction.run("MATCH (user:User {email: $email})" +
+            "CREATE (user)-[:]"
+            "CREATE (:RecipeBook)-[:CONTAINS]->(:Recipe {title: $title, image: $image})",
                 Values.parameters("title", recipe.getTitle(), "image", recipe.getImage()));
             return null;
         };
@@ -47,7 +49,9 @@ public class RecipeBookRepository {
 
     public static TransactionCallback<List<RecipeModel>> getAllRecipesTransaction(UserModel user) {
         return transaction -> {
-            var result = transaction.run("MATCH (:RecipeBook)-[:CONTAINS]->(r:Recipe) RETURN r.title AS title, r.image AS image");
+            var result = transaction.run("MATCH (user:User {email: $email})-[:OWNS]->(book:RecipeBook)-[:CONTAINS]->(recipe:Recipe) " +
+            "RETURN recipe.title AS title, recipe.image AS image",
+            Values.parameters("email", user.getEmail()));
             
             List<RecipeModel> recipes = new ArrayList<>();
             while (result.hasNext()){
@@ -68,8 +72,9 @@ public class RecipeBookRepository {
 
     public static TransactionCallback<Void> removeRecipeTransaction(RecipeModel recipeName) {
         return transaction -> {
-            transaction.run("MATCH (:RecipeBook)-[:CONTAINS]->(r:Recipe {name: $name}) DETACH DELETE r",
-                Values.parameters("name", recipeName));
+            transaction.run("MATCH (user:User {email: $email})-[:OWNS]->(book:RecipeBook)-[r:CONTAINS]->(recipe:Recipe {title: $title, image: $image}) " +
+            "DETACH DELETE r",
+                Values.parameters("email", user.getEmail(), "title", recipe.getTitle(), "image", recipe.getImage()));
             return null;
         };
     }
