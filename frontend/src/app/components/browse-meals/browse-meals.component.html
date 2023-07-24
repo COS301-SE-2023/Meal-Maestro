@@ -1,9 +1,9 @@
-<ion-card *ngFor="let item of mealsData" (click)="setOpen(true, item)" color="primary">
+<ion-card  (click)="setOpen(true, item)" color="primary">
   <ion-card-header>
-    <ion-card-title class="head">{{item.title}}</ion-card-title>
+    <ion-card-title class="head">{{mealsData.name}}e</ion-card-title>
   </ion-card-header>
   <ion-card-content>
-   {{item.description}}
+   {{mealsData.description}}
   </ion-card-content>
 <ion-avatar>
 
@@ -15,7 +15,7 @@
   <ng-template>
     <ion-header>
       <ion-toolbar>
-        <ion-title>{{currentObject.title}}</ion-title>
+        <ion-title>{{mealsData.name}}</ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="setOpen(false,null)">Close</ion-button>
         </ion-buttons>
@@ -27,9 +27,9 @@
 
     </ion-avatar>
     <ion-content class="ion-padding">
-      <p>{{currentObject.ingredients}}</p> 
-     <p>{{currentObject.instructions}}</p> 
-     <p>{{currentObject.cookingTime}}</p> 
+      <p>{{mealsData.ingredients}}</p> 
+     <p>{{mealsData.instructions}}</p> 
+     <p>{{mealsData.cookingTime}}</p> 
     </ion-content>
   </ng-template>
 </ion-modal>

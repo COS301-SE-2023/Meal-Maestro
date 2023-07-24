@@ -16,7 +16,14 @@ import { MealBrowseI } from '../../models/mealBrowse.model';
 })
 export class BrowseMealsComponent  implements OnInit {
 
-  @Input() mealsData!: MealBrowseI[];
+  // @Input() dayData!: MealBrowseI[];
+  // item: MealBrowseI | undefined;
+  // daysMeals: MealBrowseI[] = [] ;
+
+  @Input() mealsData!: MealBrowseI;
+  item: MealBrowseI | undefined;
+  popularMeals: MealBrowseI[] = [];
+
   isModalOpen = false;
   currentObject :any
   setOpen(isOpen: boolean, o :any) {

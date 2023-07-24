@@ -14,7 +14,7 @@ import { MealBrowseI } from '../../models/mealBrowse.model';
   templateUrl: './browse.page.html',
   styleUrls: ['./browse.page.scss'],
   standalone: true,
-  imports: [IonicModule, BrowseMealsComponent ]
+  imports: [IonicModule, BrowseMealsComponent, CommonModule ]
 })
 export class BrowsePage implements OnInit{
   // meals: DaysMealsI[];
