@@ -13,6 +13,12 @@ public class FoodModel {
     @PositiveOrZero(message = "Weight must be a positive number")
     private int weight;
 
+    public FoodModel(){
+        this.name = "";
+        this.quantity = 0;
+        this.weight = 0;
+    }
+
     public FoodModel(String name, int quantity, int weight){
         this.name = name;
         this.quantity = quantity;
