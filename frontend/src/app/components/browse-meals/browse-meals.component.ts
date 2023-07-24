@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, Input, NO_ERRORS_SCHEMA } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { MealBrowseI } from '../../models/mealBrowse.model';
+import { ErrorHandlerService } from '../../services/services';
 
 @Component({
   selector: 'app-browse-meals',
@@ -32,6 +33,21 @@ export class BrowseMealsComponent  implements OnInit {
     this.isModalOpen = isOpen;
     this.setCurrent(o)
   }
+
+  searchQuery: string;
+  searchResults: any;
+
+  onSearch() {
+    this.mealService.searchMeals(this.searchQuery).subscribe(
+      (response) => {
+        this.searchResults = response;
+      },
+      error: (err) =>  {
+        console.error('Error searching meals:', error);
+      }
+    );
+  }
+
   constructor() { }
 
   ngOnInit() {}
@@ -39,4 +55,7 @@ export class BrowseMealsComponent  implements OnInit {
   setCurrent(o : any) {
     this.currentObject = o;
   }
+
+
+
 }
