@@ -58,8 +58,10 @@ public class OpenaiApiService {
     //     text = text.replace("\n", "");
     //     return text;
 
-    return "{\"instructions\":\"1. Preheat oven to 375 degrees/r/n2. Grease a baking dish with butter/r/n3. Beat together the eggs, milk, and a pinch of salt/r/n4. Place the bread slices in the baking dish and pour the egg mixture over them/r/n5. Bake in the preheated oven for 25 minutes/r/n6. Serve warm with your favorite toppings\",\"name\":\"Baked French Toast\",\"description\":\"a delicious breakfast dish of egg-soaked bread\",\"ingredients\":\"6 slices of bread/r/n3 eggs/r/n3/4 cup of milk/r/nSalt/r/nButter\",\"cookingTime\":\"30 minutes\"}";
-    }
+    //return "{\"instructions\":\"1. Preheat oven to 375 degrees/r/n2. Grease a baking dish with butter/r/n3. Beat together the eggs, milk, and a pinch of salt/r/n4. Place the bread slices in the baking dish and pour the egg mixture over them/r/n5. Bake in the preheated oven for 25 minutes/r/n6. Serve warm with your favorite toppings\",\"name\":\"Baked French Toast\",\"description\":\"a delicious breakfast dish of egg-soaked bread\",\"ingredients\":\"6 slices of bread/r/n3 eggs/r/n3/4 cup of milk/r/nSalt/r/nButter\",\"cookingTime\":\"30 minutes\"}";
+    return "{\"instructions\":\"1. Preheat oven to 375 degrees\\n2. Grease a baking dish with butter\\n3. Beat together the eggs, milk, and a pinch of salt\\n4. Place the bread slices in the baking dish and pour the egg mixture over them\\n5. Bake in the preheated oven for 25 minutes\\n6. Serve warm with your favorite toppings\",\"name\":\"Baked French Toast\",\"description\":\"a delicious breakfast dish of egg-soaked bread\",\"ingredients\":\"6 slices of bread\\n3 eggs\\n3/4 cup of milk\\nSalt\\nButter\",\"cookingTime\":\"30 minutes\",\"url\":\"https://images.unsplash.com/photo-1484723091739-30a097e8f929?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=449&q=80\"}";
+
+}
 
     public String fetchMealResponse(String Type,String extendedPrompt) throws JsonMappingException, JsonProcessingException{
         JsonNode jsonNode = jsonMapper.readTree(getJSONResponse(Type,extendedPrompt));
