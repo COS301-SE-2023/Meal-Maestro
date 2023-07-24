@@ -31,10 +31,10 @@ export class BrowsePage implements OnInit{
     this.mealGenerationservice.getPopularMeals().subscribe({
       next: (data) => {
         if(Array.isArray(data)){
-          this.popularMeals.push(...data);
+          this.popularMeals = data;
         }
         else {
-          this.popularMeals.push(data);
+          this.popularMeals =[data];
         }
         
        // console.log(this.popularMeals);
