@@ -7,7 +7,6 @@ import org.neo4j.driver.Driver;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.TransactionCallback;
 import org.neo4j.driver.Values;
-import org.neo4j.driver.internal.value.MapValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.neo4j.driver.Value;
@@ -96,37 +95,71 @@ public void updateSettings(SettingsModel request, String email) {
         session.executeWrite(updateSettingsTransaction(request, email));
     }
 }
-
 public static TransactionCallback<Void> updateSettingsTransaction(SettingsModel request, String email) {
     return transaction -> {
-        transaction.run("MATCH (User {email: $email})-[:HAS_PREFERENCES]->(s:Settings) " +
-                "SET s.goal = $goal, s.shoppingInterval = $shoppingInterval, s.foodPreferences = $foodPreferences, " +
+        String cypherQuery = "MATCH (User {email: $email})-[:HAS_PREFERENCES]->(s:Preferences) ";
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("email", email);
+
+        if (request.isBMISet()) {
+            cypherQuery += "SET s.BMISet = $BMISet ";
+            parameters.put("BMISet", request.isBMISet());
+        }
+
+        if (request.isCookingTimeSet()) {
+            cypherQuery += "SET s.cookingTimeSet = $cookingTimeSet ";
+            parameters.put("cookingTimeSet", request.isCookingTimeSet());
+        }
+
+        if (request.isAllergiesSet()) {
+            cypherQuery += "SET s.allergiesSet = $allergiesSet ";
+            parameters.put("allergiesSet", request.isAllergiesSet());
+        }
+
+        if (request.isMacroSet()) {
+            cypherQuery += "SET s.macroSet = $macroSet ";
+            parameters.put("macroSet", request.isMacroSet());
+        }
+
+        if (request.isBudgetSet()) {
+            cypherQuery += "SET s.budgetSet = $budgetSet ";
+            parameters.put("budgetSet", request.isBudgetSet());
+        }
+
+        if (request.isCalorieSet()) {
+            cypherQuery += "SET s.calorieSet = $calorieSet ";
+            parameters.put("calorieSet", request.isCalorieSet());
+        }
+
+        if (request.isFoodPreferenceSet()) {
+            cypherQuery += "SET s.foodPreferenceSet = $foodPreferenceSet ";
+            parameters.put("foodPreferenceSet", request.isFoodPreferenceSet());
+        }
+
+        if (request.isShoppingIntervalSet()) {
+            cypherQuery += "SET s.shoppingIntervalSet = $shoppingIntervalSet ";
+            parameters.put("shoppingIntervalSet", request.isShoppingIntervalSet());
+        }
+
+
+        cypherQuery += "SET s.goal = $goal, s.shoppingInterval = $shoppingInterval, s.foodPreferences = $foodPreferences, " +
                 "s.calorieAmount = $calorieAmount, s.budgetRange = $budgetRange, s.macroRatio = $macroRatio, " +
                 "s.allergies = $allergies, s.cookingTime = $cookingTime, s.userHeight = $userHeight, s.userWeight = $userWeight, " +
-                "s.userBMI = $userBMI, s.BMISet = $BMISet, s.cookingTimeSet = $cookingTimeSet, s.allergiesSet = $allergiesSet, " +
-                "s.macroSet = $macroSet, s.budgetSet = $budgetSet, s.calorieSet = $calorieSet, s.foodPreferenceSet = $foodPreferenceSet, " +
-                "s.shoppingIntervalSet = $shoppingIntervalSet",
-                Values.parameters("email", email,
-                        "goal", request.getGoal(),
-                        "shoppingInterval", request.getShoppingInterval(),
-                        "foodPreferences", request.getFoodPreferences(),
-                        "calorieAmount", request.getCalorieAmount(),
-                        "budgetRange", request.getBudgetRange(),
-                        "macroRatio", request.getMacroRatio(),
-                        "allergies", request.getAllergies(),
-                        "cookingTime", request.getCookingTime(),
-                        "userHeight", request.getUserHeight(),
-                        "userWeight", request.getUserWeight(),
-                        "userBMI", request.getUserBMI(),
-                        "BMISet", request.isBMISet(),
-                        "cookingTimeSet", request.isCookingTimeSet(),
-                        "allergiesSet", request.isAllergiesSet(),
-                        "macroSet", request.isMacroSet(),
-                        "budgetSet", request.isBudgetSet(),
-                        "calorieSet", request.isCalorieSet(),
-                        "foodPreferenceSet", request.isFoodPreferenceSet(),
-                        "shoppingIntervalSet", request.isShoppingIntervalSet()
-                ));
+                "s.userBMI = $userBMI";
+
+        parameters.put("goal", request.getGoal());
+        parameters.put("shoppingInterval", request.getShoppingInterval());
+        parameters.put("foodPreferences", request.getFoodPreferences());
+        parameters.put("calorieAmount", request.getCalorieAmount());
+        parameters.put("budgetRange", request.getBudgetRange());
+        parameters.put("macroRatio", request.getMacroRatio());
+        parameters.put("allergies", request.getAllergies());
+        parameters.put("cookingTime", request.getCookingTime());
+        parameters.put("userHeight", request.getUserHeight());
+        parameters.put("userWeight", request.getUserWeight());
+        parameters.put("userBMI", request.getUserBMI());
+
+        transaction.run(cypherQuery, Values.parameters(parameters));
         return null;
     };
 }
