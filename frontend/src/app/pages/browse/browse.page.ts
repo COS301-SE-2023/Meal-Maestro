@@ -22,12 +22,13 @@ export class BrowsePage implements OnInit{
 
   popularMeals: MealBrowseI[] = [];
 
-  searchQuery: string;
-  searchResults: any;
+  // searchQuery: string;
+  // searchResults: any;
   
   constructor(public r : Router,
     private mealGenerationservice:MealGenerationService,
-    private errorHandlerService:ErrorHandlerService) { }
+    private errorHandlerService:ErrorHandlerService,
+    private http: HttpClient) { }
 
  async ngOnInit() {
   for (let index = 0; index < 8; index++) {
@@ -50,6 +51,21 @@ export class BrowsePage implements OnInit{
     })
     
   }
+}
+
+generateSearchedMeals(query: string): void {
+  this.http
+    .get<any>(`/api/getSearchedMeals?query=${query}`)
+    .subscribe({
+      next: (data) => {
+        // Handle the data returned from the backend, if needed
+        console.log(data);
+      },
+      error: (err) => {
+        // Handle errors here
+        console.error('Error searching meals:', err);
+      },
+    });
 }
 
 }
