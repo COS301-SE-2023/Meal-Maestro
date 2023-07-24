@@ -37,7 +37,7 @@ export class BrowsePage implements OnInit{
           this.popularMeals =[data];
         }
         
-       // console.log(this.popularMeals);
+        console.log(this.popularMeals);
       },
       error: (err) => {
         this.errorHandlerService.presentErrorToast(
