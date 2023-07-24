@@ -34,19 +34,19 @@ export class BrowseMealsComponent  implements OnInit {
     this.setCurrent(o)
   }
 
-  searchQuery: string;
-  searchResults: any;
+  // searchQuery: string;
+  // searchResults: any;
 
-  onSearch() {
-    this.mealService.searchMeals(this.searchQuery).subscribe(
-      (response) => {
-        this.searchResults = response;
-      },
-      error: (err) =>  {
-        console.error('Error searching meals:', error);
-      }
-    );
-  }
+  // onSearch() {
+  //   this.mealService.searchMeals(this.searchQuery).subscribe(
+  //     (response) => {
+  //       this.searchResults = response;
+  //     },
+  //     error: (err) =>  {
+  //       console.error('Error searching meals:', error);
+  //     }
+  //   );
+  // }
 
   constructor() { }
 
