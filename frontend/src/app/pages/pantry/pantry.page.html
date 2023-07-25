@@ -72,17 +72,17 @@
       </div>
   
     <ion-fab slot="fixed" vertical="bottom" horizontal="end" *ngSwitchCase="'pantry'">
-      <ion-fab-button>
+      <ion-fab-button id="open-add-modal">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+      <!-- <ion-fab-button>
         <ion-icon name="menu"></ion-icon>
       </ion-fab-button>
       <ion-fab-list side="top">
-        <ion-fab-button id="open-add-modal">
-          <ion-icon name="add"></ion-icon>
-        </ion-fab-button>
         <ion-fab-button id="open-filter-pantry">
           <ion-icon name="filter"></ion-icon>
         </ion-fab-button>
-      </ion-fab-list>
+      </ion-fab-list> -->
     </ion-fab>
 
     <ion-modal trigger="open-add-modal" (willDismiss)="addItemToPantry($event)" *ngSwitchCase="'pantry'">
