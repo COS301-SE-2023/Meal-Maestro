@@ -98,19 +98,66 @@ public class MealManagementService {
     }
 
      public String generatePopularMeals()throws JsonMappingException, JsonProcessingException {
-        // Fetch popular meals in JSON form
+        
+        JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast lunch or dinner"));
         int i = 0;
-        List<JsonNode> mealEntities = new ArrayList<>();
-
-        while (i < 3) {
-            JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast lunch or dinner"));
-            if (!mealJson.isMissingNode()) {
-                mealEntities.add(mealJson);
-                i++;
+        if(mealJson.isMissingNode())
+        {
+            int prevBestOfN = openaiApiService.getBestofN();
+            Boolean success = false;
+            openaiApiService.setBestofN(prevBestOfN + 1);
+            while(!success&& i < 5)
+            {
+                mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
+                if(!mealJson.isMissingNode())
+                    success = true;
+                    i++;
             }
+            openaiApiService.setBestofN(prevBestOfN);
         }
+        return mealJson.toString();    
+        
+        // JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast lunch or dinner"));
+        // ObjectNode combinedNode = JsonNodeFactory.instance.objectNode();
+        // for (int i=0;i<3;i++) {
+        //     // String entities = mealJson.get(i).toString();
+        //      combinedNode.set("breakfast lunch or dinner", mealJson.get(i));
+        // }
+        //        //
+        // // DaysMeals daysMeals = objectMapper.treeToValue(combinedNode, DaysMeals.class);
+        // return combinedNode.toString();
 
-        return mealEntities.toString();
+        // Fetch popular meals in JSON form
+    //     int i = 0;
+    //     JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast lunch or dinner"));
+    //     List<JsonNode> mealEntities = new ArrayList<>();
+
+    //     // if (mealJson.isArray()) {
+    //         for (JsonNode entity : mealJson) {
+    //             mealEntities.add(entity, toString());
+    //         }
+    //   //  }
+
+    //     while (i < 3) {
+    //        // JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast lunch or dinner"));
+    //         if (!mealJson.isMissingNode()) {
+    //             mealEntities.add(mealJson);
+    //             i++;
+    //         }
+    //     }
+
+    //     return mealEntities.toString();
+
+
+    //     int i = 0;
+    // JsonNode mealJson = null;
+
+    //     int maxAttempts = 3;
+    //     JsonNode breakfastJson = fetchMealJson("breakfast", maxAttempts);
+
+
+
+       // return fetchMealResponse("breakfast lunch or dinner");
 
         // int i = 0;
         // JsonNode popularMealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast lunch or dinner"));
