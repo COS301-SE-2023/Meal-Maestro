@@ -5,6 +5,9 @@ public class AuthenticationResponseModel {
     
     private String token;
 
+    public AuthenticationResponseModel(){
+    }
+
     public AuthenticationResponseModel(String token){
         this.token = token;
     }

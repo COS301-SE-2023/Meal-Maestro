@@ -51,4 +51,15 @@ export class ShoppingListApiService {
       },
       { observe: 'response' });
   }
+
+  buyItem(item: FoodItemI): Observable<HttpResponse<FoodItemI[]>> {
+    return this.http.post<FoodItemI[]>(
+      this.url + '/buyItem',
+      {
+        "name": item.name,
+        "quantity": item.quantity,
+        "weight": item.weight,
+      },
+      { observe: 'response' });
+  }
 }

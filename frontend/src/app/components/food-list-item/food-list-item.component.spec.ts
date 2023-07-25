@@ -7,6 +7,7 @@ import { ShoppingListApiService } from '../../services/shopping-list-api/shoppin
 import { FoodItemI } from '../../models/interfaces';
 import { of } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
+import { ElementRef } from '@angular/core';
 
 describe('FoodListItemComponent', () => {
   let component: FoodListItemComponent;
@@ -16,6 +17,8 @@ describe('FoodListItemComponent', () => {
   let mockActionSheetController: jasmine.SpyObj<any>;
   let mockPickerController: jasmine.SpyObj<any>;
   let mockItem: FoodItemI;
+
+  const mockElementRef = new ElementRef({ nativeElement: document.createElement('div') });
 
   beforeEach(waitForAsync(() => {
     mockPantryService = jasmine.createSpyObj('PantryApiService', ['updatePantryItem']);
@@ -41,12 +44,15 @@ describe('FoodListItemComponent', () => {
         { provide: ShoppingListApiService, useValue: mockShoppingListService },
         { provide: ActionSheetController, useValue: mockActionSheetController },
         { provide: PickerController, useValue: mockPickerController },
+        { provide: ElementRef, useValue: mockElementRef },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FoodListItemComponent);
     component = fixture.componentInstance;
     component.item = mockItem;
+    component.segment = 'pantry';
+    component.isVisible = true;
     fixture.detectChanges();
   }));
 

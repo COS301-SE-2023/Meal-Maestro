@@ -1,52 +1,88 @@
-   <ion-header>
-     <ion-toolbar color="primary">
-       <ion-segment [value]="segment" (ionChange)="segmentChanged($event)" >
-         <ion-segment-button value="pantry">
-           <ion-label>Pantry</ion-label>
-         </ion-segment-button>
-         <ion-segment-button value="shopping">
-           <ion-label>Shopping</ion-label>
-         </ion-segment-button>
-       </ion-segment>
-     </ion-toolbar>
-   </ion-header>
+<ion-header>
+  <ion-toolbar>
+    <ion-segment [value]="segment" (ionChange)="segmentChanged($event)" >
+      <ion-segment-button value="pantry">
+        <ion-label>Pantry</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="shopping">
+        <ion-label>Shopping</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar [debounce]="250" (ionInput)="search($event)"></ion-searchbar>
+  </ion-toolbar>
+  <ion-toolbar class="labels">
+    <ion-label slot="start" (click)="changeSort('name-down', 'name-up')">
+      Name
+      <ng-container *ngIf="currentSort === 'name-down'; else nameUpIcon">
+        <ion-icon name="caret-down"></ion-icon>
+      </ng-container>
+      <ng-template #nameUpIcon>
+        <ion-icon name="caret-up" *ngIf="currentSort === 'name-up'; else placeholderIcon"></ion-icon>
+      </ng-template>
+      <ng-template #placeholderIcon>
+        <ion-icon style="color: transparent;" name="caret-down"></ion-icon>
+      </ng-template>
+    </ion-label>
+    <ion-label class="amount-label" slot="end" (click)="changeSort('amount-down','amount-up')">
+      Amount
+      <ng-container *ngIf="currentSort === 'amount-down'; else amountUpIcon">
+        <ion-icon name="caret-down"></ion-icon>
+      </ng-container>
+      <ng-template #amountUpIcon>
+        <ion-icon name="caret-up" *ngIf="currentSort === 'amount-up'; else placeholderIcon"></ion-icon>
+      </ng-template>
+      <ng-template #placeholderIcon>
+        <ion-icon style="color: transparent;" name="caret-down"></ion-icon>
+      </ng-template>
+    </ion-label>
+  </ion-toolbar>
+  <ion-progress-bar  *ngIf="isLoading===true" type="indeterminate"></ion-progress-bar>
+</ion-header>
    
-<ion-content [fullscreen]="true" scrollY="true" [ngSwitch]="segment">
-    <ion-item color="primary" class="header" slot="fixed">
-      <ion-label slot="start">Name</ion-label>
-      <ion-label slot="end">Quantity</ion-label>
-    </ion-item>
+<ion-content [scrollY]="true" [ngSwitch]="segment">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      refreshingSpinner=null>
+    </ion-refresher-content>
+  </ion-refresher>
 
-    <ion-grid >
-      <ion-row *ngSwitchCase="'pantry'">
-        <ion-col size="12">
+      <div class="list" *ngSwitchCase="'pantry'">
           <app-food-list-item 
           *ngFor="let item of pantryItems" 
           [item]="item" 
           [segment]="'pantry'"
+          [isVisible]="isVisible(item.name)"
           (itemDeleted)="onItemDeleted($event)">
           </app-food-list-item>
           <div class="empty-list" *ngIf="pantryItems.length === 0">Pantry is empty :(</div>
-        </ion-col>
-      </ion-row>
+      </div>
 
-      <ion-row *ngSwitchCase="'shopping'">
-        <ion-col size="12">
+      <div class="list" *ngSwitchCase="'shopping'">
           <app-food-list-item
           *ngFor="let item of shoppingItems"
           [item]="item"
           [segment]="'shopping'"
-          (itemDeleted)="onItemDeleted($event)">
+          [isVisible]="isVisible(item.name)"
+          (itemDeleted)="onItemDeleted($event)"
+          (itemBought)="onItemBought($event)">
           ></app-food-list-item>
           <div class="empty-list" *ngIf="shoppingItems.length === 0">Shopping list is empty :(</div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+      </div>
   
     <ion-fab slot="fixed" vertical="bottom" horizontal="end" *ngSwitchCase="'pantry'">
       <ion-fab-button id="open-add-modal">
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
+      <!-- <ion-fab-button>
+        <ion-icon name="menu"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="top">
+        <ion-fab-button id="open-filter-pantry">
+          <ion-icon name="filter"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list> -->
     </ion-fab>
 
     <ion-modal trigger="open-add-modal" (willDismiss)="addItemToPantry($event)" *ngSwitchCase="'pantry'">
@@ -66,26 +102,45 @@
         </ion-header>
 
         <ion-content class="ion-padding">
-          <ion-list>
-            <ion-item>
-              <ion-input type="text" label="Name" labelPlacement="floating" placeholder="Enter name" [(ngModel)]="newItem.name"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input label="Quantity" labelPlacement="floating" placeholder="Enter quantity" [(ngModel)]="newItem.quantity"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input label="Weight" labelPlacement="floating" placeholder="Enter weight" [(ngModel)]="newItem.weight"></ion-input>
-            </ion-item>
-          </ion-list>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="9">
+                <ion-item>
+                  <ion-input type="text" label="Name" labelPlacement="floating" placeholder="Enter name" [(ngModel)]="newItem.name"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="9">
+                <ion-item *ngIf="isQuantity">
+                  <ion-input label="Quantity" labelPlacement="floating" placeholder="Enter quantity" type="number" [(ngModel)]="newItem.quantity"></ion-input>
+                </ion-item>
+                <ion-item *ngIf="!isQuantity">
+                  <ion-input label="Weight" labelPlacement="floating" placeholder="Enter weight in grams" type="number" [(ngModel)]="newItem.weight"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="3">
+                  <ion-toggle [(ngModel)]="isQuantity"></ion-toggle>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </ion-content>
 
       </ng-template>
     </ion-modal>
 
     <ion-fab slot="fixed" vertical="bottom" horizontal="end" *ngSwitchCase="'shopping'">
-      <ion-fab-button id="open-add-modal-shopping">
-        <ion-icon name="add"></ion-icon>
+      <ion-fab-button>
+        <ion-icon name="menu"></ion-icon>
       </ion-fab-button>
+      <ion-fab-list side="top">
+        <ion-fab-button id="open-add-modal-shopping">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button id="open-filter-shopping">
+          <ion-icon name="filter"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
     </ion-fab>
 
     <ion-modal trigger="open-add-modal-shopping" (willDismiss)="addItemToShoppingList($event)" *ngSwitchCase="'shopping'">
@@ -105,17 +160,28 @@
         </ion-header>
 
         <ion-content class="ion-padding">
-          <ion-list>
-            <ion-item>
-              <ion-input type="text" label="Name" labelPlacement="floating" placeholder="Enter name" [(ngModel)]="newItem.name"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input label="Quantity" labelPlacement="floating" placeholder="Enter quantity" [(ngModel)]="newItem.quantity"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input label="Weight" labelPlacement="floating" placeholder="Enter weight" [(ngModel)]="newItem.weight"></ion-input>
-            </ion-item>
-          </ion-list>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="9">
+                <ion-item>
+                  <ion-input type="text" label="Name" labelPlacement="floating" placeholder="Enter name" [(ngModel)]="newItem.name"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="9">
+                <ion-item *ngIf="isQuantity">
+                  <ion-input label="Quantity" labelPlacement="floating" placeholder="Enter quantity" type="number" [(ngModel)]="newItem.quantity"></ion-input>
+                </ion-item>
+                <ion-item *ngIf="!isQuantity">
+                  <ion-input label="Weight" labelPlacement="floating" placeholder="Enter weight in grams" type="number" [(ngModel)]="newItem.weight"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="3">
+                  <ion-toggle [(ngModel)]="isQuantity"></ion-toggle>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </ion-content>
 
       </ng-template>

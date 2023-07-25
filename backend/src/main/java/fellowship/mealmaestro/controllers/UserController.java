@@ -4,8 +4,11 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import fellowship.mealmaestro.models.UserModel;
@@ -48,5 +51,20 @@ public class UserController {
         @RequestBody AuthenticationRequestModel request
     ){
         return ResponseEntity.ok(authenticationService.authenticate(request));
+    }
+
+    @PutMapping("/updateUser")
+    public ResponseEntity<UserModel> updateUser(
+        @RequestBody UserModel user,
+        @RequestHeader("Authorization") String token
+    ){
+        return ResponseEntity.ok(userService.updateUser(user, token));
+    }
+
+    @GetMapping("/getUser")
+    public ResponseEntity<UserModel> getUser(
+        @RequestHeader("Authorization") String token
+    ){
+        return ResponseEntity.ok(userService.getUser(token));
     }
 }

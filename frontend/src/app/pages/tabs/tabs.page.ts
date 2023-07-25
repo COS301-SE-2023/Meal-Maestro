@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, EnvironmentInjector, inject } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 
@@ -6,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss'],
   standalone: true,
-  imports: [IonicModule],
+  imports: [IonicModule, CommonModule],
 })
 export class TabsPage {
   public environmentInjector = inject(EnvironmentInjector);

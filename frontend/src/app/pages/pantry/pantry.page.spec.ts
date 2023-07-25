@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { PantryPage } from './pantry.page';
 import { of } from 'rxjs';
 import { FoodItemI } from '../../models/interfaces';
-import { PantryApiService, ShoppingListApiService } from '../../services/services';
+import { AuthenticationService, PantryApiService, ShoppingListApiService } from '../../services/services';
 import { HttpResponse } from '@angular/common/http';
 
 describe('PantryPage', () => {
@@ -13,11 +13,13 @@ describe('PantryPage', () => {
   let fixture: ComponentFixture<PantryPage>;
   let mockPantryService: jasmine.SpyObj<PantryApiService>;
   let mockShoppingListService: jasmine.SpyObj<ShoppingListApiService>;
+  let mockAuthService: jasmine.SpyObj<AuthenticationService>;
   let mockItems: FoodItemI[];
 
   beforeEach(async () => {
     mockPantryService = jasmine.createSpyObj('PantryApiService', ['getPantryItems', 'addToPantry', 'deletePantryItem']);
     mockShoppingListService = jasmine.createSpyObj('ShoppingListApiService', ['getShoppingListItems', 'addToShoppingList', 'deleteShoppingListItem']);
+    mockAuthService = jasmine.createSpyObj('AuthenticationService', ['logout']);
     mockItems = [
       {
         name: 'test',
@@ -48,6 +50,7 @@ describe('PantryPage', () => {
       providers: [
         { provide: PantryApiService, useValue: mockPantryService },
         { provide: ShoppingListApiService, useValue: mockShoppingListService },
+        { provide: AuthenticationService, useValue: mockAuthService },
       ],
     }).compileComponents();
 
