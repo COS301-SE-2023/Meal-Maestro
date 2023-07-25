@@ -76,12 +76,14 @@ export class BrowsePage implements OnInit{
   for (let index = 0; index < 8; index++) {
     this.mealGenerationservice.getPopularMeals().subscribe({
       next: (data) => {
-        if(Array.isArray(data)){
-          this.popularMeals = data;
-        }
-        else {
-          this.popularMeals =[data];
-        }
+        this.popularMeals = this.popularMeals.concat(data);
+       // const parsedData = JSON.parse(data);
+        // if(Array.isArray(parsedData)){
+        //   this.popularMeals = parsedData;
+        // }
+        // else {
+        //   this.popularMeals =[parsedData];
+        // }
         
         console.log(this.popularMeals);
       },
