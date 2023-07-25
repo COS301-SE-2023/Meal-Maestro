@@ -34,8 +34,15 @@ jobs:
         cache-dependency-path: package-lock.json
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm run test:dev
-    - run: npm run test:unit
+
+    - name: Test with Angular
+      run: npm run test:dev
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./backend/gradlew
+
+    - name: Test with Gradle
+      run: npm run test:unit
     
     - name: Download artifacts
       uses: actions/download-artifact@v2  
