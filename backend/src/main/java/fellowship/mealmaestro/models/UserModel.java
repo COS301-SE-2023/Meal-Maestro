@@ -26,6 +26,10 @@ public class UserModel implements UserDetails{
 
     private AuthorityRoleModel authorityRole;
 
+    public UserModel(){
+        this.authorityRole = AuthorityRoleModel.USER;
+    }
+
     public UserModel(String name, String password, String email, AuthorityRoleModel authorityRole){
         this.name = name;
         this.password = password;
