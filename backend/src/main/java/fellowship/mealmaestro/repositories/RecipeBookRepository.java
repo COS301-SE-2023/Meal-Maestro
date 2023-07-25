@@ -31,10 +31,10 @@ public class RecipeBookRepository {
 
     public static TransactionCallback<Void> addRecipeTransaction(UserModel user, RecipeModel recipe) {
         return transaction -> {
-            transaction.run("MATCH (user:User {email: $email})" +
-            "CREATE (user)-[:]"
-            "CREATE (:RecipeBook)-[:CONTAINS]->(:Recipe {title: $title, image: $image})",
-                Values.parameters("title", recipe.getTitle(), "image", recipe.getImage()));
+            transaction.run("MATCH (user:User {email: $email}), (recipe:Recipes {title: $title})" +
+            "MERGE (user)-[:OWNS]->(recipeBook:RecipeBook) " +
+            "MERGE (recipeBook)-[:CONTAINS]->(recipe)",
+            Values.parameters("email", user.getEmail(), "title", recipe.getTitle()));
             return null;
         };
     }
