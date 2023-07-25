@@ -13,8 +13,17 @@
       <ion-row>
       
         <ion-col>
+          <!-- <ng-container *ngIf="popularMeals.length >= 1">
+            helo
+            <!-- Display the properties of the second entity -->
+            <!-- <div>
+              <h2>Name: {{ popularMeals[0].name }}</h2>
+              <p>Description: {{ popularMeals[0].description }}</p>
+              <!-- Display other properties as needed -->
+            <!-- </div> -->
+          <!-- </ng-container>  -->
 
-          <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item" ></app-browse-meals>
+         <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item" ></app-browse-meals>
           <!-- <ion-card button="true" color="primary">
               <ion-card-header>
                 <ion-card-title class="head">Greek Salad with Chicken</ion-card-title>
