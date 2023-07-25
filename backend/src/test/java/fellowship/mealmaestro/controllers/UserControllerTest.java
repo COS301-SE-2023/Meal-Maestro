@@ -71,7 +71,7 @@ public class UserControllerTest {
                 .contentType("application/json")
                 .header("Authorization", "Bearer testToken..")
                 .content("{\"name\":\"username\",\"password\":\"password\",\"email\":\"email\"}"))
-            .andExpect(status().isInternalServerError());
+            .andExpect(status().isNotFound());
     }
 
 }
