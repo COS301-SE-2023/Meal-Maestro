@@ -13,7 +13,7 @@
 
     "test:dev": "ng test --browsers=ChromeHeadless --watch=false --code-coverage ",
 
-    "test:unit": "./backend/gradlew test"
+    "test:unit": "./gradlew test"
   },
   "private": true,
   "dependencies": {
