@@ -18,6 +18,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import fellowship.mealmaestro.models.UserModel;
+import fellowship.mealmaestro.models.auth.AuthenticationRequestModel;
+import fellowship.mealmaestro.models.auth.AuthenticationResponseModel;
+import fellowship.mealmaestro.models.auth.RegisterRequestModel;
 import fellowship.mealmaestro.services.UserService;
 import fellowship.mealmaestro.services.auth.AuthenticationService;
 import fellowship.mealmaestro.services.auth.JwtService;
@@ -74,4 +77,45 @@ public class UserControllerTest {
             .andExpect(status().isNotFound());
     }
 
+    @Test
+    public void registerSuccessTest() throws Exception {
+        when(authenticationService.register(any(RegisterRequestModel.class))).thenReturn(Optional.of(new AuthenticationResponseModel("token")));
+
+        when(jwtService.extractUserEmail(any(String.class))).thenReturn("test@test.com");
+        when(jwtService.generateToken(any(UserDetails.class))).thenReturn("testToken..");
+        when(jwtService.isTokenValid(any(String.class), any(UserDetails.class))).thenReturn(true);
+
+        mockMvc.perform(post("/register")
+                .contentType("application/json")
+                .content("{\"username\":\"username\",\"email\":\"email\",\"password\":\"password\"}"))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void registerFailureTest() throws Exception {
+        when(authenticationService.register(any(RegisterRequestModel.class))).thenReturn(Optional.empty());
+
+        when(jwtService.extractUserEmail(any(String.class))).thenReturn("test@test.com");
+        when(jwtService.generateToken(any(UserDetails.class))).thenReturn("testToken..");
+        when(jwtService.isTokenValid(any(String.class), any(UserDetails.class))).thenReturn(true);
+
+        mockMvc.perform(post("/register")
+                .contentType("application/json")
+                .content("{\"username\":\"username\",\"email\":\"email\",\"password\":\"password\"}"))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void authenticateSuccessTest() throws Exception {
+        when(authenticationService.authenticate(any(AuthenticationRequestModel.class))).thenReturn(new AuthenticationResponseModel("token"));
+
+        when(jwtService.extractUserEmail(any(String.class))).thenReturn("test@test.com");
+        when(jwtService.generateToken(any(UserDetails.class))).thenReturn("testToken..");
+        when(jwtService.isTokenValid(any(String.class), any(UserDetails.class))).thenReturn(true);
+
+        mockMvc.perform(post("/authenticate")
+                .contentType("application/json")
+                .content("{\"email\":\"email\",\"password\":\"password\"}"))
+            .andExpect(status().isOk());
+    }
 }

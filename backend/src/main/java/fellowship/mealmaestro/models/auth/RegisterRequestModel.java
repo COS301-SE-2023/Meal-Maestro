@@ -6,6 +6,9 @@ public class RegisterRequestModel {
     private String email;
     private String password;
 
+    public RegisterRequestModel(){
+    }
+
     public RegisterRequestModel(String username, String email, String password){
         this.username = username;
         this.email = email;
