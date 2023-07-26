@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.validation.constraints.NotBlank;
 
-@Node
+@Node("DaysMeals")
 public class DaysMealsModel {
     @Relationship(type = "breakfast")
     @NotBlank(message = "breakfast meal required")
