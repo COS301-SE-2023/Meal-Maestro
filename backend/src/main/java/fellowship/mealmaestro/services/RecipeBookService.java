@@ -15,11 +15,11 @@ public class RecipeBookService {
     }
 
     public void addRecipe(UserModel user, RecipeModel recipe) {
-        recipeBookRepository.addRecipe(recipe);
+        recipeBookRepository.addRecipe(user, recipe);
     }
 
     public void removeRecipe(UserModel user, RecipeModel recipe) {
-        recipeBookRepository.removeRecipe(recipe);
+        recipeBookRepository.removeRecipe(user, recipe);
     }
 
     public List<RecipeModel> getAllRecipes(UserModel user) {

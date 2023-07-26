@@ -70,7 +70,7 @@ public class RecipeBookRepository {
         }
     }
 
-    public static TransactionCallback<Void> removeRecipeTransaction(RecipeModel recipeName) {
+    public static TransactionCallback<Void> removeRecipeTransaction(UserModel user, RecipeModel recipeName) {
         return transaction -> {
             transaction.run("MATCH (user:User {email: $email})-[:OWNS]->(book:RecipeBook)-[r:CONTAINS]->(recipe:Recipe {title: $title, image: $image}) " +
             "DETACH DELETE r",
