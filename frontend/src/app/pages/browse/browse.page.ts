@@ -55,24 +55,36 @@ export class BrowsePage implements OnInit{
  
 
 // Function to handle the search bar input event
-onSearchChange(event: CustomEvent) {
+onSearch(event: Event) {
   // Get the search query from the event object
-  this.searchQuery = event.detail.value;
+  const customEvent = event as CustomEvent<any>;
+  const query: string = customEvent.detail.value;
+ // const query: string = event.detail.value;
+ // this.searchQuery = event.detail.value;
 
   // Call the getSearchedMeals function with the new search query
-  this.mealGenerationservice.getSearchedMeals(this.searchQuery);
-}
-
-generateSearchMeals(query: string) {
-  // Call the service function to get the searched meals with the provided query
+ // this.mealGenerationservice.getSearchedMeals(query).subscribe;
   this.mealGenerationservice.getSearchedMeals(query).subscribe({
     next: (data) => {
-      // Update the searchedMeals array with the data returned from the service
       this.searchedMeals = data;
       console.log(this.searchedMeals);
     },
-  })
+    error: (err) => {
+      this.errorHandlerService.presentErrorToast('Error loading meal items', err);
+    },
+  });
 }
+
+// generateSearchMeals(query: string) {
+//   // Call the service function to get the searched meals with the provided query
+//   this.mealGenerationservice.getSearchedMeals(query).subscribe({
+//     next: (data) => {
+//       // Update the searchedMeals array with the data returned from the service
+//       this.searchedMeals = data;
+//       console.log(this.searchedMeals);
+//     },
+//   })
+// }
 
 }
 
