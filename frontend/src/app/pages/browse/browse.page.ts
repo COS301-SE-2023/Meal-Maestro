@@ -21,6 +21,7 @@ export class BrowsePage implements OnInit{
   // meals: DaysMealsI[];
 
   popularMeals: MealBrowseI[] = [];
+  searchedMeals : MealBrowseI[] = [];
 
   searchQuery: string='';
   searchResults: any;
@@ -35,7 +36,6 @@ export class BrowsePage implements OnInit{
 
  async ngOnInit() {
   
-  // for (let index = 0; index < 3; index++) {
     this.mealGenerationservice.getPopularMeals().subscribe({
       next: (data) => {
         this.popularMeals = this.popularMeals.concat(data);
@@ -48,31 +48,18 @@ export class BrowsePage implements OnInit{
         )
       }
     })
+
     
- // }
+ 
 }
+ 
 
-generateSearchedMeals(query: string): void {
-  this.http
-    .get<any>(`/api/getSearchedMeals?query=${query}`)
-    .subscribe({
-      next: (data) => {
-        // Handle the data returned from the backend, if needed
-        console.log(data);
-      },
-      error: (err) => {
-        // Handle errors here
-        console.error('Error searching meals:', err);
-      },
-    });
-}
-
-onSearch() {
-  if (this.searchQuery && this.searchQuery.trim() !== '') {
-    this.generateSearchedMeals(this.searchQuery);
-  } else {
-    console.log('Please enter a valid search query.');
-  }
-}
+// onSearch() {
+//   if (this.searchQuery && this.searchQuery.trim() !== '') {
+//     this.generateSearchedMeals(this.searchQuery);
+//   } else {
+//     console.log('Please enter a valid search query.');
+//   }
+// }
 
 }

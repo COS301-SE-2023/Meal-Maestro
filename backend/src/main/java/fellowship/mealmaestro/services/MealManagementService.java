@@ -123,6 +123,21 @@ public class MealManagementService {
     public String generateSearchedMeals(String query) throws JsonProcessingException {
         
        JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast lunch or dinner"));
+       int i = 0;
+        if(mealJson.isMissingNode())
+        {
+            int prevBestOfN = openaiApiService.getBestofN();
+            Boolean success = false;
+            openaiApiService.setBestofN(prevBestOfN + 1);
+            while(!success&& i < 5)
+            {
+                mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
+                if(!mealJson.isMissingNode())
+                    success = true;
+                    i++;
+            }
+            openaiApiService.setBestofN(prevBestOfN);
+        }
 
         // Convert the JSON node to a List<JsonNode> to filter the entities
         List<JsonNode> mealList = new ArrayList<>();
