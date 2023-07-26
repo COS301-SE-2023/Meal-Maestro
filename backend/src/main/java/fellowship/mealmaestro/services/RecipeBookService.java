@@ -14,11 +14,11 @@ public class RecipeBookService {
         this.recipeBookRepository = recipeBookRepository;
     }
 
-    public void addRecipe(RecipeModel recipe) {
+    public void addRecipe(UserModel user, RecipeModel recipe) {
         recipeBookRepository.addRecipe(recipe);
     }
 
-    public void removeRecipe(RecipeModel recipe) {
+    public void removeRecipe(UserModel user, RecipeModel recipe) {
         recipeBookRepository.removeRecipe(recipe);
     }
 
