@@ -1,6 +1,7 @@
 package fellowship.mealmaestro.services;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,5 +49,9 @@ public class MealDatabseService {
 
         DaysMealsModel daysMealsModel = new DaysMealsModel(breakfast, lunch, dinner, date, userModel);
         daysMealsRepository.save(daysMealsModel);
+    }
+
+    public List<DaysMealsModel> retrieveDaysMealsModel(Date date){
+        return daysMealsRepository.findMealsForNextWeek(date);
     }
 }
