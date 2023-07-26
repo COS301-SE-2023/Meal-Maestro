@@ -5,21 +5,26 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fellowship.mealmaestro.models.DaysMealsModel;
+import fellowship.mealmaestro.models.MealModel;
+import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.repositories.DaysMealsRepository;
 import fellowship.mealmaestro.repositories.MealRepository;
 
 @Service
 public class MealDatabseService {
     private final MealRepository mealRepository;
+
     public MealRepository getMealRepository() {
         return mealRepository;
     }
 
     private final DaysMealsRepository daysMealsRepository;
-    
+
     public DaysMealsRepository getDaysMealsRepository() {
         return daysMealsRepository;
     }
@@ -31,9 +36,17 @@ public class MealDatabseService {
 
     }
 
-    public void saveDaysMeals(JsonNode daysMealsJson, Date date) {
-        DaysMealsModel daysMealsModel;
-        
+    public void saveDaysMeals(JsonNode daysMealsJson, Date date) throws JsonProcessingException, IllegalArgumentException {
+        UserService userService = new UserService();
+        UserModel userModel = userService.getUser(" ");
 
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        MealModel breakfast = objectMapper.treeToValue(daysMealsJson.get("breakfast"), MealModel.class);
+        MealModel lunch = objectMapper.treeToValue(daysMealsJson.get("lunch"), MealModel.class);
+        MealModel dinner = objectMapper.treeToValue(daysMealsJson.get("dinner"), MealModel.class);
+
+        DaysMealsModel daysMealsModel = new DaysMealsModel(breakfast, lunch, dinner, date, userModel);
+        daysMealsRepository.save(daysMealsModel);
     }
 }
