@@ -35,58 +35,11 @@ export class BrowsePage implements OnInit{
 
  async ngOnInit() {
   
-    // for (let index = 0; index < 8; index++) {
-    //   this.mealGenerationservice.getPopularMeals().subscribe({
-    //     next: (data) => {
-    //       // Parse the JSON string into a JavaScript array of objects
-    //       let mealsArray: MealBrowseI[] = JSON.parse(data);
-
-    //       // Add the parsed mealsArray to the popularMeals array
-    //       this.popularMeals = this.popularMeals.concat(mealsArray);
-
-    //       console.log(this.popularMeals);
-    //     },
-    //     error: (err) => {
-    //       this.errorHandlerService.presentErrorToast(
-    //         'Error loading meal items', err
-    //       );
-    //     }
-    //   })
-
-    // }
-    // for (let index = 0; index < 8; index++) {
-    //   try {
-    //     const data = await this.mealGenerationservice.getPopularMeals().toPromise();
-    //     // Parse the JSON string into a JavaScript array of objects
-    //     const mealsArray: MealBrowseI[] = JSON.parse(data);
-
-    //     // Add the parsed mealsArray to the popularMeals array
-    //     this.popularMeals = this.popularMeals.concat(mealsArray);
-
-    //     console.log(this.popularMeals);
-    //   } catch (err) {
-    //     this.errorHandlerService.presentErrorToast(
-    //       'Error loading meal items', err
-    //     );
-    //   }
-    // }
-
-    
-  
-
-
   // for (let index = 0; index < 3; index++) {
     this.mealGenerationservice.getPopularMeals().subscribe({
       next: (data) => {
         this.popularMeals = this.popularMeals.concat(data);
-       // const parsedData = JSON.parse(data);
-        // if(Array.isArray(parsedData)){
-        //   this.popularMeals = parsedData;
-        // }
-        // else {
-        //   this.popularMeals =[parsedData];
-        // }
-        
+   
         console.log(this.popularMeals);
       },
       error: (err) => {
