@@ -64,13 +64,13 @@ public class RecipeBookRepository {
     //#endregion
 
     //#region Delete
-    public void removeRecipe(RecipeModel recipeName){
+    public void removeRecipe(UserModel user, RecipeModel recipe){
         try (Session session = driver.session()){
-            session.executeWrite(removeRecipeTransaction(recipeName));
+            session.executeWrite(removeRecipeTransaction(user, recipe));
         }
     }
 
-    public static TransactionCallback<Void> removeRecipeTransaction(UserModel user, RecipeModel recipeName) {
+    public static TransactionCallback<Void> removeRecipeTransaction(UserModel user, RecipeModel recipe) {
         return transaction -> {
             transaction.run("MATCH (user:User {email: $email})-[:OWNS]->(book:RecipeBook)-[r:CONTAINS]->(recipe:Recipe {title: $title, image: $image}) " +
             "DETACH DELETE r",

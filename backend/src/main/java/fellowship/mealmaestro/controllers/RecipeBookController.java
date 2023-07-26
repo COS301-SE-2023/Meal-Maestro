@@ -15,13 +15,13 @@ public class RecipeBookController {
     }
 
     @PostMapping("/addRecipe")
-    public void addRecipe(@RequestBody RecipeModel recipe) {
-        recipeBookService.addRecipe(recipe);
+    public void addRecipe(@RequestBody UserModel user, @RequestBody RecipeModel recipe) {
+        recipeBookService.addRecipe(user, recipe);
     }
 
     @PostMapping("/removeRecipe")
-    public void removeRecipe(@RequestBody RecipeModel recipe) {
-        recipeBookService.removeRecipe(recipe);
+    public void removeRecipe(@RequestBody UserModel user, @RequestBody RecipeModel recipe) {
+        recipeBookService.removeRecipe(user, recipe);
     }
 
     @PostMapping("/getAllRecipes")
