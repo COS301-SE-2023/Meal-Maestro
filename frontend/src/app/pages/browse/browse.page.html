@@ -20,8 +20,12 @@
           </div>
           <div *ngIf="searchedMeals.length > 0">
             <!-- Display the popular meals here -->
-            <!-- <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item" ></app-browse-meals>-->
+             <app-browse-meals *ngFor="let item of searchedMeals" [searchData]="item" ></app-browse-meals>
           </div> 
+          <div *ngIf="searchedMeals.length === 0">
+            <!-- Display the popular meals here -->
+            <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item" ></app-browse-meals>
+          </div>
           <!-- <ng-container *ngIf="popularMeals.length >= 4">
            
             <div>
@@ -30,7 +34,7 @@
             </div>
          </ng-container>  -->
 
-         <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item" ></app-browse-meals>
+         <!-- <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item" ></app-browse-meals> -->
           <!-- <ion-card button="true" color="primary">
               <ion-card-header>
                 <ion-card-title class="head">Greek Salad with Chicken</ion-card-title>
