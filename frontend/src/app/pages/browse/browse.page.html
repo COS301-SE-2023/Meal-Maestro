@@ -3,7 +3,7 @@
     <ion-toolbar>
       <!-- <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" /> -->
       <ion-searchbar class="search" (ionChange)="onSearch($event)">
-        <app-browse-meals *ngFor="let item of searchedMeals" [searchData]="item" ></app-browse-meals>
+        <!-- <app-browse-meals *ngFor="let thing of searchedMeals" [searchData]="thing" ></app-browse-meals> -->
       </ion-searchbar>
     </ion-toolbar>
   </ion-header>
@@ -15,6 +15,13 @@
       <ion-row>
       
         <ion-col>
+          <div *ngIf="noResultsFound">
+            No results found for the entered search query.
+          </div>
+          <div *ngIf="searchedMeals.length > 0">
+            <!-- Display the popular meals here -->
+            <!-- <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item" ></app-browse-meals>-->
+          </div> 
           <!-- <ng-container *ngIf="popularMeals.length >= 4">
            
             <div>

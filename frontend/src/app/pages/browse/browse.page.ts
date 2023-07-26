@@ -22,6 +22,7 @@ export class BrowsePage implements OnInit{
 
   popularMeals: MealBrowseI[] = [];
   searchedMeals : MealBrowseI[] = [];
+  noResultsFound: boolean = false;
 
   searchQuery: string='';
   searchResults: any;
@@ -66,8 +67,16 @@ onSearch(event: Event) {
  // this.mealGenerationservice.getSearchedMeals(query).subscribe;
   this.mealGenerationservice.getSearchedMeals(query).subscribe({
     next: (data) => {
-      this.searchedMeals = data;
-      console.log(this.searchedMeals);
+      if (data.length === 0) {
+        this.noResultsFound = true;
+       // console.log(this.searchedMeals);
+      }
+      else {
+        this.noResultsFound = false;
+        this.searchedMeals = data;
+        console.log(this.searchedMeals);
+      }
+      
     },
     error: (err) => {
       this.errorHandlerService.presentErrorToast('Error loading meal items', err);
