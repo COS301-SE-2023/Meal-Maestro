@@ -1,8 +1,13 @@
 package fellowship.mealmaestro.services;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+import fellowship.mealmaestro.models.DaysMealsModel;
 import fellowship.mealmaestro.repositories.DaysMealsRepository;
 import fellowship.mealmaestro.repositories.MealRepository;
 
@@ -26,5 +31,9 @@ public class MealDatabseService {
 
     }
 
-    
+    public void saveDaysMeals(JsonNode daysMealsJson, Date date) {
+        DaysMealsModel daysMealsModel;
+        
+
+    }
 }
