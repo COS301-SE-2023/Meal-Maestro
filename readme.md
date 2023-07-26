@@ -22,6 +22,7 @@ easily plan meals for the coming week and helps them hit their nutritional goals
 - Angular CLI v16.0.0
 - Ionic CLI v7.1.1
 - Gradle v8
+- Java 17
 
 ## Install prerequisites:
 
