@@ -15,4 +15,8 @@ public interface DaysMealsRepository extends Neo4jRepository<DaysMealsModel,Date
 
     @Query("MATCH (d:DaysMeals {mealDate: $mealDate}) RETURN d LIMIT 1")
     Optional<DaysMealsModel> findByMealDate(Date mealDate);
+
+    @Query("MATCH (d:DaysMeals) WHERE d.mealDate = $date RETURN d")
+    List<DaysMealsModel> findMealsForDate(Date date);
+
 }

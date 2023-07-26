@@ -55,6 +55,10 @@ public class MealDatabseService {
     public List<DaysMealsModel> retrieveDaysMealsModel(Date date){
         return daysMealsRepository.findMealsForNextWeek(date);
     }
+
+     public List<DaysMealsModel> retrieveDatessMealModel(Date date){
+        return daysMealsRepository.findMealsForDate(date);
+    }
     
     public Optional<DaysMealsModel> fetchDay(Date mealDate) {
         return daysMealsRepository.findByMealDate(mealDate);
@@ -72,26 +76,23 @@ public class MealDatabseService {
 
         if(time == "breakfast")
         {
-            daysMealsModel.setBreakfast(mealModel);(mealModel);
+            daysMealsModel.setBreakfast(mealModel);
             MealModel updatedMeal = mealRepository.save(mealModel);
             daysMealsModel.setBreakfast(updatedMeal);
         }
         if(time == "lunch")
         {
-            daysMealsModel.setLunch(mealModel);(mealModel);
+            daysMealsModel.setLunch(mealModel);
             MealModel updatedMeal = mealRepository.save(mealModel);
             daysMealsModel.setLunch(updatedMeal);
         }
         if(time == "dinner")
         {
-            daysMealsModel.setDinner(mealModel);(mealModel);
+            daysMealsModel.setDinner(mealModel);
             MealModel updatedMeal = mealRepository.save(mealModel);
             daysMealsModel.setDinner(updatedMeal);
         }
         
-        
-
-    
         daysMealsRepository.save(daysMealsModel);
     }
 }
