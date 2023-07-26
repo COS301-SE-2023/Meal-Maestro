@@ -1,3 +1,5 @@
+<!-- popularMeals display cards -->
+<ng-container *ngIf="!isSearchResult">
 <ion-card  (click)="setOpen(true, item)" color="primary">
   <ion-card-header>
     <ion-card-title class="head">{{mealsData.name}}</ion-card-title>
@@ -35,3 +37,46 @@
   </ng-template>
 </ion-modal>
 </ion-card>
+</ng-container>
+
+
+<!-- searchedMeals display cards -->
+<ng-container *ngIf="isSearchResult">
+  <ion-card  (click)="setOpen(true, item)" color="primary">
+    <ion-card-header>
+      <ion-card-title class="head">{{searchData.name}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+     {{searchData.description}}
+    </ion-card-content>
+  <ion-avatar>
+  <img src="{{searchData.url}}">
+  <img alt="{{searchData.url}}">
+    <!-- <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"/> -->
+  
+  </ion-avatar>
+  
+  <ion-modal [isOpen]="isModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{searchData.name}}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpen(false,null)">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-avatar class="background">
+  
+        <!-- <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"/> -->
+        <img src="{{searchData.url}}">
+      </ion-avatar>
+      <ion-content class="ion-padding">
+        <p>{{searchData.ingredients}}</p> 
+       <p>{{searchData.instructions}}</p> 
+       <p>{{searchData.cookingTime}}</p> 
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  </ion-card>
+  </ng-container>
