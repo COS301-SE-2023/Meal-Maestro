@@ -47,19 +47,32 @@ export class BrowsePage implements OnInit{
           'Error loading meal items', err
         )
       }
+
+      
     })
-
-    
  
 }
  
 
-// onSearch() {
-//   if (this.searchQuery && this.searchQuery.trim() !== '') {
-//     this.generateSearchedMeals(this.searchQuery);
-//   } else {
-//     console.log('Please enter a valid search query.');
-//   }
-// }
+// Function to handle the search bar input event
+onSearchChange(event: CustomEvent) {
+  // Get the search query from the event object
+  this.searchQuery = event.detail.value;
+
+  // Call the getSearchedMeals function with the new search query
+  this.mealGenerationservice.getSearchedMeals(this.searchQuery);
+}
+
+generateSearchMeals(query: string) {
+  // Call the service function to get the searched meals with the provided query
+  this.mealGenerationservice.getSearchedMeals(query).subscribe({
+    next: (data) => {
+      // Update the searchedMeals array with the data returned from the service
+      this.searchedMeals = data;
+      console.log(this.searchedMeals);
+    },
+  })
+}
 
 }
+
