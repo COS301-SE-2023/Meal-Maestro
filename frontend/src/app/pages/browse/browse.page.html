@@ -2,7 +2,9 @@
   <ion-header [translucent]="true">
     <ion-toolbar>
       <!-- <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" /> -->
-      <ion-searchbar class="search" (ionChange)="onSearch($event)"></ion-searchbar>
+      <ion-searchbar class="search" (ionChange)="onSearch($event)">
+        <app-browse-meals *ngFor="let item of searchedMeals" [searchData]="item" ></app-browse-meals>
+      </ion-searchbar>
     </ion-toolbar>
   </ion-header>
 

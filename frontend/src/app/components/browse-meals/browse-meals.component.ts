@@ -24,7 +24,9 @@ export class BrowseMealsComponent  implements OnInit {
   @Input() mealsData!: MealBrowseI;
   item: MealBrowseI | undefined;
   popularMeals: MealBrowseI[] = [];
-  searchQuery!: string;
+  //searchQuery!: string;
+  @Input() searchData!: MealBrowseI;
+   searchedMeals: MealBrowseI[] = [];
 
   isModalOpen = false;
   currentObject :any
