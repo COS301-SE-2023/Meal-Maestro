@@ -50,6 +50,9 @@ easily plan meals for the coming week and helps them hit their nutritional goals
 
 - 📃 https://docs.google.com/document/d/1FmSqFAENVQOZEEr14x5cBBWr9sgkA5lm3mrld0XY0l8/edit?usp=sharing
 
+## Technical Installation Manual
+- 📖 https://docs.google.com/document/d/1KWnnRnpyYKyQDBUFijPwVD7MgGMjvhL-w9v_T77EAyE/edit?usp=sharing
+
 ## User Manual Document
 - 📃 https://docs.google.com/document/d/1Cvxc9UgSUuXDbWwugPlxlK7Dh_KO7xvwuzCKtDzu1sM/edit?usp=sharing
 
@@ -60,7 +63,6 @@ easily plan meals for the coming week and helps them hit their nutritional goals
 - 📃 https://docs.google.com/document/d/1GADUq8VWsgqLFTfSPIBHwsFnrli8AbZGp7uwuRqVZu8/edit?usp=sharing
 
 ## Project Board
-
 - 📋 https://github.com/orgs/COS301-SE-2023/projects/38
 
 ## Individuals
