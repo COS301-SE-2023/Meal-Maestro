@@ -1,5 +1,5 @@
 <!-- popularMeals display cards -->
-<div *ngIf="!Searched">
+<ng-container *ngIf="!Searched">
 <ion-card  (click)="setOpen(true, item)" color="primary">
   <ion-card-header>
     <ion-card-title class="head">{{mealsData.name}}</ion-card-title>
@@ -8,9 +8,8 @@
    {{mealsData.description}}
   </ion-card-content>
 <ion-avatar>
-<img src="{{mealsData.url}}">
-<img alt="{{mealsData.url}}">
-  
+  <img src="{{mealsData.url}}">
+  <img alt="{{mealsData.url}}">
 
 </ion-avatar>
 
@@ -38,7 +37,7 @@
   </ng-template>
 </ion-modal>
 </ion-card>
-</div>
+</ng-container>
 
 
 <!-- searchedMeals display cards -->
