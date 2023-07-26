@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -180,21 +181,50 @@ public class MealManagementService {
     }
 
     public String generateSearchedMeals(String query) throws JsonProcessingException {
-        int i = 0;
-        JsonNode searchedMeal = objectMapper.readTree(openaiApiService.fetchMealResponse(query));
-        if (searchedMeal.isMissingNode()) {
-            int prevBestOfN = openaiApiService.getBestofN();
-            boolean success = false;
-            openaiApiService.setBestofN(prevBestOfN + 1);
-            while (!success && i < 5) {
-                searchedMeal = objectMapper.readTree(openaiApiService.fetchMealResponse(query));
-                if (!searchedMeal.isMissingNode())
-                    success = true;
-                i++;
+        
+       JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast lunch or dinner"));
+
+        // Convert the JSON node to a List<JsonNode> to filter the entities
+        List<JsonNode> mealList = new ArrayList<>();
+        if (mealJson.isArray()) {
+            for (JsonNode entity : mealJson) {
+                mealList.add(entity);
             }
-            openaiApiService.setBestofN(prevBestOfN);
         }
-        return searchedMeal.toString();
+        // Filter the entities based on the query parameter
+        List<JsonNode> filteredEntities = new ArrayList<>();
+        for (JsonNode entity : mealList) {
+            String name = entity.get("name").asText().toLowerCase();
+        // String description = entity.get("description").asText().toLowerCase();
+            String ingredients = entity.get("ingredients").asText().toLowerCase();
+        // String instructions = entity.get("instruction").asText().toLowerCase();
+            if (name.contains(query.toLowerCase()) || ingredients.contains(query.toLowerCase())) {
+                filteredEntities.add(entity);
+            }
+        }
+        // Create a new JSON array node to store the filtered entities
+        ArrayNode filteredEntitiesArray = JsonNodeFactory.instance.arrayNode();
+        filteredEntities.forEach(filteredEntitiesArray::add);
+
+        return filteredEntitiesArray.toString();
+
+        // int i = 0;
+        // JsonNode searchedMeal = objectMapper.readTree(openaiApiService.fetchMealResponse(query));
+        // if (searchedMeal.isMissingNode()) {
+        //     int prevBestOfN = openaiApiService.getBestofN();
+        //     boolean success = false;
+        //     openaiApiService.setBestofN(prevBestOfN + 1);
+        //     while (!success && i < 5) {
+        //         searchedMeal = objectMapper.readTree(openaiApiService.fetchMealResponse(query));
+        //         if (!searchedMeal.isMissingNode())
+        //             success = true;
+        //         i++;
+        //     }
+        //     openaiApiService.setBestofN(prevBestOfN);
+        // }
+       // return searchedMeal.toString();
+
+
     }
 
     // public List<Meal> generateSearchedMeals(String query) throws JsonProcessingException {
