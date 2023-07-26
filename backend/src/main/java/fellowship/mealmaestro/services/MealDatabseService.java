@@ -36,9 +36,9 @@ public class MealDatabseService {
 
     }
 
-    public void saveDaysMeals(JsonNode daysMealsJson, Date date) throws JsonProcessingException, IllegalArgumentException {
+    public void saveDaysMeals(JsonNode daysMealsJson, Date date, String token) throws JsonProcessingException, IllegalArgumentException {
         UserService userService = new UserService();
-        UserModel userModel = userService.getUser(" ");
+        UserModel userModel = userService.getUser(token);
 
         ObjectMapper objectMapper = new ObjectMapper();
 
