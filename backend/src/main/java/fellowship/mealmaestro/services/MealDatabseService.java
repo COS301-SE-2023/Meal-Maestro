@@ -2,6 +2,7 @@ package fellowship.mealmaestro.services;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,5 +54,44 @@ public class MealDatabseService {
 
     public List<DaysMealsModel> retrieveDaysMealsModel(Date date){
         return daysMealsRepository.findMealsForNextWeek(date);
+    }
+    
+    public Optional<DaysMealsModel> fetchDay(Date mealDate) {
+        return daysMealsRepository.findByMealDate(mealDate);
+    }
+
+    public void changeMealForDate(Date mealDate, MealModel mealModel, String time) {
+
+        Optional<DaysMealsModel> optionalDaysMealsModel = daysMealsRepository.findByMealDate(mealDate);
+        if (optionalDaysMealsModel.isEmpty()) {
+            // Handle error, node not found for the given mealDate
+            return;
+        }
+
+        DaysMealsModel daysMealsModel = optionalDaysMealsModel.get();
+
+        if(time == "breakfast")
+        {
+            daysMealsModel.setBreakfast(mealModel);(mealModel);
+            MealModel updatedMeal = mealRepository.save(mealModel);
+            daysMealsModel.setBreakfast(updatedMeal);
+        }
+        if(time == "lunch")
+        {
+            daysMealsModel.setLunch(mealModel);(mealModel);
+            MealModel updatedMeal = mealRepository.save(mealModel);
+            daysMealsModel.setLunch(updatedMeal);
+        }
+        if(time == "dinner")
+        {
+            daysMealsModel.setDinner(mealModel);(mealModel);
+            MealModel updatedMeal = mealRepository.save(mealModel);
+            daysMealsModel.setDinner(updatedMeal);
+        }
+        
+        
+
+    
+        daysMealsRepository.save(daysMealsModel);
     }
 }
