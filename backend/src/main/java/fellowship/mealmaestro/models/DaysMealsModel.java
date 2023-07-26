@@ -29,18 +29,18 @@ public class DaysMealsModel {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date mealDate;
    
-    // @Relationship(type = "date")
-    // @NotBlank(message = "user required")
-    // private UserModel user;
+    @Relationship(type = "date")
+    @NotBlank(message = "user required")
+    private UserModel user;
 
     public DaysMealsModel(MealModel breakfast, MealModel lunch, MealModel dinner, Date mealDate
-  //  , UserModel user
+   , UserModel user
     ){
         this.breakfast = breakfast;
         this.lunch = lunch;
         this.dinner = dinner;
         this.mealDate = mealDate;
-      //  this.user = user;
+       this.user = user;
     }
 
     public MealModel getBreakfast(){
