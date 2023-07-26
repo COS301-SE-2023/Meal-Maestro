@@ -70,10 +70,12 @@ export class BrowsePage implements OnInit{
     //     );
     //   }
     // }
+
+    
   
 
 
-  for (let index = 0; index < 5; index++) {
+  // for (let index = 0; index < 3; index++) {
     this.mealGenerationservice.getPopularMeals().subscribe({
       next: (data) => {
         this.popularMeals = this.popularMeals.concat(data);
@@ -94,7 +96,7 @@ export class BrowsePage implements OnInit{
       }
     })
     
-  }
+ // }
 }
 
 generateSearchedMeals(query: string): void {
