@@ -70,13 +70,12 @@ onSearch(event: Event) {
  // this.mealGenerationservice.getSearchedMeals(query).subscribe;
   this.mealGenerationservice.getSearchedMeals(query).subscribe({
     next: (data) => {
+      this.Searched = true;
       if (data.length === 0) {
-        this.Searched = true;
         this.noResultsFound = true;
        // console.log(this.searchedMeals);
       }
       else {
-        this.Searched = true;
         this.noResultsFound = false;
         this.searchedMeals = data;
         console.log(this.searchedMeals);

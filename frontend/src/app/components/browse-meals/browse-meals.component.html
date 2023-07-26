@@ -1,5 +1,5 @@
 <!-- popularMeals display cards -->
-
+<div *ngIf="!Searched">
 <ion-card  (click)="setOpen(true, item)" color="primary">
   <ion-card-header>
     <ion-card-title class="head">{{mealsData.name}}</ion-card-title>
@@ -10,7 +10,7 @@
 <ion-avatar>
 <img src="{{mealsData.url}}">
 <img alt="{{mealsData.url}}">
-  <!-- <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"/> -->
+  
 
 </ion-avatar>
 
@@ -26,8 +26,9 @@
     </ion-header>
     <ion-avatar class="background">
 
-      <!-- <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"/> -->
       <img src="{{mealsData.url}}">
+      <img alt="{{mealsData.url}}"> 
+
     </ion-avatar>
     <ion-content class="ion-padding">
       <p>{{mealsData.ingredients}}</p> 
@@ -37,11 +38,11 @@
   </ng-template>
 </ion-modal>
 </ion-card>
-
+</div>
 
 
 <!-- searchedMeals display cards -->
-<!-- <ng-container *ngIf="isSearchResult">
+<ng-container *ngIf="Searched">
   <ion-card  (click)="setOpen(true, item)" color="primary">
     <ion-card-header>
       <ion-card-title class="head">{{searchData.name}}</ion-card-title>
@@ -51,10 +52,9 @@
     </ion-card-content>
   <ion-avatar>
   <img src="{{searchData.url}}">
-  <img alt="{{searchData.url}}"> -->
-    <!-- <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"/> -->
-  
-  <!-- </ion-avatar>
+  <img alt="{{searchData.url}}"> 
+      
+  </ion-avatar>
   
   <ion-modal [isOpen]="isModalOpen">
     <ng-template>
@@ -66,10 +66,10 @@
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      <ion-avatar class="background"> -->
+      <ion-avatar class="background"> 
   
-        <!-- <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"/> -->
-        <!-- <img src="{{searchData.url}}">
+         <img src="{{searchData.url}}">
+         <img alt="{{searchData.url}}"> 
       </ion-avatar>
       <ion-content class="ion-padding">
         <p>{{searchData.ingredients}}</p> 
@@ -79,4 +79,4 @@
     </ng-template>
   </ion-modal>
   </ion-card>
-  </ng-container> -->
+  </ng-container>
