@@ -15,17 +15,32 @@
       <ion-row>
       
         <ion-col>
-          <div *ngIf="noResultsFound">
+          <!-- <div *ngIf="noResultsFound">
             No results found for the entered search query.
           </div>
-          <div *ngIf="searchedMeals.length > 0">
-            <!-- Display the popular meals here -->
-             <app-browse-meals *ngFor="let item of searchedMeals" [searchData]="item" [isSearchResult]="false"></app-browse-meals>
-          </div> 
-          <div *ngIf="searchedMeals.length === 0">
-            <!-- Display the popular meals here -->
-            <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item" [isSearchResult]="true"></app-browse-meals>
+          <div *ngIf="searchedMeals.length > 0"> 
+              <app-browse-meals *ngFor="let item of searchedMeals" [searchData]="item" [isSearchResult]="false"></app-browse-meals> 
+          </div>  -->
+
+          <div *ngIf="!Searched">
+            <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item"></app-browse-meals>
           </div>
+          <div *ngIf="Searched">
+            <div *ngIf="noResultsFound">
+              No results found for the entered search query.
+            </div>
+            <div *ngIf="noResultsFound">
+              <app-browse-meals *ngFor="let item of searchedMeals" [searchData]="item"></app-browse-meals>
+            </div>
+            
+          </div>
+        
+
+          <!-- <div *ngIf="searchedMeals.length === 0"> -->
+            <!-- Display the popular meals here -->
+           <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item"></app-browse-meals>
+
+         <!-- </div> -->
           <!-- <ng-container *ngIf="popularMeals.length >= 4">
            
             <div>

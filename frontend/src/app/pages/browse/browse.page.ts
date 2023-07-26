@@ -23,6 +23,7 @@ export class BrowsePage implements OnInit{
   popularMeals: MealBrowseI[] = [];
   searchedMeals : MealBrowseI[] = [];
   noResultsFound: boolean = false;
+  Searched: boolean = false;
 
   searchQuery: string='';
   searchResults: any;
@@ -39,6 +40,7 @@ export class BrowsePage implements OnInit{
   
     this.mealGenerationservice.getPopularMeals().subscribe({
       next: (data) => {
+        this.Searched = false;
         this.popularMeals = this.popularMeals.concat(data);
    
         console.log(this.popularMeals);
@@ -58,6 +60,7 @@ export class BrowsePage implements OnInit{
 // Function to handle the search bar input event
 onSearch(event: Event) {
   // Get the search query from the event object
+  
   const customEvent = event as CustomEvent<any>;
   const query: string = customEvent.detail.value;
  // const query: string = event.detail.value;
@@ -68,10 +71,12 @@ onSearch(event: Event) {
   this.mealGenerationservice.getSearchedMeals(query).subscribe({
     next: (data) => {
       if (data.length === 0) {
+        this.Searched = true;
         this.noResultsFound = true;
        // console.log(this.searchedMeals);
       }
       else {
+        this.Searched = true;
         this.noResultsFound = false;
         this.searchedMeals = data;
         console.log(this.searchedMeals);
