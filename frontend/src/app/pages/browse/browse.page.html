@@ -29,6 +29,7 @@
           <div *ngIf="Searched">
             <div *ngIf="noResultsFound">
               No results found for the entered search query.
+              <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item"></app-browse-meals>
             </div>
             <div *ngIf="noResultsFound">
               <app-browse-meals *ngFor="let item of searchedMeals" [searchData]="item"></app-browse-meals>
@@ -38,7 +39,7 @@
 
           <!-- <div *ngIf="searchedMeals.length === 0"> -->
             <!-- Display the popular meals here -->
-           <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item"></app-browse-meals>
+           <!-- <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item"></app-browse-meals> -->
 
          <!-- </div> -->
           <!-- <ng-container *ngIf="popularMeals.length >= 4">
