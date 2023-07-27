@@ -43,6 +43,7 @@ export class LoginPage {
       error: (error) => {
         if (error.status == 403){
           this.errorHandlerService.presentErrorToast('Invalid credentials', 'Invalid credentials');
+          localStorage.removeItem('token');
         }else{
           this.errorHandlerService.presentErrorToast('Unexpected error. Please try again', error);
         }
@@ -52,5 +53,6 @@ export class LoginPage {
 
   goToSignup() {
     this.router.navigate(['../signup']);
+    localStorage.removeItem('token');
   }
 }

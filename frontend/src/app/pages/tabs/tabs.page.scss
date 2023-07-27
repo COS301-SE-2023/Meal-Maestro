@@ -1,1 +1,11 @@
+.bar{
+    padding-top: 1vh;
+}
 
+ion-tab-button {
+transition: transform 0.2s ease-in-out;
+}
+
+ion-tab-button.tab-selected {
+transform: translateY(-5px);
+} 

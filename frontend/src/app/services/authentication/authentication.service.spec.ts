@@ -7,12 +7,14 @@ import { AuthResponseI } from '../../models/authResponse.model';
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
   let httpClientSpy: jasmine.SpyObj<HttpClient>;
+  let routerSpy: jasmine.SpyObj<any>;
   let mockUser: UserI;
   let mockAuthResponse: AuthResponseI;
 
   beforeEach(() => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
-    service = new AuthenticationService(httpClientSpy as any);
+    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    service = new AuthenticationService(httpClientSpy as any, routerSpy as any);
 
     mockUser = {
       "username": "test",

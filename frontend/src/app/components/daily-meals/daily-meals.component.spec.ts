@@ -10,11 +10,13 @@ describe('DailyMealsComponent', () => {
   let mockMealGenerationService: jasmine.SpyObj<MealGenerationService>;
 
   beforeEach(waitForAsync(() => {
+    mockMealGenerationService = jasmine.createSpyObj('MealGenerationService', ['getDailyMeals']);
+
     TestBed.configureTestingModule({
       imports: [IonicModule.forRoot(), DailyMealsComponent],
       providers: [
-        { provide: MealGenerationService, useValue: mockMealGenerationService },
-      ],
+        { provide: MealGenerationService, useValue: mockMealGenerationService }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DailyMealsComponent);
