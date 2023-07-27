@@ -44,7 +44,7 @@
 
           <ng-container *ngIf="Searched">
             <div *ngIf="noResultsFound">
-              No results found for the entered search query.
+              No results were found.
               <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item"></app-browse-meals>
             </div>
             <div *ngIf="!noResultsFound">
