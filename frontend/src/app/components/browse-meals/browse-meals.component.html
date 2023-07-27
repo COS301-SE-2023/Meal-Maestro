@@ -1,5 +1,6 @@
 <!-- popularMeals display cards -->
-<ng-container *ngIf="!Searched">
+<!-- <ng-container *ngIf="!Searched">
+  
 <ion-card  (click)="setOpen(true, item)" color="primary">
   <ion-card-header>
     <ion-card-title class="head">{{mealsData.name}}</ion-card-title>
@@ -37,13 +38,13 @@
   </ng-template>
 </ion-modal>
 </ion-card>
-</ng-container>
+</ng-container> -->
 
 
 <!-- searchedMeals display cards -->
-<ng-container *ngIf="Searched">
+<!-- <ng-container *ngIf="Searched">
   heloooo
-  <ion-card  (click)="setOpen(true, item)" color="primary">
+  <ion-card  (click)="setOpen(true, thing)" color="primary">
     <ion-card-header>
       <ion-card-title class="head">{{searchData.name}}</ion-card-title>
     </ion-card-header>
@@ -79,4 +80,42 @@
     </ng-template>
   </ion-modal>
   </ion-card>
-  </ng-container>
+  </ng-container> -->
+
+<ion-card  (click)="setOpen(true, item)" color="primary">
+  <ion-card-header>
+    <ion-card-title class="head">{{mealsData.name}}</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+  {{mealsData.description}}
+  </ion-card-content>
+<ion-avatar>
+  <img src="{{mealsData.url}}">
+  <img alt="{{mealsData.url}}">
+
+</ion-avatar>
+
+<ion-modal [isOpen]="isModalOpen">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{mealsData.name}}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="setOpen(false,null)">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-avatar class="background">
+
+      <img src="{{mealsData.url}}">
+      <img alt="{{mealsData.url}}"> 
+
+    </ion-avatar>
+    <ion-content class="ion-padding">
+      <p>{{mealsData.ingredients}}</p> 
+    <p>{{mealsData.instructions}}</p> 
+    <p>{{mealsData.cookingTime}}</p> 
+    </ion-content>
+  </ng-template>
+</ion-modal>
+</ion-card>
