@@ -31,7 +31,7 @@
               No results found for the entered search query.
               <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item"></app-browse-meals>
             </div>
-            <div *ngIf="noResultsFound">
+            <div *ngIf="!noResultsFound">
               <app-browse-meals *ngFor="let item of searchedMeals" [searchData]="item"></app-browse-meals>
             </div>
           </div>
