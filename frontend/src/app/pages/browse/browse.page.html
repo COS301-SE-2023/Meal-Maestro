@@ -6,9 +6,11 @@
         <!-- <app-browse-meals *ngFor="let thing of searchedMeals" [searchData]="thing" ></app-browse-meals> -->
       </ion-searchbar>
     </ion-toolbar>
+    <ion-progress-bar *ngIf="Loading===true" type="indeterminate"></ion-progress-bar>
   </ion-header>
 
   <ion-content [fullscreen]="true" scrollY="true">
+    <ion-refresher slot="fixed" (ionRefresh)="RefreshMeals($event)"></ion-refresher>
     <!-- <ion-searchbar class="search"></ion-searchbar> -->
     <ion-grid>
       
@@ -134,7 +136,7 @@
         <ion-col></ion-col>
       </ion-row> -->
     </ion-grid>
-
+  
   </ion-content>
 </body>
 

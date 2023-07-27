@@ -24,7 +24,7 @@ export class BrowsePage implements OnInit{
   searchedMeals : MealBrowseI[] = [];
   noResultsFound: boolean = false;
   Searched: boolean = false;
-
+  Loading : boolean = false;
   searchQuery: string='';
   searchResults: any;
   
@@ -94,6 +94,16 @@ onSearch(event: Event) {
   cancel() {
     this.Searched = false
     console.log(this.Searched)
+  }
+
+ 
+
+  RefreshMeals(event:any) {
+    this.Loading = true;
+    setTimeout(() => {
+      this.Loading = false;
+      event.target.complete();
+    },2000);
   }
 
 // generateSearchMeals(query: string) {
