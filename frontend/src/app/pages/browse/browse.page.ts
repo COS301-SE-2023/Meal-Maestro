@@ -91,6 +91,11 @@ onSearch(event: Event) {
 
 }
 
+  cancel() {
+    this.Searched = false
+    console.log(this.Searched)
+  }
+
 // generateSearchMeals(query: string) {
 //   // Call the service function to get the searched meals with the provided query
 //   this.mealGenerationservice.getSearchedMeals(query).subscribe({
