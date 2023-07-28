@@ -104,7 +104,6 @@ export class PantryPage implements OnInit{
     var ev = event as CustomEvent<OverlayEventDetail<FoodItemI>>;
 
     if (ev.detail.role === 'confirm') {
-      console.log(ev.detail.data);
       this.pantryService.addToPantry(ev.detail.data!).subscribe({
         next: (response) => {
           if (response.status === 200) {
