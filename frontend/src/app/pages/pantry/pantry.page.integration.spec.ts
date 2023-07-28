@@ -87,4 +87,16 @@ describe('PantryPageIntegration', () => {
         expect(shoppingListService.getShoppingListItems).toHaveBeenCalled();
 
     })
+
+    it('should handle 403 error when gettingPantryItems', async () => {
+        spyOn(pantryService, 'getPantryItems').and.callThrough();
+        spyOn(authService, 'logout').and.callThrough();
+        spyOn(component, 'fetchItems').and.callThrough();
+
+        await component.fetchItems();
+
+        expect(component.fetchItems).toHaveBeenCalled();
+        expect(pantryService.getPantryItems).toHaveBeenCalled();
+        expect(authService.logout).toHaveBeenCalled();
+    });
 });
