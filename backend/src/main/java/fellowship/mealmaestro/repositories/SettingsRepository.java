@@ -86,10 +86,6 @@ private static Map<String, Integer> getMacroRatioFromRecord(Record record) {
     return macroRatioMap;
 }
 
-
-
-
-
 public void updateSettings(SettingsModel request, String email) {
     try (Session session = driver.session()) {
         session.executeWrite(updateSettingsTransaction(request, email));
