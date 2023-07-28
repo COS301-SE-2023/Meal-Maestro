@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -67,6 +68,8 @@ public class MealDatabseService {
         return daysMealsRepository.findByMealDate(mealDate);
     }
 
+     
+
     public void changeMealForDate(DayOfWeek mealDate, MealModel mealModel, String time) {
 
         Optional<DaysMealsModel> optionalDaysMealsModel = daysMealsRepository.findByMealDate(mealDate);
@@ -97,5 +100,11 @@ public class MealDatabseService {
         }
         
         daysMealsRepository.save(daysMealsModel);
+    }
+
+    public Optional<DaysMealsModel> findUsersDaysMeals(DayOfWeek day, String token){
+         UserModel userModel = userService.getUser(token);
+        String email = userModel.getEmail();
+        return daysMealsRepository.findDaysMealsWithMealsForUserAndDate(email, (userModel.getEmail() + day.toString()));
     }
 }

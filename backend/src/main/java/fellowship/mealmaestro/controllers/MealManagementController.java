@@ -4,18 +4,14 @@ import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,13 +19,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import fellowship.mealmaestro.models.DaysMealsModel;
-import fellowship.mealmaestro.models.FoodModel;
-import fellowship.mealmaestro.models.MealModel;
 import fellowship.mealmaestro.services.MealDatabseService;
 import fellowship.mealmaestro.services.MealManagementService;
-import jakarta.validation.Valid;
 
 @RestController
 public class MealManagementController {
@@ -51,11 +46,23 @@ public class MealManagementController {
         DayOfWeek dayOfWeek = localDate.getDayOfWeek();
        ObjectMapper objectMapper = new ObjectMapper();
         // retrieve
-        Optional<DaysMealsModel> mealsForWeek = mealDatabseService.retrieveDatesMealModel(dayOfWeek);
+        Optional<DaysMealsModel> mealsForWeek = mealDatabseService.findUsersDaysMeals(dayOfWeek, token);
         if(mealsForWeek.isPresent())
         {
-            JsonNode daysMealsModel = objectMapper.valueToTree(mealsForWeek.get());
-            return jsonNodeToString(daysMealsModel);
+            ObjectNode daysMealsModel = objectMapper.valueToTree(mealsForWeek.get());
+            
+            // JsonNode breakfastJson = findMealSegment(daysMealsModel, "breakfast");
+            // JsonNode lunchJson = findMealSegment(daysMealsModel, "lunch");
+            // JsonNode dinnerJson = findMealSegment(daysMealsModel, "dinner");
+
+            // ObjectNode combinedNode = JsonNodeFactory.instance.objectNode();
+            // combinedNode.set("breakfast", breakfastJson);
+            // combinedNode.set("lunch", lunchJson);
+            // combinedNode.set("dinner", dinnerJson);
+           
+           
+           
+            return daysMealsModel.toString();
         }
         else 
         {
@@ -76,68 +83,32 @@ public class MealManagementController {
         return mealManagementService.generateMeal();
     }
 
-    public static String jsonNodeToString(JsonNode jsonNode) {
+    public static JsonNode findMealSegment(JsonNode jsonNode, String mealType) {
         if (jsonNode.isObject()) {
-            return objectToString(jsonNode);
-        } else if (jsonNode.isArray()) {
-            return arrayToString(jsonNode);
-        } else {
-            // For primitive values or leaf nodes, append the value directly
-            return jsonNode.toString();
-        }
-    }
-
-    private static String objectToString(JsonNode jsonNode) {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("{");
-        boolean isFirst = true;
-
-        // Get an iterator for the field names of the JSON object
-        Iterator<Entry<String, JsonNode>> fields = jsonNode.fields();
-
-        // Traverse through each property in the object
-        while (fields.hasNext()) {
-            Entry<String, JsonNode> field = fields.next();
-            String propertyName = field.getKey();
-            JsonNode propertyValue = field.getValue();
-
-            if (!isFirst) {
-                sb.append(",");
+            JsonNode startNode = jsonNode.get("start");
+            if (startNode != null) {
+                JsonNode startProperties = startNode.get("properties");
+                if (startProperties != null) {
+                    JsonNode mealDateNode = startProperties.get("mealDate");
+                    if (mealDateNode != null && mealType.equalsIgnoreCase(mealDateNode.asText())) {
+                        return jsonNode;
+                    }
+                }
             }
 
-            // Append the property name and recursively call the method for nested JSON nodes
-            sb.append("\"").append(propertyName).append("\":");
-            sb.append(jsonNodeToString(propertyValue));
-
-            isFirst = false;
-        }
-
-        sb.append("}");
-
-        return sb.toString();
-    }
-
-    private static String arrayToString(JsonNode jsonNode) {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("[");
-        boolean isFirst = true;
-
-        // Traverse through each element in the array
-        for (JsonNode element : jsonNode) {
-            if (!isFirst) {
-                sb.append(",");
+            JsonNode segmentsNode = jsonNode.get("segments");
+            if (segmentsNode != null) {
+                for (JsonNode segment : segmentsNode) {
+                    JsonNode foundNode = findMealSegment(segment, mealType);
+                    if (foundNode != null) {
+                        return foundNode;
+                    }
+                }
             }
-
-            // Recursively call the method for elements in the array
-            sb.append(jsonNodeToString(element));
-
-            isFirst = false;
         }
 
-        sb.append("]");
-
-        return sb.toString();
+        return null;
     }
+
+   
 }

@@ -13,8 +13,10 @@ import jakarta.validation.constraints.NotBlank;
 
 @Node("DaysMeals")
 public class DaysMealsModel {
+    
     @Relationship(type = "breakfast")
     @NotBlank(message = "breakfast meal required")
+   
     private MealModel breakfast;
 
     @Relationship(type = "lunch")
@@ -26,6 +28,9 @@ public class DaysMealsModel {
     private MealModel dinner;
 
     @Id
+    @NotBlank(message = "date and user required")
+    private String userDateIdentifier;
+
     @NotBlank(message = "date required")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private DayOfWeek mealDate;
@@ -33,6 +38,8 @@ public class DaysMealsModel {
     @Relationship(type = "HAS_DAY")
     @NotBlank(message = "user required")
     private UserModel user;
+
+    public DaysMealsModel(){};
 
     public DaysMealsModel(MealModel breakfast, MealModel lunch, MealModel dinner, DayOfWeek mealDate
    , UserModel user
@@ -42,6 +49,7 @@ public class DaysMealsModel {
         this.dinner = dinner;
         this.mealDate = mealDate;
        this.user = user;
+       this.userDateIdentifier =( user.getEmail() + mealDate.toString());
     }
 
     public MealModel getBreakfast(){
