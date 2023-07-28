@@ -1,5 +1,6 @@
 package fellowship.mealmaestro.services;
 
+import java.time.DayOfWeek;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -37,9 +38,11 @@ public class MealDatabseService {
         this.mealRepository = mealRepository;
 
     }
+    @Autowired
+    private UserService userService;
 
-    public void saveDaysMeals(JsonNode daysMealsJson, Date date, String token) throws JsonProcessingException, IllegalArgumentException {
-        UserService userService = new UserService();
+    public void saveDaysMeals(JsonNode daysMealsJson, DayOfWeek date, String token) throws JsonProcessingException, IllegalArgumentException {
+       
         UserModel userModel = userService.getUser(token);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -52,19 +55,19 @@ public class MealDatabseService {
         daysMealsRepository.save(daysMealsModel);
     }
 
-    public List<DaysMealsModel> retrieveDaysMealsModel(Date date){
+    public List<DaysMealsModel> retrieveDaysMealsModel(DayOfWeek date){
         return daysMealsRepository.findMealsForNextWeek(date);
     }
 
-     public List<DaysMealsModel> retrieveDatessMealModel(Date date){
+     public Optional<DaysMealsModel> retrieveDatesMealModel(DayOfWeek date){
         return daysMealsRepository.findMealsForDate(date);
     }
     
-    public Optional<DaysMealsModel> fetchDay(Date mealDate) {
+    public Optional<DaysMealsModel> fetchDay(DayOfWeek mealDate) {
         return daysMealsRepository.findByMealDate(mealDate);
     }
 
-    public void changeMealForDate(Date mealDate, MealModel mealModel, String time) {
+    public void changeMealForDate(DayOfWeek mealDate, MealModel mealModel, String time) {
 
         Optional<DaysMealsModel> optionalDaysMealsModel = daysMealsRepository.findByMealDate(mealDate);
         if (optionalDaysMealsModel.isEmpty()) {

@@ -1,5 +1,6 @@
 package fellowship.mealmaestro.models;
 
+import java.time.DayOfWeek;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -27,13 +28,13 @@ public class DaysMealsModel {
     @Id
     @NotBlank(message = "date required")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date mealDate;
+    private DayOfWeek mealDate;
    
-    @Relationship(type = "date")
+    @Relationship(type = "HAS_DAY")
     @NotBlank(message = "user required")
     private UserModel user;
 
-    public DaysMealsModel(MealModel breakfast, MealModel lunch, MealModel dinner, Date mealDate
+    public DaysMealsModel(MealModel breakfast, MealModel lunch, MealModel dinner, DayOfWeek mealDate
    , UserModel user
     ){
         this.breakfast = breakfast;
@@ -67,11 +68,11 @@ public class DaysMealsModel {
         this.dinner = dinner;
     }
     
-    public void setMealDate(Date mealDate){
+    public void setMealDate(DayOfWeek mealDate){
         this.mealDate = mealDate;
     }
 
-    public Date getMealDate(){
+    public DayOfWeek getMealDate(){
         return this.mealDate;
     }
 }

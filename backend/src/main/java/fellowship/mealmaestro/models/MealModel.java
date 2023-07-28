@@ -26,6 +26,7 @@ public class MealModel {
 
     @NotBlank(message = "Cooking time is required")
     private String cookingTime;
+    public MealModel(){};
 
     public MealModel(String name, String instructions,String description, String url, String ingredients, String cookingTime){
         this.name = name;
