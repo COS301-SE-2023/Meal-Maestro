@@ -146,6 +146,10 @@ public class MealManagementService {
                 mealList.add(entity);
             }
         }
+
+        // Split the query into individual words
+        String[] searchWords = query.toLowerCase().split(" ");
+
         // Filter the entities based on the query parameter
         List<JsonNode> filteredEntities = new ArrayList<>();
         for (JsonNode entity : mealList) {
@@ -154,10 +158,24 @@ public class MealManagementService {
             String ingredients = entity.get("ingredients").asText().toLowerCase();
             String description = entity.get("description").asText().toLowerCase();
         // String instructions = entity.get("instruction").asText().toLowerCase();
-            if (name.contains(query.toLowerCase()) || ingredients.contains(query.toLowerCase()) || description.contains(query.toLowerCase()) ) {
-                filteredEntities.add(entity);
+        
+        // Check if all search words are present in the name, ingredients, or description
+        boolean allWordsFound = true;
+        for (String word : searchWords) {
+            if (!name.contains(word) && !ingredients.contains(word) && !description.contains(word)) {
+                allWordsFound = false;
+                break;
             }
         }
+        if (allWordsFound) {
+            filteredEntities.add(entity);
+        }
+
+    }
+        // if (name.contains(query.toLowerCase()) || ingredients.contains(query.toLowerCase()) || description.contains(query.toLowerCase()) ) {
+        //         filteredEntities.add(entity);
+        //     }
+        // }
         // Create a new JSON array node to store the filtered entities
         ArrayNode filteredEntitiesArray = JsonNodeFactory.instance.arrayNode();
         filteredEntities.forEach(filteredEntitiesArray::add);
