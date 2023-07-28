@@ -1,64 +1,55 @@
-<body>
-  <ion-content [fullscreen]="true" scrollY="false">
-    <ion-grid>
-      <ion-row>
-        <ion-col></ion-col>
-        <ion-col>
-          <ion-avatar class="logo">
-            <img src="https://images.unsplash.com/photo-1530554764233-e79e16c91d08?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80">
-          </ion-avatar>
-        </ion-col>
-        <ion-col></ion-col>
-      </ion-row>
-      <br>
-      <form #form="ngForm" (ngSubmit)="login(form.value)">
-      <ion-col>
-        <ion-input class="firstinput"
-          id="login-email"
-          placeholder="Email"
-          type="email"
-          required
-          email
-          shape="round"
-          name="email"
-          [(ngModel)]="user.email"
-          #email="ngModel"
+<ion-content [fullscreen]="true" scrollY="false">
+  <div class="background-image"></div>
+  <ion-grid>
+    <div class="logo-container">
+      <img class="logo" src="assets/Logo.svg" alt="logo">
+    </div>
+    <br>
+    <form #form="ngForm" (ngSubmit)="login(form.value)">
+    <ion-col>
+      <ion-input class="firstinput"
+        id="login-email"
+        placeholder="Email"
+        type="email"
+        required
+        email
+        name="email"
+        [(ngModel)]="user.email"
+        #email="ngModel"
+      >
+      </ion-input>
+      <div [class.hidden]="!(email.invalid && email.touched)" class="alert">
+        Please enter a valid email.
+      </div>
+      <ion-input
+        id="login-password"
+        placeholder="Password"
+        type="password" 
+        required
+        name="password"
+        [(ngModel)]="user.password"
+        #password="ngModel"
         >
-        </ion-input>
-        <div [class.hidden]="!(email.invalid && email.touched)" class="alert">
-          Please enter a valid email.
-        </div>
-        <ion-input class="secondinput"
-          id="login-password"
-          placeholder="Password"
-          type="password" 
-          required
-          shape="round"
-          name="password"
-          [(ngModel)]="user.password"
-          #password="ngModel"
-          >
-        </ion-input>
-        <div [class.hidden]="!(password.invalid && password.touched)" class="alert">
-          Please enter a password.
-        </div>
+      </ion-input>
+      <div [class.hidden]="!(password.invalid && password.touched)" class="alert">
+        Please enter a password.
+      </div>
+    </ion-col>
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col>
+        <ion-button id="login-button" expand="block" type="submit" [disabled]="form.invalid" >Login</ion-button>
       </ion-col>
-      <ion-row>
-        <ion-col></ion-col>
-        <ion-col>
-          <ion-button id="login-button" expand="block" type="submit" [disabled]="form.invalid" >Login</ion-button>
-        </ion-col>
-        <ion-col></ion-col>
-      </ion-row>
-      </form>
+      <ion-col></ion-col>
+    </ion-row>
+    </form>
 
-      <ion-row>
-        <a class="firstlink">Forget Password?</a>
-      </ion-row>
-      <ion-row>
-        <a class="signup" (click)="goToSignup()">Don't have an account? Sign Up</a>
-      </ion-row>
-      
-    </ion-grid>
-  </ion-content>
-</body>
+    <ion-row>
+      <a class="firstlink">Forget Password?</a>
+    </ion-row>
+    <ion-row>
+      <a class="signup" (click)="goToSignup()">Don't have an account? Sign Up</a>
+    </ion-row>
+    
+  </ion-grid>
+</ion-content>
