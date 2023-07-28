@@ -1,3 +1,5 @@
+package fellowship.mealmaestro.repositories;
+
 import org.springframework.stereotype.Repository;
 
 import org.neo4j.driver.Driver;

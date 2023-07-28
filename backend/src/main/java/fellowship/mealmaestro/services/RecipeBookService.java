@@ -1,9 +1,12 @@
+package fellowship.mealmaestro.services;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import fellowship.mealmaestro.models.RecipeModel;
 import fellowship.mealmaestro.models.UserModel;
+import fellowship.mealmaestro.repositories.RecipeBookRepository;
 
 @Service
 public class RecipeBookService {
