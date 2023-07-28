@@ -152,8 +152,9 @@ public class MealManagementService {
             String name = entity.get("name").asText().toLowerCase();
         // String description = entity.get("description").asText().toLowerCase();
             String ingredients = entity.get("ingredients").asText().toLowerCase();
+            String description = entity.get("description").asText().toLowerCase();
         // String instructions = entity.get("instruction").asText().toLowerCase();
-            if (name.contains(query.toLowerCase()) || ingredients.contains(query.toLowerCase())) {
+            if (name.contains(query.toLowerCase()) || ingredients.contains(query.toLowerCase()) || description.contains(query.toLowerCase()) ) {
                 filteredEntities.add(entity);
             }
         }
