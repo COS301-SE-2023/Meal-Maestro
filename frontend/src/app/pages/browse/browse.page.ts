@@ -8,7 +8,6 @@ import { MealGenerationService } from '../../services/meal-generation/meal-gener
 import { ErrorHandlerService } from '../../services/services';
 import { DaysMealsI } from '../../models/daysMeals.model';
 import { MealBrowseI } from '../../models/mealBrowse.model';
-import { HttpClient } from '@angular/common/http'; // Import HttpClient to make HTTP requests
 
 @Component({
   selector: 'app-browse',
@@ -30,8 +29,7 @@ export class BrowsePage implements OnInit{
   
   constructor(public r : Router,
     private mealGenerationservice:MealGenerationService,
-    private errorHandlerService:ErrorHandlerService,
-    private http: HttpClient) 
+    private errorHandlerService:ErrorHandlerService,) 
     { 
       this.searchQuery = '';
     }
@@ -50,7 +48,6 @@ export class BrowsePage implements OnInit{
           'Error loading meal items', err
         )
       }
-
       
     })
  
