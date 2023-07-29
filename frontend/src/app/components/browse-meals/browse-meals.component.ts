@@ -10,22 +10,31 @@ import { MealBrowseI } from '../../models/mealBrowse.model';
   standalone:true,
   imports: [CommonModule, IonicModule],
 })
-export class BrowseMealsComponent  implements OnInit {
 
-  @Input() mealsData!: MealBrowseI[];
+export class BrowseMealsComponent  implements OnInit {
+  @Input() mealsData!: MealBrowseI;
+  @Input() searchData!: MealBrowseI;
+  @Input() Searched: boolean = false;
+
+  item: MealBrowseI | undefined;
+  popularMeals: MealBrowseI[] = [];
+  thing: MealBrowseI | undefined;
+  searchedMeals: MealBrowseI[] = [];
   isModalOpen = false;
-  currentObject :any
-  setOpen(isOpen: boolean, o :any) {
-    if(o==null)
-      o = this.currentObject
-    this.isModalOpen = isOpen;
-    this.setCurrent(o)
-  }
+  currentObject: any;
+
   constructor() { }
 
   ngOnInit() {}
 
   setCurrent(o : any) {
     this.currentObject = o;
+  }
+
+  setOpen(isOpen: boolean, o :any) {
+    if(o==null)
+      o = this.currentObject
+    this.isModalOpen = isOpen;
+    this.setCurrent(o)
   }
 }

@@ -1,14 +1,86 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-searchbar class="search"></ion-searchbar>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content [fullscreen]="true" scrollY="true">
-  <!-- <ion-searchbar class="search"></ion-searchbar> -->
-  <ion-grid>
-    
-    <ion-row>
+<body>
+  <ion-header [translucent]="true">
+    <ion-toolbar>
+      <!-- <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" /> -->
+      <ion-searchbar class="search" (ionChange)="onSearch($event)" (ionClear)="cancel()">
+        <!-- <app-browse-meals *ngFor="let thing of searchedMeals" [searchData]="thing" ></app-browse-meals> -->
+      </ion-searchbar>
+    </ion-toolbar>
+    <ion-progress-bar *ngIf="Loading===true" type="indeterminate"></ion-progress-bar>
+  </ion-header>
+
+  <ion-content [fullscreen]="true" scrollY="true">
+    <ion-refresher slot="fixed" (ionRefresh)="RefreshMeals($event)"></ion-refresher>
+    <!-- <ion-searchbar class="search"></ion-searchbar> -->
+    <ion-grid>
+      
+      <ion-row>
+      
+        <ion-col>
+          <!-- <div *ngIf="noResultsFound">
+            No results found for the entered search query.
+          </div>
+          <div *ngIf="searchedMeals.length > 0"> 
+              <app-browse-meals *ngFor="let item of searchedMeals" [searchData]="item" [isSearchResult]="false"></app-browse-meals> 
+          </div>  -->
+
+          <!-- <div *ngIf="!Searched">
+            <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item"></app-browse-meals>
+          </div>
+
+          <ng-container *ngIf="Searched">
+            <div *ngIf="noResultsFound">
+              No results found for the entered search query.
+              <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item"></app-browse-meals>
+            </div>
+            <div *ngIf="!noResultsFound">
+              <app-browse-meals *ngFor="let item of searchedMeals" [searchData]="item"></app-browse-meals>
+            </div>
+          </ng-container> -->
+
+          <div *ngIf="!Searched">
+            <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item"></app-browse-meals>
+          </div>
+
+          <ng-container *ngIf="Searched">
+            <div *ngIf="noResultsFound">
+              No results were found.
+              <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item"></app-browse-meals>
+            </div>
+            <div *ngIf="!noResultsFound">
+              <app-browse-meals *ngFor="let item of searchedMeals" [mealsData]="item"></app-browse-meals>
+            </div>
+          </ng-container>
+        
+
+          <!-- <div *ngIf="searchedMeals.length === 0"> -->
+            <!-- Display the popular meals here -->
+           <!-- <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item"></app-browse-meals> -->
+
+         <!-- </div> -->
+          <!-- <ng-container *ngIf="popularMeals.length >= 4">
+           
+            <div>
+              <h2>Name: {{ popularMeals[3].name }}</h2>
+              <p>Description: {{ popularMeals[2].description }}</p>
+            </div>
+         </ng-container>  -->
+
+         <!-- <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item" ></app-browse-meals> -->
+          <!-- <ion-card button="true" color="primary">
+              <ion-card-header>
+                <ion-card-title class="head">Greek Salad with Chicken</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                A light and refreshing salad featuring a flavorful and protein-packed option for a healthy meal prep.
+              </ion-card-content>
+            <ion-avatar>
+              <img src="https://images.unsplash.com/photo-1580013759032-c96505e24c1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1818&q=80">
+            </ion-avatar>
+          </ion-card> -->
+        </ion-col>
+
     
       <ion-col>
 
@@ -46,41 +118,25 @@
       <ion-col></ion-col>
     </ion-row>
 
-    <ion-row>
-      <ion-col></ion-col>
-      <ion-col>
-        <ion-card button="true" color="primary">
-            <ion-card-header>
-              <ion-card-title class="head">Fried Chicken Tenders</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              Crispy and golden-brown on the outside, tender and juicy on the inside, the classic comfort food favorite.
-            </ion-card-content>
-          <ion-avatar>
-            <img src="https://images.unsplash.com/photo-1614398751058-eb2e0bf63e53?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1014&q=80">
-          </ion-avatar>
-        </ion-card>
-      </ion-col>
-      <ion-col></ion-col>
-    </ion-row>
 
-    <ion-row class="rowlast">
-      <ion-col></ion-col>
-      <ion-col>
-        <ion-card button="true" color="primary">
-            <ion-card-header>
-              <ion-card-title class="head">Spaghetti & Prawns</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              This Italian-inspired recipe is a crowd-pleaser and can be made in advance, making it perfect for meal prepping.
-            </ion-card-content>
-          <ion-avatar>
-            <img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80">
-          </ion-avatar>
-        </ion-card>
-      </ion-col>
-      <ion-col></ion-col>
-    </ion-row> -->
-  </ion-grid>
-
-</ion-content>
+      <ion-row class="rowlast">
+        <ion-col></ion-col>
+        <ion-col>
+          <ion-card button="true" color="primary">
+              <ion-card-header>
+                <ion-card-title class="head">Spaghetti & Prawns</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                This Italian-inspired recipe is a crowd-pleaser and can be made in advance, making it perfect for meal prepping.
+              </ion-card-content>
+            <ion-avatar>
+              <img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80">
+            </ion-avatar>
+          </ion-card>
+        </ion-col>
+        <ion-col></ion-col>
+      </ion-row> -->
+    </ion-grid>
+  
+  </ion-content>
+</body>

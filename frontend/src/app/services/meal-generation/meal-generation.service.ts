@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, tap } from 'rxjs';
 import { MealI } from '../../models/meal.model';
-import { DaysMealsI, FoodItemI, UserI } from '../../models/interfaces';
+import { DaysMealsI, FoodItemI, UserI, MealBrowseI } from '../../models/interfaces';
 import { title } from 'process';
 
 @Injectable({
@@ -66,6 +66,21 @@ export class MealGenerationService {
       this.url+'/getMeal'
     );
   }
+
+  getPopularMeals():Observable<MealBrowseI[]> {
+    return this.http.get<MealBrowseI[]>(
+      this.url+'/getPopularMeals'
+    );
+  }
+
+  getSearchedMeals(query: string): Observable<MealBrowseI[]> {
+    const params = { query: query }; // backend expects the query parameter
+    return this.http.get<MealBrowseI[]>(
+      this.url + '/getSearchedMeals', 
+      { params: params });
+  }
+
+  
 
 
 
