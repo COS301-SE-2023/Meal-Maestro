@@ -82,7 +82,7 @@
   </ion-card>
   </ng-container> -->
 
-<ion-card  (click)="setOpen(true, item)" color="primary">
+<ion-card *ngIf="mealsData" (click)="setOpen(true, item)" color="primary">
   <ion-card-header>
     <ion-card-title class="head">{{mealsData.name}}</ion-card-title>
   </ion-card-header>
