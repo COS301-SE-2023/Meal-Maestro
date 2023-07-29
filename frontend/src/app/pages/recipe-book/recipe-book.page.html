@@ -12,7 +12,7 @@
   </ion-header>
   <ion-grid style="padding-top: 30px; padding-left: 20px; padding-right: 20px;">
     <app-recipe-item #recipeItem></app-recipe-item>
-    <ion-row>
+    <ion-row *ngIf="items.length > 0; else emptyState">
       <ion-col size="6" *ngFor="let item of items">        
         <ion-card class="ion-no-margin" (click)="recipeItem.openModal(item)">
           <ion-icon name="close" class="close-icon"></ion-icon>
@@ -21,10 +21,12 @@
           </div>
         </ion-card>
       </ion-col>
-    </ion-row>
+    </ion-row>    
   </ion-grid>
-  
-  
+
+  <ng-template #emptyState>
+    <div class="empty">
+      No saved recipes yet  
+    </div>
+  </ng-template>
 </ion-content>
-
-
