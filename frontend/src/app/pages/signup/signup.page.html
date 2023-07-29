@@ -1,90 +1,83 @@
-<body>
-  <ion-content [fullscreen]="true" scrollY="false">
-    <ion-grid>
+<ion-content [fullscreen]="true" scrollY="false">
+  <div class="background-image"></div>
+  <ion-grid>
+    <div class="logo-container">
+      <img class="logo" src="assets/Logo.svg" alt="logo">
+    </div>
+    <br>
+    <form #form="ngForm" (ngSubmit)="signup(form.value)">
+    <ion-col>
+        <ion-input class="firstinput"
+          id="signup-name"
+          placeholder="Name"
+          type="text"
+          required
+          shape="round"
+          name="username"
+          [(ngModel)]="user.username"
+          #username="ngModel"
+        >
+      </ion-input>
+      <div [class.hidden]="!(username.invalid && username.touched)" class="alert">
+        Name is required.
+      </div>
+        <ion-input class="secondinput"
+          id="signup-email"
+          placeholder="Email"
+          type="email"
+          required
+          email
+          shape="round"
+          name="email"
+          [(ngModel)]="user.email"
+          #email="ngModel"
+        >
+      </ion-input>
+      <div [class.hidden]="!(email.invalid && email.touched)" class="alert">
+        Please enter a valid email.
+      </div>
+        <ion-input class="thirdinput"
+          id="signup-password"
+          placeholder="Password"
+          type="password" 
+          required
+          shape="round"
+          name="initial"
+          minlength="8"
+          [(ngModel)]="initial"
+          #initialPassword="ngModel"
+          >
+        </ion-input>
+        <div [class.hidden]="!(initialPassword.invalid && initialPassword.touched)" class="alert">
+          Password must be at least 8 characters long.
+        </div>
+        <ion-input class="thirdinput"
+          id="verify-password"
+          placeholder="Verify password"
+          type="password" 
+          required
+          shape="round"
+          name="verify"
+          minlength="8"
+          [(ngModel)]="verify"
+          #verifyPassword="ngModel"
+          >
+        </ion-input>
+        <div [class.hidden]="!(verifyPassword.invalid && verifyPassword.touched)" class="alert">
+          Passwords must match.
+        </div>
+      </ion-col>
       <ion-row>
         <ion-col></ion-col>
         <ion-col>
-          <ion-avatar class="logo">
-            <img src="https://images.unsplash.com/photo-1530554764233-e79e16c91d08?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80">
-          </ion-avatar>
+          <ion-button id="signup-button" expand="block" type="submit" [disabled]="form.invalid">Sign up</ion-button>
         </ion-col>
         <ion-col></ion-col>
       </ion-row>
-      <br>
-      <form #form="ngForm" (ngSubmit)="signup(form.value)">
-      <ion-col>
-          <ion-input class="firstinput"
-            id="signup-name"
-            placeholder="Name"
-            type="text"
-            required
-            shape="round"
-            name="username"
-            [(ngModel)]="user.username"
-            #username="ngModel"
-          >
-        </ion-input>
-        <div [class.hidden]="!(username.invalid && username.touched)" class="alert">
-          Name is required.
-        </div>
-          <ion-input class="secondinput"
-            id="signup-email"
-            placeholder="Email"
-            type="email"
-            required
-            email
-            shape="round"
-            name="email"
-            [(ngModel)]="user.email"
-            #email="ngModel"
-          >
-        </ion-input>
-        <div [class.hidden]="!(email.invalid && email.touched)" class="alert">
-          Please enter a valid email.
-        </div>
-          <ion-input class="thirdinput"
-            id="signup-password"
-            placeholder="Password"
-            type="password" 
-            required
-            shape="round"
-            name="initial"
-            minlength="8"
-            [(ngModel)]="initial"
-            #initialPassword="ngModel"
-            >
-          </ion-input>
-          <div [class.hidden]="!(initialPassword.invalid && initialPassword.touched)" class="alert">
-            Password must be at least 8 characters long.
-          </div>
-          <ion-input class="thirdinput"
-            id="verify-password"
-            placeholder="Verify password"
-            type="password" 
-            required
-            shape="round"
-            name="verify"
-            minlength="8"
-            [(ngModel)]="verify"
-            #verifyPassword="ngModel"
-            >
-          </ion-input>
-          <div [class.hidden]="!(verifyPassword.invalid && verifyPassword.touched)" class="alert">
-            Passwords must match.
-          </div>
-        </ion-col>
-        <ion-row>
-          <ion-col></ion-col>
-          <ion-col>
-            <ion-button id="signup-button" expand="block" type="submit" [disabled]="form.invalid">Sign up</ion-button>
-          </ion-col>
-          <ion-col></ion-col>
-        </ion-row>
-      </form>
-      <ion-row>
-        <a class="loginlink" (click)="goToLogin()">Already have an account? Login</a>
-      </ion-row>
-      
-    </ion-grid>
-  </ion-content>
-</body>
+    </form>
+    <ion-row>
+      <a class="loginlink" (click)="goToLogin()">Already have an account? Login</a>
+    </ion-row>
+    
+  </ion-grid>
+</ion-content>

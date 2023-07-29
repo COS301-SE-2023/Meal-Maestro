@@ -16,9 +16,9 @@ export class MealGenerationService {
     password: '', 
   }
 
-
-
   url : String = 'http://localhost:8080';
+
+
   constructor(private http: HttpClient) { }
 
   getDailyMeals():Observable<DaysMealsI[]> {

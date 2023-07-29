@@ -25,7 +25,7 @@ public class UserRepository {
     //#region Create
     public void createUser(UserModel user){
         try (Session session = driver.session()){
-
+            
             session.executeWrite(createUserTransaction(user.getName(), user.getPassword(), user.getEmail()));
         }
     }
@@ -39,6 +39,16 @@ public class UserRepository {
             return null;
         };
     }
+
+    /*
+     * 
+     * CREATE (:Pantry)<-[:HAS_PANTRY]-(n0:User {name: "", password: "", email: ""})-[:HAS_PREFERENCES]->(n1:Preferences)-[:HAS_ALLERGIES]->(:Allergies),
+(:`Shopping List`)<-[:HAS_LIST]-(n0)-[:HAS_RECIPE_BOOK]->(:`Recipe Book`),
+(:Interval)<-[:HAS_INTERVAL]-(n1)-[:HAS_GOAL]->(:Goal),
+(:`Calorie Goal`)<-[:HAS_CALORIE_GOAL]-(n1)-[:HAS_EATING_STYLE]->(:`Eating Style`),
+(:Macro)<-[:HAS_MACRO]-(n1)-[:HAS_BUDGET]->(:Budget),
+(:BMI)<-[:HAS_BMI]-(n1)-[:HAS_COOKING_TIME]->(:`Cooking Time`)
+     */
     //#endregion
 
     //#region Get User
@@ -67,6 +77,21 @@ public class UserRepository {
                 AuthorityRoleModel.USER
             );
             return user;
+        };
+    }
+
+    public UserModel updateUser(UserModel user, String email) {
+        try (Session session = driver.session()){
+            session.executeWrite(updateUserTransaction(user.getName(), email));
+            return user;
+        }
+    }
+
+    public static TransactionCallback<Void> updateUserTransaction(String username, String email) {
+        return transaction -> {
+            transaction.run("MATCH (n0:User {email: $email}) SET n0.username = $username",
+            Values.parameters("email", email, "username", username));
+            return null;
         };
     }
 }

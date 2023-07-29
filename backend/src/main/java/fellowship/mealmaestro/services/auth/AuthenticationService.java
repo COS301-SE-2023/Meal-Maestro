@@ -34,7 +34,7 @@ public class AuthenticationService {
 
     public Optional<AuthenticationResponseModel> register(RegisterRequestModel request){
         var user = new UserModel(
-            request.getFirstname(),
+            request.getUsername(),
             passwordEncoder.encode(request.getPassword()),
             request.getEmail(),
             AuthorityRoleModel.USER

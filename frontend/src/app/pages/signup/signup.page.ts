@@ -59,5 +59,6 @@ export class SignupPage {
 
   goToLogin() {
     this.router.navigate(['../']);
+    localStorage.removeItem('token');
   }
 }
