@@ -15,10 +15,7 @@ import { catchError, firstValueFrom } from 'rxjs';
   imports: [IonicModule, CommonModule, FormsModule, RecipeItemComponent]
 })
 export class RecipeBookPage implements OnInit {
-  items: RecipeItemI[] = [{
-    title:"red",
-    image:""
-  }];
+  items: RecipeItemI[] = [];
 
   constructor(private recipeService: RecipeBookApiService) { }
 
