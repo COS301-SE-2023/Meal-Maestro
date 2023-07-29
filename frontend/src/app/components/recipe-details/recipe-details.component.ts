@@ -22,8 +22,8 @@ export class RecipeDetailsComponent  implements OnInit {
   }
 
   recipe: RecipeItemI = {
-    image: "dd",
-    title: "name",
+    image: this.image,
+    title: this.title,
   };
 
   saveToRP(): void {
