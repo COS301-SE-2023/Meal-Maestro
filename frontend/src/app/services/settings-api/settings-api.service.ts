@@ -12,23 +12,23 @@ export class SettingsApiService {
 
   constructor(private http: HttpClient) { }
 
-  getSettings(token: string): Observable<HttpResponse<UserPreferencesI>> {
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+  getSettings(): Observable<HttpResponse<UserPreferencesI>> {
     return this.http.post<UserPreferencesI>(
       `${this.url}/getSettings`,
       {},
-      { headers, observe: 'response' }
+      { observe: 'response' }
     );
   }
 
-  updateSettings(settings: UserPreferencesI, token: string): Observable<HttpResponse<void>> {
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+  updateSettings(settings: UserPreferencesI): Observable<HttpResponse<void>> {
     return this.http.post<void>(
       `${this.url}/updateSettings`,
       settings,
-      { headers, observe: 'response' }
+      { observe: 'response' }
     );
   }
+
+  
 
 
 }
