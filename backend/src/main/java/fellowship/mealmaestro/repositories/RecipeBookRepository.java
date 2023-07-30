@@ -56,7 +56,7 @@ public class RecipeBookRepository {
             Values.parameters("email", user));
             
             List<RecipeModel> recipes = new ArrayList<>();
-            while (result.hasNext()){ System.out.println("result obtained");
+            while (result.hasNext()){
                 var record = result.next();
                 recipes.add(new RecipeModel(record.get("title").asString(), record.get("image").asString()));
             }
