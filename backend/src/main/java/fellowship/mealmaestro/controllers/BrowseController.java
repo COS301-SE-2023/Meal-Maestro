@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fellowship.mealmaestro.models.MealModel;
 import fellowship.mealmaestro.services.BrowseService;
-import fellowship.mealmaestro.services.PantryService;
+//import fellowship.mealmaestro.services.PantryService;
 import jakarta.validation.Valid;
 
 @RestController
@@ -21,7 +21,7 @@ public class BrowseController {
     @Autowired
     private BrowseService browseService;
 
-    @PostMapping("/getPopularMeals")
+    @GetMapping("/getPopularMeals")
     public ResponseEntity<List<MealModel>> getPopularMeals(@RequestHeader("Authorization") String token){
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
@@ -30,7 +30,7 @@ public class BrowseController {
         return ResponseEntity.ok(browseService.getPopularMeals(authToken));
     }
 
-    @PostMapping("/getSearchedMeals")
+    @GetMapping("/getSearchedMeals")
     public ResponseEntity<List<MealModel>> searchMeals(@Valid @RequestBody String request, @RequestHeader("Authorization") String token){
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();

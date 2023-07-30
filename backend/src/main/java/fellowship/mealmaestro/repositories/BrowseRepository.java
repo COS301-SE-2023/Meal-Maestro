@@ -40,7 +40,6 @@ public class BrowseRepository {
         org.neo4j.driver.Result result = transaction.run("MATCH (m:Meal)\n" +
                 "WITH m, rand() as random\n" +
                 "ORDER BY random\n" +
-                "LIMIT $limit\n" +
                 "RETURN m.name AS name, m.instructions AS instructions, m.description AS description, " +
                 "m.url AS url, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
                 Values.parameters("email", email));
