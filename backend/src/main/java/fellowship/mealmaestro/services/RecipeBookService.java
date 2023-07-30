@@ -1,5 +1,6 @@
 package fellowship.mealmaestro.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -7,9 +8,13 @@ import java.util.List;
 import fellowship.mealmaestro.models.RecipeModel;
 import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.repositories.RecipeBookRepository;
+import fellowship.mealmaestro.services.auth.JwtService;
 
 @Service
 public class RecipeBookService {
+
+    @Autowired
+    private JwtService jwtService;
     
     private final RecipeBookRepository recipeBookRepository;
 
@@ -25,7 +30,9 @@ public class RecipeBookService {
         recipeBookRepository.removeRecipe(user, recipe);
     }
 
-    public List<RecipeModel> getAllRecipes(String user) {
-        return recipeBookRepository.getAllRecipes(user);
+    public List<RecipeModel> getAllRecipes(String token) {
+        String email = jwtService.extractUserEmail(token);
+
+        return recipeBookRepository.getAllRecipes(email);
     }
 }
