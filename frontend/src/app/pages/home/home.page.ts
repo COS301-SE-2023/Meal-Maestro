@@ -29,7 +29,7 @@ export class HomePage implements OnInit{
             }));
             this.daysMeals.push(...mealsWithDate);
           } else {
-            data.date = this.getDayOfWeek(index);
+            data.mealDate = this.getDayOfWeek(index);
             this.daysMeals.push(data);
           }
           

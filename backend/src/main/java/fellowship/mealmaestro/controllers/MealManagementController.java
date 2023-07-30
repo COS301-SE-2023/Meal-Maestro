@@ -12,6 +12,8 @@ import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,8 +25,10 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import fellowship.mealmaestro.models.DaysMealsModel;
+import fellowship.mealmaestro.models.FoodModel;
 import fellowship.mealmaestro.services.MealDatabseService;
 import fellowship.mealmaestro.services.MealManagementService;
+import jakarta.validation.Valid;
 
 @RestController
 public class MealManagementController {
@@ -51,17 +55,7 @@ public class MealManagementController {
         {
             ObjectNode daysMealsModel = objectMapper.valueToTree(mealsForWeek.get());
             
-            // JsonNode breakfastJson = findMealSegment(daysMealsModel, "breakfast");
-            // JsonNode lunchJson = findMealSegment(daysMealsModel, "lunch");
-            // JsonNode dinnerJson = findMealSegment(daysMealsModel, "dinner");
-
-            // ObjectNode combinedNode = JsonNodeFactory.instance.objectNode();
-            // combinedNode.set("breakfast", breakfastJson);
-            // combinedNode.set("lunch", lunchJson);
-            // combinedNode.set("dinner", dinnerJson);
-           
-           
-           
+     
             return daysMealsModel.toString();
         }
         else 
@@ -108,6 +102,18 @@ public class MealManagementController {
         }
 
         return null;
+    }
+    
+
+    @PostMapping("/regenerate")
+    public String regenerate(@Valid @RequestBody DaysMealsModel request , @RequestHeader("Authorization") String token){
+        
+       
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode daysMealsModel = objectMapper.valueToTree(request);
+        // regenerate and update
+      
+        return daysMealsModel.toString();
     }
 
    

@@ -4,5 +4,5 @@ export interface DaysMealsI {
     breakfast:MealI;
     lunch:MealI;
     dinner:MealI;
-    date:string;
+    mealDate:string;
 }

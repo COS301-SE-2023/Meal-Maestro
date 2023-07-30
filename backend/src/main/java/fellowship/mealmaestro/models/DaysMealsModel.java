@@ -15,29 +15,31 @@ import jakarta.validation.constraints.NotBlank;
 public class DaysMealsModel {
     
     @Relationship(type = "breakfast")
-    @NotBlank(message = "breakfast meal required")
+  //  @NotBlank(message = "breakfast meal required")
    
     private MealModel breakfast;
 
     @Relationship(type = "lunch")
-    @NotBlank(message = "lunch meal required")
+   // @NotBlank(message = "lunch meal required")
     private MealModel lunch;
 
     @Relationship(type = "dinner")
-    @NotBlank(message = "dinner meal required")
+ //   @NotBlank(message = "dinner meal required")
     private MealModel dinner;
 
     @Id
-    @NotBlank(message = "date and user required")
+  //  @NotBlank(message = "date and user required")
     private String userDateIdentifier;
 
-    @NotBlank(message = "date required")
+ //   @NotBlank(message = "date required")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private DayOfWeek mealDate;
    
     @Relationship(type = "HAS_DAY")
-    @NotBlank(message = "user required")
+//    @NotBlank(message = "user required")
     private UserModel user;
+
+    private String meal;
 
     public DaysMealsModel(){};
 

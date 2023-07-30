@@ -16,6 +16,9 @@ import { ErrorHandlerService } from '../../services/services';
 })
 export class DailyMealsComponent  implements OnInit {
 
+  breakfast: string = "breakfast";
+  lunch: string  = "lunch";
+  dinner: string  = "dinner";
 
   @Input() todayData!: MealI[];
   @Input() dayData!: DaysMealsI;
@@ -51,16 +54,29 @@ export class DailyMealsComponent  implements OnInit {
 
   }
 
-  handleArchive() {
+  handleArchive(meal:string) {
     // Function to handle the "Archive" option action
     console.log('Archive option clicked');
-    // Add your custom logic here
+    
+
   }
 
-  handleSync() {
+  handleSync(meal:string) {
     // Function to handle the "Sync" option action
     console.log('Sync option clicked');
     // Add your custom logic here
+    this.mealGenerationservice.handleArchive(this.dayData, meal).subscribe({
+      next: (data) => {
+        this.dayData = data;
+        
+        console.log(this.meals);
+      },
+      error: (err) => {
+        this.errorHandlerService.presentErrorToast(
+          'Error regenerating meal items', err
+        )
+      }
+    })
   }
 
   setCurrent(o : any) {

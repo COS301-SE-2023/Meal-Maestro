@@ -1,7 +1,7 @@
 <ion-item>
   <div class="card-container">
     <div class="label-container">
-      <ion-label>{{ dayData.date }}</ion-label>
+      <ion-label>{{ dayData.mealDate }}</ion-label>
       <span class="line"></span>
     </div>
 
@@ -54,10 +54,10 @@
         </ion-modal>
       </ion-item>
       <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="handleSync()"> <ion-icon name="sync-outline"></ion-icon> </ion-item-option>
+        <ion-item-option color="danger" (click)="handleSync(breakfast)"> <ion-icon name="sync-outline"></ion-icon> </ion-item-option>
       </ion-item-options>
       <ion-item-options side="start">
-        <ion-item-option color="secondary" (click)="handleArchive()" > <ion-icon slot="icon-only" name="archive"></ion-icon> </ion-item-option>
+        <ion-item-option color="secondary" (click)="handleArchive(breakfast)" > <ion-icon slot="icon-only" name="archive"></ion-icon> </ion-item-option>
       </ion-item-options>
       </ion-card>
    
@@ -115,10 +115,10 @@
         </ion-modal>
       </ion-item>
       <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="handleSync()"> <ion-icon name="sync-outline"></ion-icon> </ion-item-option>
+        <ion-item-option color="danger" (click)="handleSync(lunch)"> <ion-icon name="sync-outline"></ion-icon> </ion-item-option>
       </ion-item-options>
       <ion-item-options side="start">
-        <ion-item-option color="secondary" (click)="handleArchive()" > <ion-icon slot="icon-only" name="archive"></ion-icon> </ion-item-option>
+        <ion-item-option color="secondary" (click)="handleArchive(lunch)" > <ion-icon slot="icon-only" name="archive"></ion-icon> </ion-item-option>
       </ion-item-options>
       </ion-card>
    
@@ -175,10 +175,10 @@
         </ion-modal>
       </ion-item>
       <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="handleSync()"> <ion-icon name="sync-outline"></ion-icon> </ion-item-option>
+        <ion-item-option color="danger" (click)="handleSync(dinner)"> <ion-icon name="sync-outline"></ion-icon> </ion-item-option>
       </ion-item-options>
       <ion-item-options side="start">
-        <ion-item-option color="secondary" (click)="handleArchive()" > <ion-icon slot="icon-only" name="archive"></ion-icon> </ion-item-option>
+        <ion-item-option color="secondary" (click)="handleArchive(dinner)" > <ion-icon slot="icon-only" name="archive"></ion-icon> </ion-item-option>
       </ion-item-options>
       </ion-card>
    
