@@ -19,7 +19,7 @@
       <ion-card-title>Goal</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-    <ion-input label="Eating Goal" label-placement="floating" fill="outline" placeholder="Bulking up"  [(ngModel)]="userpreferences.goal"></ion-input>
+    <ion-input label="Eating Goal" label-placement="floating" fill="outline" placeholder="Bulking up"  [(ngModel)]="userpreferences.goal" (ionChange)="setGoal()"></ion-input>
   </ion-card-content>
   </ion-card>
 <!-- the shopping interval -->
@@ -146,7 +146,7 @@
             <ion-card-subtitle>
             <div class="toggle-container">
               <ion-label class="toggle-label">Set Preferences </ion-label>
-              <ion-toggle [(ngModel)]="preferenceToggle" (ionChange)="pereference_Toggle()"></ion-toggle>
+              <ion-toggle [(ngModel)]="preferenceToggle" (ionChange)="preference_Toggle()"></ion-toggle>
             </div>
           </ion-card-subtitle>
             <ion-list>
