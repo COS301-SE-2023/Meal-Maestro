@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AlertController, IonicModule } from '@ionic/angular';
+import { ActionSheetController, AlertController, IonicModule } from '@ionic/angular';
 import { RecipeItemComponent } from '../../components/recipe-item/recipe-item.component';
 import { RecipeItemI } from '../../models/recipeItem.model';
 import { AuthenticationService, ErrorHandlerService, RecipeBookApiService } from '../../services/services';
@@ -20,7 +20,7 @@ export class RecipeBookPage implements OnInit {
   constructor(private recipeService: RecipeBookApiService, 
     private errorHandlerService: ErrorHandlerService,
     private auth: AuthenticationService,
-    private alertController: AlertController) { }
+    private actionSheetController: ActionSheetController) { }
 
   async ionViewWillEnter() {
     this.getRecipes();
@@ -55,26 +55,24 @@ export class RecipeBookPage implements OnInit {
   async confirmRemove(event: Event, recipe: RecipeItemI) {
     event.stopPropagation();
 
-    const alert = await this.alertController.create({
-      header: 'Confirm Removal',
-      message: `Are you sure you want to remove ${recipe.title} from your recipe book?`,
+    const actionSheet = await this.actionSheetController.create({
+      header: `Are you sure you want to remove ${recipe.title} from your recipe book?`,
       buttons: [
         {
           text: 'Delete',
-          cssClass: 'danger',
+          role: 'destructive',
           handler: () => {
             this.removeRecipe(recipe);
           }
         },
         {
           text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary'
+          role: 'cancel'
         }
       ]
     });
-
-    await alert.present();
+  
+    await actionSheet.present();
   }
 
   async removeRecipe(recipe: RecipeItemI) {
