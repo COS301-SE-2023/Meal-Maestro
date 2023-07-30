@@ -31,24 +31,44 @@ public class BrowseRepository {
     }
 
     public List<MealModel> getPopularMealsTransaction(Transaction tx) {
-        public List<MealModel> getPopularMealsTransaction(Transaction tx) {
-            List<MealModel> popularMeals = new ArrayList<>();
+        List<MealModel> popularMeals = new ArrayList<>();
     
-            org.neo4j.driver.Result result = tx.run("MATCH (m:Meal)<--(u:User)\n" +
+        org.neo4j.driver.Result result = tx.run("MATCH (m:Meal)<--(u:User)\n" +
                 "WITH m, count(u) as popularity\n" +
                 "ORDER BY popularity DESC\n" +
                 "LIMIT 10\n" +
                 "RETURN m.name AS name, m.recipe AS recipe");
     
-            while (result.hasNext()) {
-                org.neo4j.driver.Record record = result.next();
-                String name = record.get("name").asString();
-                String recipe = record.get("recipe").asString();
-                popularMeals.add(new MealModel(name, recipe));
-            }
-    
-            return popularMeals;
+        while (result.hasNext()) {
+            org.neo4j.driver.Record record = result.next();
+            String name = record.get("name").asString();
+            String recipe = record.get("recipe").asString();
+            popularMeals.add(new MealModel(name, recipe));
         }
+    
+        return popularMeals;
+        }
+
+
+    public MealModel searchMealByName(String mealName) {
+        try (Session session = driver.session()) {
+            return session.readTransaction(tx -> searchMealByNameTransaction(tx, mealName));
+        }
+    }
+
+    public MealModel searchMealByNameTransaction(Transaction tx, String mealName) {
+        org.neo4j.driver.Result result = tx.run("MATCH (m:Meal {name: $name})\n" +
+                "RETURN m.name AS name, m.recipe AS recipe", Values.parameters("name", mealName));
+
+        if (result.hasNext()) {
+            org.neo4j.driver.Record record = result.next();
+            String name = record.get("name").asString();
+            String recipe = record.get("recipe").asString();
+            return new MealModel(name, recipe);
+        }
+
+        return null; // Meal with the given name not found.
+    }
 
 
 }
