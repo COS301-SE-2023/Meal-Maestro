@@ -50,6 +50,9 @@ export class LoginPage implements OnInit {
         if (error.status == 403){
           this.errorHandlerService.presentErrorToast('Invalid credentials', 'Invalid credentials');
           localStorage.removeItem('token');
+        }else if(error.status == 404){
+          this.errorHandlerService.presentErrorToast('Email or password incorrect', 'Email or password incorrect');
+          localStorage.removeItem('token');
         }else{
           this.errorHandlerService.presentErrorToast('Unexpected error. Please try again', error);
         }
