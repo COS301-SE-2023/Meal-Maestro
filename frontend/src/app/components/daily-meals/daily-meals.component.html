@@ -4,11 +4,12 @@
       <ion-label>Daily plan</ion-label>
       <span class="line"></span>
     </div>
-    <ion-item-sliding>
-      <ion-card (click)="setOpen(true, item)" color="primary">
-        <ion-item class="no-style" color="primary" no-padding no-margin>
-          
-          
+
+    <ion-item-sliding ion-padding="0px" style="display: contents;"> 
+      
+      <ion-card (click)="setOpen(true, item)" color="primary" ion-padding>
+       <ion-item class="no-style" color="none" style="  --inner-padding-end: 0;--inner-padding-bottom: 0;" >
+          <div ion-no-padding style="padding-inline-end:0px !important;">
             <ion-card-header>
               <ion-card-subtitle>Breakfast</ion-card-subtitle>
               <ion-card-title>{{ dayData.breakfast.name }}</ion-card-title>
@@ -26,11 +27,9 @@
                 alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
               />
             </ion-avatar>
+          </div>
+      
         
-        </ion-item>
-        <ion-item-options side="end">
-          <ion-item-option color="danger"> regenerate </ion-item-option>
-        </ion-item-options>
 
         <ion-modal [isOpen]="isModalOpen">
           <ng-template>
@@ -55,7 +54,16 @@
             </ion-content>
           </ng-template>
         </ion-modal>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="danger"> <ion-icon name="sync-outline"></ion-icon> </ion-item-option>
+      </ion-item-options>
+      <ion-item-options side="start">
+        <ion-item-option color="secondary"> <ion-icon slot="icon-only" name="archive"></ion-icon> </ion-item-option>
+      </ion-item-options>
       </ion-card>
+   
+    
     </ion-item-sliding>
 
     <ion-card (click)="setOpen(true, item)" color="primary">
@@ -94,6 +102,9 @@
           </ion-content>
         </ng-template>
       </ion-modal>
+
+     
+
     </ion-card>
 
     <ion-card (click)="setOpen(true, item)" color="primary">

@@ -4,17 +4,25 @@ ion-avatar {
   --border-radius: 0%;
 
 }
+ion-item-sliding {
+ 
+  --ion-padding: 0px;
+ }
 
 ion-item {
  width: 100%;
  display: block;
+ --ion-padding: 0px;
+
+
+
+
 }
 ion-card {
   padding: 0%;
+  --ion-padding: 0px;
 }
-.item-inner {
-  padding: 0%;
-}
+
 .div1 img{
   width: 100%;
   height: 100%;
@@ -26,9 +34,10 @@ ion-card {
   --padding-start:0;
   --padding-end: 0;
   padding-right: 0%;
-  background-color: var(--ion-color-primary);
-  display: flex !important;
-  flex-direction: column !important;
+
+}
+.side {
+  display: inline;
 }
 
 .label-container {
