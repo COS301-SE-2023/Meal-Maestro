@@ -24,9 +24,9 @@ public class BrowseService {
         return browseRepository.getPopularMeals(email);
     }
 
-    public List<MealModel> searchMeals(String mealName, String token){
+    public List<MealModel> getSearchedMeals(String mealName, String token){
         String email = jwtService.extractUserEmail(token);
-        return browseRepository.searchMeals(mealName,email);
+        return browseRepository.getSearchedMeals(mealName,email);
     }
 
 }

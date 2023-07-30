@@ -11,7 +11,7 @@ import org.neo4j.driver.TransactionWork;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import fellowship.mealmaestro.models.FoodModel;
+//import fellowship.mealmaestro.models.FoodModel;
 import fellowship.mealmaestro.models.MealModel;
 
 
@@ -88,14 +88,14 @@ public class BrowseRepository {
         // }
 
 
-    public List<MealModel> searchMeals(String mealName, String email) {
+    public List<MealModel> getSearchedMeals(String mealName, String email) {
         try (Session session = driver.session()) {
-            return session.executeRead(searchMealsTransaction(mealName, email));
+            return session.executeRead(getSearchedMealsTransaction(mealName, email));
            // return session.readTransaction(tx -> searchMealByNameTransaction(tx, mealName));
         }
     }
 
-    public TransactionCallback<List<MealModel>> searchMealsTransaction(String mealName, String email) {
+    public TransactionCallback<List<MealModel>> getSearchedMealsTransaction(String mealName, String email) {
         return transaction -> {
            
         List<MealModel> matchingPopularMeals = new ArrayList<>();
