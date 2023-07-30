@@ -26,8 +26,9 @@ public class RecipeBookService {
         recipeBookRepository.addRecipe(user, recipe);
     }
 
-    public void removeRecipe(UserModel user, RecipeModel recipe) {
-        recipeBookRepository.removeRecipe(user, recipe);
+    public void removeRecipe(RecipeModel recipe, String token) {
+        String email = jwtService.extractUserEmail(token);
+        recipeBookRepository.removeRecipe(request, email);
     }
 
     public List<RecipeModel> getAllRecipes(String token) {
