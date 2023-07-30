@@ -49,7 +49,7 @@ public class RecipeBookRepository {
         }
     }
 
-    public static TransactionCallback<List<RecipeModel>> getAllRecipesTransaction(String user) { System.out.println(user);
+    public static TransactionCallback<List<RecipeModel>> getAllRecipesTransaction(String user) {
         return transaction -> {
             var result = transaction.run("MATCH (user:User {email: $email})-[:HAS_RECIPE_BOOK]->(book:`Recipe Book`)-[:CONTAINS]->(recipe:Recipe) " +
             "RETURN recipe.title AS title, recipe.image AS image",
