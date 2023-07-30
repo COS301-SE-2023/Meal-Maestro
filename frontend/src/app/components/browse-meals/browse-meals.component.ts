@@ -25,7 +25,9 @@ export class BrowseMealsComponent  implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+   // console.log(this.mealsData);
+  }
 
   setCurrent(o : any) {
     this.currentObject = o;
