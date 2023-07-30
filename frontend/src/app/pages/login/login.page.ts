@@ -21,13 +21,16 @@ export class LoginPage implements OnInit {
   }
   
 
-  constructor( private router: Router, private errorHandlerService: ErrorHandlerService, private auth: AuthenticationService ) { }
+  constructor(private router: Router,
+              private errorHandlerService: ErrorHandlerService, 
+              private auth: AuthenticationService 
+              ) { }
 
   ngOnInit() {
   }
 
-  login(form: any) {
-
+  async login(form: any) {
+    console.log(form);
     const loginUser: UserI = {
       username: '',
       email: form.email,
