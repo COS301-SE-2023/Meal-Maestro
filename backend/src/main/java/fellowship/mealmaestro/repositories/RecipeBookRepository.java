@@ -66,17 +66,17 @@ public class RecipeBookRepository {
     //#endregion
 
     //#region Delete
-    public void removeRecipe(UserModel user, RecipeModel recipe){
+    public void removeRecipe(RecipeModel recipe, String email){
         try (Session session = driver.session()){
-            session.executeWrite(removeRecipeTransaction(user, recipe));
+            session.executeWrite(removeRecipeTransaction(recipe, email));
         }
     }
 
-    public static TransactionCallback<Void> removeRecipeTransaction(UserModel user, RecipeModel recipe) {
+    public static TransactionCallback<Void> removeRecipeTransaction(RecipeModel recipe, String email) {
         return transaction -> {
-            transaction.run("MATCH (user:User {email: $email})-[:OWNS]->(book:Recipe Book)-[r:CONTAINS]->(recipe:Recipe {title: $title, image: $image}) " +
-            "DETACH DELETE r",
-                Values.parameters("email", user.getEmail(), "title", recipe.getTitle(), "image", recipe.getImage()));
+            transaction.run("MATCH (user:User {email: $email})-[:HAS_RECIPE_BOOK]->(book:`Recipe Book`)-[r:CONTAINS]->(recipe:Recipe {title: $title}) " +
+            "DETACH r",
+                Values.parameters("email", email, "title", recipe.getTitle()));
             return null;
         };
     }
