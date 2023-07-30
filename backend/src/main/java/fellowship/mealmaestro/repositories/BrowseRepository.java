@@ -88,14 +88,18 @@ public class BrowseRepository {
         }
 
 
-    public MealModel searchMealByName(String mealName) {
+    public List<MealModel> searchMealByName(String mealName) {
         try (Session session = driver.session()) {
-            return session.readTransaction(tx -> searchMealByNameTransaction(tx, mealName));
+            return session.executeRead(searchMealByNameTransaction(mealName));
+           // return session.readTransaction(tx -> searchMealByNameTransaction(tx, mealName));
         }
     }
 
-    public MealModel searchMealByNameTransaction(Transaction tx, String mealName) {
-        org.neo4j.driver.Result result = tx.run("MATCH (m:Meal {name: $name})\n" +
+    public TransactionCallback<List<MealModel>> searchMealByNameTransaction(String mealName) {
+        return transaction -> {
+           
+        List<MealModel> matchingPopularMeals = new ArrayList<>();
+        org.neo4j.driver.Result result = transaction.run("MATCH (m:Meal {name: $name})\n" +
                 "RETURN m.name AS name, m.instructions AS instructions, m.description AS description, " +
                 "m.url AS url, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
                 Values.parameters("name", mealName));
@@ -108,10 +112,12 @@ public class BrowseRepository {
             String url = record.get("url").asString();
             String ingredients = record.get("ingredients").asString();
             String cookingTime = record.get("cookingTime").asString();
-            return new MealModel(name, instructions, description, url, ingredients, cookingTime);
+           // return new MealModel(name, instructions, description, url, ingredients, cookingTime);
+           matchingPopularMeals.add(new MealModel(name, instructions, description, url, ingredients, cookingTime));
         }
 
-        return null; // Meal with the given name not found.
+        return matchingPopularMeals; 
+        };
     }
 
 
