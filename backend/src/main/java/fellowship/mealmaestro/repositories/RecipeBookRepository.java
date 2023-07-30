@@ -75,7 +75,7 @@ public class RecipeBookRepository {
     public static TransactionCallback<Void> removeRecipeTransaction(RecipeModel recipe, String email) {
         return transaction -> {
             transaction.run("MATCH (user:User {email: $email})-[:HAS_RECIPE_BOOK]->(book:`Recipe Book`)-[r:CONTAINS]->(recipe:Recipe {title: $title}) " +
-            "DETACH r",
+            "DELETE r",
                 Values.parameters("email", email, "title", recipe.getTitle()));
             return null;
         };
