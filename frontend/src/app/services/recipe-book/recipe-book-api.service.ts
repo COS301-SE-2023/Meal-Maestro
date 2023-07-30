@@ -42,15 +42,14 @@ export class RecipeBookApiService {
     );
   }
 
-  removeRecipe(item: RecipeItemI): Observable<RecipeItemI>{
-    return this.http.post<RecipeItemI>(
+  removeRecipe(recipe: RecipeItemI): Observable<HttpResponse<void>> {
+    return this.http.post<void>(
       this.url+'/removeRecipe',
-      {
-        "recipe": {
-          "title": item.title,
-          "image": item.title
-        }
-      }
-    )
+      {        
+        "title": recipe.title,
+        "image": recipe.title        
+      },
+      {observe: 'response'}
+    );
   }
 }

@@ -52,16 +52,16 @@ export class RecipeBookPage implements OnInit {
     })
   }
 
-  async confirmRemove(title : String) {
+  async confirmRemove(recipe: RecipeItemI) {
     const alert = await this.alertController.create({
       header: 'Confirm Removal',
-      message: `Are you sure you want to remove ${title} from your recipe book?`,
+      message: `Are you sure you want to remove ${recipe.title} from your recipe book?`,
       buttons: [
         {
           text: 'Delete',
           cssClass: 'danger',
           handler: () => {
-            this.removeRecipe(title);
+            this.removeRecipe(recipe);
           }
         },
         {
@@ -75,8 +75,31 @@ export class RecipeBookPage implements OnInit {
     await alert.present();
   }
 
-  async removeRecipe(title : String) {
-
+  async removeRecipe(recipe: RecipeItemI) {
+    this.recipeService.removeRecipe(recipe).subscribe({
+      next: (response) => {
+        if (response.status === 200) {
+          this.errorHandlerService.presentSuccessToast(
+            `Successfully removed ${recipe.title}`
+          )
+          this.getRecipes();
+        }
+      },
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorised access. Please log in again',
+            err
+          )
+          this.auth.logout();
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Error removing recipe from Recipe Book',
+            err
+          )
+        }
+      }
+    });
   }
 
   ngOnInit() {
