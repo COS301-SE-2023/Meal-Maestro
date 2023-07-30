@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { AlertController, IonicModule } from '@ionic/angular';
 import { RecipeItemComponent } from '../../components/recipe-item/recipe-item.component';
 import { RecipeItemI } from '../../models/recipeItem.model';
 import { AuthenticationService, ErrorHandlerService, RecipeBookApiService } from '../../services/services';
@@ -19,7 +19,8 @@ export class RecipeBookPage implements OnInit {
 
   constructor(private recipeService: RecipeBookApiService, 
     private errorHandlerService: ErrorHandlerService,
-    private auth: AuthenticationService) { }
+    private auth: AuthenticationService,
+    private alertController: AlertController) { }
 
   async ionViewWillEnter() {
     this.getRecipes();
@@ -49,6 +50,33 @@ export class RecipeBookPage implements OnInit {
         }
       }
     })
+  }
+
+  async confirmRemove(title : String) {
+    const alert = await this.alertController.create({
+      header: 'Confirm Removal',
+      message: `Are you sure you want to remove ${title} from your recipe book?`,
+      buttons: [
+        {
+          text: 'Delete',
+          cssClass: 'danger',
+          handler: () => {
+            this.removeRecipe(title);
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary'
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async removeRecipe(title : String) {
+
   }
 
   ngOnInit() {
