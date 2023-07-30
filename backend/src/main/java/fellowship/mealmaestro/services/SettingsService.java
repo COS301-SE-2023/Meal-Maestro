@@ -28,4 +28,9 @@ public class SettingsService {
         String email = jwtService.extractUserEmail(token);
         SettingsRepository.updateSettings(request, email);
     }
+
+    public void calculateBMI(String token){
+        
+    }
+    
 }
