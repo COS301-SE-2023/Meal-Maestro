@@ -28,7 +28,7 @@ public class RecipeBookController {
     }
 
     @PostMapping("/getAllRecipes")
-    public List<RecipeModel> getAllRecipes(@RequestBody UserModel user) {
+    public List<RecipeModel> getAllRecipes(@RequestBody String user) {
         return recipeBookService.getAllRecipes(user);
     }
 }

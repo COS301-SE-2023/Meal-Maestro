@@ -18,7 +18,7 @@ export class RecipeBookApiService {
 
   constructor(private http: HttpClient) { }
 
-  getAllRecipes(): Observable<RecipeItemI[]> {
+  getAllRecipes(): Observable<RecipeItemI[]> { 
     return this.http.post<RecipeItemI[]>(
       this.url+'/getAllRecipes',
       {

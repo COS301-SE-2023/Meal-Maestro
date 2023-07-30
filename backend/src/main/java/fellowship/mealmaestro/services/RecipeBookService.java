@@ -25,7 +25,7 @@ public class RecipeBookService {
         recipeBookRepository.removeRecipe(user, recipe);
     }
 
-    public List<RecipeModel> getAllRecipes(UserModel user) {
+    public List<RecipeModel> getAllRecipes(String user) {
         return recipeBookRepository.getAllRecipes(user);
     }
 }
