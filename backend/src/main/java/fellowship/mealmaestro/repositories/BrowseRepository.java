@@ -26,14 +26,14 @@ public class BrowseRepository {
     }
 
 
-    public List<MealModel> getRandomMeals(int numberOfMeals) {
+    public List<MealModel> getPopularMeals(String email) {
         try (Session session = driver.session()) {
             //return session.readTransaction(tx -> getRandomMealsTransaction(tx, numberOfMeals));
-            return session.executeRead(getRandomMealsTransaction(numberOfMeals));
+            return session.executeRead(getPopularMealsTransaction(email));
         }
     }
 
-    public TransactionCallback<List<MealModel>> getRandomMealsTransaction(int numberOfMeals) {
+    public TransactionCallback<List<MealModel>> getPopularMealsTransaction(String email) {
         return transaction -> {
 
         List<MealModel> randomMeals = new ArrayList<>();
@@ -43,7 +43,7 @@ public class BrowseRepository {
                 "LIMIT $limit\n" +
                 "RETURN m.name AS name, m.instructions AS instructions, m.description AS description, " +
                 "m.url AS url, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
-                Values.parameters("limit", numberOfMeals));
+                Values.parameters("email", email));
 
         while (result.hasNext()) {
             org.neo4j.driver.Record record = result.next();
@@ -68,7 +68,7 @@ public class BrowseRepository {
     //     }
     // }
 
-    public List<MealModel> getPopularMealsTransaction(Transaction tx) {
+ //   public List<MealModel> getPopularMealsTransaction(Transaction tx) {
         // List<MealModel> popularMeals = new ArrayList<>();
     
         // org.neo4j.driver.Result result = tx.run("MATCH (m:Meal)<--(u:User)\n" +
@@ -84,25 +84,25 @@ public class BrowseRepository {
         //     popularMeals.add(new MealModel(name, recipe));
         // }
     
-        return getRandomMeals(10);
-        }
+        // return getRandomMeals(5);
+        // }
 
 
-    public List<MealModel> searchMealByName(String mealName) {
+    public List<MealModel> searchMeals(String mealName, String email) {
         try (Session session = driver.session()) {
-            return session.executeRead(searchMealByNameTransaction(mealName));
+            return session.executeRead(searchMealsTransaction(mealName, email));
            // return session.readTransaction(tx -> searchMealByNameTransaction(tx, mealName));
         }
     }
 
-    public TransactionCallback<List<MealModel>> searchMealByNameTransaction(String mealName) {
+    public TransactionCallback<List<MealModel>> searchMealsTransaction(String mealName, String email) {
         return transaction -> {
            
         List<MealModel> matchingPopularMeals = new ArrayList<>();
         org.neo4j.driver.Result result = transaction.run("MATCH (m:Meal {name: $name})\n" +
                 "RETURN m.name AS name, m.instructions AS instructions, m.description AS description, " +
                 "m.url AS url, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
-                Values.parameters("name", mealName));
+                Values.parameters("email", email));
 
         if (result.hasNext()) {
             org.neo4j.driver.Record record = result.next();
