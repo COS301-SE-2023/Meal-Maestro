@@ -51,6 +51,18 @@ export class DailyMealsComponent  implements OnInit {
 
   }
 
+  handleArchive() {
+    // Function to handle the "Archive" option action
+    console.log('Archive option clicked');
+    // Add your custom logic here
+  }
+
+  handleSync() {
+    // Function to handle the "Sync" option action
+    console.log('Sync option clicked');
+    // Add your custom logic here
+  }
+
   setCurrent(o : any) {
     this.currentObject = o;
   }

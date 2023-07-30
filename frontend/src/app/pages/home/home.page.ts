@@ -18,24 +18,45 @@ export class HomePage implements OnInit{
     , private errorHandlerService:ErrorHandlerService) {};
 
   async ngOnInit() {
-    this.mealGenerationservice.getDailyMeals().subscribe({
-      next: (data) => {
-        if (Array.isArray(data)) {
-          this.daysMeals = data;
-        } else {
-          // Convert the single item to an array
-          this.daysMeals = [data];
-        }
-        
-      },
-      error: (err) => {
-        this.errorHandlerService.presentErrorToast(
-          'Error loading meal items', err
-        )
-      }
-    })
-    
+   
+     for (let index = 0; index < 4; index++) {
+      this.mealGenerationservice.getDailyMeals().subscribe({
+        next: (data: DaysMealsI[] | DaysMealsI) => {
+          if (Array.isArray(data)) {
+            const mealsWithDate = data.map((item) => ({
+              ...item,
+              date: this.getDayOfWeek(index),
+            }));
+            this.daysMeals.push(...mealsWithDate);
+          } else {
+            data.date = this.getDayOfWeek(index);
+            this.daysMeals.push(data);
+          }
+          
+        },
+        error: (err) => {
+          this.errorHandlerService.presentErrorToast(
+            'Error loading meal items',
+            err
+          );
+        },
+      });
+    }
 
+  }
+  private getDayOfWeek(dayOffset: number): string {
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const today = new Date();
+    const targetDate = new Date(today);
+    targetDate.setDate(today.getDate() + dayOffset);
+    const dayIndex = targetDate.getDay();
+    return daysOfWeek[dayIndex];
+  }
+
+  private addDays(date: Date, days: number): Date {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
   }
 
 
