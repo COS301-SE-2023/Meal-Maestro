@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserI, RecipeItemI } from '../../models/interfaces';
 import { Observable } from 'rxjs';
@@ -18,10 +18,11 @@ export class RecipeBookApiService {
 
   constructor(private http: HttpClient) { }
 
-  getAllRecipes(): Observable<RecipeItemI[]> { 
+  getAllRecipes(): Observable<HttpResponse<RecipeItemI[]>> { 
     return this.http.post<RecipeItemI[]>(
       this.url+'/getAllRecipes',
-      {}
+      {},
+      {observe: 'response'}
     );
   }
 

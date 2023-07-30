@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { RecipeItemComponent } from '../../components/recipe-item/recipe-item.component';
 import { RecipeItemI } from '../../models/recipeItem.model';
-import { RecipeBookApiService } from '../../services/services';
+import { AuthenticationService, ErrorHandlerService, RecipeBookApiService } from '../../services/services';
 import { catchError, firstValueFrom } from 'rxjs';
 
 @Component({
@@ -17,30 +17,38 @@ import { catchError, firstValueFrom } from 'rxjs';
 export class RecipeBookPage implements OnInit {
   items: RecipeItemI[] = [];
 
-  constructor(private recipeService: RecipeBookApiService) { }
+  constructor(private recipeService: RecipeBookApiService, 
+    private errorHandlerService: ErrorHandlerService,
+    private auth: AuthenticationService) { }
 
   async ionViewWillEnter() {
-    try {
-      const recipes = await this.getRecipes();
-      this.items = recipes;
-    } catch (error) {
-      console.log("An error in ionViewWillEnter rb.page: " + error);
-    }
+    this.getRecipes();
   }
 
   async getRecipes() {
-    try {
-      const recipes = await firstValueFrom(
-        this.recipeService.getAllRecipes().pipe(
-          catchError((error) => {
-            throw error;
-          })
-        )
-      );
-      return recipes;
-    } catch (error) {
-      throw error;
-    }
+    this.recipeService.getAllRecipes().subscribe({
+      next: (response) => {
+        if (response.status === 200) {
+          if (response.body) {
+            this.items = response.body;
+          }
+        }
+      },
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            "Unauthorised access. Please log in again",
+            err
+          )
+          this.auth.logout();
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Error loading saved recipes',
+            err
+          )
+        }
+      }
+    })
   }
 
   ngOnInit() {
