@@ -1,21 +1,22 @@
-import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
+import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing"
 import { AuthenticationService, ErrorHandlerService } from "../../services/services";
-import { LoginPage } from "./login.page";
+import { SignupPage } from "./signup.page";
+import { UserI } from "../../models/user.model";
 import { TestBed } from "@angular/core/testing";
 import { IonicModule } from "@ionic/angular";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Router } from "@angular/router";
-import { UserI } from "../../models/user.model";
 import { Component } from "@angular/core";
 
-describe('LoginPageIntegration', () => {
+describe('SignupPageIntegration', () => {
     let httpMock: HttpTestingController;
     let auth: AuthenticationService;
     let errorHandler: ErrorHandlerService;
-    let component: LoginPage;
+    let component: SignupPage;
     let routerSpy = {navigate: jasmine.createSpy('navigate')};
     let apiUrl = 'http://localhost:8080';
-    let mockUser: UserI;
+    let  mockUser: UserI;
+    let mockForm: any;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -26,84 +27,88 @@ describe('LoginPageIntegration', () => {
                 AuthenticationService,
                 ErrorHandlerService,
                 { provide: Router, useValue: routerSpy },
-                LoginPage
+                SignupPage
             ]
         }).compileComponents();
 
         httpMock = TestBed.inject(HttpTestingController);
         auth = TestBed.inject(AuthenticationService);
         errorHandler = TestBed.inject(ErrorHandlerService);
-        component = TestBed.inject(LoginPage);
+        component = TestBed.inject(SignupPage);
         
         mockUser = {
             username: 'test',
             password: 'test',
             email: 'test@test.com'
         };
+
+        mockForm = {
+            username: 'test',
+            initial: 'test',
+            verify: 'test',
+            email: 'test@test.com'
+        }
     })
 
     afterEach(() => {
         httpMock.verify();
     });
 
-    it('should login a user and navigate to home', async () => {
-        spyOn(auth, 'login').and.callThrough();
+    it('should signup a user and navigate to home', async () => {
+        spyOn(auth, 'register').and.callThrough();
         spyOn(errorHandler, 'presentSuccessToast').and.callThrough();
 
-        let mockForm = {
-            email: 'test@test.com',
-            password: 'test'
-        };
+        await component.signup(mockForm);
 
-        await component.login(mockForm);
-
-        const req = httpMock.expectOne(apiUrl + '/authenticate');
+        const req = httpMock.expectOne(apiUrl + '/register');
         expect(req.request.method).toBe('POST');
-        req.flush({token: 'test'}, {status: 200, statusText: 'OK'});
+        req.flush({token: 'testToken'}, {status: 200, statusText: 'OK'});
 
-        expect(auth.login).toHaveBeenCalled();
+        expect(auth.register).toHaveBeenCalledWith(mockUser);
         expect(errorHandler.presentSuccessToast).toHaveBeenCalled();
         expect(routerSpy.navigate).toHaveBeenCalledWith(['app/tabs/home']);
-
     });
     
-    it('should not login a user if 403 response and display an error', async () => {
-        spyOn(auth, 'login').and.callThrough();
+    it('should display an error if the user entered passwords that do not match', async () => {
         spyOn(errorHandler, 'presentErrorToast').and.callThrough();
+        spyOn(auth, 'register').and.callThrough();
 
-        let mockForm = {
-            email: 'test@test.com',
-            password: 'test'
-        };
+        mockForm.verify = 'notTest';
 
-        await component.login(mockForm);
+        await component.signup(mockForm);
 
-        const req = httpMock.expectOne(apiUrl + '/authenticate');
-        expect(req.request.method).toBe('POST');
-        req.flush(null, {status: 403, statusText: 'Forbidden'});
-
-        expect(auth.login).toHaveBeenCalled();
         expect(errorHandler.presentErrorToast).toHaveBeenCalled();
+        expect(auth.register).not.toHaveBeenCalled();
     });
 
-    it('should not login a user if 500 response and display an error', async () => {
-        spyOn(auth, 'login').and.callThrough();
+    it('should display an error if the email already exists', async () => {
         spyOn(errorHandler, 'presentErrorToast').and.callThrough();
+        spyOn(auth, 'register').and.callThrough();
 
-        let mockForm = {
-            email: 'test@test.com',
-            password: 'test'
-        };
+        await component.signup(mockForm);
 
-        await component.login(mockForm);
-
-        const req = httpMock.expectOne(apiUrl + '/authenticate');
+        const req = httpMock.expectOne(apiUrl + '/register');
         expect(req.request.method).toBe('POST');
-        req.flush(null, {status: 500, statusText: 'Internal Server Error'});
+        req.flush({error: 'Email already exists'}, {status: 400, statusText: 'Bad Request'});
 
-        expect(auth.login).toHaveBeenCalled();
         expect(errorHandler.presentErrorToast).toHaveBeenCalled();
+        expect(auth.register).toHaveBeenCalledWith(mockUser);
     });
+
+    it('should display an error if there is a server error', async () => {
+        spyOn(errorHandler, 'presentErrorToast').and.callThrough();
+        spyOn(auth, 'register').and.callThrough();
+
+        await component.signup(mockForm);
+
+        const req = httpMock.expectOne(apiUrl + '/register');
+        expect(req.request.method).toBe('POST');
+        req.flush({error: 'Server error'}, {status: 500, statusText: 'Internal Server Error'});
+
+        expect(errorHandler.presentErrorToast).toHaveBeenCalled();
+        expect(auth.register).toHaveBeenCalledWith(mockUser);
+    });
+
 });
 
 @Component({template: ''})
