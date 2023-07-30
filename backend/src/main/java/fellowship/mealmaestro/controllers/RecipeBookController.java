@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import fellowship.mealmaestro.models.RecipeModel;
 import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.services.RecipeBookService;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -24,8 +25,15 @@ public class RecipeBookController {
     }
 
     @PostMapping("/removeRecipe")
-    public void removeRecipe(@RequestBody UserModel user, @RequestBody RecipeModel recipe) {
-        recipeBookService.removeRecipe(user, recipe);
+    public ResponseEntity<Void> removeRecipe(@Valid @RequestBody RecipeModel request, @RequestHeader("Authorization") String token) {
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        String authToken = token.substring(7);
+        recipeBookService.removeRecipe(request, authToken);
+
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/getAllRecipes")
