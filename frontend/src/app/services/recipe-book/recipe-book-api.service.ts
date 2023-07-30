@@ -21,10 +21,7 @@ export class RecipeBookApiService {
   getAllRecipes(): Observable<RecipeItemI[]> { 
     return this.http.post<RecipeItemI[]>(
       this.url+'/getAllRecipes',
-      {
-        "username": this.user.username,
-        "email": this.user.email
-      }
+      {}
     );
   }
 

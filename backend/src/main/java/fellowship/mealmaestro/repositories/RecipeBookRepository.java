@@ -33,7 +33,7 @@ public class RecipeBookRepository {
 
     public static TransactionCallback<Void> addRecipeTransaction(UserModel user, RecipeModel recipe) {
         return transaction -> {
-            transaction.run("MATCH (user:User {email: $email}), (recipe:Recipes {title: $title})" +
+            transaction.run("MATCH (user:User {email: $email}), (recipe:Recipe {title: $title})" +
             "MERGE (user)-[:HAS_RECIPE_BOOK]->(recipeBook:Recipe Book) " +
             "MERGE (recipeBook)-[:CONTAINS]->(recipe)",
             Values.parameters("email", user.getEmail(), "title", recipe.getTitle()));
@@ -49,14 +49,14 @@ public class RecipeBookRepository {
         }
     }
 
-    public static TransactionCallback<List<RecipeModel>> getAllRecipesTransaction(String user) { System.out.println("hi");
+    public static TransactionCallback<List<RecipeModel>> getAllRecipesTransaction(String user) { System.out.println(user);
         return transaction -> {
-            var result = transaction.run("MATCH (user:User {email: $email})-[:HAS_RECIPE_BOOK]->(book:Recipe Book)-[:CONTAINS]->(recipe:Recipe) " +
+            var result = transaction.run("MATCH (user:User {email: $email})-[:HAS_RECIPE_BOOK]->(book:`Recipe Book`)-[:CONTAINS]->(recipe:Recipe) " +
             "RETURN recipe.title AS title, recipe.image AS image",
             Values.parameters("email", user));
             
             List<RecipeModel> recipes = new ArrayList<>();
-            while (result.hasNext()){ System.console().writer().write("result obtained");
+            while (result.hasNext()){ System.out.println("result obtained");
                 var record = result.next();
                 recipes.add(new RecipeModel(record.get("title").asString(), record.get("image").asString()));
             }
