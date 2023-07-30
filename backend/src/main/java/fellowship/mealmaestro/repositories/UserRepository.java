@@ -37,7 +37,7 @@ public class UserRepository {
                     "(:`Shopping List`)<-[:HAS_LIST]-(n0)-[:HAS_RECIPE_BOOK]->(:`Recipe Book`), " +
                     "(:Interval)<-[:HAS_INTERVAL]-(n1)-[:HAS_GOAL]->(:Goal), " +
                     "(:`Calorie Goal`)<-[:HAS_CALORIE_GOAL]-(n1)-[:HAS_EATING_STYLE]->(:`Eating Style`), " +
-                    "(:Macro)<-[:HAS_MACRO]-(n1)-[:HAS_BUDGET]->(:Budget), " +
+                    "(:Macro {protein: 0,carbs: 0, fats: 0})<-[:HAS_MACRO]-(n1)-[:HAS_BUDGET]->(:Budget), " +
                     "(:BMI)<-[:HAS_BMI]-(n1)-[:HAS_COOKING_TIME]->(:`Cooking Time`)",
                     Values.parameters("username", username, "password", password, "email", email));
             return null;
