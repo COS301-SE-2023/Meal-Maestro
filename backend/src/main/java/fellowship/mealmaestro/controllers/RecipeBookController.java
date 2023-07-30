@@ -1,5 +1,6 @@
 package fellowship.mealmaestro.controllers;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import fellowship.mealmaestro.models.RecipeModel;
@@ -28,7 +29,12 @@ public class RecipeBookController {
     }
 
     @PostMapping("/getAllRecipes")
-    public List<RecipeModel> getAllRecipes(@RequestBody String user) {
-        return recipeBookService.getAllRecipes(user);
+    public ResponseEntity<List<RecipeModel>> getAllRecipes(@RequestHeader String token) {
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        String authToken = token.substring(7);
+        return ResponseEntity.ok(recipeBookService.getAllRecipes(authToken));
     }
 }
