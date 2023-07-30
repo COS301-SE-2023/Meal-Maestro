@@ -13,48 +13,54 @@ public class SettingsModel{
     private int calorieAmount;
     private String budgetRange;
     private Map<String, Integer> macroRatio;
+
     private List<String> allergies;
-    private int cookingTime;
+    private String cookingTime;
     private int userHeight; // consider moving to account
     private int userWeight; // consider moving to account
     private int userBMI;
 
-    private boolean BMISet;
-    private boolean cookingTimeSet;
-    private boolean allergiesSet;
-    private boolean macroSet;
-    private boolean budgetSet;
-    private boolean calorieSet;
-    private boolean foodPreferenceSet;
-    private boolean shoppingIntervalSet;
+    private boolean BMISet = false;
+    private boolean cookingTimeSet = false;
+    private boolean allergiesSet = false;
+    private boolean macroSet = false;
+    private boolean budgetSet = false;
+    private boolean calorieSet = false;
+    private boolean foodPreferenceSet = false;
+    private boolean shoppingIntervalSet = false;
+
+    public SettingsModel() {
+        // Empty constructor with all booleans set to false by default
+    }
 
     public SettingsModel(String goal, String shoppingInterval, List<String> foodPreferences, int calorieAmount,
-    String budgetRange, Map<String, Integer> macroRatio, List<String> allergies, int cookingTime,
-    int userHeight, int userWeight, int userBMI, boolean BMISet, boolean cookingTimeSet,
-    boolean allergiesSet, boolean macroSet, boolean budgetSet, boolean calorieSet,
-    boolean foodPreferenceSet, boolean shoppingIntervalSet) {
-this.goal = goal;
-this.shoppingInterval = shoppingInterval;
-this.foodPreferences = foodPreferences;
-this.calorieAmount = calorieAmount;
-this.budgetRange = budgetRange;
-this.macroRatio = macroRatio;
-this.allergies = allergies;
-this.cookingTime = cookingTime;
-this.userHeight = userHeight;
-this.userWeight = userWeight;
-this.userBMI = userBMI;
-this.BMISet = BMISet;
-this.cookingTimeSet = cookingTimeSet;
-this.allergiesSet = allergiesSet;
-this.macroSet = macroSet;
-this.budgetSet = budgetSet;
-this.calorieSet = calorieSet;
-this.foodPreferenceSet = foodPreferenceSet;
-this.shoppingIntervalSet = shoppingIntervalSet;
-}
-
- 
+                         String budgetRange, Map<String, Integer> macroRatio, List<String> allergies, String cookingTime,
+                         int userHeight, int userWeight, int userBMI, boolean BMISet, boolean cookingTimeSet,
+                         boolean allergiesSet, boolean macroSet, boolean budgetSet, boolean calorieSet,
+                         boolean foodPreferenceSet, boolean shoppingIntervalSet) {
+        this.goal = goal;
+        this.shoppingInterval = shoppingInterval;
+        this.foodPreferences = foodPreferences;
+        this.calorieAmount = calorieAmount;
+        this.budgetRange = budgetRange;
+        this.macroRatio =  macroRatio;
+            macroRatio.put("protein", 0);
+    macroRatio.put("carbs", 0);
+    macroRatio.put("fat", 0);
+        this.allergies = allergies;
+        this.cookingTime = cookingTime;
+        this.userHeight = userHeight;
+        this.userWeight = userWeight;
+        this.userBMI = userBMI;
+        this.BMISet = BMISet;
+        this.cookingTimeSet = cookingTimeSet;
+        this.allergiesSet = allergiesSet;
+        this.macroSet = macroSet;
+        this.budgetSet = budgetSet;
+        this.calorieSet = calorieSet;
+        this.foodPreferenceSet = foodPreferenceSet;
+        this.shoppingIntervalSet = shoppingIntervalSet;
+    }
 
     public String getGoal() {
         return goal;
@@ -112,11 +118,11 @@ this.shoppingIntervalSet = shoppingIntervalSet;
         this.allergies = allergies;
     }
 
-    public int getCookingTime() {
+    public String getCookingTime() {
         return cookingTime;
     }
 
-    public void setCookingTime(int cookingTime) {
+    public void setCookingTime(String cookingTime) {
         this.cookingTime = cookingTime;
     }
 
@@ -137,6 +143,7 @@ this.shoppingIntervalSet = shoppingIntervalSet;
     }
 
     public int getUserBMI() {
+        userBMI =userWeight / userHeight;
         return userBMI;
     }
 
