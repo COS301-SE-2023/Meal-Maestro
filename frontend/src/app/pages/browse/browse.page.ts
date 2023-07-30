@@ -27,6 +27,7 @@ export class BrowsePage implements OnInit{
   searchQuery: string='';
   searchResults: any;
   
+  
   constructor(public r : Router,
     private mealGenerationservice:MealGenerationService,
     private errorHandlerService:ErrorHandlerService,) 
