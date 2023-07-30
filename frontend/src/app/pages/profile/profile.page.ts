@@ -350,12 +350,10 @@ else if (this.userpreferences.calorie_set === false) {
         }
       
         if (selectedAllergens.length === 1) {
-          console.log(this.displayAllergies);
           return selectedAllergens[0];
         } else if (selectedAllergens.length > 1) {
           return 'Multiple';
         } else {
-          console.log(this.displayAllergies);
           return '';
          
         }

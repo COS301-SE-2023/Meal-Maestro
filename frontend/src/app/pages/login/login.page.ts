@@ -30,7 +30,6 @@ export class LoginPage implements OnInit {
   }
 
   async login(form: any) {
-    console.log(form);
     const loginUser: UserI = {
       username: '',
       email: form.email,
