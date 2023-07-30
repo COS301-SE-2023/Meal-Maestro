@@ -15,7 +15,7 @@
     <ion-row *ngIf="items.length > 0; else emptyState">
       <ion-col size="6" *ngFor="let item of items">        
         <ion-card class="ion-no-margin" (click)="recipeItem.openModal(item)">
-          <ion-icon name="close" class="close-icon" (click)="confirmRemove(item)"></ion-icon>
+          <ion-icon name="close" class="close-icon" (click)="confirmRemove($event, item)"></ion-icon>
           <div class="image-container" [style.background-image]="'url(' + item.image + ')'">
             <div class="card-title">{{ item.title }}</div>
           </div>

@@ -52,7 +52,9 @@ export class RecipeBookPage implements OnInit {
     })
   }
 
-  async confirmRemove(recipe: RecipeItemI) {
+  async confirmRemove(event: Event, recipe: RecipeItemI) {
+    event.stopPropagation();
+
     const alert = await this.alertController.create({
       header: 'Confirm Removal',
       message: `Are you sure you want to remove ${recipe.title} from your recipe book?`,
