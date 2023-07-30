@@ -6,10 +6,12 @@ import org.neo4j.driver.Driver;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.Values;
 import org.neo4j.driver.Transaction;
+import org.neo4j.driver.TransactionCallback;
 import org.neo4j.driver.TransactionWork;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import fellowship.mealmaestro.models.FoodModel;
 import fellowship.mealmaestro.models.MealModel;
 
 
@@ -26,14 +28,16 @@ public class BrowseRepository {
 
     public List<MealModel> getRandomMeals(int numberOfMeals) {
         try (Session session = driver.session()) {
-            return session.readTransaction(tx -> getRandomMealsTransaction(tx, numberOfMeals));
+            //return session.readTransaction(tx -> getRandomMealsTransaction(tx, numberOfMeals));
+            return session.executeRead(getRandomMealsTransaction(numberOfMeals));
         }
     }
 
-    public List<MealModel> getRandomMealsTransaction(Transaction tx, int numberOfMeals) {
-        List<MealModel> randomMeals = new ArrayList<>();
+    public TransactionCallback<List<MealModel>> getRandomMealsTransaction(int numberOfMeals) {
+        return transaction -> {
 
-        org.neo4j.driver.Result result = tx.run("MATCH (m:Meal)\n" +
+        List<MealModel> randomMeals = new ArrayList<>();
+        org.neo4j.driver.Result result = transaction.run("MATCH (m:Meal)\n" +
                 "WITH m, rand() as random\n" +
                 "ORDER BY random\n" +
                 "LIMIT $limit\n" +
@@ -53,6 +57,7 @@ public class BrowseRepository {
         }
 
         return randomMeals;
+        };
     }
 
 
