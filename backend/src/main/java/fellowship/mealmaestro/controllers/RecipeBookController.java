@@ -29,7 +29,7 @@ public class RecipeBookController {
     }
 
     @PostMapping("/getAllRecipes")
-    public ResponseEntity<List<RecipeModel>> getAllRecipes(@RequestHeader String token) {
+    public ResponseEntity<List<RecipeModel>> getAllRecipes(@RequestHeader("Authorization") String token) {
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
