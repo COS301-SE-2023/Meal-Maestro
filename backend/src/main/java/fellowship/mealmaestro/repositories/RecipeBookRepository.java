@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import fellowship.mealmaestro.models.RecipeModel;
-import fellowship.mealmaestro.models.UserModel;
 
 @Repository
 public class RecipeBookRepository {
@@ -25,19 +24,19 @@ public class RecipeBookRepository {
     }
 
     //#region Create
-    public void addRecipe(UserModel user, RecipeModel recipe){
+    public RecipeModel addRecipe(RecipeModel recipe, String email){
         try (Session session = driver.session()){
-            session.executeWrite(addRecipeTransaction(user, recipe));
+           return session.executeWrite(addRecipeTransaction(recipe, email));
         }
     }
 
-    public static TransactionCallback<Void> addRecipeTransaction(UserModel user, RecipeModel recipe) {
+    public static TransactionCallback<RecipeModel> addRecipeTransaction(RecipeModel recipe, String email) {
         return transaction -> {
             transaction.run("MATCH (user:User {email: $email}), (recipe:Recipe {title: $title})" +
-            "MERGE (user)-[:HAS_RECIPE_BOOK]->(recipeBook:Recipe Book) " +
+            "MERGE (user)-[:HAS_RECIPE_BOOK]->(recipeBook:`Recipe Book`) " +
             "MERGE (recipeBook)-[:CONTAINS]->(recipe)",
-            Values.parameters("email", user.getEmail(), "title", recipe.getTitle()));
-            return null;
+            Values.parameters("email", email, "title", recipe.getTitle()));
+            return (new RecipeModel(recipe.getTitle(), recipe.getImage()));
         };
     }
     //#endregion
