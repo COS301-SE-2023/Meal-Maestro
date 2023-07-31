@@ -4,5 +4,5 @@ export interface DaysMealsI {
     breakfast:MealI;
     lunch:MealI;
     dinner:MealI;
-    mealDate:string | "Monday";
+    mealDate:string | undefined;
 }
