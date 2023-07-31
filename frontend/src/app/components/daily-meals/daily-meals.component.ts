@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Input } from '@angular/core';
 import { IonicModule, IonicSlides } from '@ionic/angular';
-import { MealI } from '../../models/meal.model';
 import { Router } from '@angular/router';
 import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
 import { DaysMealsI } from '../../models/daysMeals.model';
@@ -80,11 +79,6 @@ export class DailyMealsComponent  implements OnInit {
     else if (meal == "lunch")
       recipe = this.dayData.lunch;
     else recipe = this.dayData.dinner;   
-
-    const item = {
-      title: recipe?.name;
-      image: recipe.im
-    }
 
     this.addService.setRecipeItem(recipe);
   }

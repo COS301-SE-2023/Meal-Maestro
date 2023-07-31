@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActionSheetController, IonicModule } from '@ionic/angular';
 import { RecipeItemComponent } from '../../components/recipe-item/recipe-item.component';
-import { RecipeItemI } from '../../models/recipeItem.model';
 import { AuthenticationService, ErrorHandlerService, RecipeBookApiService } from '../../services/services';
 import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
 import { MealI } from '../../models/meal.model';
@@ -86,7 +85,7 @@ export class RecipeBookPage implements OnInit {
     event.stopPropagation();
 
     const actionSheet = await this.actionSheetController.create({
-      header: `Are you sure you want to remove ${recipe.title} from your recipe book?`,
+      header: `Are you sure you want to remove ${recipe.name} from your recipe book?`,
       buttons: [
         {
           text: 'Delete',
@@ -110,7 +109,7 @@ export class RecipeBookPage implements OnInit {
       next: (response) => {
         if (response.status === 200) {
           this.errorHandlerService.presentSuccessToast(
-            `Successfully removed ${recipe.title}`
+            `Successfully removed ${recipe.name}`
           )
           this.getRecipes();
         }

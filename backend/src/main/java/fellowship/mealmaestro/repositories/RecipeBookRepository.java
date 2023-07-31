@@ -32,11 +32,13 @@ public class RecipeBookRepository {
 
     public static TransactionCallback<MealModel> addRecipeTransaction(MealModel recipe, String email) {
         return transaction -> {
-            transaction.run("MATCH (user:User {email: $email}), (recipe:Meal {title: $title})" +
+            transaction.run("MATCH (user:User {email: $email}), (recipe:Meal {name: $name, description: $desc, image: $image, ingredients: $ing, " +
+            "instructions: $ins, cookingTime: $ck})" +
             "MERGE (user)-[:HAS_RECIPE_BOOK]->(recipeBook:`Recipe Book`) " +
             "MERGE (recipeBook)-[:CONTAINS]->(recipe)",
-            Values.parameters("email", email, "title", recipe.getName()));
-            return (new MealModel(recipe.getName(), recipe.getimage()));
+            Values.parameters("email", email, "name", recipe.getName(), "desc", recipe.getdescription(), "image", recipe.getimage(),
+            "ing", recipe.getingredients(), "ins", recipe.getinstructions(), "ck", recipe.getcookingTime()));
+            return (new MealModel(recipe.getName(), recipe.getinstructions(), recipe.getdescription(), recipe.getimage(), recipe.getingredients(), recipe.getcookingTime()));
         };
     }
     //#endregion
@@ -51,13 +53,14 @@ public class RecipeBookRepository {
     public static TransactionCallback<List<MealModel>> getAllRecipesTransaction(String user) {
         return transaction -> {
             var result = transaction.run("MATCH (user:User {email: $email})-[:HAS_RECIPE_BOOK]->(book:`Recipe Book`)-[:CONTAINS]->(recipe:Meal) " +
-            "RETURN recipe.title AS title, recipe.image AS image",
+            "RETURN recipe.name AS name, recipe.image AS image, recipe.description AS description, recipe.ingredients as ingredients, recipe.instructions as instructions, recipe.cookingTime as cookingTime",
             Values.parameters("email", user));
             
             List<MealModel> recipes = new ArrayList<>();
             while (result.hasNext()){
                 var record = result.next();
-                recipes.add(new MealModel(record.get("title").asString(), record.get("image").asString()));
+                recipes.add(new MealModel(record.get("name").asString(), record.get("instructions").asString(), record.get("description").asString(), record.get("image").asString(),
+                record.get("ingredients").asString(), record.get("cookingTime").asString()));
             }
             return recipes;
         };
@@ -73,9 +76,9 @@ public class RecipeBookRepository {
 
     public static TransactionCallback<Void> removeRecipeTransaction(MealModel recipe, String email) {
         return transaction -> {
-            transaction.run("MATCH (user:User {email: $email})-[:HAS_RECIPE_BOOK]->(book:`Recipe Book`)-[r:CONTAINS]->(recipe:Meal {title: $title}) " +
+            transaction.run("MATCH (user:User {email: $email})-[:HAS_RECIPE_BOOK]->(book:`Recipe Book`)-[r:CONTAINS]->(recipe:Meal {name: $name}) " +
             "DELETE r",
-                Values.parameters("email", email, "title", recipe.getTitle()));
+                Values.parameters("email", email, "name", recipe.getName()));
             return null;
         };
     }
