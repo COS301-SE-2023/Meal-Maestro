@@ -84,4 +84,12 @@ public class MealModel {
     public void setcookingTime(String cookingTime){
         this.cookingTime = cookingTime;
     }
+
+    public void copyFromOtherModel(MealModel mealModel){
+        this.name = mealModel.getName();
+        this.cookingTime = mealModel.getcookingTime();
+        this.ingredients = mealModel.getingredients();
+        this.instructions = mealModel.getinstructions();
+        this.description = mealModel.getdescription();
+    }
 }
