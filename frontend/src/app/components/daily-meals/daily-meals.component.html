@@ -12,7 +12,7 @@
     <ion-item-sliding ion-padding="0px" style="display: contents;"> 
       
       <ion-card  color="primary" ion-padding>
-       <ion-item class="no-style" (click)="setOpen(true, item)" color="none" style="  --inner-padding-end: 0;--inner-padding-bottom: 0;" >
+       <ion-item class="no-style" (click)="setOpen(true, 'breakfast')" color="none" style="  --inner-padding-end: 0;--inner-padding-bottom: 0;" >
           <div ion-no-padding style="padding-inline-end:0px !important;">
             <ion-card-header>
               <ion-card-subtitle>Breakfast</ion-card-subtitle>
@@ -33,13 +33,13 @@
             </ion-avatar>
           </div>
       
-        <ion-modal [isOpen]="isModalOpen">
+        <ion-modal [isOpen]="isBreakfastModalOpen">
           <ng-template>
             <ion-header>
               <ion-toolbar>
                 <ion-title>{{ dayData?.breakfast?.name }}</ion-title>
                 <ion-buttons slot="end">
-                  <ion-button (click)="setOpen(false, null)">Close</ion-button>
+                  <ion-button (click)="setOpen(false, 'breakfast')">Close</ion-button>
                 </ion-buttons>
               </ion-toolbar>
             </ion-header>
@@ -74,7 +74,7 @@
     <ion-item-sliding ion-padding="0px" style="display: contents;"> 
       
       <ion-card  color="primary" ion-padding>
-       <ion-item class="no-style" (click)="setOpen(true, item)" color="none" style="  --inner-padding-end: 0;--inner-padding-bottom: 0;" >
+       <ion-item class="no-style" (click)="setOpen(true, 'lunch')" color="none" style="  --inner-padding-end: 0;--inner-padding-bottom: 0;" >
           <div ion-no-padding style="padding-inline-end:0px !important;">
             <ion-card-header>
               <ion-card-subtitle>Lunch</ion-card-subtitle>
@@ -97,13 +97,13 @@
       
         
 
-        <ion-modal [isOpen]="isModalOpen">
+        <ion-modal [isOpen]="isLunchModalOpen">
           <ng-template>
             <ion-header>
               <ion-toolbar>
                 <ion-title>{{ dayData?.lunch?.name }}</ion-title>
                 <ion-buttons slot="end">
-                  <ion-button (click)="setOpen(false, null)">Close</ion-button>
+                  <ion-button (click)="setOpen(false, 'lunch')">Close</ion-button>
                 </ion-buttons>
               </ion-toolbar>
             </ion-header>
@@ -137,7 +137,7 @@
     <ion-item-sliding ion-padding="0px" style="display: contents;"> 
       
       <ion-card  color="primary" ion-padding>
-       <ion-item class="no-style" (click)="setOpen(true, item)" color="none" style="  --inner-padding-end: 0;--inner-padding-bottom: 0;" >
+       <ion-item class="no-style" (click)="setOpen(true, 'dinner')" color="none" style="  --inner-padding-end: 0;--inner-padding-bottom: 0;" >
           <div ion-no-padding style="padding-inline-end:0px !important;">
             <ion-card-header>
               <ion-card-subtitle>Dinner</ion-card-subtitle>
@@ -160,13 +160,13 @@
       
         
 
-        <ion-modal [isOpen]="isModalOpen">
+        <ion-modal [isOpen]="isDinnerModalOpen">
           <ng-template>
             <ion-header>
               <ion-toolbar>
                 <ion-title>{{ dayData?.dinner?.name }}</ion-title>
                 <ion-buttons slot="end">
-                  <ion-button (click)="setOpen(false, null)">Close</ion-button>
+                  <ion-button (click)="setOpen(false,'dinner')">Close</ion-button>
                 </ion-buttons>
               </ion-toolbar>
             </ion-header>

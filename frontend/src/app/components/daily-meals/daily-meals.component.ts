@@ -25,14 +25,28 @@ export class DailyMealsComponent  implements OnInit {
   item: DaysMealsI | undefined;
   daysMeals: DaysMealsI[] = [] ;
   meals:MealI[] = [];
-
+  isBreakfastModalOpen = false;
+  isLunchModalOpen = false;
+  isDinnerModalOpen = false;
   isModalOpen = false;
-  currentObject :any
-  setOpen(isOpen: boolean, o :any) {
-    if(o==null)
-      o = this.currentObject
-    this.isModalOpen = isOpen;
-    this.setCurrent(o)
+  currentObject :DaysMealsI | undefined
+  setOpen(isOpen: boolean, mealType: string) {
+    if (mealType === 'breakfast') {
+      this.isBreakfastModalOpen = isOpen;
+      if (isOpen) {
+        this.setCurrent(this.dayData?.breakfast);
+      }
+    } else if (mealType === 'lunch') {
+      this.isLunchModalOpen = isOpen;
+      if (isOpen) {
+        this.setCurrent(this.dayData?.lunch);
+      }
+    } else if (mealType === 'dinner') {
+      this.isDinnerModalOpen = isOpen;
+      if (isOpen) {
+        this.setCurrent(this.dayData?.dinner);
+      }
+    }
   }
   constructor(public r : Router
     , private mealGenerationservice:MealGenerationService
@@ -61,7 +75,7 @@ export class DailyMealsComponent  implements OnInit {
 
   }
 
-  handleSync(meal:string) {
+  async handleSync(meal:string) {
     // Function to handle the "Sync" option action
     console.log('Sync option clicked');
     // Add your custom logic here
