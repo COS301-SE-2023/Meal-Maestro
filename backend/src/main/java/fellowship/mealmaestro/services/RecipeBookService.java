@@ -22,8 +22,9 @@ public class RecipeBookService {
         this.recipeBookRepository = recipeBookRepository;
     }
 
-    public void addRecipe(UserModel user, RecipeModel recipe) {
-        recipeBookRepository.addRecipe(user, recipe);
+    public RecipeModel addRecipe(RecipeModel recipe, String token) {
+        String email = jwtService.extractUserEmail(token);
+        recipeBookRepository.addRecipe(recipe, email);
     }
 
     public void removeRecipe(RecipeModel request, String token) {
