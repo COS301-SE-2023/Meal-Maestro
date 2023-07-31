@@ -121,28 +121,28 @@ public class MealManagementController {
         if (databaseModel.isPresent()) {
             DaysMealsModel newModel = databaseModel.get();
             System.out.println("present");
-            System.out.println(request.getMeal());
+         
             String meal = request.getMeal();
             if (meal.equals("breakfast")) {
-                System.out.println("b");
+    
                 mealModel = newModel.getBreakfast();
                 mealModel = objectMapper.readValue(mealManagementService.generateMeal(request.getMeal()),
                         MealModel.class);
-                mealModel.setName("Cookies and creme");
+         
                 newModel.setBreakfast(mealModel);
             } else if (meal.equals("lunch")) {
-                System.out.println("l");
+           
                 mealModel = newModel.getLunch();
                 mealModel = objectMapper.readValue(mealManagementService.generateMeal(request.getMeal()),
                         MealModel.class);
-                mealModel.setName("Cookies and creme");
+      
                 newModel.setLunch(mealModel);
             } else if (meal.equals("dinner")) {
-                System.out.println("d");
+         
                 mealModel = newModel.getDinner();
                 mealModel = objectMapper.readValue(mealManagementService.generateMeal(request.getMeal()),
                         MealModel.class);
-                mealModel.setName("Cookies and creme");
+          
                 newModel.setDinner(mealModel);
             }
 
@@ -151,11 +151,9 @@ public class MealManagementController {
             this.mealDatabseService.saveRegeneratedMeal(newModel);
 
             ObjectNode daysMealsModel = objectMapper.valueToTree(newModel);
-            // regenerate and update
-
+       
             return daysMealsModel.toString();
 
-            // return databaseModel.get().toString();
         }
         ObjectNode daysMealsModel = objectMapper.valueToTree(request);
         return daysMealsModel.toString();
