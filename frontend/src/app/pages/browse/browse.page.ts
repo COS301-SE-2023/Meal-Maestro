@@ -8,6 +8,7 @@ import { MealGenerationService } from '../../services/meal-generation/meal-gener
 import { ErrorHandlerService } from '../../services/services';
 import { DaysMealsI } from '../../models/daysMeals.model';
 import { MealBrowseI } from '../../models/mealBrowse.model';
+import { MealI } from '../../models/interfaces';
 
 @Component({
   selector: 'app-browse',
@@ -19,8 +20,8 @@ import { MealBrowseI } from '../../models/mealBrowse.model';
 export class BrowsePage implements OnInit{
   // meals: DaysMealsI[];
 
-  popularMeals: MealBrowseI[] = [];
-  searchedMeals : MealBrowseI[] = [];
+  popularMeals: MealI[] = [];
+  searchedMeals : MealI[] = [];
   noResultsFound: boolean = false;
   Searched: boolean = false;
   Loading : boolean = false;
