@@ -6,7 +6,7 @@ export interface UserPreferencesI {
     budgetRange: string;
     macroRatio: {protein: number, carbs: number, fat: number};
     allergies: string[];
-    cookingTime: number;
+    cookingTime: string;
     userHeight: number; //consider moving to account
     userWeight: number; //consider moving to account
     userBMI: number;
