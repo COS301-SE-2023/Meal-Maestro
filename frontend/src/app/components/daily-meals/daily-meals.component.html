@@ -1,7 +1,11 @@
 <ion-item>
   <div class="card-container">
     <div class="label-container">
-      <ion-label>{{ dayData?.mealDate }}</ion-label>
+      <ion-item *ngIf="dayData">
+        <!-- Rest of the code -->
+        <ion-label>{{ dayData?.mealDate }}</ion-label>
+      </ion-item>
+     
       <span class="line"></span>
     </div>
 
