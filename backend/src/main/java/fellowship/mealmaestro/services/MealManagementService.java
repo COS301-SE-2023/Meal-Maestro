@@ -151,7 +151,7 @@ public class MealManagementService {
         int prevBestOfN = openaiApiService.getBestofN();
         Boolean success = false;
         openaiApiService.setBestofN(prevBestOfN + 1);
-        while(!success&& i < 2)
+        while(!success&& i < 4)
         {
         mealJson =
         objectMapper.readTree(openaiApiService.fetchMealResponse(mealType));
