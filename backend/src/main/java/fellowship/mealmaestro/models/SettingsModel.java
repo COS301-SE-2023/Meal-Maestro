@@ -44,9 +44,7 @@ public class SettingsModel{
         this.calorieAmount = calorieAmount;
         this.budgetRange = budgetRange;
         this.macroRatio =  macroRatio;
-            macroRatio.put("protein", 0);
-    macroRatio.put("carbs", 0);
-    macroRatio.put("fat", 0);
+        
         this.allergies = allergies;
         this.cookingTime = cookingTime;
         this.userHeight = userHeight;
@@ -144,11 +142,11 @@ public class SettingsModel{
     }
 
     public int getUserBMI() {
-        if (userHeight == 0 || userWeight == 0) {
-            return 0;
-        }
-        userBMI =userWeight / userHeight;
         return userBMI;
+    }
+
+    public void setUserBMI(int userHeight, int userWeight) {
+        this.userBMI = userHeight/userWeight;
     }
 
     public void setUserBMI(int userBMI) {
