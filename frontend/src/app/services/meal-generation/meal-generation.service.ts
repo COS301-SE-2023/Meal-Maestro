@@ -55,7 +55,7 @@ export class MealGenerationService {
         "breakfast": daysMeal.breakfast,
         "lunch": daysMeal.lunch,
         "dinner": daysMeal.dinner,
-        "mealDate": daysMeal.mealDate.toUpperCase(),
+        "mealDate": daysMeal?.mealDate?.toUpperCase(),
         "meal": meal
       });
   }
