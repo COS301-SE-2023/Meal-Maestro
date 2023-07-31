@@ -101,6 +101,7 @@ export class ProfilePage {
     
     
       next: (response) => {
+        console.log("response")
          console.log(response.body)
         if (response.status === 200) {
           console.log("response")
@@ -110,7 +111,12 @@ export class ProfilePage {
             this.userpreferences.goal = response.body.goal;
             this.userpreferences.shoppingInterval = response.body.shoppingInterval;
             this.userpreferences.foodPreferences = response.body.foodPreferences;
+            if (response.body.calorieAmount == null) {
+              this.userpreferences.calorieAmount = 0;
+            }
+            else
             this.userpreferences.calorieAmount = response.body.calorieAmount;
+
             this.userpreferences.budgetRange = response.body.budgetRange;
             this.userpreferences.allergies = response.body.allergies;
             this.userpreferences.cookingTime = response.body.cookingTime;
@@ -140,7 +146,7 @@ export class ProfilePage {
         } else {
           console.log('Error loading user settings', err);
         }
-        console.log(err.body)
+       
       },
     });
 
@@ -407,6 +413,13 @@ export class ProfilePage {
   }
 
   getSelectedAllergens(): string {
+
+    if (this.userpreferences.allergies == null) {
+      this.userpreferences.allergies = [];
+      return '';
+    }
+    else
+    {
     const selectedAllergens = [];
 
     if (this.allergens.seafood) {
@@ -433,6 +446,7 @@ export class ProfilePage {
     } else {
       return '';
     }
+  }
   }
 
   setOpenCooking(isOpen: boolean) {
