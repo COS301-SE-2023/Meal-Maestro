@@ -19,9 +19,39 @@ export class HomePage implements OnInit{
 
   async ngOnInit() {
    
-     for (let index = 0; index < 4; index++) {
-      this.mealGenerationservice.getDailyMeals(this.getDayOfWeek(index)).subscribe({
-        next: (data: DaysMealsI[] | DaysMealsI) => {
+    //  for (let index = 0; index < 4; index++) {
+    //   this.mealGenerationservice.getDailyMeals(this.getDayOfWeek(index)).subscribe({
+    //     next: (data: DaysMealsI[] | DaysMealsI) => {
+    //       if (Array.isArray(data)) {
+    //         const mealsWithDate = data.map((item) => ({
+    //           ...item,
+    //           mealDate: this.getDayOfWeek(index),
+    //         }));
+    //         this.daysMeals.push(...mealsWithDate);
+    //       } else {
+    //         data.mealDate = this.getDayOfWeek(index);
+    //         this.daysMeals.push(data);
+    //       }
+          
+    //     },
+    //     error: (err) => {
+    //       this.errorHandlerService.presentErrorToast(
+    //         'Error loading meal items',
+    //         err
+    //       );
+    //     },
+    //   });
+
+    const observables = [];
+   
+    for (let index = 0; index < 4; index++) {
+      const observable = this.mealGenerationservice.getDailyMeals(this.getDayOfWeek(index));
+      observables.push(observable);
+    }
+  
+    forkJoin(observables).subscribe({
+      next: (dataArray: (DaysMealsI[] | DaysMealsI)[]) => {
+        dataArray.forEach((data, index) => {
           if (Array.isArray(data)) {
             const mealsWithDate = data.map((item) => ({
               ...item,
@@ -32,18 +62,15 @@ export class HomePage implements OnInit{
             data.mealDate = this.getDayOfWeek(index);
             this.daysMeals.push(data);
           }
-          
-        },
-        error: (err) => {
-          this.errorHandlerService.presentErrorToast(
-            'Error loading meal items',
-            err
-          );
-        },
-      });
+        });
+      },
+      error: (err) => {
+        this.errorHandlerService.presentErrorToast('Error loading meal items', err);
+      },
+    });
     }
 
-  }
+  
   private getDayOfWeek(dayOffset: number): string {
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const today = new Date();
@@ -88,4 +115,5 @@ export class HomePage implements OnInit{
 import { ErrorHandlerService } from '../../services/services';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
+import { forkJoin } from 'rxjs';
 
