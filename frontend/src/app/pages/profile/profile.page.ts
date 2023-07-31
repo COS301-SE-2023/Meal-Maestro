@@ -4,8 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { UserPreferencesI } from '../../models/userpreference.model';
 
 import { CommonModule } from '@angular/common';
-import { RangeCustomEvent, RangeValue } from '@ionic/core';
 import { Router } from '@angular/router';
+import { SettingsApiService } from '../../services/settings-api/settings-api.service';
+
 import { UserI } from '../../models/user.model';
 import { AuthenticationService } from '../../services/services';
 
@@ -17,82 +18,72 @@ import { AuthenticationService } from '../../services/services';
   standalone: true,
   imports: [IonicModule, FormsModule, CommonModule],
 })
+
 export class ProfilePage implements OnInit {
-  constructor( private router: Router , private pickerController: PickerController, private auth: AuthenticationService ) {
+  constructor(
+    private router: Router,
+    private pickerController: PickerController,
+    private settingsApiService: SettingsApiService,
+    private auth: AuthenticationService
+  ) {
     this.selectedPriceRange = '';
-    this.user = {
-      username: '',
-      email: '',
-      password: ''
-    };
   }
 
-  ngOnInit() {
-    this.auth.getUser().subscribe({
-      next: (response) => {
-        if (response.status == 200) {
-          if (response.body && response.body.name) {
-            this.user.username = response.body.name;
-            this.user.email = response.body.email;
-            this.user.password = response.body.password;
-          }
-        }
-      },
-      error: (error) => {
-        console.log(error);
-      }
-    })
-  }
-
-
-  user : UserI;
-
-  userpreferences : UserPreferencesI = {
-    goal: '',
-    shopping_interval: '',
-    food_preferences: [],
-    calorie_amount: 0,
-    budget_range: '',
-    macro_ratio: {protein: 0, carbs: 0, fats: 0},
-    allergies: [],
-    cooking_time: 0,
-    user_height: 0,
-    user_weight: 0,
-    user_BMI: 0,
-
-    BMI_set : false,
-    cookingtime_set : false,
-    allergies_set : false,
-    macro_set : false,
-    budget_set : false,
-    calorie_set : false,
-    foodpreferance_set : false,
-    shoppinginterfval_set : false,
+  // User data
+  user: UserI = {
+    username: '',
+    email: '',
+    password: '',
   };
-  //Variables for displaying
+
+  userpreferences: UserPreferencesI = {
+    goal: '',
+    shoppingInterval: '',
+  foodPreferences: [],
+    calorieAmount: 0,
+    budgetRange: '',
+    macroRatio: { protein: 0, carbs: 0, fat: 0 },
+    allergies: [],
+    cookingTime: '',
+    userHeight: 0,
+    userWeight: 0,
+    userBMI: 0,
+
+    bmiset: false,
+    cookingTimeSet: false,
+    allergiesSet: false,
+    macroSet: false,
+    budgetSet: false,
+    calorieSet: false,
+    foodPreferenceSet: false,
+    shoppingIntervalSet: false,
+  };
+
+  // Variables for displaying
   displaying_Macroratio: string | undefined;
   shoppingIntervalOtherValue: number | undefined | any;
-  shopping_interval: string | any;
-  displayAllergies: string = '';
-  displayPreferences: string = '';
+  shoppingInterval: string | any;
+  displayAllergies: string[] | string = '';
+  displayPreferences: string[] | string = '' ;
   selectedPreferences: string | any;
   selectedPriceRange: string;
- 
-  //check if possible to change
+
+  // Check if possible to change
   preferences = {
     vegetarian: false,
     vegan: false,
     glutenIntolerant: false,
-    lactoseIntolerant: false
+    lactoseIntolerant: false,
   };
+
   allergens = {
     nuts: false,
     seafood: false,
     soy: false,
-    eggs: false
+    eggs: false,
   };
 
-  //modal controllers
+  // Modal controllers
   isPreferencesModalOpen: boolean = false;
   isCalorieModalOpen: boolean = false;
   isBudgetModalOpen: boolean = false;
@@ -111,13 +102,110 @@ export class ProfilePage implements OnInit {
   allergiesToggle: boolean = false;
   cookingToggle: boolean = false;
   BMIToggle: boolean = false;
- 
+
+  ngOnInit() {
+    this.loadUserSettings();
+    this.auth.getUser().subscribe({
+      next: (response) => {
+        if (response.status == 200) {
+          if (response.body && response.body.name) {
+            this.user.username = response.body.name;
+            this.user.email = response.body.email;
+            this.user.password = response.body.password;
+          }
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
+  }
+
+   private async loadUserSettings() {
+    this.settingsApiService.getSettings().subscribe({
+    
+    
+      next: (response) => {
+       
+        if (response.status === 200) {
+         
+          if (response.body) {
+           
+            
+            this.userpreferences.goal = response.body.goal;
+            this.userpreferences.shoppingInterval = response.body.shoppingInterval;
+            this.userpreferences.foodPreferences = response.body.foodPreferences;
+           
+            if (response.body.calorieAmount == null) {
+              this.userpreferences.calorieAmount = 0;
+            }
+            else
+            this.userpreferences.calorieAmount = response.body.calorieAmount;
+
+            this.userpreferences.budgetRange = response.body.budgetRange;
+            this.userpreferences.allergies = response.body.allergies;
+            this.userpreferences.cookingTime = response.body.cookingTime;
+            this.userpreferences.userHeight = response.body.userHeight;
+            this.userpreferences.userWeight = response.body.userWeight;
+            this.userpreferences.userBMI = response.body.userBMI;
+            this.userpreferences.bmiset = response.body.bmiset;
+            this.userpreferences.cookingTimeSet = response.body.cookingTimeSet;
+            this.userpreferences.allergiesSet = response.body.allergiesSet;
+            this.userpreferences.macroSet = response.body.macroSet;
+            this.userpreferences.budgetSet = response.body.budgetSet;
+            this.userpreferences.calorieSet = response.body.calorieSet;
+            this.userpreferences.foodPreferenceSet = response.body.foodPreferenceSet;
+            this.userpreferences.shoppingIntervalSet = response.body.shoppingIntervalSet;
+            this.userpreferences.macroRatio.fat = response.body.macroRatio.fat;
+            this.userpreferences.macroRatio.carbs = response.body.macroRatio.carbs;
+            this.userpreferences.macroRatio.protein = response.body.macroRatio.protein;
+            
+           
+
+            this.displayPreferences = this.userpreferences.foodPreferences;
+            this.displayAllergies = this.userpreferences.allergies;
+            this.displaying_Macroratio = this.getDisplayMacroratio();
+            this.updateDisplayData();
+          }
+                  }
+      },
+      error: (err) => {
+        if (err.status === 403) {
+          console.log('Unauthorized access. Please login again.', err);
+          this.router.navigate(['../']);
+        } else {
+          console.log('Error loading user settings', err);
+        }
+       
+      },
+    });
+    
+   
+  }
+
+  setGoal() {
+    this.updateSettingsOnServer(); // Update the settings on the server when the goal is set
+  }
   
 
+  private updateSettingsOnServer() {
+    // console.log(this.userpreferences);
+    this.settingsApiService.updateSettings(this.userpreferences).subscribe(
+      (response) => {
+        if (response.status === 200) {
+          // Successfully updated settings on the server
+          console.log('Settings updated successfully');
+        }
+      },
+      (error) => {
+        // Handle error while updating settings
+        console.log('Error updating settings', error);
+      }
+    );
+  }
 
-
-  //function to navigate to account-profile page
-  navToProfile(){
+  // Function to navigate to account-profile page
+  navToProfile() {
     this.router.navigate(['acc-profile']);
   }
 
@@ -130,98 +218,118 @@ export class ProfilePage implements OnInit {
   setOpenPreferences(isOpen: boolean) {
     this.isPreferencesModalOpen = isOpen;
   }
+
   setOpenPreferencesSave(isOpen: boolean) {
-  if (this.userpreferences.foodpreferance_set === true) {
-    if (this.preferences.vegetarian || this.preferences.vegan || this.preferences.glutenIntolerant || this.preferences.lactoseIntolerant) {
-      if (!isOpen) {
-        this.displayPreferences = this.getSelectedPreferences();
+    if (this.userpreferences.foodPreferenceSet === true) {
+      if (
+        this.preferences.vegetarian ||
+        this.preferences.vegan ||
+        this.preferences.glutenIntolerant ||
+        this.preferences.lactoseIntolerant
+      ) {
+        if (!isOpen) {
+          this.updateDisplayData(); // Update the display data when the modal is closed
+        }
+        this.isPreferencesModalOpen = isOpen;
       }
+    } else if (this.userpreferences.foodPreferenceSet === false) {
+      this.userpreferences.foodPreferences = [];
+      this.displayPreferences = '';
       this.isPreferencesModalOpen = isOpen;
     }
+    this.updateSettingsOnServer();
   }
-  else if (this.userpreferences.foodpreferance_set === false) {
-    this.userpreferences.food_preferences = [];
-    this.displayPreferences = '';
-    this.isPreferencesModalOpen = isOpen;
+
+  preference_Toggle() {
+    this.userpreferences.foodPreferenceSet = !this.userpreferences.foodPreferenceSet;
+    this.updateSettingsOnServer();
   }
-  }
-  pereference_Toggle()
-{
-  this.userpreferences.foodpreferance_set = !this.userpreferences.foodpreferance_set;
-}
-  
+
   getSelectedPreferences(): string {
     const selectedPreferences = [];
-  
-    if (this.preferences.vegetarian) {
-      selectedPreferences.push('Vegetarian');
-      this.userpreferences.food_preferences.push('Vegetarian');
-    }
-    if (this.preferences.vegan) {
-      selectedPreferences.push('Vegan');
-      this.userpreferences.food_preferences.push('Vegan');
-    }
-    if (this.preferences.glutenIntolerant) {
-      selectedPreferences.push('Gluten-intolerant');
-      this.userpreferences.food_preferences.push('Gluten-intolerant');
-    }
-    if (this.preferences.lactoseIntolerant) {
-      selectedPreferences.push('Lactose-intolerant');
-      this.userpreferences.food_preferences.push('Lactose-intolerant');
-    }
-  
-    if (selectedPreferences.length === 1) {
-      return selectedPreferences[0];
-    } else if (selectedPreferences.length > 1) {
-      return 'Multiple';
-    } else {
+    if (this.userpreferences.foodPreferences == null) {
+      this.userpreferences.foodPreferences = [];
       return '';
-    
     }
-    
-  }
+    else
+    {
+      this.userpreferences.foodPreferences = [];
+      if (this.preferences.vegetarian && !this.userpreferences.foodPreferences.includes('Vegetarian')) {
+        console.log("here")
+        selectedPreferences.push('Vegetarian');
+        this.userpreferences.foodPreferences.push('Vegetarian');
+      }
+      if (this.preferences.vegan && !this.userpreferences.foodPreferences.includes('Vegan')) {
+        selectedPreferences.push('Vegan');
+        this.userpreferences.foodPreferences.push('Vegan');
+      }
+      if (this.preferences.glutenIntolerant && !this.userpreferences.foodPreferences.includes('Gluten-intolerant')) {
+        selectedPreferences.push('Gluten-intolerant');
+        this.userpreferences.foodPreferences.push('Gluten-intolerant');
+      }
+      if (this.preferences.lactoseIntolerant && !this.userpreferences.foodPreferences.includes('Lactose-intolerant')) {
+        selectedPreferences.push('Lactose-intolerant');
+        this.userpreferences.foodPreferences.push('Lactose-intolerant');
+      }
+  
+      if (selectedPreferences.length === 1) {
+        return selectedPreferences[0];
+      } else if (selectedPreferences.length > 1) {
+        return 'Multiple';
+      } else {
+        return '';
+      }
+    }
+    }
+
+   
 
   setOpenCalorie(isOpen: boolean) {
     this.isCalorieModalOpen = isOpen;
   }
-  setOpenCalorieSave(isOpen: boolean) {
-    if (this.userpreferences.calorie_set === true) {
-    if (this.userpreferences.calorie_amount) {
-    if (!isOpen) {
-    }
-    this.isCalorieModalOpen = isOpen;
-  }
-}
-else if (this.userpreferences.calorie_set === false) {
-  this.userpreferences.calorie_amount = 0;
-  this.isCalorieModalOpen = isOpen;
-}
-}
 
-  calorieAmount_Toggle(){
-    this.userpreferences.calorie_set = !this.userpreferences.calorie_set;
+  setOpenCalorieSave(isOpen: boolean) {
+    if (this.userpreferences.calorieSet === true) {
+      if (this.userpreferences.calorieAmount) {
+        if (!isOpen) {
+          this.updateDisplayData(); // Update the display data when the modal is closed
+        }
+        this.isCalorieModalOpen = isOpen;
+      }
+    } else if (this.userpreferences.calorieSet === false) {
+      this.userpreferences.calorieAmount = 0;
+      this.isCalorieModalOpen = isOpen;
+    }
+    this.updateSettingsOnServer();
+  }
+
+  calorieAmount_Toggle() {
+    this.userpreferences.calorieSet = !this.userpreferences.calorieSet;
+    this.updateSettingsOnServer();
   }
 
   showSelectedCalorieAmount(event: any) {
-    this.userpreferences.calorie_amount = event.target.value;
+    this.userpreferences.calorieAmount = event.target.value;
   }
 
   setOpenBudget(isOpen: boolean) {
     this.isBudgetModalOpen = isOpen;
   }
+
   setOpenBudgetSave(isOpen: boolean) {
-    if (this.userpreferences.budget_set === true) {
-    this.userpreferences.budget_range = this.selectedPriceRange;
+    if (this.userpreferences.budgetSet === true) {
+      this.userpreferences.budgetRange = this.selectedPriceRange;
+      this.isBudgetModalOpen = isOpen;
+    } else if (this.userpreferences.budgetSet === false) {
+      this.userpreferences.budgetRange = '';
       this.isBudgetModalOpen = isOpen;
     }
-    else if (this.userpreferences.budget_set === false) {
-      this.userpreferences.budget_range = '';
-      this.isBudgetModalOpen = isOpen;
-    }
+    this.updateSettingsOnServer();
   }
-  budgetRange_Toggle()
-  {
-    this.userpreferences.budget_set = !this.userpreferences.budget_set;
+
+  budgetRange_Toggle() {
+    this.userpreferences.budgetSet = !this.userpreferences.budgetSet;
+    this.updateSettingsOnServer();
   }
 
   async openPicker() {
@@ -235,9 +343,8 @@ else if (this.userpreferences.calorie_set === false) {
             { text: '3', value: 3 },
             { text: '4', value: 4 },
             { text: '5', value: 5 },
-            
           ],
-          selectedIndex: 0, // Set the default selected index
+          selectedIndex: this.userpreferences.macroRatio.protein, // Set the default selected index
         },
         {
           name: 'carbs',
@@ -247,21 +354,19 @@ else if (this.userpreferences.calorie_set === false) {
             { text: '3', value: 3 },
             { text: '4', value: 4 },
             { text: '5', value: 5 },
-            
           ],
-          selectedIndex: 0, // Set the default selected index
+          selectedIndex: this.userpreferences.macroRatio.carbs, // Set the default selected index
         },
         {
-          name: 'fats',
+          name: 'fat',
           options: [
             { text: '1', value: 1 },
             { text: '2', value: 2 },
             { text: '3', value: 3 },
             { text: '4', value: 4 },
             { text: '5', value: 5 },
-            
           ],
-          selectedIndex: 0, // Set the default selected index
+          selectedIndex: this.userpreferences.macroRatio.fat, // Set the default selected index
         },
       ],
       buttons: [
@@ -273,9 +378,10 @@ else if (this.userpreferences.calorie_set === false) {
           text: 'Confirm',
           handler: (value) => {
             // Update the selected macro values based on the selected indexes
-            this.userpreferences.macro_ratio.protein = value['protein'].value;
-            this.userpreferences.macro_ratio.carbs = value['carbs'].value;
-            this.userpreferences.macro_ratio.fats = value['fats'].value;
+            this.userpreferences.macroRatio.protein = value['protein'].value;
+            this.userpreferences.macroRatio.carbs = value['carbs'].value;
+            this.userpreferences.macroRatio.fat = value['fat'].value;
+            this.updateSettingsOnServer();
           },
         },
       ],
@@ -283,152 +389,265 @@ else if (this.userpreferences.calorie_set === false) {
 
     await picker.present();
   }
+
   setOpenMacro(isOpen: boolean) {
     this.isMacroModalOpen = isOpen;
   }
+
   setOpenMacroSave(isOpen: boolean) {
-    if (this.userpreferences.macro_set === true) {
-    if (!isOpen) {
-      this.displaying_Macroratio = this.userpreferences.macro_ratio.protein + ' : ' + this.userpreferences.macro_ratio.carbs + ' : ' + this.userpreferences.macro_ratio.fats;
+    if (this.userpreferences.macroSet === true) {
+      if (!isOpen) {
+        this.displaying_Macroratio = this.getDisplayMacroratio(); // Update the display data when the modal is closed
+      }
+      this.isMacroModalOpen = isOpen;
+    } else if (this.userpreferences.macroSet === false) {
+      this.userpreferences.macroRatio.protein = 0;
+      this.userpreferences.macroRatio.carbs = 0;
+      this.userpreferences.macroRatio.fat = 0;
+      this.displaying_Macroratio = '';
+      this.isMacroModalOpen = isOpen;
     }
-    this.isMacroModalOpen = isOpen;
+    this.updateSettingsOnServer();
   }
-  else if (this.userpreferences.macro_set === false) {
-    this.userpreferences.macro_ratio.protein = 0;
-    this.userpreferences.macro_ratio.carbs = 0;
-    this.userpreferences.macro_ratio.fats = 0;
-    this.displaying_Macroratio = '';
-    this.isMacroModalOpen = isOpen;
+
+  macro_Toggle() {
+    this.userpreferences.macroSet = !this.userpreferences.macroSet;
+    this.updateSettingsOnServer();
   }
-  }
-  macro_Toggle()
-  {
-    this.userpreferences.macro_set = !this.userpreferences.macro_set;
-  }
+
   setOpenAllergies(isOpen: boolean) {
     this.isAllergiesModalOpen = isOpen;
   }
+
   setOpenAllergiesSave(isOpen: boolean) {
-    if (this.userpreferences.allergies_set === true) {
-    if (this.allergens.seafood || this.allergens.nuts || this.allergens.eggs || this.allergens.soy) {
-      
+    if (this.userpreferences.allergiesSet === true) {
+      if (
+        this.allergens.seafood ||
+        this.allergens.nuts ||
+        this.allergens.eggs ||
+        this.allergens.soy
+      ) {
         if (!isOpen) {
-          this.displayAllergies = this.getSelectedAllergens();
+          this.displayAllergies = this.getSelectedAllergens(); // Update the display data when the modal is closed
         }
-    this.isAllergiesModalOpen = isOpen;
+        this.isAllergiesModalOpen = isOpen;
       }
-    }
-    else if (this.userpreferences.allergies_set === false) {
+    } else if (this.userpreferences.allergiesSet === false) {
       this.userpreferences.allergies = [];
       this.displayAllergies = '';
       this.isAllergiesModalOpen = isOpen;
     }
+    this.updateSettingsOnServer();
+  }
+
+  allergies_Toggle() {
+    this.userpreferences.allergiesSet = !this.userpreferences.allergiesSet;
+    this.updateSettingsOnServer();
+  }
+
+  getSelectedAllergens(): string {
+    const selectedAllergens  = [];
+    if (this.userpreferences.allergies == null) {
+      this.userpreferences.allergies = [];
+      return '';
     }
-    allergies_Toggle()
+    else
     {
-      this.userpreferences.allergies_set = !this.userpreferences.allergies_set;
+     this.userpreferences.allergies = [];
+
+    if (this.allergens.seafood && !this.userpreferences.allergies.includes('Seafood')) {
+      selectedAllergens.push('Seafood');
+      this.userpreferences.allergies.push('Seafood');
+    }
+    if (this.allergens.nuts && !this.userpreferences.allergies.includes('Nuts')) {
+      selectedAllergens.push('Nuts');
+      this.userpreferences.allergies.push('Nuts');
+    }
+    if (this.allergens.eggs && !this.userpreferences.allergies.includes('Eggs')) {
+      selectedAllergens.push('Eggs');
+      this.userpreferences.allergies.push('Eggs');
+    }
+    if (this.allergens.soy && !this.userpreferences.allergies.includes('Soy')) {
+      selectedAllergens.push('Soy');
+      this.userpreferences.allergies.push('Soy');
     }
 
-      getSelectedAllergens(): string {
-        const selectedAllergens = [];
-      
-        if (this.allergens.seafood) {
-          selectedAllergens.push('Seafood');
-          this.userpreferences.allergies.push('Seafood')
-        }
-        if (this.allergens.nuts) {
-          selectedAllergens.push('Nuts');
-          this.userpreferences.allergies.push('Nuts')
-        }
-        if (this.allergens.eggs) {
-          selectedAllergens.push('Eggs');
-          this.userpreferences.allergies.push('Eggs')
-        }
-        if (this.allergens.soy) {
-          selectedAllergens.push('Soy');
-          this.userpreferences.allergies.push('Soy')
-        }
-      
-        if (selectedAllergens.length === 1) {
-          console.log(this.displayAllergies);
-          return selectedAllergens[0];
-        } else if (selectedAllergens.length > 1) {
-          return 'Multiple';
-        } else {
-          console.log(this.displayAllergies);
-          return '';
-         
-        }
-        
-      }
+    if (selectedAllergens.length === 1) {
+      return selectedAllergens[0];
+    } else if (selectedAllergens.length > 1) {
+      return 'Multiple';
+    } else {
+      return '';
+    }
+  }
+  }
+
+
   setOpenCooking(isOpen: boolean) {
     this.isCookingModalOpen = isOpen;
   }
-  setOpenCookingSave(isOpen: boolean) {
-    if (this.userpreferences.cookingtime_set === true) {
-    this.isCookingModalOpen = isOpen;
-    }
-    else if (this.userpreferences.cookingtime_set === false){
-      this.userpreferences.cooking_time = 0;
 
+  setOpenCookingSave(isOpen: boolean) {
+    if (this.userpreferences.cookingTimeSet === true) {
+      this.isCookingModalOpen = isOpen;
+    } else if (this.userpreferences.cookingTimeSet === false) {
+      this.userpreferences.cookingTime = '';
       this.isCookingModalOpen = isOpen;
     }
+    this.updateSettingsOnServer();
   }
-  cookingtime_Toggle()
-  {
-    this.userpreferences.cookingtime_set = !this.userpreferences.cookingtime_set;
+
+  cookingtime_Toggle() {
+    this.userpreferences.cookingTimeSet = !this.userpreferences.cookingTimeSet;
+    this.updateSettingsOnServer();
   }
 
   setOpenBMI(isOpen: boolean) {
     this.isBMIModalOpen = isOpen;
   }
+
   setOpenBMISave(isOpen: boolean) {
+     if (this.userpreferences.userHeight && this.userpreferences.userWeight) {
+      this.updateDisplayData(); // Update the display data when the modal is closed
+      this.isBMIModalOpen = isOpen;
 
-    if (this.userpreferences.BMI_set === true) {
-    if (!isOpen) {
-      //call BMI calculation fuction
-    this.isBMIModalOpen = isOpen;
+     }
+    
+
+     if (this.userpreferences.bmiset === false) {
+      this.userpreferences.userBMI = 0;
+      this.isBMIModalOpen = isOpen;
     }
+    this.updateSettingsOnServer();
   }
-  else if (this.userpreferences.BMI_set === false) {
-    this.userpreferences.user_BMI = 0;
 
-    this.isBMIModalOpen = isOpen;
+  BMI_Toggle() {
+    this.userpreferences.bmiset = !this.userpreferences.bmiset;
+    this.updateSettingsOnServer();
   }
-}
-  BMI_Toggle()
-  {
-    this.userpreferences.BMI_set = !this.userpreferences.BMI_set;
-  }
+
   setOpenShopping(isOpen: boolean) {
     this.isShoppingModalOpen = isOpen;
   }
 
   setOpenShoppingSave(isOpen: boolean) {
-    if (this.userpreferences.shoppinginterfval_set === true ) {
-    if (this.shopping_interval === 'other') {
-        this.userpreferences.shopping_interval = this.shoppingIntervalOtherValue.toString();
-    }
-      else if (this.shopping_interval == 'weekly' || this.shopping_interval == 'biweekly' || this.shopping_interval == 'monthly')
-      {
-        this.userpreferences.shopping_interval = this.shopping_interval;
+    if (this.userpreferences.shoppingIntervalSet === true) {
+      if (this.shoppingInterval === 'other') {
+        this.userpreferences.shoppingInterval = this.shoppingIntervalOtherValue.toString();
+      } else if (
+        this.shoppingInterval == 'weekly' ||
+        this.shoppingInterval == 'biweekly' ||
+        this.shoppingInterval == 'monthly'
+      ) {
+        this.userpreferences.shoppingInterval = this.shoppingInterval;
       }
-    this.isShoppingModalOpen = isOpen;
+      this.isShoppingModalOpen = isOpen;
+    } else if (this.userpreferences.shoppingIntervalSet === false) {
+      this.userpreferences.shoppingInterval = '';
+      this.isShoppingModalOpen = isOpen;
+    }
+    this.updateSettingsOnServer();
   }
-  else if (this.userpreferences.shoppinginterfval_set === false){
-    this.userpreferences.shopping_interval = '';
-    this.isShoppingModalOpen = isOpen;
+
+  shoppingInterval_Toggle() {
+    this.userpreferences.shoppingIntervalSet = !this.userpreferences.shoppingIntervalSet;
+    this.updateSettingsOnServer();
   }
-}
 
-shoppingInterval_Toggle()
-{
-  this.userpreferences.shoppinginterfval_set = !this.userpreferences.shoppinginterfval_set;
-}
-}
+  // Function to update display data
+  updateDisplayData() {
+    if (this.userpreferences.shoppingInterval != '') {
+    this.shoppingintervalToggle = true
+    this.shoppingInterval = this.userpreferences.shoppingInterval;
+    this.userpreferences.shoppingIntervalSet = true;
+    }
 
+    if (this.userpreferences.foodPreferences != null) {
+      this.preferenceToggle = true
+      if (this.userpreferences.foodPreferences.includes('Vegetarian')) {
+        this.preferences.vegetarian = true;
+      }
+      if (this.userpreferences.foodPreferences.includes('Vegan')) {
+        this.preferences.vegan = true;
+      }
+      if (this.userpreferences.foodPreferences.includes('Gluten-intolerant')) {
+        this.preferences.glutenIntolerant = true;
+      }
+      if (this.userpreferences.foodPreferences.includes('Lactose-intolerant')) {
+        this.preferences.lactoseIntolerant = true;
+      }
+      this.userpreferences.foodPreferenceSet = true;
 
+      }
 
+    if (this.userpreferences.calorieAmount != 0) {
+      this.calorieToggle = true
+      this.userpreferences.calorieSet = true;
+      }
+
+    if (this.userpreferences.budgetRange != '') {
+        this.budgetToggle = true
+        this.selectedPriceRange = this.userpreferences.budgetRange;
+        this.userpreferences.budgetSet = true;
+      }
+
+    if (this.userpreferences.macroRatio != null) {
+        this.macroToggle = true
+      
+        this.userpreferences.macroSet = true;
+      }   
+
+    if (this.userpreferences.allergies != null) {
+        this.allergiesToggle = true
+        if (this.userpreferences.allergies.includes('Seafood')) {
+          this.allergens.seafood = true;
+        }
+        if (this.userpreferences.allergies.includes('Nuts')) {
+          this.allergens.nuts = true;
+        }
+        if (this.userpreferences.allergies.includes('Eggs')) {
+          this.allergens.eggs = true;
+        }
+        if (this.userpreferences.allergies.includes('Soy')) {
+          this.allergens.soy = true;
+        }
+        this.userpreferences.allergiesSet = true;
+      }
+
+      if (this.userpreferences.userBMI != 0) {
+        this.BMIToggle = true
+        this.userpreferences.bmiset = true;
+        }
+
+      if (this.userpreferences.cookingTime != '') {
+        this.cookingToggle = true
+        this.userpreferences.cookingTimeSet = true;
+        }
  
+    
+    this.displayPreferences = this.getSelectedPreferences();
+    this.displaying_Macroratio = this.getDisplayMacroratio();
+    this.displayAllergies = this.getSelectedAllergens();
+  }
 
+  // Function to get the displaying macro ratio
+  getDisplayMacroratio(): string {
+    console.log(this.userpreferences.macroRatio)
+    if(this.userpreferences && this.userpreferences.macroRatio){
+        return (
+            this.userpreferences.macroRatio.protein +
+            ' : ' +
+            this.userpreferences.macroRatio.carbs +
+            ' : ' +
+            this.userpreferences.macroRatio.fat
+        );
+    } else {
+        return "Not available";
+    }
+}
 
+calculateBMI() {
+    this.userpreferences.userBMI = Math.round(this.userpreferences.userHeight /
+        this.userpreferences.userWeight);
+ }
+}

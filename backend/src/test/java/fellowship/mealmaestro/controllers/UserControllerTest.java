@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import fellowship.mealmaestro.models.UserModel;
@@ -27,6 +28,12 @@ import fellowship.mealmaestro.services.auth.JwtService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestPropertySource(properties = {
+    "JWT_SECRET=secret",
+    "DB_URI=bolt://localhost:7687",
+    "DB_USERNAME=neo4j",
+    "DB_PASSWORD=password"
+})
 public class UserControllerTest {
     
     @Autowired

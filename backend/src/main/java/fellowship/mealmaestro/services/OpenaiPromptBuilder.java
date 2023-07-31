@@ -3,6 +3,7 @@ package fellowship.mealmaestro.services;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,10 +12,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class OpenaiPromptBuilder {
 
+    @Autowired
+    private SettingsService settingsService;
     public String buildPrompt(String Type) throws JsonProcessingException {
         String prompt = "";
-
-        prompt += buildContext(Type);
+        String preferenceString =settingsService.ALL_SETTINGS;
+        prompt += buildContext(Type, preferenceString);
         prompt += buildGoal();
         prompt += buildFormat();
         prompt += buildSubtasks();

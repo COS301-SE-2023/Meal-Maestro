@@ -244,7 +244,7 @@ export class FoodListItemComponent  implements AfterViewInit {
             value: i*10
         });
 
-        if(i === this.item.weight) {
+        if(i*10 === this.item.weight) {
           weightSelectedIndex = i - 1;
         }
     }

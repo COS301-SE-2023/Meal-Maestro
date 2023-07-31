@@ -25,30 +25,24 @@ public class UserRepository {
     //#region Create
     public void createUser(UserModel user){
         try (Session session = driver.session()){
-
+            
             session.executeWrite(createUserTransaction(user.getName(), user.getPassword(), user.getEmail()));
         }
     }
 
     public static TransactionCallback<Void> createUserTransaction(String username, String password, String email) {
-        //creates user with default pantry, shopping list, recipe book, and preferences
+        // Creates user with default pantry, shopping list, recipe book, and preferences
         return transaction -> {
-            transaction.run("CREATE (:Preferences)<-[:HAS_PREFERENCES]-(n0:User {username: $username, password: $password, email: $email})-[:HAS_PANTRY]->(:Pantry),\r\n" + //
-                    "(:`Shopping List`)<-[:HAS_LIST]-(n0)-[:HAS_RECIPE_BOOK]->(:`Recipe Book`)",
-            Values.parameters("username", username, "password", password, "email", email));
+            transaction.run("CREATE (:Pantry)<-[:HAS_PANTRY]-(n0:User {username: $username, password: $password, email: $email})-[:HAS_PREFERENCES]->(n1:Preferences)-[:HAS_ALLERGIES]->(:Allergies), " +
+                    "(:`Shopping List`)<-[:HAS_LIST]-(n0)-[:HAS_RECIPE_BOOK]->(:`Recipe Book`), " +
+                    "(:Interval)<-[:HAS_INTERVAL]-(n1)-[:HAS_GOAL]->(:Goal), " +
+                    "(:`Calorie Goal`)<-[:HAS_CALORIE_GOAL]-(n1)-[:HAS_EATING_STYLE]->(:`Eating Style`), " +
+                    "(:Macro {protein: 0,carbs: 0, fat: 0})<-[:HAS_MACRO]-(n1)-[:HAS_BUDGET]->(:Budget), " +
+                    "(:BMI {height: 0, weight: 0, BMI: 0})<-[:HAS_BMI]-(n1)-[:HAS_COOKING_TIME]->(:`Cooking Time`)",
+                    Values.parameters("username", username, "password", password, "email", email));
             return null;
         };
     }
-
-    /*
-     * 
-     * CREATE (:Pantry)<-[:HAS_PANTRY]-(n0:User {name: "", password: "", email: ""})-[:HAS_PREFERENCES]->(n1:Preferences)-[:HAS_ALLERGIES]->(:Allergies),
-(:`Shopping List`)<-[:HAS_LIST]-(n0)-[:HAS_RECIPE_BOOK]->(:`Recipe Book`),
-(:Interval)<-[:HAS_INTERVAL]-(n1)-[:HAS_GOAL]->(:Goal),
-(:`Calorie Goal`)<-[:HAS_CALORIE_GOAL]-(n1)-[:HAS_EATING_STYLE]->(:`Eating Style`),
-(:Macro)<-[:HAS_MACRO]-(n1)-[:HAS_BUDGET]->(:Budget),
-(:BMI)<-[:HAS_BMI]-(n1)-[:HAS_COOKING_TIME]->(:`Cooking Time`)
-     */
     //#endregion
 
     //#region Get User

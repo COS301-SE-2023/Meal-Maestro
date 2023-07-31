@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -13,7 +13,7 @@ import { UserI } from '../../models/user.model';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
-export class LoginPage {
+export class LoginPage implements OnInit {
   user: UserI = {
     username: '',
     email: '',
@@ -21,10 +21,15 @@ export class LoginPage {
   }
   
 
-  constructor( private router: Router, private errorHandlerService: ErrorHandlerService, private auth: AuthenticationService ) { }
+  constructor(private router: Router,
+              private errorHandlerService: ErrorHandlerService, 
+              private auth: AuthenticationService 
+              ) { }
 
-  login(form: any) {
+  ngOnInit() {
+  }
 
+  async login(form: any) {
     const loginUser: UserI = {
       username: '',
       email: form.email,
@@ -43,6 +48,9 @@ export class LoginPage {
       error: (error) => {
         if (error.status == 403){
           this.errorHandlerService.presentErrorToast('Invalid credentials', 'Invalid credentials');
+          localStorage.removeItem('token');
+        }else if(error.status == 404){
+          this.errorHandlerService.presentErrorToast('Email or password incorrect', 'Email or password incorrect');
           localStorage.removeItem('token');
         }else{
           this.errorHandlerService.presentErrorToast('Unexpected error. Please try again', error);

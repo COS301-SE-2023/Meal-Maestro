@@ -13,4 +13,12 @@ export class AppComponent {
   public environmentInjector = inject(EnvironmentInjector);
 
   constructor() {}
+
+  //const url = 'http://localhost:7867/removeFromPantry
+  // const body = {
+  //   id : 'pantryItemId'
+  // }
+
+  // this.http.post(url, body)
+
 }

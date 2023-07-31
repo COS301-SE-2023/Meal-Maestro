@@ -15,11 +15,11 @@ public class RegisterRequestModel {
         this.password = password;
     }
 
-    public String getFirstname(){
+    public String getUsername(){
         return username;
     }
 
-    public void setFirstname(String username){
+    public void setUserame(String username){
         this.username = username;
     }
 

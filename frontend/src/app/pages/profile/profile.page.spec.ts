@@ -1,11 +1,13 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
-
 import { ProfilePage } from './profile.page';
+
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AuthenticationService } from '../../services/services';
-import { UserI } from '../../models/user.model';
-import { HttpResponse } from '@angular/common/http';
-import { of } from 'rxjs';
+import { UserI } from '../../models/interfaces';
+
 
 describe('ProfilePage', () => {
   let component: ProfilePage;
@@ -13,29 +15,19 @@ describe('ProfilePage', () => {
   let mockAuthService: jasmine.SpyObj<AuthenticationService>;
   let mockUser: UserI;
 
-  beforeEach(async () => {
-    mockAuthService = jasmine.createSpyObj('AuthenticationService', ['getUser']);
 
-    mockUser = {
-      username: "test",
-      email: "test@test.com",
-      password: "secret"
-    }
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      //removed ProfilePage from declarations
+      imports: [IonicModule.forRoot(), HttpClientTestingModule, RouterTestingModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA] // added this line
 
-    const response = new HttpResponse<UserI>({ body: mockUser, status: 200 });
-    mockAuthService.getUser.and.returnValue(of(response));
-
-    await TestBed.configureTestingModule({
-      imports: [ProfilePage, IonicModule],
-      providers: [
-        { provide: AuthenticationService, useValue: mockAuthService },
-      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProfilePage);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
