@@ -145,22 +145,22 @@ public class MealManagementService {
     public String generateMeal(String mealType) throws JsonMappingException, JsonProcessingException {
         
         JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(mealType));
-        //int i = 0;
-        // if(mealJson.isMissingNode())
-        // {
-        // int prevBestOfN = openaiApiService.getBestofN();
-        // Boolean success = false;
-        // openaiApiService.setBestofN(prevBestOfN + 1);
-        // while(!success&& i < 5)
-        // {
-        // mealJson =
-        // objectMapper.readTree(openaiApiService.fetchMealResponse(mealType));
-        // if(!mealJson.isMissingNode())
-        // success = true;
-        // i++;
-        // }
-        // openaiApiService.setBestofN(prevBestOfN);
-        // }
+        int i = 0;
+        if(mealJson.isMissingNode())
+        {
+        int prevBestOfN = openaiApiService.getBestofN();
+        Boolean success = false;
+        openaiApiService.setBestofN(prevBestOfN + 1);
+        while(!success&& i < 2)
+        {
+        mealJson =
+        objectMapper.readTree(openaiApiService.fetchMealResponse(mealType));
+        if(!mealJson.isMissingNode())
+        success = true;
+        i++;
+        }
+        openaiApiService.setBestofN(prevBestOfN);
+        }
         return mealJson.toString();
     }
 
