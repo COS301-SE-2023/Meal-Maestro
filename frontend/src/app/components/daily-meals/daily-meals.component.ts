@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
 import { DaysMealsI } from '../../models/daysMeals.model';
 import { ErrorHandlerService } from '../../services/services';
+import { MealI, RecipeItemI } from '../../models/interfaces';
+import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
 
 @Component({
   selector: 'app-daily-meals',
@@ -50,7 +52,8 @@ export class DailyMealsComponent  implements OnInit {
   }
   constructor(public r : Router
     , private mealGenerationservice:MealGenerationService
-    , private errorHandlerService:ErrorHandlerService) {}
+    , private errorHandlerService:ErrorHandlerService,
+    private addService: AddRecipeService) {}
 
   ngOnInit() {
     // this.mealGenerationservice.getDailyMeals().subscribe({
@@ -70,9 +73,20 @@ export class DailyMealsComponent  implements OnInit {
 
   handleArchive(meal:string) {
     // Function to handle the "Archive" option action
-    console.log('Archive option clicked');
-    
+    var recipe: MealI | undefined;
 
+    if (meal == "breakfast")
+      recipe = this.dayData.breakfast;
+    else if (meal == "lunch")
+      recipe = this.dayData.lunch;
+    else recipe = this.dayData.dinner;   
+
+    const item = {
+      title: recipe?.name;
+      image: recipe.im
+    }
+
+    this.addService.setRecipeItem(recipe);
   }
 
   async handleSync(meal:string) {
