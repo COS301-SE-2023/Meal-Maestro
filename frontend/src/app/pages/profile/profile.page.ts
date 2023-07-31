@@ -19,14 +19,22 @@ import { AuthenticationService } from '../../services/services';
   imports: [IonicModule, FormsModule, CommonModule],
 })
 
-export class ProfilePage {
+export class ProfilePage implements OnInit {
   constructor(
     private router: Router,
     private pickerController: PickerController,
-    private settingsApiService: SettingsApiService
+    private settingsApiService: SettingsApiService,
+    private auth: AuthenticationService
   ) {
     this.selectedPriceRange = '';
   }
+
+  // User data
+  user: UserI = {
+    username: '',
+    email: '',
+    password: '',
+  };
 
   userpreferences: UserPreferencesI = {
     goal: '',
@@ -97,6 +105,20 @@ export class ProfilePage {
 
   ngOnInit() {
     this.loadUserSettings();
+    this.auth.getUser().subscribe({
+      next: (response) => {
+        if (response.status == 200) {
+          if (response.body && response.body.name) {
+            this.user.username = response.body.name;
+            this.user.email = response.body.email;
+            this.user.password = response.body.password;
+          }
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
   }
 
    private async loadUserSettings() {
