@@ -16,9 +16,6 @@ import { CommonModule } from '@angular/common';
 
 })
 export class RecipeItemComponent {
-  @Input() image!: string;
-  @Input() title!: string;
-
   async openModal(item: any) {
     const modal = await this.modalController.create({
       component: RecipeDetailsComponent,

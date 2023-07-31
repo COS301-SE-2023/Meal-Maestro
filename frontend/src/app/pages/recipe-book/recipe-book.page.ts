@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActionSheetController, AlertController, IonicModule } from '@ionic/angular';
+import { ActionSheetController, IonicModule } from '@ionic/angular';
 import { RecipeItemComponent } from '../../components/recipe-item/recipe-item.component';
 import { RecipeItemI } from '../../models/recipeItem.model';
 import { AuthenticationService, ErrorHandlerService, RecipeBookApiService } from '../../services/services';
-import { catchError, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-book',
@@ -24,6 +23,32 @@ export class RecipeBookPage implements OnInit {
 
   async ionViewWillEnter() {
     this.getRecipes();
+  }
+
+  async addRecipe(item: RecipeItemI) {    
+      this.recipeService.addRecipe(item).subscribe({
+        next: (response) => {
+          if (response.status === 200) {
+            if (response.body) {
+              this.items.push(response.body);
+            }
+          }
+        },
+        error: (err) => {
+          if (err.status === 403) {
+            this.errorHandlerService.presentErrorToast(
+              'Unauthorised access. Please log in again.',
+              err
+            )
+            this.auth.logout();
+          } else {
+            this.errorHandlerService.presentErrorToast(
+              'Error adding item to your Recipe Book',
+              err
+            )
+          }
+        }
+      });
   }
 
   async getRecipes() {
@@ -105,4 +130,8 @@ export class RecipeBookPage implements OnInit {
   ngOnInit() {
   }
 
+  notSaved(recipe: RecipeItemI): boolean {
+    console.log('called :)');
+    return !this.items.includes(recipe);
+  }  
 }
