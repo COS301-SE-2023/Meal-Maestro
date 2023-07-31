@@ -11,26 +11,21 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class DaysMealsModel {
 
     @Relationship(type = "breakfast")
-
     private MealModel breakfast;
 
     @Relationship(type = "lunch")
-
     private MealModel lunch;
 
     @Relationship(type = "dinner")
-
     private MealModel dinner;
 
     @Id
-
     private String userDateIdentifier;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private DayOfWeek mealDate;
 
     @Relationship(type = "HAS_DAY", direction = Relationship.Direction.INCOMING)
-
     private UserModel user;
 
     private String meal;
