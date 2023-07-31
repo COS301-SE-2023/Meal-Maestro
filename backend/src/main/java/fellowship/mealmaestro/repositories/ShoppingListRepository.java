@@ -43,12 +43,9 @@ public class ShoppingListRepository {
     }
     /*  Example Post data:
      * {
-     * "food": {
      *  "name": "Carrot",
      *  "quantity": "0",
      *  "weight": "0"
-     * },
-     * "token": "secretToken"
      * }
      */
     //#endregion
@@ -77,7 +74,6 @@ public class ShoppingListRepository {
     }
     /*  Example Post data:
      * {
-     * "token": "secretToken"
      * }
      */
     //#endregion
@@ -118,4 +114,56 @@ public class ShoppingListRepository {
         };
     }
     //#endregion
+
+    //#region Move to Pantry
+    public List<FoodModel> buyItem(FoodModel food, String email){
+        try (Session session = driver.session()){
+            return session.executeWrite(buyItemTransaction(food, email));
+        }
+    }
+
+    public static TransactionCallback<List<FoodModel>> buyItemTransaction(FoodModel food, String email){
+        return transaction -> {
+            var findFoodInBoth = transaction.run(
+                "MATCH (u:User{email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[:IN_LIST]->(:Food {name: $name}), \r\n" + //
+                "(u)-[:HAS_PANTRY]->(p:`Pantry`)-[:IN_PANTRY]->(:Food {name: $name}) \r\n" + //
+                "RETURN count(*)",
+                Values.parameters("email", email, "name", food.getName())
+            );
+
+            boolean foodInBoth = findFoodInBoth.single().get(0).asInt() > 0;
+
+            if (foodInBoth) {
+                transaction.run(
+                    // If food exists in both, update the pantry food and delete the shopping list food
+                    "MATCH (u:User{email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[r:IN_LIST]->(f:Food {name: $name}), \r\n" + //
+                    "(u)-[:HAS_PANTRY]->(p:`Pantry`)-[:IN_PANTRY]->(fp:Food{name: $name}) \r\n" + //
+                    "SET fp.weight = fp.weight + f.weight, fp.quantity = fp.quantity + f.quantity \r\n" + //
+                    "DELETE r, f",
+                    Values.parameters("email", email, "name", food.getName())
+                );
+            } else {
+                transaction.run(
+                    // If food only exists in shopping list, create it in the pantry and delete it from the shopping list
+                    "MATCH (u:User{email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[r:IN_LIST]->(f:Food {name: $name}), \r\n" + //
+                    "(u)-[:HAS_PANTRY]->(p:`Pantry`) \r\n" + //
+                    "CREATE (p)-[:IN_PANTRY]->(:Food {name: $name, quantity: f.quantity, weight: f.weight}) \r\n" + //
+                    "DELETE r, f",
+                    Values.parameters("email", email, "name", food.getName())
+                );
+            }
+
+            var result = transaction.run(
+                "MATCH (u:User{email: $email})-[:HAS_PANTRY]->(:`Pantry`)-[:IN_PANTRY]->(f:Food) RETURN f.name AS name, f.quantity AS quantity, f.weight AS weight \r\n", //
+                Values.parameters("email", email)
+            );
+
+            List<FoodModel> foods = new ArrayList<>();
+            while (result.hasNext()){
+                var record = result.next();
+                foods.add(new FoodModel(record.get("name").asString(), record.get("quantity").asInt(), record.get("weight").asInt()));
+            }
+            return foods;
+        };
+    }
 }

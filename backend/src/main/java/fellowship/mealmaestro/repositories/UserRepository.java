@@ -25,7 +25,7 @@ public class UserRepository {
     //#region Create
     public void createUser(UserModel user){
         try (Session session = driver.session()){
-
+            
             session.executeWrite(createUserTransaction(user.getName(), user.getPassword(), user.getEmail()));
         }
     }
@@ -43,8 +43,6 @@ public class UserRepository {
             return null;
         };
     }
-    
-    
     //#endregion
 
     //#region Get User
@@ -73,6 +71,21 @@ public class UserRepository {
                 AuthorityRoleModel.USER
             );
             return user;
+        };
+    }
+
+    public UserModel updateUser(UserModel user, String email) {
+        try (Session session = driver.session()){
+            session.executeWrite(updateUserTransaction(user.getName(), email));
+            return user;
+        }
+    }
+
+    public static TransactionCallback<Void> updateUserTransaction(String username, String email) {
+        return transaction -> {
+            transaction.run("MATCH (n0:User {email: $email}) SET n0.username = $username",
+            Values.parameters("email", email, "username", username));
+            return null;
         };
     }
 }

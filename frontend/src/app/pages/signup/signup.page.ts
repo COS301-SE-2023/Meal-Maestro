@@ -25,7 +25,6 @@ export class SignupPage {
   constructor(private router: Router, private errorHandlerService: ErrorHandlerService, private auth: AuthenticationService ) { }
 
   async signup(form: any) {
-    console.log(form);
     if (form.initial !== form.verify) {
       this.errorHandlerService.presentErrorToast('Passwords do not match', 'Passwords do not match');
       return;
@@ -59,5 +58,6 @@ export class SignupPage {
 
   goToLogin() {
     this.router.navigate(['../']);
+    localStorage.removeItem('token');
   }
 }

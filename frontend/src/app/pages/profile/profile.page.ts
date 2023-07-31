@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicModule, PickerController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { UserPreferencesI } from '../../models/userpreference.model';
@@ -7,6 +7,10 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SettingsApiService } from '../../services/settings-api/settings-api.service';
 
+import { UserI } from '../../models/user.model';
+import { AuthenticationService } from '../../services/services';
+
+
 @Component({
   selector: 'app-profile',
   templateUrl: 'profile.page.html',
@@ -14,6 +18,7 @@ import { SettingsApiService } from '../../services/settings-api/settings-api.ser
   standalone: true,
   imports: [IonicModule, FormsModule, CommonModule],
 })
+
 export class ProfilePage {
   constructor(
     private router: Router,
@@ -453,6 +458,7 @@ export class ProfilePage {
     }
   }
   }
+
 
   setOpenCooking(isOpen: boolean) {
     this.isCookingModalOpen = isOpen;

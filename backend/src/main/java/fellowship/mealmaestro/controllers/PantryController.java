@@ -56,5 +56,4 @@ public class PantryController {
         String authToken = token.substring(7);
         return ResponseEntity.ok(pantryService.getPantry(authToken));
     }
-
 }

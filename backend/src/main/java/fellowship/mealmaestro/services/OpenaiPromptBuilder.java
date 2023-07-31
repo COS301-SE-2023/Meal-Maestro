@@ -13,8 +13,8 @@ public class OpenaiPromptBuilder {
 
     public String buildPrompt(String Type) throws JsonProcessingException {
         String prompt = "";
-
-        prompt += buildContext(Type);
+        String preferenceString ="";
+        prompt += buildContext(Type, preferenceString);
         prompt += buildGoal();
         prompt += buildFormat();
         prompt += buildSubtasks();

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Input } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, IonicSlides } from '@ionic/angular';
 import { MealI } from '../../models/meal.model';
 import { Router } from '@angular/router';
 import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
@@ -16,20 +16,37 @@ import { ErrorHandlerService } from '../../services/services';
 })
 export class DailyMealsComponent  implements OnInit {
 
-
+  breakfast: string = "breakfast";
+  lunch: string  = "lunch";
+  dinner: string  = "dinner";
+  mealDate: string | undefined;
   @Input() todayData!: MealI[];
-  @Input() dayData!: DaysMealsI[];
+  @Input() dayData!: DaysMealsI;
   item: DaysMealsI | undefined;
   daysMeals: DaysMealsI[] = [] ;
   meals:MealI[] = [];
-
+  isBreakfastModalOpen = false;
+  isLunchModalOpen = false;
+  isDinnerModalOpen = false;
   isModalOpen = false;
-  currentObject :any
-  setOpen(isOpen: boolean, o :any) {
-    if(o==null)
-      o = this.currentObject
-    this.isModalOpen = isOpen;
-    this.setCurrent(o)
+  currentObject :DaysMealsI | undefined
+  setOpen(isOpen: boolean, mealType: string) {
+    if (mealType === 'breakfast') {
+      this.isBreakfastModalOpen = isOpen;
+      if (isOpen) {
+        this.setCurrent(this.dayData?.breakfast);
+      }
+    } else if (mealType === 'lunch') {
+      this.isLunchModalOpen = isOpen;
+      if (isOpen) {
+        this.setCurrent(this.dayData?.lunch);
+      }
+    } else if (mealType === 'dinner') {
+      this.isDinnerModalOpen = isOpen;
+      if (isOpen) {
+        this.setCurrent(this.dayData?.dinner);
+      }
+    }
   }
   constructor(public r : Router
     , private mealGenerationservice:MealGenerationService
@@ -49,6 +66,32 @@ export class DailyMealsComponent  implements OnInit {
     // })
 
 
+  }
+
+  handleArchive(meal:string) {
+    // Function to handle the "Archive" option action
+    console.log('Archive option clicked');
+    
+
+  }
+
+  async handleSync(meal:string) {
+    // Function to handle the "Sync" option action
+    console.log('Sync option clicked');
+    // Add your custom logic here
+    this.mealGenerationservice.handleArchive(this.dayData, meal).subscribe({
+      next: (data) => {
+        data.mealDate = this.dayData.mealDate;
+        this.dayData = data;
+        
+        console.log(this.meals);
+      },
+      error: (err) => {
+        this.errorHandlerService.presentErrorToast(
+          'Error regenerating meal items', err
+        )
+      }
+    })
   }
 
   setCurrent(o : any) {
