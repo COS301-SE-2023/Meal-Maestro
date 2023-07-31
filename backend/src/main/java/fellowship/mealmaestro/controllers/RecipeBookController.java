@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import fellowship.mealmaestro.models.RecipeModel;
-import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.services.RecipeBookService;
 import jakarta.validation.Valid;
 
