@@ -30,31 +30,31 @@ describe('SettingsApiService', () => {
     const mockToken = 'sample-token';
     const mockResponse: UserPreferencesI = {
         goal: 'Weight Loss',
-        shopping_interval: 'Weekly',
-        food_preferences: [],
-        calorie_amount: 0,
-        budget_range: '',
-        macro_ratio: {
+        shoppingInterval: 'Weekly',
+        foodPreferences: [],
+        calorieAmount: 0,
+        budgetRange: '',
+        macroRatio: {
             protein: 0,
             carbs: 0,
-            fats: 0
+            fat: 0
         },
         allergies: [],
-        cooking_time: 0,
-        user_height: 0,
-        user_weight: 0,
-        user_BMI: 0,
-        BMI_set: false,
-        cookingtime_set: false,
-        allergies_set: false,
-        macro_set: false,
-        budget_set: false,
-        calorie_set: false,
-        foodpreferance_set: false,
-        shoppinginterfval_set: false
+        cookingTime: '',
+        userHeight: 0,
+        userWeight: 0,
+        userBMI: 0,
+        bmiset: false,
+        cookingTimeSet: false,
+        allergiesSet: false,
+        macroSet: false,
+        budgetSet: false,
+        calorieSet: false,
+        foodPreferenceSet: false,
+        shoppingIntervalSet: false
     };
 
-    service.getSettings(mockToken).subscribe((response: HttpResponse<UserPreferencesI>) => {
+    service.getSettings().subscribe((response: HttpResponse<UserPreferencesI>) => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual(mockResponse);
     });
@@ -69,31 +69,31 @@ describe('SettingsApiService', () => {
     const mockToken = 'sample-token';
     const mockSettings: UserPreferencesI = {
         goal: 'Weight Loss',
-        shopping_interval: 'Weekly',
-        food_preferences: [],
-        calorie_amount: 0,
-        budget_range: '',
-        macro_ratio: {
+        shoppingInterval: 'Weekly',
+        foodPreferences: [],
+        calorieAmount: 0,
+        budgetRange: '',
+        macroRatio: {
             protein: 0,
             carbs: 0,
-            fats: 0
+            fat: 0
         },
         allergies: [],
-        cooking_time: 0,
-        user_height: 0,
-        user_weight: 0,
-        user_BMI: 0,
-        BMI_set: false,
-        cookingtime_set: false,
-        allergies_set: false,
-        macro_set: false,
-        budget_set: false,
-        calorie_set: false,
-        foodpreferance_set: false,
-        shoppinginterfval_set: false
+        cookingTime: '',
+        userHeight: 0,
+        userWeight: 0,
+        userBMI: 0,
+        bmiset: false,
+        cookingTimeSet: false,
+        allergiesSet: false,
+        macroSet: false,
+        budgetSet: false,
+        calorieSet: false,
+        foodPreferenceSet: false,
+        shoppingIntervalSet: false
     };
 
-    service.updateSettings(mockSettings, mockToken).subscribe((response: HttpResponse<void>) => {
+    service.updateSettings(mockSettings).subscribe((response: HttpResponse<void>) => {
       expect(response.status).toBe(200);
     });
 
