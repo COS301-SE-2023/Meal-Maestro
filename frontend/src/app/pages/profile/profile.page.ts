@@ -31,7 +31,7 @@ export class ProfilePage {
     budgetRange: '',
     macroRatio: { protein: 0, carbs: 0, fat: 0 },
     allergies: [],
-    cookingTime: 0,
+    cookingTime: '',
     userHeight: 0,
     userWeight: 0,
     userBMI: 0,
@@ -50,8 +50,8 @@ export class ProfilePage {
   displaying_Macroratio: string | undefined;
   shoppingIntervalOtherValue: number | undefined | any;
   shoppingInterval: string | any;
-  displayAllergies: string = '';
-  displayPreferences: string = '';
+  displayAllergies: string[] | string = '';
+  displayPreferences: string[] | string = '' ;
   selectedPreferences: string | any;
   selectedPriceRange: string;
 
@@ -94,23 +94,21 @@ export class ProfilePage {
     this.loadUserSettings();
   }
 
-
-
    private async loadUserSettings() {
     this.settingsApiService.getSettings().subscribe({
     
     
       next: (response) => {
-        console.log("response")
-         console.log(response.body)
+       
         if (response.status === 200) {
-          console.log("response")
+         
           if (response.body) {
            
-            // this.userpreferences = response.body;
+            
             this.userpreferences.goal = response.body.goal;
             this.userpreferences.shoppingInterval = response.body.shoppingInterval;
             this.userpreferences.foodPreferences = response.body.foodPreferences;
+           
             if (response.body.calorieAmount == null) {
               this.userpreferences.calorieAmount = 0;
             }
@@ -134,10 +132,15 @@ export class ProfilePage {
             this.userpreferences.macroRatio.fat = response.body.macroRatio.fat;
             this.userpreferences.macroRatio.carbs = response.body.macroRatio.carbs;
             this.userpreferences.macroRatio.protein = response.body.macroRatio.protein;
-            console.log(this.userpreferences)
+            
+           
+
+            this.displayPreferences = this.userpreferences.foodPreferences;
+            this.displayAllergies = this.userpreferences.allergies;
+            this.displaying_Macroratio = this.getDisplayMacroratio();
             this.updateDisplayData();
           }
-        }
+                  }
       },
       error: (err) => {
         if (err.status === 403) {
@@ -149,7 +152,7 @@ export class ProfilePage {
        
       },
     });
-
+    
    
   }
 
@@ -222,19 +225,21 @@ export class ProfilePage {
     }
     else
     {
-      if (this.preferences.vegetarian) {
+      this.userpreferences.foodPreferences = [];
+      if (this.preferences.vegetarian && !this.userpreferences.foodPreferences.includes('Vegetarian')) {
+        console.log("here")
         selectedPreferences.push('Vegetarian');
         this.userpreferences.foodPreferences.push('Vegetarian');
       }
-      if (this.preferences.vegan) {
+      if (this.preferences.vegan && !this.userpreferences.foodPreferences.includes('Vegan')) {
         selectedPreferences.push('Vegan');
         this.userpreferences.foodPreferences.push('Vegan');
       }
-      if (this.preferences.glutenIntolerant) {
+      if (this.preferences.glutenIntolerant && !this.userpreferences.foodPreferences.includes('Gluten-intolerant')) {
         selectedPreferences.push('Gluten-intolerant');
         this.userpreferences.foodPreferences.push('Gluten-intolerant');
       }
-      if (this.preferences.lactoseIntolerant) {
+      if (this.preferences.lactoseIntolerant && !this.userpreferences.foodPreferences.includes('Lactose-intolerant')) {
         selectedPreferences.push('Lactose-intolerant');
         this.userpreferences.foodPreferences.push('Lactose-intolerant');
       }
@@ -311,7 +316,7 @@ export class ProfilePage {
             { text: '4', value: 4 },
             { text: '5', value: 5 },
           ],
-          selectedIndex: 0, // Set the default selected index
+          selectedIndex: this.userpreferences.macroRatio.protein, // Set the default selected index
         },
         {
           name: 'carbs',
@@ -322,10 +327,10 @@ export class ProfilePage {
             { text: '4', value: 4 },
             { text: '5', value: 5 },
           ],
-          selectedIndex: 0, // Set the default selected index
+          selectedIndex: this.userpreferences.macroRatio.carbs, // Set the default selected index
         },
         {
-          name: 'fats',
+          name: 'fat',
           options: [
             { text: '1', value: 1 },
             { text: '2', value: 2 },
@@ -333,7 +338,7 @@ export class ProfilePage {
             { text: '4', value: 4 },
             { text: '5', value: 5 },
           ],
-          selectedIndex: 0, // Set the default selected index
+          selectedIndex: this.userpreferences.macroRatio.fat, // Set the default selected index
         },
       ],
       buttons: [
@@ -347,7 +352,7 @@ export class ProfilePage {
             // Update the selected macro values based on the selected indexes
             this.userpreferences.macroRatio.protein = value['protein'].value;
             this.userpreferences.macroRatio.carbs = value['carbs'].value;
-            this.userpreferences.macroRatio.fat = value['fats'].value;
+            this.userpreferences.macroRatio.fat = value['fat'].value;
             this.updateSettingsOnServer();
           },
         },
@@ -413,28 +418,28 @@ export class ProfilePage {
   }
 
   getSelectedAllergens(): string {
-
+    const selectedAllergens  = [];
     if (this.userpreferences.allergies == null) {
       this.userpreferences.allergies = [];
       return '';
     }
     else
     {
-    const selectedAllergens = [];
+     this.userpreferences.allergies = [];
 
-    if (this.allergens.seafood) {
+    if (this.allergens.seafood && !this.userpreferences.allergies.includes('Seafood')) {
       selectedAllergens.push('Seafood');
       this.userpreferences.allergies.push('Seafood');
     }
-    if (this.allergens.nuts) {
+    if (this.allergens.nuts && !this.userpreferences.allergies.includes('Nuts')) {
       selectedAllergens.push('Nuts');
       this.userpreferences.allergies.push('Nuts');
     }
-    if (this.allergens.eggs) {
+    if (this.allergens.eggs && !this.userpreferences.allergies.includes('Eggs')) {
       selectedAllergens.push('Eggs');
       this.userpreferences.allergies.push('Eggs');
     }
-    if (this.allergens.soy) {
+    if (this.allergens.soy && !this.userpreferences.allergies.includes('Soy')) {
       selectedAllergens.push('Soy');
       this.userpreferences.allergies.push('Soy');
     }
@@ -457,7 +462,7 @@ export class ProfilePage {
     if (this.userpreferences.cookingTimeSet === true) {
       this.isCookingModalOpen = isOpen;
     } else if (this.userpreferences.cookingTimeSet === false) {
-      this.userpreferences.cookingTime = 0;
+      this.userpreferences.cookingTime = '';
       this.isCookingModalOpen = isOpen;
     }
     this.updateSettingsOnServer();
@@ -473,11 +478,14 @@ export class ProfilePage {
   }
 
   setOpenBMISave(isOpen: boolean) {
-    if (this.userpreferences.bmiset === true) {
-      if (!isOpen) {
-        this.calculateBMI(); // Call BMI calculation function and update the display data
-      }
-    } else if (this.userpreferences.bmiset === false) {
+     if (this.userpreferences.userHeight && this.userpreferences.userWeight) {
+      this.updateDisplayData(); // Update the display data when the modal is closed
+      this.isBMIModalOpen = isOpen;
+
+     }
+    
+
+     if (this.userpreferences.bmiset === false) {
       this.userpreferences.userBMI = 0;
       this.isBMIModalOpen = isOpen;
     }
@@ -519,6 +527,75 @@ export class ProfilePage {
 
   // Function to update display data
   updateDisplayData() {
+    if (this.userpreferences.shoppingInterval != '') {
+    this.shoppingintervalToggle = true
+    this.shoppingInterval = this.userpreferences.shoppingInterval;
+    this.userpreferences.shoppingIntervalSet = true;
+    }
+
+    if (this.userpreferences.foodPreferences != null) {
+      this.preferenceToggle = true
+      if (this.userpreferences.foodPreferences.includes('Vegetarian')) {
+        this.preferences.vegetarian = true;
+      }
+      if (this.userpreferences.foodPreferences.includes('Vegan')) {
+        this.preferences.vegan = true;
+      }
+      if (this.userpreferences.foodPreferences.includes('Gluten-intolerant')) {
+        this.preferences.glutenIntolerant = true;
+      }
+      if (this.userpreferences.foodPreferences.includes('Lactose-intolerant')) {
+        this.preferences.lactoseIntolerant = true;
+      }
+      this.userpreferences.foodPreferenceSet = true;
+
+      }
+
+    if (this.userpreferences.calorieAmount != 0) {
+      this.calorieToggle = true
+      this.userpreferences.calorieSet = true;
+      }
+
+    if (this.userpreferences.budgetRange != '') {
+        this.budgetToggle = true
+        this.selectedPriceRange = this.userpreferences.budgetRange;
+        this.userpreferences.budgetSet = true;
+      }
+
+    if (this.userpreferences.macroRatio != null) {
+        this.macroToggle = true
+      
+        this.userpreferences.macroSet = true;
+      }   
+
+    if (this.userpreferences.allergies != null) {
+        this.allergiesToggle = true
+        if (this.userpreferences.allergies.includes('Seafood')) {
+          this.allergens.seafood = true;
+        }
+        if (this.userpreferences.allergies.includes('Nuts')) {
+          this.allergens.nuts = true;
+        }
+        if (this.userpreferences.allergies.includes('Eggs')) {
+          this.allergens.eggs = true;
+        }
+        if (this.userpreferences.allergies.includes('Soy')) {
+          this.allergens.soy = true;
+        }
+        this.userpreferences.allergiesSet = true;
+      }
+
+      if (this.userpreferences.userBMI != 0) {
+        this.BMIToggle = true
+        this.userpreferences.bmiset = true;
+        }
+
+      if (this.userpreferences.cookingTime != '') {
+        this.cookingToggle = true
+        this.userpreferences.cookingTimeSet = true;
+        }
+ 
+    
     this.displayPreferences = this.getSelectedPreferences();
     this.displaying_Macroratio = this.getDisplayMacroratio();
     this.displayAllergies = this.getSelectedAllergens();
@@ -540,9 +617,8 @@ export class ProfilePage {
     }
 }
 
-
-  // Function to calculate BMI
-  calculateBMI() {
-    // Implement your BMI calculation logic here and update the userpreferences.userBMI accordingly
-  }
+calculateBMI() {
+    this.userpreferences.userBMI = Math.round(this.userpreferences.userHeight /
+        this.userpreferences.userWeight);
+ }
 }
