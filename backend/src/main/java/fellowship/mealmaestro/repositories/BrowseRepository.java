@@ -98,10 +98,17 @@ public class BrowseRepository {
         return transaction -> {
            
         List<MealModel> matchingPopularMeals = new ArrayList<>();
-        org.neo4j.driver.Result result = transaction.run("MATCH (m:Meal {name: $name})\n" +
-                "RETURN m.name AS name, m.instructions AS instructions, m.description AS description, " +
-                "m.url AS url, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
-                Values.parameters("email", email));
+        // org.neo4j.driver.Result result = transaction.run("MATCH (m:Meal {name: $name})\n" +
+        //         "RETURN m.name AS name, m.instructions AS instructions, m.description AS description, " +
+        //         "m.url AS url, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
+        //         Values.parameters("email", email));
+        org.neo4j.driver.Result result = transaction.run(
+            "MATCH (m:Meal)\n" +
+            "WHERE m.name =~ $namePattern\n" + // Use regular expression matching
+            "RETURN m.name AS name, m.instructions AS instructions, m.description AS description, " +
+            "m.url AS url, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
+            Values.parameters("namePattern", "(?i).*" + mealName + ".*") // (?i) for case-insensitive
+        );
 
         if (result.hasNext()) {
             org.neo4j.driver.Record record = result.next();
