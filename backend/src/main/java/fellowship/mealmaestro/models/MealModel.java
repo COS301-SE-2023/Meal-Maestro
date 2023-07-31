@@ -14,7 +14,7 @@ public class MealModel {
 
     @NotBlank(message = "A Description is required")
     private String description;
-=
+
     @NotBlank(message = "A Url is required")
     private String url;
 
@@ -83,6 +83,7 @@ public class MealModel {
 
     public void setcookingTime(String cookingTime){
         this.cookingTime = cookingTime;
+    }
 
     public void copyFromOtherModel(MealModel mealModel){
         this.name = mealModel.getName();
