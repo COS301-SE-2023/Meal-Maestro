@@ -5,6 +5,7 @@ import { ActionSheetController, IonicModule } from '@ionic/angular';
 import { RecipeItemComponent } from '../../components/recipe-item/recipe-item.component';
 import { RecipeItemI } from '../../models/recipeItem.model';
 import { AuthenticationService, ErrorHandlerService, RecipeBookApiService } from '../../services/services';
+import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
 
 @Component({
   selector: 'app-recipe-book',
@@ -20,7 +21,8 @@ export class RecipeBookPage implements OnInit {
   constructor(private recipeService: RecipeBookApiService, 
     private errorHandlerService: ErrorHandlerService,
     private auth: AuthenticationService,
-    private actionSheetController: ActionSheetController) { }
+    private actionSheetController: ActionSheetController,
+    private addService: AddRecipeService) { }
 
   async ionViewWillEnter() {
     this.getRecipes();
@@ -134,6 +136,11 @@ export class RecipeBookPage implements OnInit {
   }
 
   ngOnInit() {
+    this.addService.recipeItem$.subscribe((recipeItem) => {
+      if (recipeItem) {
+        this.addRecipe(recipeItem);
+      }
+    });
   }
    
 }

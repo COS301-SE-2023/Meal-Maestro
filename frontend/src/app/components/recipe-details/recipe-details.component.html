@@ -1,13 +1,13 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{ title }}</ion-title>
+    <ion-title>{{ item.title }}</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="closeModal()">Close</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-img [src]="image" [alt]="title"></ion-img>
+  <ion-img [src]="item.image" [alt]="item.title"></ion-img>
   <div *ngIf="notSaved()">
     <ion-button (click)="addRecipe(item)" class="savebutton" fill="outline" shape="round" color="black">
       <ion-icon slot="start" name="bookmark-outline"></ion-icon> 

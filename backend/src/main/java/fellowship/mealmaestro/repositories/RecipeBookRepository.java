@@ -32,7 +32,7 @@ public class RecipeBookRepository {
 
     public static TransactionCallback<RecipeModel> addRecipeTransaction(RecipeModel recipe, String email) {
         return transaction -> {
-            transaction.run("MATCH (user:User {email: $email}), (recipe:Recipe {title: $title})" +
+            transaction.run("MATCH (user:User {email: $email}), (recipe:Meal {title: $title})" +
             "MERGE (user)-[:HAS_RECIPE_BOOK]->(recipeBook:`Recipe Book`) " +
             "MERGE (recipeBook)-[:CONTAINS]->(recipe)",
             Values.parameters("email", email, "title", recipe.getTitle()));
@@ -50,7 +50,7 @@ public class RecipeBookRepository {
 
     public static TransactionCallback<List<RecipeModel>> getAllRecipesTransaction(String user) {
         return transaction -> {
-            var result = transaction.run("MATCH (user:User {email: $email})-[:HAS_RECIPE_BOOK]->(book:`Recipe Book`)-[:CONTAINS]->(recipe:Recipe) " +
+            var result = transaction.run("MATCH (user:User {email: $email})-[:HAS_RECIPE_BOOK]->(book:`Recipe Book`)-[:CONTAINS]->(recipe:Meal) " +
             "RETURN recipe.title AS title, recipe.image AS image",
             Values.parameters("email", user));
             
@@ -73,7 +73,7 @@ public class RecipeBookRepository {
 
     public static TransactionCallback<Void> removeRecipeTransaction(RecipeModel recipe, String email) {
         return transaction -> {
-            transaction.run("MATCH (user:User {email: $email})-[:HAS_RECIPE_BOOK]->(book:`Recipe Book`)-[r:CONTAINS]->(recipe:Recipe {title: $title}) " +
+            transaction.run("MATCH (user:User {email: $email})-[:HAS_RECIPE_BOOK]->(book:`Recipe Book`)-[r:CONTAINS]->(recipe:Meal {title: $title}) " +
             "DELETE r",
                 Values.parameters("email", email, "title", recipe.getTitle()));
             return null;
