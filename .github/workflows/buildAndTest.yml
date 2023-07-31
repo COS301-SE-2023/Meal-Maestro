@@ -53,6 +53,9 @@ jobs:
       working-directory: backend
       env:
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        DB_URI: ${{ secrets.DB_URI }}
     
     - name: Download artifacts
       uses: actions/download-artifact@v2  
