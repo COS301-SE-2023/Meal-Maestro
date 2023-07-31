@@ -6,7 +6,7 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.List;
 
-@Node
+@Node("SavedMeals")
 public class SavedMealsModel {
     @Relationship(type = "SAVED_MEAL")
     private List<MealModel> savedMealList;
