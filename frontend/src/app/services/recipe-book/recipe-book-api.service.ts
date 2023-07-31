@@ -1,6 +1,6 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UserI, RecipeItemI } from '../../models/interfaces';
+import { UserI, RecipeItemI, MealI } from '../../models/interfaces';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -18,31 +18,31 @@ export class RecipeBookApiService {
 
   constructor(private http: HttpClient) { }
 
-  getAllRecipes(): Observable<HttpResponse<RecipeItemI[]>> { 
-    return this.http.post<RecipeItemI[]>(
+  getAllRecipes(): Observable<HttpResponse<MealI[]>> { 
+    return this.http.post<MealI[]>(
       this.url+'/getAllRecipes',
       {},
       {observe: 'response'}
     );
   }
 
-  addRecipe(item: RecipeItemI): Observable<HttpResponse<RecipeItemI>> {
-    return this.http.post<RecipeItemI>(
+  addRecipe(item: MealI): Observable<HttpResponse<MealI>> {
+    return this.http.post<MealI>(
       this.url+'/addRecipe',
       {
-        "title":item.title,
+        "name":item.name,
         "image":item.image
       },
       {observe: 'response'}
     );
   }
 
-  removeRecipe(recipe: RecipeItemI): Observable<HttpResponse<void>> {
+  removeRecipe(recipe: MealI): Observable<HttpResponse<void>> {
     return this.http.post<void>(
       this.url+'/removeRecipe',
       {        
-        "title": recipe.title,
-        "image": recipe.title        
+        "title": recipe.name,
+        "image": recipe.image        
       },
       {observe: 'response'}
     );

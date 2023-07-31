@@ -17,7 +17,7 @@ import { RecipeItemI } from '../../models/recipeItem.model';
 
 })
 export class RecipeItemComponent {
-  items: RecipeItemI[] = [];
+  items: MealI[] = [];
 
   async openModal(item: any) {
     const modal = await this.modalController.create({
@@ -30,7 +30,7 @@ export class RecipeItemComponent {
     await modal.present();
   }
 
-  public passItems(items: RecipeItemI[]): void {
+  public passItems(items: MealI[]): void {
     this.items = items;
   }
 

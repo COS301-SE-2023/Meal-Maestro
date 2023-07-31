@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { RecipeItemI } from '../../models/recipeItem.model';
+import { MealI } from '../../models/meal.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AddRecipeService {
-  private recipeSource: BehaviorSubject<RecipeItemI | null> = new BehaviorSubject<RecipeItemI | null>(null);
+  private recipeSource: BehaviorSubject<MealI | null> = new BehaviorSubject<MealI | null>(null);
   constructor() { }
 
   recipeItem$ = this.recipeSource.asObservable();
 
-  setRecipeItem(recipeItem: RecipeItemI): void {
+  setRecipeItem(recipeItem: MealI): void {
     this.recipeSource.next(recipeItem);
   }
 }

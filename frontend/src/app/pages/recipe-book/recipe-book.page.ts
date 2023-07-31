@@ -6,6 +6,7 @@ import { RecipeItemComponent } from '../../components/recipe-item/recipe-item.co
 import { RecipeItemI } from '../../models/recipeItem.model';
 import { AuthenticationService, ErrorHandlerService, RecipeBookApiService } from '../../services/services';
 import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
+import { MealI } from '../../models/meal.model';
 
 @Component({
   selector: 'app-recipe-book',
@@ -16,7 +17,7 @@ import { AddRecipeService } from '../../services/recipe-book/add-recipe.service'
 })
 export class RecipeBookPage implements OnInit {
   @ViewChild(RecipeItemComponent) recipeItem!: RecipeItemComponent;
-  public items: RecipeItemI[] = [];
+  public items: MealI[] = [];
 
   constructor(private recipeService: RecipeBookApiService, 
     private errorHandlerService: ErrorHandlerService,
@@ -28,7 +29,7 @@ export class RecipeBookPage implements OnInit {
     this.getRecipes();
   }
 
-  async addRecipe(item: RecipeItemI) {    
+  async addRecipe(item: MealI) {    
       this.recipeService.addRecipe(item).subscribe({
         next: (response) => {
           if (response.status === 200) {
@@ -81,7 +82,7 @@ export class RecipeBookPage implements OnInit {
     })
   }
 
-  async confirmRemove(event: Event, recipe: RecipeItemI) {
+  async confirmRemove(event: Event, recipe: MealI) {
     event.stopPropagation();
 
     const actionSheet = await this.actionSheetController.create({
@@ -104,7 +105,7 @@ export class RecipeBookPage implements OnInit {
     await actionSheet.present();
   }
 
-  async removeRecipe(recipe: RecipeItemI) {
+  async removeRecipe(recipe: MealI) {
     this.recipeService.removeRecipe(recipe).subscribe({
       next: (response) => {
         if (response.status === 200) {
@@ -131,7 +132,7 @@ export class RecipeBookPage implements OnInit {
     });
   }
 
-  handleEvent(data: RecipeItemI) {
+  handleEvent(data: MealI) {
     this.addRecipe(data);
   }
 

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import fellowship.mealmaestro.models.RecipeModel;
+import fellowship.mealmaestro.models.MealModel;
 import fellowship.mealmaestro.repositories.RecipeBookRepository;
 import fellowship.mealmaestro.services.auth.JwtService;
 
@@ -21,17 +21,17 @@ public class RecipeBookService {
         this.recipeBookRepository = recipeBookRepository;
     }
 
-    public RecipeModel addRecipe(RecipeModel recipe, String token) {
+    public MealModel addRecipe(MealModel recipe, String token) {
         String email = jwtService.extractUserEmail(token);
         return recipeBookRepository.addRecipe(recipe, email);
     }
 
-    public void removeRecipe(RecipeModel request, String token) {
+    public void removeRecipe(MealModel request, String token) {
         String email = jwtService.extractUserEmail(token);
         recipeBookRepository.removeRecipe(request, email);
     }
 
-    public List<RecipeModel> getAllRecipes(String token) {
+    public List<MealModel> getAllRecipes(String token) {
         String email = jwtService.extractUserEmail(token);
 
         return recipeBookRepository.getAllRecipes(email);

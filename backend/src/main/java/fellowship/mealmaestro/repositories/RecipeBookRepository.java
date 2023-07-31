@@ -11,7 +11,7 @@ import org.neo4j.driver.Values;
 import java.util.List;
 import java.util.ArrayList;
 
-import fellowship.mealmaestro.models.RecipeModel;
+import fellowship.mealmaestro.models.MealModel;
 
 @Repository
 public class RecipeBookRepository {
@@ -24,40 +24,40 @@ public class RecipeBookRepository {
     }
 
     //#region Create
-    public RecipeModel addRecipe(RecipeModel recipe, String email){
+    public MealModel addRecipe(MealModel recipe, String email){
         try (Session session = driver.session()){
            return session.executeWrite(addRecipeTransaction(recipe, email));
         }
     }
 
-    public static TransactionCallback<RecipeModel> addRecipeTransaction(RecipeModel recipe, String email) {
+    public static TransactionCallback<MealModel> addRecipeTransaction(MealModel recipe, String email) {
         return transaction -> {
             transaction.run("MATCH (user:User {email: $email}), (recipe:Meal {title: $title})" +
             "MERGE (user)-[:HAS_RECIPE_BOOK]->(recipeBook:`Recipe Book`) " +
             "MERGE (recipeBook)-[:CONTAINS]->(recipe)",
-            Values.parameters("email", email, "title", recipe.getTitle()));
-            return (new RecipeModel(recipe.getTitle(), recipe.getImage()));
+            Values.parameters("email", email, "title", recipe.getName()));
+            return (new MealModel(recipe.getName(), recipe.getimage()));
         };
     }
     //#endregion
 
     //#region Read               
-    public List<RecipeModel> getAllRecipes(String user){
+    public List<MealModel> getAllRecipes(String user){
         try (Session session = driver.session()){
             return session.executeRead(getAllRecipesTransaction(user));
         }
     }
 
-    public static TransactionCallback<List<RecipeModel>> getAllRecipesTransaction(String user) {
+    public static TransactionCallback<List<MealModel>> getAllRecipesTransaction(String user) {
         return transaction -> {
             var result = transaction.run("MATCH (user:User {email: $email})-[:HAS_RECIPE_BOOK]->(book:`Recipe Book`)-[:CONTAINS]->(recipe:Meal) " +
             "RETURN recipe.title AS title, recipe.image AS image",
             Values.parameters("email", user));
             
-            List<RecipeModel> recipes = new ArrayList<>();
+            List<MealModel> recipes = new ArrayList<>();
             while (result.hasNext()){
                 var record = result.next();
-                recipes.add(new RecipeModel(record.get("title").asString(), record.get("image").asString()));
+                recipes.add(new MealModel(record.get("title").asString(), record.get("image").asString()));
             }
             return recipes;
         };
@@ -65,13 +65,13 @@ public class RecipeBookRepository {
     //#endregion
 
     //#region Delete
-    public void removeRecipe(RecipeModel recipe, String email){
+    public void removeRecipe(MealModel recipe, String email){
         try (Session session = driver.session()){
             session.executeWrite(removeRecipeTransaction(recipe, email));
         }
     }
 
-    public static TransactionCallback<Void> removeRecipeTransaction(RecipeModel recipe, String email) {
+    public static TransactionCallback<Void> removeRecipeTransaction(MealModel recipe, String email) {
         return transaction -> {
             transaction.run("MATCH (user:User {email: $email})-[:HAS_RECIPE_BOOK]->(book:`Recipe Book`)-[r:CONTAINS]->(recipe:Meal {title: $title}) " +
             "DELETE r",
