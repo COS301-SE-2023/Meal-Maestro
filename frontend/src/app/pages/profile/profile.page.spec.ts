@@ -5,6 +5,8 @@ import { ProfilePage } from './profile.page';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { AuthenticationService } from '../../services/services';
+import { UserI } from '../../models/interfaces';
 
 
 describe('ProfilePage', () => {

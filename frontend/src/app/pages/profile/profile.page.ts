@@ -189,6 +189,7 @@ export class ProfilePage implements OnInit {
   
 
   private updateSettingsOnServer() {
+    // console.log(this.userpreferences);
     this.settingsApiService.updateSettings(this.userpreferences).subscribe(
       (response) => {
         if (response.status === 200) {

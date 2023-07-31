@@ -146,7 +146,11 @@ public class SettingsModel{
     }
 
     public void setUserBMI(int userHeight, int userWeight) {
-        this.userBMI = userHeight/userWeight;
+        if (userWeight == 0) {
+            this.userBMI = 0;
+        } else {
+            this.userBMI = userHeight/userWeight;
+        }
     }
 
     public void setUserBMI(int userBMI) {
