@@ -20,8 +20,13 @@ public class RecipeBookController {
     }
 
     @PostMapping("/addRecipe")
-    public void addRecipe(@RequestBody UserModel user, @RequestBody RecipeModel recipe) {
-        recipeBookService.addRecipe(user, recipe);
+    public ResponseEntity<RecipeModel> addRecipe(@Valid @RequestBody RecipeModel request, @RequestHeader("Authorization") String token) {
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        String authToken = token.substring(7);
+        return ResponseEntity.ok(recipeBookService.addRecipe(request, authToken));
     }
 
     @PostMapping("/removeRecipe")
