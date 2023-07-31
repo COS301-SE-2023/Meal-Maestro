@@ -9,7 +9,8 @@ import org.springframework.test.context.TestPropertySource;
     "JWT_SECRET=secret",
     "DB_URI=bolt://localhost:7687",
     "DB_USERNAME=neo4j",
-    "DB_PASSWORD=password"
+    "DB_PASSWORD=password",
+    "OPENAI_API_KEY=secret"
 })
 class MealmaestroApplicationTests {
 
