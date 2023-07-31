@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -36,7 +36,6 @@ export class BrowsePage implements OnInit{
     }
 
  async ngOnInit() {
-  
     this.mealGenerationservice.getPopularMeals().subscribe({
       next: (data) => {
         this.Searched = false;
@@ -61,6 +60,12 @@ onSearch(event: Event) {
   
   const customEvent = event as CustomEvent<any>;
   const query: string = customEvent.detail.value;
+
+  if(query == "") {
+    this.ngOnInit();
+    return;
+  }
+
  // const query: string = event.detail.value;
  // this.searchQuery = event.detail.value;
 
