@@ -37,6 +37,7 @@ public class BrowseRepository {
         return transaction -> {
 
         List<MealModel> randomMeals = new ArrayList<>();
+       // org.neo4j.driver.Result result = transaction.run("MATCH (User{email: $email})-[:HAS_BROWSE]->(p:Browse)-[:IN_BROWSE]->(m:Meal)\n" +
         org.neo4j.driver.Result result = transaction.run("MATCH (m:Meal)\n" +
                 "WITH m, rand() as random\n" +
                 "ORDER BY random\n" +
@@ -104,7 +105,7 @@ public class BrowseRepository {
         //         Values.parameters("email", email));
         org.neo4j.driver.Result result = transaction.run(
             "MATCH (m:Meal)\n" +
-            "WHERE m.name =~ $namePattern\n" + // Use regular expression matching
+            "WHERE m.name =~ $namePattern OR m.ingredients =~ $namePattern OR m.description =~ $namePattern\n" + // Use regular expression matching
             "RETURN m.name AS name, m.instructions AS instructions, m.description AS description, " +
             "m.url AS url, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
             Values.parameters("namePattern", "(?i).*" + mealName + ".*") // (?i) for case-insensitive
