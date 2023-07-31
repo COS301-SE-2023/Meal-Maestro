@@ -8,9 +8,8 @@
 </ion-header>
 <ion-content>
   <ion-img [src]="image" [alt]="title"></ion-img>
-  <app-recipe-book #recipeBook></app-recipe-book>
-  <div *ngIf="recipeBook.notSaved(item)">
-    <ion-button (click)="recipeBook.addRecipe(item)" class="savebutton" fill="outline" shape="round" color="black">
+  <div *ngIf="notSaved()">
+    <ion-button (click)="addRecipe(item)" class="savebutton" fill="outline" shape="round" color="black">
       <ion-icon slot="start" name="bookmark-outline"></ion-icon> 
       Save to Recipe Book
     </ion-button>

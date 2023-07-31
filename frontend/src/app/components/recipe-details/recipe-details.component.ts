@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { RecipeItemI } from '../../models/recipeItem.model';
 import { RecipeBookPage } from '../../pages/recipe-book/recipe-book.page';
@@ -11,8 +11,9 @@ import { RecipeBookPage } from '../../pages/recipe-book/recipe-book.page';
   imports: [IonicModule, RecipeBookPage]
 })
 export class RecipeDetailsComponent implements OnInit {
-  @Input() image!: string;
-  @Input() title!: string;
+  @Input() item!: RecipeItemI;
+  @Input() items!: RecipeItemI[];
+  @Output() addToRecipeBook: EventEmitter<RecipeItemI> = new EventEmitter();
 
   constructor(private modalController: ModalController) { }
 
@@ -22,8 +23,12 @@ export class RecipeDetailsComponent implements OnInit {
     this.modalController.dismiss();
   }
 
-  recipe: RecipeItemI = {
-    image: this.image,
-    title: this.title,
-  };
+  notSaved(): boolean {
+    console.log('called :)');
+    return !this.items.includes(this.item);
+  } 
+
+  addRecipe(item: RecipeItemI) {
+    this.addToRecipeBook.emit(item);
+  }
 }

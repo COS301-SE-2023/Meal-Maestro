@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActionSheetController, IonicModule } from '@ionic/angular';
@@ -14,7 +14,8 @@ import { AuthenticationService, ErrorHandlerService, RecipeBookApiService } from
   imports: [IonicModule, CommonModule, FormsModule, RecipeItemComponent]
 })
 export class RecipeBookPage implements OnInit {
-  items: RecipeItemI[] = [];
+  @ViewChild(RecipeItemComponent) recipeItem!: RecipeItemComponent;
+  public items: RecipeItemI[] = [];
 
   constructor(private recipeService: RecipeBookApiService, 
     private errorHandlerService: ErrorHandlerService,
@@ -57,6 +58,7 @@ export class RecipeBookPage implements OnInit {
         if (response.status === 200) {
           if (response.body) {
             this.items = response.body;
+            this.recipeItem.passItems(this.items);
           }
         }
       },
@@ -127,11 +129,11 @@ export class RecipeBookPage implements OnInit {
     });
   }
 
-  ngOnInit() {
+  handleEvent(data: RecipeItemI) {
+    this.addRecipe(data);
   }
 
-  notSaved(recipe: RecipeItemI): boolean {
-    console.log('called :)');
-    return !this.items.includes(recipe);
-  }  
+  ngOnInit() {
+  }
+   
 }

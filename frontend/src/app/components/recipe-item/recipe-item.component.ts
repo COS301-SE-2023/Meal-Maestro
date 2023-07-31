@@ -4,6 +4,7 @@ import { RecipeDetailsComponent } from '../recipe-details/recipe-details.compone
 
 import { MealI } from '../../models/meal.model';
 import { CommonModule } from '@angular/common';
+import { RecipeItemI } from '../../models/recipeItem.model';
 
 
 @Component({
@@ -16,15 +17,21 @@ import { CommonModule } from '@angular/common';
 
 })
 export class RecipeItemComponent {
+  items: RecipeItemI[] = [];
+
   async openModal(item: any) {
     const modal = await this.modalController.create({
       component: RecipeDetailsComponent,
       componentProps: {
-        image: item.image,
-        title: item.title
+        item: item,
+        items: this.items
       }
     });
     await modal.present();
+  }
+
+  public passItems(items: RecipeItemI[]): void {
+    this.items = items;
   }
 
   constructor(private modalController: ModalController) { }
