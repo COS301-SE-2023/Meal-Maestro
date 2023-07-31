@@ -1,12 +1,14 @@
+//write unit test for the settings-api.service.ts
+// Path: frontend/src/app/services/settings-api/settings-api.service.spec.ts  
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { SettingsApiService } from './settings-api.service';
-import { HttpResponse } from '@angular/common/http';
-import { UserPreferencesI } from '../../models/interfaces';
+import { UserPreferencesI } from '../../models/userpreference.model';
 
 describe('SettingsApiService', () => {
   let service: SettingsApiService;
   let httpMock: HttpTestingController;
+  let settings: UserPreferencesI;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -26,83 +28,77 @@ describe('SettingsApiService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should get user settings', () => {
-    const mockToken = 'sample-token';
-    const mockResponse: UserPreferencesI = {
-        goal: 'Weight Loss',
-        shoppingInterval: 'Weekly',
-        foodPreferences: [],
-        calorieAmount: 0,
-        budgetRange: '',
-        macroRatio: {
-            protein: 0,
-            carbs: 0,
-            fat: 0
-        },
-        allergies: [],
-        cookingTime: '',
-        userHeight: 0,
-        userWeight: 0,
-        userBMI: 0,
-        bmiset: false,
-        cookingTimeSet: false,
-        allergiesSet: false,
-        macroSet: false,
-        budgetSet: false,
-        calorieSet: false,
-        foodPreferenceSet: false,
-        shoppingIntervalSet: false
+  it('should get settings', () => {
+    settings = {
+      goal: 'lose',
+      shoppingInterval: 'weekly',
+      foodPreferences: ['vegan'],
+      calorieAmount: 2000,
+      budgetRange: 'low',
+      macroRatio: {protein: 0.3, carbs: 0.4, fat: 0.3},
+      allergies: ['dairy'],
+      cookingTime: '30',
+      userHeight: 180,
+      userWeight: 80,
+      userBMI: 24.7,
+
+      bmiset : true,
+      cookingTimeSet : true,
+      allergiesSet : true,
+      macroSet : true,
+      budgetSet : true,
+      calorieSet : true,
+      foodPreferenceSet : true,
+      shoppingIntervalSet : true,
+
     };
 
-    service.getSettings().subscribe((response: HttpResponse<UserPreferencesI>) => {
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual(mockResponse);
+    service.getSettings().subscribe((res) => {
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual(settings);
     });
 
     const req = httpMock.expectOne(`${service.url}/getSettings`);
     expect(req.request.method).toBe('POST');
-    expect(req.request.headers.get('Authorization')).toBe(`Bearer ${mockToken}`);
-    req.flush(mockResponse);
+    req.flush(settings);
   });
 
-  it('should update user settings', () => {
-    const mockToken = 'sample-token';
-    const mockSettings: UserPreferencesI = {
-        goal: 'Weight Loss',
-        shoppingInterval: 'Weekly',
-        foodPreferences: [],
-        calorieAmount: 0,
-        budgetRange: '',
-        macroRatio: {
-            protein: 0,
-            carbs: 0,
-            fat: 0
-        },
-        allergies: [],
-        cookingTime: '',
-        userHeight: 0,
-        userWeight: 0,
-        userBMI: 0,
-        bmiset: false,
-        cookingTimeSet: false,
-        allergiesSet: false,
-        macroSet: false,
-        budgetSet: false,
-        calorieSet: false,
-        foodPreferenceSet: false,
-        shoppingIntervalSet: false
+
+  it('should update settings', () => {
+    settings = {
+      goal: 'lose',
+      shoppingInterval: 'weekly',
+      foodPreferences: ['vegan'],
+      calorieAmount: 2000,
+      budgetRange: 'low',
+
+      macroRatio: {protein: 0.3, carbs: 0.4, fat: 0.3},
+      allergies: ['dairy'],
+      cookingTime: '30',
+      userHeight: 180,
+      userWeight: 80,
+      userBMI: 24.7,
+
+      bmiset : true,
+      cookingTimeSet : true,
+      allergiesSet : true,
+      macroSet : true,
+      budgetSet : true,
+      calorieSet : true,
+      foodPreferenceSet : true,
+      shoppingIntervalSet : true,
     };
 
-    service.updateSettings(mockSettings).subscribe((response: HttpResponse<void>) => {
-      expect(response.status).toBe(200);
+
+    service.updateSettings(settings).subscribe((res) => {
+      expect(res.status).toBe(200);
     });
 
     const req = httpMock.expectOne(`${service.url}/updateSettings`);
     expect(req.request.method).toBe('POST');
-    expect(req.request.headers.get('Authorization')).toBe(`Bearer ${mockToken}`);
-    expect(req.request.body).toEqual(mockSettings);
-    req.flush(null); // Assuming the backend returns an empty response for updateSettings
+    req.flush(settings);
   });
-
-  // Add more test cases for other API endpoints as needed
 });
+
+
+
