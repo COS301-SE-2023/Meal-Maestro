@@ -362,7 +362,7 @@
           <ion-card-content>
             <ion-text>
               <p>
-                A macro ratio is the proportion of carbohydrates, proteins, and fats in a person's diet. It describes how much of each macronutrient contributes to the total calorie intake. Common ratios, like the "40-30-30" ratio, specify the percentage of calories from each macronutrient. It helps customize nutrition for goals like weight loss, muscle gain, or performance. Consulting a professional is advised for personalized macro ratios.
+                A macro ratio is the proportion of carbohydrates, proteins, and fat in a person's diet. It describes how much of each macronutrient contributes to the total calorie intake. Common ratios, like the "40-30-30" ratio, specify the percentage of calories from each macronutrient. It helps customize nutrition for goals like weight loss, muscle gain, or performance. Consulting a professional is advised for personalized macro ratios.
               </p>
             </ion-text>
           </ion-card-content>
@@ -526,7 +526,7 @@
             <ion-button (click)="setOpenBMI(false)">Cancel</ion-button>
           </ion-buttons>
           <ion-buttons slot="end">
-            <ion-button (click)="setOpenBMISave(false)" [strong]="true">Confirm</ion-button>
+            <ion-button (click)="setOpenBMISave(false)" (click)="calculateBMI()" [strong]="true">Confirm</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
