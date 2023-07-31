@@ -26,19 +26,14 @@ export class RecipeBookApiService {
     );
   }
 
-  addRecipe(item: RecipeItemI): Observable<RecipeItemI> {
+  addRecipe(item: RecipeItemI): Observable<HttpResponse<RecipeItemI>> {
     return this.http.post<RecipeItemI>(
       this.url+'/addRecipe',
       {
-        "recipe": {
-          "title": item.title,
-          "image": item.image
-        },
-        "user": {
-          "username": this.user.username,
-          "email": this.user.email
-        }
-      }
+        "title":item.title,
+        "image":item.image
+      },
+      {observe: 'response'}
     );
   }
 
