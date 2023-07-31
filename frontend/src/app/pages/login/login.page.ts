@@ -21,13 +21,15 @@ export class LoginPage implements OnInit {
   }
   
 
-  constructor( private router: Router, private errorHandlerService: ErrorHandlerService, private auth: AuthenticationService ) { }
+  constructor(private router: Router,
+              private errorHandlerService: ErrorHandlerService, 
+              private auth: AuthenticationService 
+              ) { }
 
   ngOnInit() {
   }
 
-  login(form: any) {
-
+  async login(form: any) {
     const loginUser: UserI = {
       username: '',
       email: form.email,
@@ -46,6 +48,9 @@ export class LoginPage implements OnInit {
       error: (error) => {
         if (error.status == 403){
           this.errorHandlerService.presentErrorToast('Invalid credentials', 'Invalid credentials');
+          localStorage.removeItem('token');
+        }else if(error.status == 404){
+          this.errorHandlerService.presentErrorToast('Email or password incorrect', 'Email or password incorrect');
           localStorage.removeItem('token');
         }else{
           this.errorHandlerService.presentErrorToast('Unexpected error. Please try again', error);
