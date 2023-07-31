@@ -56,6 +56,7 @@ public class OpenaiApiService {
     private int maximumTokenLength = 800;
 
     // potential vars
+
     // will make a few prompts and return best, heavy on token use
     private int bestOfN = 1;
     // detect abuse
