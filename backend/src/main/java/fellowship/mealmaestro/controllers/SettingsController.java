@@ -36,6 +36,7 @@ public class SettingsController {
             return ResponseEntity.badRequest().build();
         }
         String authToken = token.substring(7);
+        request.setUserBMI(request.getUserHeight(), request.getUserWeight());
         settingsService.updateSettings(request, authToken);
         return ResponseEntity.ok().build();
     }
