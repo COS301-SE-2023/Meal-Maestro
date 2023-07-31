@@ -15,55 +15,37 @@ substitutions, budget preferences and gives users the ability to add ingredients
 virtual pantry through image recognition. It aims to reduce decision fatigue, helps users
 easily plan meals for the coming week and helps them hit their nutritional goals. 
 
-# Set Up
-## Install:
-- Node v18.16.0
-- npm v9.5.1
-- Angular CLI v16.0.0
-- Ionic CLI v7.1.1
-- Gradle v8
-- Java 17
-
-## Install prerequisites:
-
-1. Install Node.js (https://nodejs.org/) and npm (comes with Node.js).
-2. Install Angular CLI globally by running `npm install -g @angular/cli`
-3. Install Ionic CLI globally by running `npm install -g @ionic/cli`
-4. Install Gradle (https://gradle.org/install/)
-
-## Starting the app:
-1. Will most likely need to run `npm install` to install all dependencies.
-2. Run `ionic serve` to start the app in the browser.
-3. Run `.\backend\gradlew.bat -p backend bootRun` to start the backend server.
-4. Frontend will be running on http://localhost:8100/ and the backend will be running on http://localhost:8080/
-
 # Documentation
 ## Demo 1
 
 - 🎥 [Demo 1](https://drive.google.com/file/d/10Eq8U3jkWRM08BBfeC6RolvX8edsNR31/view?usp=sharing)
+### System Requirements Specification
+- 📃 [SRS](https://docs.google.com/document/d/1r36yfCPophZftvO_4PcoFPyaN1UonBcP5Fbmt0ypGoI/edit?usp=sharing)
 
-## System Requirements Specification
-### v1:
 
-- 📃 [SRS v1](https://docs.google.com/document/d/1r36yfCPophZftvO_4PcoFPyaN1UonBcP5Fbmt0ypGoI/edit?usp=sharing)
-### v2:
-
-- 📃 [SRS v2](https://docs.google.com/document/d/1FmSqFAENVQOZEEr14x5cBBWr9sgkA5lm3mrld0XY0l8/edit?usp=sharing)
-
-## Technical Installation Manual
-- 📖 [Installation Manual v1](https://docs.google.com/document/d/1KWnnRnpyYKyQDBUFijPwVD7MgGMjvhL-w9v_T77EAyE/edit?usp=sharing)
-
-## User Manual Document
-- 📃 [User Manual v1](https://docs.google.com/document/d/1Cvxc9UgSUuXDbWwugPlxlK7Dh_KO7xvwuzCKtDzu1sM/edit?usp=sharing)
-- https://docs.google.com/document/d/1npM7LlKqEH4eLSaIJUsVhWk6_DC4qCrBcZCBaxCqGWk/edit?usp=sharing
-
-## Coding Standards Document
-- 📃 [Coding Standards v1](https://docs.google.com/document/d/1Prh1NJkLCubiySVKyEGGlkWgBTonqnkokMo-sBYGPYw/edit?usp=sharing)
-
-## Architectural Requirements Document
+## Demo 2
+### System Requirements Specification
+- 📃 [SRS](https://docs.google.com/document/d/1FmSqFAENVQOZEEr14x5cBBWr9sgkA5lm3mrld0XY0l8/edit?usp=sharing)
+### User Manual Document
+- 📃 [User Manual](https://docs.google.com/document/d/1Cvxc9UgSUuXDbWwugPlxlK7Dh_KO7xvwuzCKtDzu1sM/edit?usp=sharing)
+### Coding Standards Document
+- 📃 [Coding Standards](https://docs.google.com/document/d/1Prh1NJkLCubiySVKyEGGlkWgBTonqnkokMo-sBYGPYw/edit?usp=sharing)
+### Architectural Requirements Document
 - 📃 [Architectural Requirements](https://docs.google.com/document/d/1GADUq8VWsgqLFTfSPIBHwsFnrli8AbZGp7uwuRqVZu8/edit?usp=sharing)
 
-## Project Board
+
+## Demo 3
+### System Requirements Specification
+- 📃 [SRS](https://docs.google.com/document/d/1FmSqFAENVQOZEEr14x5cBBWr9sgkA5lm3mrld0XY0l8/edit?usp=sharing)
+### Technical Installation Manual
+- 📖 [Installation Manual](https://docs.google.com/document/d/1KWnnRnpyYKyQDBUFijPwVD7MgGMjvhL-w9v_T77EAyE/edit?usp=sharing)
+### User Manual Document
+- 📃 [User Manual](https://docs.google.com/document/d/1npM7LlKqEH4eLSaIJUsVhWk6_DC4qCrBcZCBaxCqGWk/edit?usp=sharing)
+### Coding Standards Document
+- 📃 [Coding Standards](https://docs.google.com/document/d/1Prh1NJkLCubiySVKyEGGlkWgBTonqnkokMo-sBYGPYw/edit?usp=sharing)
+### Architectural Requirements Document
+- 📃 [Architectural Requirements](https://docs.google.com/document/d/1GADUq8VWsgqLFTfSPIBHwsFnrli8AbZGp7uwuRqVZu8/edit?usp=sharing)
+### Project Board
 - 📋 [Project Board](https://github.com/orgs/COS301-SE-2023/projects/38)
 
 ## Individuals
