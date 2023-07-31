@@ -24,3 +24,8 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+
+div.item-inner {
+    padding-right: 0px !important;
+    padding-inline-end:0px !important;
+  }

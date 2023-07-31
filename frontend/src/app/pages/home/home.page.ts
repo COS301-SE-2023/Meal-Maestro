@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonicModule, DailyMealsComponent],
+  imports: [IonicModule, DailyMealsComponent, CommonModule],
 })
 export class HomePage implements OnInit{
   daysMeals: DaysMealsI[] = [];
@@ -18,18 +18,45 @@ export class HomePage implements OnInit{
     , private errorHandlerService:ErrorHandlerService) {};
 
   async ngOnInit() {
-    this.mealGenerationservice.getDailyMeals().subscribe({
-      next: (data) => {
-        this.daysMeals = data;
-        
-      },
-      error: (err) => {
-        this.errorHandlerService.presentErrorToast(
-          'Error loading meal items', err
-        )
-      }
-    })
+   
+     for (let index = 0; index < 4; index++) {
+      this.mealGenerationservice.getDailyMeals(this.getDayOfWeek(index)).subscribe({
+        next: (data: DaysMealsI[] | DaysMealsI) => {
+          if (Array.isArray(data)) {
+            const mealsWithDate = data.map((item) => ({
+              ...item,
+              date: this.getDayOfWeek(index),
+            }));
+            this.daysMeals.push(...mealsWithDate);
+          } else {
+            data.mealDate = this.getDayOfWeek(index);
+            this.daysMeals.push(data);
+          }
+          
+        },
+        error: (err) => {
+          this.errorHandlerService.presentErrorToast(
+            'Error loading meal items',
+            err
+          );
+        },
+      });
+    }
 
+  }
+  private getDayOfWeek(dayOffset: number): string {
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const today = new Date();
+    const targetDate = new Date(today);
+    targetDate.setDate(today.getDate() + dayOffset);
+    const dayIndex = targetDate.getDay();
+    return daysOfWeek[dayIndex];
+  }
+
+  private addDays(date: Date, days: number): Date {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
   }
 
 
@@ -59,4 +86,6 @@ export class HomePage implements OnInit{
   
 }import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
 import { ErrorHandlerService } from '../../services/services';
+import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 

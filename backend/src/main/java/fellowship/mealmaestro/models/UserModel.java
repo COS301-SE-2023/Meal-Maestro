@@ -3,6 +3,8 @@ package fellowship.mealmaestro.models;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +14,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+@Node("User")
 public class UserModel implements UserDetails{
     @NotBlank(message = "A Username is required")
     private String name;
@@ -19,7 +22,7 @@ public class UserModel implements UserDetails{
     @NotBlank
     @Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")
     private String password;
-
+    @Id
     @NotBlank
     @Email(message = "Email must be valid")
     private String email;
