@@ -81,6 +81,7 @@ export class DailyMealsComponent  implements OnInit {
     // Add your custom logic here
     this.mealGenerationservice.handleArchive(this.dayData, meal).subscribe({
       next: (data) => {
+        data.mealDate = this.dayData.mealDate;
         this.dayData = data;
         
         console.log(this.meals);
