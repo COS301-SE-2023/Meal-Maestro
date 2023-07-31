@@ -1,12 +1,10 @@
 package fellowship.mealmaestro.services;
 
 import java.time.DayOfWeek;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -39,11 +37,13 @@ public class MealDatabseService {
         this.mealRepository = mealRepository;
 
     }
+
     @Autowired
     private UserService userService;
 
-    public void saveDaysMeals(JsonNode daysMealsJson, DayOfWeek date, String token) throws JsonProcessingException, IllegalArgumentException {
-       
+    public void saveDaysMeals(JsonNode daysMealsJson, DayOfWeek date, String token)
+            throws JsonProcessingException, IllegalArgumentException {
+
         UserModel userModel = userService.getUser(token);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -56,19 +56,21 @@ public class MealDatabseService {
         daysMealsRepository.save(daysMealsModel);
     }
 
-    public List<DaysMealsModel> retrieveDaysMealsModel(DayOfWeek date){
+    public List<DaysMealsModel> retrieveDaysMealsModel(DayOfWeek date) {
         return daysMealsRepository.findMealsForNextWeek(date);
     }
 
-     public Optional<DaysMealsModel> retrieveDatesMealModel(DayOfWeek date){
+    public Optional<DaysMealsModel> retrieveDatesMealModel(DayOfWeek date) {
         return daysMealsRepository.findMealsForDate(date);
     }
-    
+
     public Optional<DaysMealsModel> fetchDay(DayOfWeek mealDate) {
         return daysMealsRepository.findByMealDate(mealDate);
     }
 
-     
+    public void saveRegeneratedMeal(DaysMealsModel daysMealsModel) {
+        daysMealsRepository.save(daysMealsModel);
+    }
 
     public void changeMealForDate(DayOfWeek mealDate, MealModel mealModel, String time) {
 
@@ -80,31 +82,31 @@ public class MealDatabseService {
 
         DaysMealsModel daysMealsModel = optionalDaysMealsModel.get();
 
-        if(time == "breakfast")
-        {
+        if (time == "breakfast") {
             daysMealsModel.setBreakfast(mealModel);
             MealModel updatedMeal = mealRepository.save(mealModel);
             daysMealsModel.setBreakfast(updatedMeal);
         }
-        if(time == "lunch")
-        {
+        if (time == "lunch") {
             daysMealsModel.setLunch(mealModel);
             MealModel updatedMeal = mealRepository.save(mealModel);
             daysMealsModel.setLunch(updatedMeal);
         }
-        if(time == "dinner")
-        {
+        if (time == "dinner") {
             daysMealsModel.setDinner(mealModel);
             MealModel updatedMeal = mealRepository.save(mealModel);
             daysMealsModel.setDinner(updatedMeal);
         }
-        
+
         daysMealsRepository.save(daysMealsModel);
     }
 
-    public Optional<DaysMealsModel> findUsersDaysMeals(DayOfWeek day, String token){
-         UserModel userModel = userService.getUser(token);
-        String email = userModel.getEmail();
-        return daysMealsRepository.findDaysMealsWithMealsForUserAndDate(email, (userModel.getEmail() + day.toString()));
+    public Optional<DaysMealsModel> findUsersDaysMeals(DayOfWeek day, String token)
+            throws JsonProcessingException, IllegalArgumentException {
+        UserModel userModel = userService.getUser(token);
+
+        return daysMealsRepository.findById((userModel.getEmail() + day.toString()));
+
     }
+
 }

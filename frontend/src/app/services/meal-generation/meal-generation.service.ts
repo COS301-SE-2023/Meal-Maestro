@@ -4,6 +4,7 @@ import { Observable, catchError, map, tap } from 'rxjs';
 import { MealI } from '../../models/meal.model';
 import { DaysMealsI, FoodItemI, UserI } from '../../models/interfaces';
 import { title } from 'process';
+import { request } from 'http';
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +22,12 @@ export class MealGenerationService {
   url : String = 'http://localhost:8080';
   constructor(private http: HttpClient) { }
 
-  getDailyMeals():Observable<DaysMealsI[]> {
-    return this.http.get<DaysMealsI[]>(
-      this.url+'/getDaysMeals'
+  getDailyMeals(dayOfWeek : String):Observable<DaysMealsI[]> {
+    return this.http.post<any>(
+      this.url+'/getDaysMeals',
+      { 
+        "dayOfWeek" : dayOfWeek.toUpperCase(),
+      }
     );
   }
 

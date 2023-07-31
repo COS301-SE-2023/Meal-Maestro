@@ -20,7 +20,7 @@ export class HomePage implements OnInit{
   async ngOnInit() {
    
      for (let index = 0; index < 4; index++) {
-      this.mealGenerationservice.getDailyMeals().subscribe({
+      this.mealGenerationservice.getDailyMeals(this.getDayOfWeek(index)).subscribe({
         next: (data: DaysMealsI[] | DaysMealsI) => {
           if (Array.isArray(data)) {
             const mealsWithDate = data.map((item) => ({

@@ -15,8 +15,8 @@ public class MealModel {
     @NotBlank(message = "A Description is required")
     private String description;
 
-    @NotBlank(message = "A Url is required")
-    private String url;
+    // @NotBlank(message = "A Url is required")
+    // private String url;
 
     @NotBlank(message = "Ingredients are required")
     private String ingredients;
@@ -32,7 +32,7 @@ public class MealModel {
         this.name = name;
         this.instructions = instructions;
         this.description = description;
-        this.url = url;
+   //     this.url = url;
         this.ingredients = ingredients;
         this.cookingTime = cookingTime;
     }
@@ -61,13 +61,13 @@ public class MealModel {
         this.description = description;
     }
 
-    public String geturl(){
-        return this.url;
-    }
+    // public String geturl(){
+    //     return this.url;
+    // }
 
-    public void seturl(String url){
-        this.url = url;
-    }
+    // public void seturl(String url){
+    //     this.url = url;
+    // }
 
     public String getingredients(){
         return this.ingredients;
