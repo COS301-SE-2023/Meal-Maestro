@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import fellowship.mealmaestro.models.MealModel;
@@ -31,12 +32,12 @@ public class BrowseController {
     }
 
     @GetMapping("/getSearchedMeals")
-    public ResponseEntity<List<MealModel>> searchMeals(@Valid @RequestBody String request, @RequestHeader("Authorization") String token){
+    public ResponseEntity<List<MealModel>> getSearcedhMeals(@RequestParam("query") String mealName, @RequestHeader("Authorization") String token){
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
         String authToken = token.substring(7);
-        return ResponseEntity.ok(browseService.getSearchedMeals(request,authToken));                                                                     
+        return ResponseEntity.ok(browseService.getSearchedMeals(mealName,authToken));                                                                     
     }
     
 }
