@@ -16,11 +16,11 @@
           <div ion-no-padding style="padding-inline-end:0px !important;">
             <ion-card-header>
               <ion-card-subtitle>Breakfast</ion-card-subtitle>
-              <ion-card-title>{{ dayData.breakfast.name }}</ion-card-title>
+              <ion-card-title>{{ dayData?.breakfast?.name }}</ion-card-title>
             </ion-card-header>
       
             <ion-card-content>
-              {{ dayData.breakfast.description }}
+              {{ dayData?.breakfast?.description }}
             </ion-card-content>
         
 
@@ -37,7 +37,7 @@
           <ng-template>
             <ion-header>
               <ion-toolbar>
-                <ion-title>{{ dayData.breakfast.name }}</ion-title>
+                <ion-title>{{ dayData?.breakfast?.name }}</ion-title>
                 <ion-buttons slot="end">
                   <ion-button (click)="setOpen(false, null)">Close</ion-button>
                 </ion-buttons>
@@ -50,9 +50,9 @@
               />
             </ion-avatar>
             <ion-content class="ion-padding">
-              <p>{{ dayData.breakfast.ingredients }}</p>
-              <p>{{ dayData.breakfast.instructions }}</p>
-              <p>{{ dayData.breakfast.cookingTime }}</p>
+              <p>{{ dayData?.breakfast?.ingredients }}</p>
+              <p>{{ dayData?.breakfast?.instructions }}</p>
+              <p>{{ dayData?.breakfast?.cookingTime }}</p>
             </ion-content>
           </ng-template>
         </ion-modal>
@@ -75,11 +75,11 @@
           <div ion-no-padding style="padding-inline-end:0px !important;">
             <ion-card-header>
               <ion-card-subtitle>Lunch</ion-card-subtitle>
-              <ion-card-title>{{ dayData.lunch.name }}</ion-card-title>
+              <ion-card-title>{{ dayData?.lunch?.name }}</ion-card-title>
             </ion-card-header>
       
             <ion-card-content>
-              {{ dayData.lunch.description }}
+              {{ dayData?.lunch?.description }}
             </ion-card-content>
         
 
@@ -98,7 +98,7 @@
           <ng-template>
             <ion-header>
               <ion-toolbar>
-                <ion-title>{{ dayData.lunch.name }}</ion-title>
+                <ion-title>{{ dayData?.lunch?.name }}</ion-title>
                 <ion-buttons slot="end">
                   <ion-button (click)="setOpen(false, null)">Close</ion-button>
                 </ion-buttons>
@@ -111,9 +111,9 @@
               />
             </ion-avatar>
             <ion-content class="ion-padding">
-              <p>{{ dayData.lunch.ingredients }}</p>
-              <p>{{ dayData.lunch.instructions }}</p>
-              <p>{{ dayData.lunch.cookingTime }}</p>
+              <p>{{ dayData?.lunch?.ingredients }}</p>
+              <p>{{ dayData?.lunch?.instructions }}</p>
+              <p>{{ dayData?.lunch?.cookingTime }}</p>
             </ion-content>
           </ng-template>
         </ion-modal>
@@ -135,11 +135,11 @@
           <div ion-no-padding style="padding-inline-end:0px !important;">
             <ion-card-header>
               <ion-card-subtitle>Dinner</ion-card-subtitle>
-              <ion-card-title>{{ dayData.dinner.name }}</ion-card-title>
+              <ion-card-title>{{ dayData?.dinner?.name }}</ion-card-title>
             </ion-card-header>
       
             <ion-card-content>
-              {{ dayData.dinner.description }}
+              {{ dayData?.dinner?.description }}
             </ion-card-content>
         
 
@@ -158,7 +158,7 @@
           <ng-template>
             <ion-header>
               <ion-toolbar>
-                <ion-title>{{ dayData.dinner.name }}</ion-title>
+                <ion-title>{{ dayData?.dinner?.name }}</ion-title>
                 <ion-buttons slot="end">
                   <ion-button (click)="setOpen(false, null)">Close</ion-button>
                 </ion-buttons>
@@ -171,9 +171,9 @@
               />
             </ion-avatar>
             <ion-content class="ion-padding">
-              <p>{{ dayData.dinner.ingredients }}</p>
-              <p>{{ dayData.dinner.instructions }}</p>
-              <p>{{ dayData.dinner.cookingTime }}</p>
+              <p>{{ dayData?.dinner?.ingredients }}</p>
+              <p>{{ dayData?.dinner?.instructions }}</p>
+              <p>{{ dayData?.dinner?.cookingTime }}</p>
             </ion-content>
           </ng-template>
         </ion-modal>
