@@ -19,7 +19,7 @@ export class DailyMealsComponent  implements OnInit {
   breakfast: string = "breakfast";
   lunch: string  = "lunch";
   dinner: string  = "dinner";
-
+  mealDate: string | undefined;
   @Input() todayData!: MealI[];
   @Input() dayData!: DaysMealsI;
   item: DaysMealsI | undefined;

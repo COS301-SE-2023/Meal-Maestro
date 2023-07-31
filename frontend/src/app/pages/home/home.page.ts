@@ -25,7 +25,7 @@ export class HomePage implements OnInit{
           if (Array.isArray(data)) {
             const mealsWithDate = data.map((item) => ({
               ...item,
-              date: this.getDayOfWeek(index),
+              mealDate: this.getDayOfWeek(index),
             }));
             this.daysMeals.push(...mealsWithDate);
           } else {
