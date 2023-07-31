@@ -5,9 +5,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+<<<<<<< HEAD
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+=======
+import org.springframework.web.bind.annotation.RequestParam;
+>>>>>>> development
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -82,6 +86,7 @@ public class MealManagementController {
         return mealManagementService.generateMeal();
     }
 
+<<<<<<< HEAD
     public static JsonNode findMealSegment(JsonNode jsonNode, String mealType) {
         if (jsonNode.isObject()) {
             JsonNode startNode = jsonNode.get("start");
@@ -160,3 +165,16 @@ public class MealManagementController {
     }
 
 }
+=======
+    @GetMapping("/getPopularMeals")
+    public String popularMeals() throws JsonMappingException, JsonProcessingException{
+        return mealManagementService.generatePopularMeals();
+    }
+
+    @GetMapping("/getSearchedMeals")
+    public String searchedMeals(@RequestParam String query) throws JsonMappingException, JsonProcessingException {
+        // Call the mealManagementService to search meals based on the query
+        return mealManagementService.generateSearchedMeals(query);
+    }
+ }
+>>>>>>> development

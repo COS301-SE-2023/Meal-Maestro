@@ -20,12 +20,22 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 @Service
 public class OpenaiApiService {
-    Dotenv dotenv = Dotenv.configure().directory("D:\\Users\\Theodor\\Documents\\GitHub\\Meal-Maestro\\backend\\.env")
-            .load();
+    Dotenv dotenv = Dotenv.load();
     private static final String OPENAI_URL = "https://api.openai.com/v1/completions";
 
-    private final String API_KEY = dotenv.get("OPENAI_API_KEY");
+    private final static String API_KEY;
     private final RestTemplate restTemplate = new RestTemplate();
+
+    static{
+        String apiKey;
+        if (System.getenv("OPENAI_API_KEY") != null) {
+            apiKey = System.getenv("OPENAI_API_KEY");
+        } else {
+            Dotenv dotenv = Dotenv.load();
+            apiKey = dotenv.get("OPENAI_API_KEY");
+        }
+        API_KEY = apiKey;
+    }
 
     private String model = "text-davinci-003";
     private String stop = "";

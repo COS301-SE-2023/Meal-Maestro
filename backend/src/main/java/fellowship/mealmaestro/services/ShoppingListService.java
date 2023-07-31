@@ -37,4 +37,9 @@ public class ShoppingListService {
         String email = jwtService.extractUserEmail(token);
         return shoppingListRepository.getShoppingList(email);
     }
+
+    public List<FoodModel> buyItem(FoodModel request, String token){
+        String email = jwtService.extractUserEmail(token);
+        return shoppingListRepository.buyItem(request, email);
+    }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicModule, PickerController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { UserPreferencesI } from '../../models/userpreference.model';
@@ -6,6 +6,8 @@ import { UserPreferencesI } from '../../models/userpreference.model';
 import { CommonModule } from '@angular/common';
 import { RangeCustomEvent, RangeValue } from '@ionic/core';
 import { Router } from '@angular/router';
+import { UserI } from '../../models/user.model';
+import { AuthenticationService } from '../../services/services';
 
 
 @Component({
@@ -15,9 +17,36 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [IonicModule, FormsModule, CommonModule],
 })
-export class ProfilePage {
-  constructor( private router: Router , private pickerController: PickerController ) {this.selectedPriceRange = '';
-}
+export class ProfilePage implements OnInit {
+  constructor( private router: Router , private pickerController: PickerController, private auth: AuthenticationService ) {
+    this.selectedPriceRange = '';
+    this.user = {
+      username: '',
+      email: '',
+      password: ''
+    };
+  }
+
+  ngOnInit() {
+    this.auth.getUser().subscribe({
+      next: (response) => {
+        if (response.status == 200) {
+          if (response.body && response.body.name) {
+            this.user.username = response.body.name;
+            this.user.email = response.body.email;
+            this.user.password = response.body.password;
+          }
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
+  }
+
+
+  user : UserI;
+
   userpreferences : UserPreferencesI = {
     goal: '',
     shopping_interval: '',
@@ -321,12 +350,10 @@ else if (this.userpreferences.calorie_set === false) {
         }
       
         if (selectedAllergens.length === 1) {
-          console.log(this.displayAllergies);
           return selectedAllergens[0];
         } else if (selectedAllergens.length > 1) {
           return 'Multiple';
         } else {
-          console.log(this.displayAllergies);
           return '';
          
         }

@@ -25,7 +25,7 @@ public class UserRepository {
     //#region Create
     public void createUser(UserModel user){
         try (Session session = driver.session()){
-
+            
             session.executeWrite(createUserTransaction(user.getName(), user.getPassword(), user.getEmail()));
         }
     }

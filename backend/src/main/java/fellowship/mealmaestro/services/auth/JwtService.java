@@ -19,9 +19,18 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
 
-    private static Dotenv dotenv = Dotenv.load();
+    private static final String SIGNING_KEY;
 
-    private static final String SIGNING_KEY = dotenv.get("JWT_SECRET");
+    static {
+        String jwtSecret;
+        if (System.getenv("JWT_SECRET") != null) {
+            jwtSecret = System.getenv("JWT_SECRET");
+        } else {
+            Dotenv dotenv = Dotenv.load();
+            jwtSecret = dotenv.get("JWT_SECRET");
+        }
+        SIGNING_KEY = jwtSecret;
+    }
     
     public String extractUserEmail(String token){
         return extractClaim(token, Claims::getSubject);

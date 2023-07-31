@@ -1,5 +1,5 @@
 export interface MealBrowseI {
-    title: string;
+    name: string;
     description: string; 
     url: string;
     ingredients:string; 
