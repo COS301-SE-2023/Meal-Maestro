@@ -87,6 +87,7 @@ public class SettingsModel{
     }
 
     public int getCalorieAmount() {
+    
         return calorieAmount;
     }
 
@@ -143,6 +144,9 @@ public class SettingsModel{
     }
 
     public int getUserBMI() {
+        if (userHeight == 0 || userWeight == 0) {
+            return 0;
+        }
         userBMI =userWeight / userHeight;
         return userBMI;
     }
