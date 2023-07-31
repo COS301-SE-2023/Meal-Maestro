@@ -51,7 +51,7 @@ jobs:
     - name: Test with Gradle
       run: ./gradlew test
       working-directory: backend
-        env:
+      env:
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
     
     - name: Download artifacts
