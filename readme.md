@@ -162,4 +162,4 @@ and grow as a software developer
 
 Links:
 - [Github](https://github.com/AmickeC)
-- [Linkedin](www.linkedin.com/in/amicke-croucamp-3ab400277)
+- [Linkedin](www.linkedin.com/in/amicke-croucamp-3ab400277/)
