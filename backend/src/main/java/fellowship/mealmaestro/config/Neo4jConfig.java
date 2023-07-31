@@ -15,6 +15,7 @@ public class Neo4jConfig {
         String uri;
         String username;
         String password;
+        Dotenv dotenv;
 
         if (System.getenv("DB_URI") != null) {
             uri = System.getenv("DB_URI");
@@ -23,11 +24,20 @@ public class Neo4jConfig {
 
             return GraphDatabase.driver(uri, AuthTokens.basic(username, password));
         }
-        
-        Dotenv dotenv = Dotenv.load();
-        uri = dotenv.get("DB_URI");
-        username = dotenv.get("DB_USERNAME");
-        password = dotenv.get("DB_PASSWORD");
+
+        try {
+            dotenv = Dotenv.load();
+            uri = dotenv.get("DB_URI");
+            username = dotenv.get("DB_USERNAME");
+            password = dotenv.get("DB_PASSWORD");
+        } catch (Exception e){
+            dotenv = Dotenv.configure()
+                            .ignoreIfMissing()
+                            .load();
+            uri = "No DB URI Found";
+            username = "No DB Username Found";
+            password = "No DB Password Found";
+        }
 
         return GraphDatabase.driver(uri, AuthTokens.basic(username, password));
     }

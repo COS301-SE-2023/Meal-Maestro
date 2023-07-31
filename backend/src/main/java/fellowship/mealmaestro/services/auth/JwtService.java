@@ -23,11 +23,19 @@ public class JwtService {
 
     static {
         String jwtSecret;
+        Dotenv dotenv;
         if (System.getenv("JWT_SECRET") != null) {
             jwtSecret = System.getenv("JWT_SECRET");
         } else {
-            Dotenv dotenv = Dotenv.load();
-            jwtSecret = dotenv.get("JWT_SECRET");
+            try {
+                dotenv = Dotenv.load();
+                jwtSecret = dotenv.get("JWT_SECRET");
+            } catch (Exception e){
+                dotenv = Dotenv.configure()
+                                .ignoreIfMissing()
+                                .load();
+                jwtSecret = "No JWT Secret Found";
+            }
         }
         SIGNING_KEY = jwtSecret;
     }
