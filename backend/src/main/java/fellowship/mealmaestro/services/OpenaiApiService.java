@@ -20,6 +20,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 @Service
 public class OpenaiApiService {
+    Dotenv dotenv = Dotenv.load();
     private static final String OPENAI_URL = "https://api.openai.com/v1/completions";
 
     private final static String API_KEY;
@@ -53,78 +54,73 @@ public class OpenaiApiService {
     private double presencePenalty = 0.0;
 
     private int maximumTokenLength = 800;
-    
+
     // potential vars
-        // will make a few prompts and return best, heavy on token use
-        private int bestOfN = 1;
-        // detect abuse
-       // private String user = "";
-        // echo back prompt and its compeletion
-       // private boolean echo = false;
-        // stream prompt as it generates
-       // private boolean stream = false;
+    // will make a few prompts and return best, heavy on token use
+    private int bestOfN = 1;
+    // detect abuse
+    // private String user = "";
+    // echo back prompt and its compeletion
+    // private boolean echo = false;
+    // stream prompt as it generates
+    // private boolean stream = false;
 
-    @Autowired private ObjectMapper jsonMapper = new ObjectMapper();
-    @Autowired private OpenaiPromptBuilder pBuilder = new OpenaiPromptBuilder();
-    
-    public String fetchMealResponse(String Type) throws JsonMappingException, JsonProcessingException{
-    //     String jsonResponse = getJSONResponse(Type);
-    //     JsonNode jsonNode = jsonMapper.readTree(jsonResponse);
-       
-    //     String text = jsonNode.get("choices").get(0).get("text").asText();
-    //    text = text.replace("\\\"", "\"");
-    //     text = text.replace("\n", "");
-    //     return text;
+    @Autowired
+    private ObjectMapper jsonMapper = new ObjectMapper();
+    @Autowired
+    private OpenaiPromptBuilder pBuilder = new OpenaiPromptBuilder();
 
-    return "[{\"instructions\":\"1. Preheat oven to 375 degrees\\n2. Grease a baking dish with butter\\n3. Beat together the eggs, milk, and a pinch of salt\\n4. Place the bread slices in the baking dish and pour the egg mixture over them\\n5. Bake in the preheated oven for 25 minutes\\n6. Serve warm with your favorite toppings\",\"name\":\"Baked French Toast\",\"description\":\"a delicious breakfast dish of egg-soaked bread\",\"ingredients\":\"6 slices of bread\\n3 eggs\\n3/4 cup of milk\\nSalt\\nButter\",\"cookingTime\":\"30 minutes\",\"url\":\"https://images.unsplash.com/photo-1484723091739-30a097e8f929?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=449&q=80\"},"
-               + "{\"instructions\":\"Your instructions for the second entity\",\"name\":\"Chicken Pizza\",\"description\":\"Delicious indian pizza topped with succulent chicken and a variety of toppings.\",\"ingredients\":\"Ingredient 1\\nIngredient 2\\nIngredient 3\",\"cookingTime\":\"45 minutes\",\"url\":\"https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=481&q=80\"},"
-               + "{\"instructions\":\"Your instructions for the third entity\",\"name\":\"Fish Tacos\",\"description\":\"Tasty tacos filled with flavorful fish, fresh veggies, and zesty sauces.\",\"ingredients\":\"Ingredient A\\nIngredient B\\nIngredient C\",\"cookingTime\":\"60 minutes\",\"url\":\"https://images.unsplash.com/photo-1565299585323-38d6b0865b47?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=480&q=80\"},"
-     + "{\"instructions\":\"Your instructions for the fourth entity\",\"name\":\"Creamy Butter Salmon\",\"description\":\"A creamy and buttery salmon dish that's rich in flavor and perfectly cooked.\",\"ingredients\":\"Ingredient 1\\nIngredient 2\\nIngredient 3\",\"cookingTime\":\"45 minutes\",\"url\":\"https://images.unsplash.com/photo-1574484284002-952d92456975?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80\"},"
-               + "{\"instructions\":\"Your instructions for the fifth entity\",\"name\":\"Prawn Pasta\",\"description\":\"Mouthwatering pasta dish with succulent prawns, cherry tomatoes, and fresh basil in a savory sauce.\",\"ingredients\":\"Ingredient A\\nIngredient B\\nIngredient C\",\"cookingTime\":\"60 minutes\",\"url\":\"https://images.unsplash.com/photo-1563379926898-05f4575a45d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80\"}]";
-    
-    
-}
+    public String fetchMealResponse(String Type) throws JsonMappingException, JsonProcessingException {
+        // String jsonResponse = getJSONResponse(Type);
+        // JsonNode jsonNode = jsonMapper.readTree(jsonResponse);
 
-    public String fetchMealResponse(String Type,String extendedPrompt) throws JsonMappingException, JsonProcessingException{
-        JsonNode jsonNode = jsonMapper.readTree(getJSONResponse(Type,extendedPrompt));
+        // String text = jsonNode.get("choices").get(0).get("text").asText();
+        // text = text.replace("\\\"", "\"");
+        // text = text.replace("\n", "");
+        // return text;
+
+        return "{\"instructions\":\"1. Preheat oven to 375 degrees/r/n2. Grease a baking dish with butter/r/n3. Beat together the eggs, milk, and a pinch of salt/r/n4. Place the bread slices in the baking dish and pour the egg mixture over them/r/n5. Bake in the preheated oven for 25 minutes/r/n6. Serve warm with your favorite toppings\",\"name\":\"Baked French Toast\",\"description\":\"a delicious breakfast dish of egg-soaked bread\",\"ingredients\":\"6 slices of bread/r/n3 eggs/r/n3/4 cup of milk/r/nSalt/r/nButter\",\"cookingTime\":\"30 minutes\"}";
+    }
+
+    public String fetchMealResponse(String Type, String extendedPrompt)
+            throws JsonMappingException, JsonProcessingException {
+        JsonNode jsonNode = jsonMapper.readTree(getJSONResponse(Type, extendedPrompt));
         return jsonNode.get("text").asText();
     }
-   
-   
-    public String getJSONResponse(String Type) throws JsonProcessingException{
-       
+
+    public String getJSONResponse(String Type) throws JsonProcessingException {
+
         String prompt;
         String jsonRequest;
 
-        
         prompt = pBuilder.buildPrompt(Type);
         jsonRequest = buildJsonApiRequest(prompt);
-        
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + API_KEY);
 
         HttpEntity<String> request = new HttpEntity<String>(jsonRequest, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(OPENAI_URL, request, String.class);
-        
+
         return response.getBody();
     }
-    public String getJSONResponse(String Type, String extendedPrompt) throws JsonProcessingException{
-       
+
+    public String getJSONResponse(String Type, String extendedPrompt) throws JsonProcessingException {
+
         String prompt;
         String jsonRequest;
 
-        
-        prompt = pBuilder.buildPrompt(Type,extendedPrompt);
+        prompt = pBuilder.buildPrompt(Type, extendedPrompt);
         jsonRequest = buildJsonApiRequest(prompt);
-        
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + API_KEY);
 
         HttpEntity<String> request = new HttpEntity<String>(jsonRequest, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(OPENAI_URL, request, String.class);
-        
+
         return response.getBody().replace("\\\"", "\"");
     }
 
@@ -136,7 +132,7 @@ public class OpenaiApiService {
         params.put("temperature", temperature);
         params.put("max_tokens", maximumTokenLength);
         params.put("stop", "####");
-    //    params.put("top_p", topP);
+        // params.put("top_p", topP);
         params.put("frequency_penalty", freqPenalty);
         params.put("presence_penalty", presencePenalty);
         params.put("n", bestOfN);
@@ -174,6 +170,7 @@ public class OpenaiApiService {
     public void setBestofN(int x) {
         this.bestOfN = x;
     }
+
     public int getBestofN() {
         return this.bestOfN;
     }

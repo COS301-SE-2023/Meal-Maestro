@@ -1,124 +1,187 @@
+<ion-item>
+  <div class="card-container">
+    <div class="label-container">
+      <ion-label>{{ dayData.mealDate }}</ion-label>
+      <span class="line"></span>
+    </div>
 
-  <ion-item>
-    <ion-label>Daily plan</ion-label>
+    <ion-item-sliding ion-padding="0px" style="display: contents;"> 
+      
+      <ion-card  color="primary" ion-padding>
+       <ion-item class="no-style" (click)="setOpen(true, item)" color="none" style="  --inner-padding-end: 0;--inner-padding-bottom: 0;" >
+          <div ion-no-padding style="padding-inline-end:0px !important;">
+            <ion-card-header>
+              <ion-card-subtitle>Breakfast</ion-card-subtitle>
+              <ion-card-title>{{ dayData.breakfast.name }}</ion-card-title>
+            </ion-card-header>
+      
+            <ion-card-content>
+              {{ dayData.breakfast.description }}
+            </ion-card-content>
+        
 
-    <ion-card
-      *ngFor="let item of dayData"
-      (click)="setOpen(true, item)"
-      color="primary"
-    >
-      <div>
-        <ion-card-header>
-          <ion-card-subtitle>Breakfast</ion-card-subtitle>
-          <ion-card-title>{{ item.breakfast.name }}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          {{ item.breakfast.description }}
-        </ion-card-content>
-        <ion-avatar>
-
-          <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"/>
-
-        </ion-avatar>
-
+         
+            <ion-avatar no-padding no-margin>
+              <img
+                src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+                alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+              />
+            </ion-avatar>
+          </div>
+      
         <ion-modal [isOpen]="isModalOpen">
           <ng-template>
             <ion-header>
               <ion-toolbar>
-                <ion-title>{{ item.breakfast.name }}</ion-title>
+                <ion-title>{{ dayData.breakfast.name }}</ion-title>
                 <ion-buttons slot="end">
                   <ion-button (click)="setOpen(false, null)">Close</ion-button>
                 </ion-buttons>
               </ion-toolbar>
             </ion-header>
             <ion-avatar class="background">
-
-              <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"/>
-
+              <img
+                src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+                alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+              />
             </ion-avatar>
             <ion-content class="ion-padding">
-              <p>{{ item.breakfast.ingredients }}</p>
-              <p>{{ item.breakfast.instructions }}</p>
-              <p>{{ item.breakfast.cookingTime }}</p>
+              <p>{{ dayData.breakfast.ingredients }}</p>
+              <p>{{ dayData.breakfast.instructions }}</p>
+              <p>{{ dayData.breakfast.cookingTime }}</p>
             </ion-content>
           </ng-template>
         </ion-modal>
-      </div>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="handleSync(breakfast)"> <ion-icon name="sync-outline"></ion-icon> </ion-item-option>
+      </ion-item-options>
+      <ion-item-options side="start">
+        <ion-item-option color="secondary" (click)="handleArchive(breakfast)" > <ion-icon slot="icon-only" name="archive"></ion-icon> </ion-item-option>
+      </ion-item-options>
+      </ion-card>
+   
+    
+    </ion-item-sliding>
 
-      <div>
-        <ion-card-header>
-          <ion-card-subtitle>Lunch</ion-card-subtitle>
-          <ion-card-title>{{ item.lunch.name }}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>{{ item.lunch.description }}</ion-card-content>
-        <ion-avatar>
+    <ion-item-sliding ion-padding="0px" style="display: contents;"> 
+      
+      <ion-card  color="primary" ion-padding>
+       <ion-item class="no-style" (click)="setOpen(true, item)" color="none" style="  --inner-padding-end: 0;--inner-padding-bottom: 0;" >
+          <div ion-no-padding style="padding-inline-end:0px !important;">
+            <ion-card-header>
+              <ion-card-subtitle>Lunch</ion-card-subtitle>
+              <ion-card-title>{{ dayData.lunch.name }}</ion-card-title>
+            </ion-card-header>
+      
+            <ion-card-content>
+              {{ dayData.lunch.description }}
+            </ion-card-content>
+        
 
-          <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"/>
-
-        </ion-avatar>
+         
+            <ion-avatar no-padding no-margin>
+              <img
+                src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+                alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+              />
+            </ion-avatar>
+          </div>
+      
+        
 
         <ion-modal [isOpen]="isModalOpen">
           <ng-template>
             <ion-header>
               <ion-toolbar>
-                <ion-title>{{ item.lunch.name }}</ion-title>
+                <ion-title>{{ dayData.lunch.name }}</ion-title>
                 <ion-buttons slot="end">
                   <ion-button (click)="setOpen(false, null)">Close</ion-button>
                 </ion-buttons>
               </ion-toolbar>
             </ion-header>
             <ion-avatar class="background">
-
-              <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" />
-
+              <img
+                src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+                alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+              />
             </ion-avatar>
             <ion-content class="ion-padding">
-              <p>{{ item.lunch.ingredients }}</p>
-              <p>{{ item.lunch.instructions }}</p>
-              <p>{{ item.lunch.cookingTime }}</p>
+              <p>{{ dayData.lunch.ingredients }}</p>
+              <p>{{ dayData.lunch.instructions }}</p>
+              <p>{{ dayData.lunch.cookingTime }}</p>
             </ion-content>
           </ng-template>
         </ion-modal>
-      </div>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="handleSync(lunch)"> <ion-icon name="sync-outline"></ion-icon> </ion-item-option>
+      </ion-item-options>
+      <ion-item-options side="start">
+        <ion-item-option color="secondary" (click)="handleArchive(lunch)" > <ion-icon slot="icon-only" name="archive"></ion-icon> </ion-item-option>
+      </ion-item-options>
+      </ion-card>
+   
+    
+    </ion-item-sliding>
+    <ion-item-sliding ion-padding="0px" style="display: contents;"> 
+      
+      <ion-card  color="primary" ion-padding>
+       <ion-item class="no-style" (click)="setOpen(true, item)" color="none" style="  --inner-padding-end: 0;--inner-padding-bottom: 0;" >
+          <div ion-no-padding style="padding-inline-end:0px !important;">
+            <ion-card-header>
+              <ion-card-subtitle>Dinner</ion-card-subtitle>
+              <ion-card-title>{{ dayData.dinner.name }}</ion-card-title>
+            </ion-card-header>
+      
+            <ion-card-content>
+              {{ dayData.dinner.description }}
+            </ion-card-content>
+        
 
-      <div>
-        <ion-card-header>
-          <ion-card-subtitle>Dinner</ion-card-subtitle>
-          <ion-card-title>{{ item.dinner.name }}</ion-card-title>
-        </ion-card-header>
-
-        <ion-card-content>
-          {{ item.dinner.description }}
-        </ion-card-content>
-        <ion-avatar>
-
-          <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" />
-
-        </ion-avatar>
+         
+            <ion-avatar no-padding no-margin>
+              <img
+                src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+                alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+              />
+            </ion-avatar>
+          </div>
+      
+        
 
         <ion-modal [isOpen]="isModalOpen">
           <ng-template>
             <ion-header>
               <ion-toolbar>
-                <ion-title>{{ item.dinner.name }}</ion-title>
+                <ion-title>{{ dayData.dinner.name }}</ion-title>
                 <ion-buttons slot="end">
                   <ion-button (click)="setOpen(false, null)">Close</ion-button>
                 </ion-buttons>
               </ion-toolbar>
             </ion-header>
             <ion-avatar class="background">
-
-              <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"/>
-
+              <img
+                src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+                alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+              />
             </ion-avatar>
             <ion-content class="ion-padding">
-              <p>{{ item.dinner.ingredients }}</p>
-              <p>{{ item.dinner.instructions }}</p>
-              <p>{{ item.dinner.cookingTime }}</p>
+              <p>{{ dayData.dinner.ingredients }}</p>
+              <p>{{ dayData.dinner.instructions }}</p>
+              <p>{{ dayData.dinner.cookingTime }}</p>
             </ion-content>
           </ng-template>
         </ion-modal>
-      </div>
-    </ion-card>
-  </ion-item>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="handleSync(dinner)"> <ion-icon name="sync-outline"></ion-icon> </ion-item-option>
+      </ion-item-options>
+      <ion-item-options side="start">
+        <ion-item-option color="secondary" (click)="handleArchive(dinner)" > <ion-icon slot="icon-only" name="archive"></ion-icon> </ion-item-option>
+      </ion-item-options>
+      </ion-card>
+   
+    
+    </ion-item-sliding>
 
