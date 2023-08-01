@@ -28,12 +28,13 @@ export class RecipeBookPage implements OnInit {
     this.getRecipes();
   }
 
-  async addRecipe(item: MealI) {    
-      this.recipeService.addRecipe(item).subscribe({
+  async addRecipe(item: MealI) {   
+    this.recipeService.addRecipe(item).subscribe({
         next: (response) => {
           if (response.status === 200) {
             if (response.body) {
-              this.items.push(response.body);
+              this.getRecipes();             
+              this.errorHandlerService.presentSuccessToast(item.name + " added to Recipe Book");
             }
           }
         },

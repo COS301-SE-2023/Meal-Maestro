@@ -31,18 +31,26 @@ export class RecipeBookApiService {
       this.url+'/addRecipe',
       {
         "name":item.name,
-        "image":item.image
+        "description":item.description,
+        "image":item.image,
+        "ingredients":item.ingredients,
+        "instructions":item.instructions,
+        "cookingTime":item.cookingTime
       },
       {observe: 'response'}
     );
   }
 
-  removeRecipe(recipe: MealI): Observable<HttpResponse<void>> {
+  removeRecipe(item: MealI): Observable<HttpResponse<void>> {
     return this.http.post<void>(
       this.url+'/removeRecipe',
       {        
-        "title": recipe.name,
-        "image": recipe.image        
+        "name":item.name,
+        "description":item.description,
+        "image":item.image,
+        "ingredients":item.ingredients,
+        "instructions":item.instructions,
+        "cookingTime":item.cookingTime        
       },
       {observe: 'response'}
     );
