@@ -89,31 +89,6 @@ public class SettingsService {
             return s;  
 
         }
-
-       
-        
-//     String s ="";// + "The goal: " + request.getGoal().toString() 
-// //    +". The budget range is: "+ request.getBudgetRange().toString() 
-// //    +". The average daily calorie goal is: "+ request.getCalorieAmount()
-// //     +". The average cooking time per meal is : "+ request.getCookingTime().toString() 
-// //     + ". The grocery shopping interval is: "+request.getShoppingInterval().toString() 
-// //     +". The user's BMI is: "+ request.getUserBMI() 
-//     //  + ". The user eats like "+ request.getFoodPreferences().toString() 
-//     //   +". The user's allergens: "+ request.getAllergies().toString()
-// //      +". The macro ratio for the user is "+ request.getMacroRatio().toString() 
-//      //;
-//      if(request.isFoodPreferenceSet())
-//       {
-//         s += ". The user prefers "+ request.getFoodPreferences().toString() ;
-//      }
-//      if(request.isAllergiesSet())
-//      {}else {
-//         s += ". The user is allergic to "+ request.getAllergies().toString() ;
-//      }
-        
-//     System.out.println(s);
-
-//     return s;
         
     }
 
