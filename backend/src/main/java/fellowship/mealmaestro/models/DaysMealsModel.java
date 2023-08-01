@@ -40,6 +40,7 @@ public class DaysMealsModel {
         this.mealDate = mealDate;
         this.user = user;
         this.userDateIdentifier = (user.getEmail() + mealDate.toString());
+        this.meal = "";
     }
 
     public MealModel getBreakfast() {
