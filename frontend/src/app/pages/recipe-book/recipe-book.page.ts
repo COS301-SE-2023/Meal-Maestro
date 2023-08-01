@@ -1,68 +1,147 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
-import { ModalController } from '@ionic/angular';
+import { ActionSheetController, IonicModule } from '@ionic/angular';
 import { RecipeItemComponent } from '../../components/recipe-item/recipe-item.component';
-import { Router } from '@angular/router';
-import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
-import { ErrorHandlerService } from '../../services/services';
+import { AuthenticationService, ErrorHandlerService, RecipeBookApiService } from '../../services/services';
+import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
+import { MealI } from '../../models/meal.model';
 
 @Component({
   selector: 'app-recipe-book',
   templateUrl: './recipe-book.page.html',
   styleUrls: ['./recipe-book.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, RecipeItemComponent]
 })
 export class RecipeBookPage implements OnInit {
-  items = [
-    { image: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80', title: 'Salmon' },
-    { image: '/assets/img2.jpg', title: 'Stir-fry' },
-    { image: '/assets/img4.jpg', title: 'Pancakes' },
-    { image: '/assets/img3.jpg', title: 'Raspberry Fruit Salad' }
-  ];
+  @ViewChild(RecipeItemComponent) recipeItem!: RecipeItemComponent;
+  public items: MealI[] = [];
 
-  constructor(
-    private modalController: ModalController,
-    public r: Router,
-    private mealGenerationservice: MealGenerationService,
-    private errorHandlerService: ErrorHandlerService
-  ) {}
+  constructor(private recipeService: RecipeBookApiService, 
+    private errorHandlerService: ErrorHandlerService,
+    private auth: AuthenticationService,
+    private actionSheetController: ActionSheetController,
+    private addService: AddRecipeService) { }
 
-  async openModal(item: any) {
-    const modal = await this.modalController.create({
-      component: RecipeItemComponent,
-      componentProps: {
-        image: item.image,
-        title: item.title
+  async ionViewWillEnter() {
+    this.getRecipes();
+  }
+
+  async addRecipe(item: MealI) {   
+    this.recipeService.addRecipe(item).subscribe({
+        next: (response) => {
+          if (response.status === 200) {
+            if (response.body) {
+              this.getRecipes();             
+              this.errorHandlerService.presentSuccessToast(item.name + " added to Recipe Book");
+            }
+          }
+        },
+        error: (err) => {
+          if (err.status === 403) {
+            this.errorHandlerService.presentErrorToast(
+              'Unauthorised access. Please log in again.',
+              err
+            )
+            this.auth.logout();
+          } else {
+            this.errorHandlerService.presentErrorToast(
+              'Error adding item to your Recipe Book',
+              err
+            )
+          }
+        }
+      });
+  }
+
+  async getRecipes() {
+    this.recipeService.getAllRecipes().subscribe({
+      next: (response) => {
+        if (response.status === 200) {
+          if (response.body) {
+            this.items = response.body;
+            this.recipeItem.passItems(this.items);
+          }
+        }
+      },
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            "Unauthorised access. Please log in again",
+            err
+          )
+          this.auth.logout();
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Error loading saved recipes',
+            err
+          )
+        }
+      }
+    })
+  }
+
+  async confirmRemove(event: Event, recipe: MealI) {
+    event.stopPropagation();
+
+    const actionSheet = await this.actionSheetController.create({
+      header: `Are you sure you want to remove ${recipe.name} from your recipe book?`,
+      buttons: [
+        {
+          text: 'Delete',
+          role: 'destructive',
+          handler: () => {
+            this.removeRecipe(recipe);
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        }
+      ]
+    });
+  
+    await actionSheet.present();
+  }
+
+  async removeRecipe(recipe: MealI) {
+    this.recipeService.removeRecipe(recipe).subscribe({
+      next: (response) => {
+        if (response.status === 200) {
+          this.errorHandlerService.presentSuccessToast(
+            `Successfully removed ${recipe.name}`
+          )
+          this.getRecipes();
+        }
+      },
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorised access. Please log in again',
+            err
+          )
+          this.auth.logout();
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Error removing recipe from Recipe Book',
+            err
+          )
+        }
       }
     });
-    await modal.present();
   }
 
-
-  async ngOnInit() {
-    // for (let index = 0; index < 4; index++) {
-    //   this.mealGenerationservice.getMeal().subscribe({
-    //     next: (data) => {
-    //       if (Array.isArray(data)) {
-    //         this.meals.push(...data);
-    //       } else {
-    //         this.meals.push(data);
-    //       }
-
-    //       console.log(this.meals);
-    //     },
-    //     error: (err) => {
-    //       this.errorHandlerService.presentErrorToast(
-    //         'Error loading recipe items',
-    //         err
-    //       );
-    //     },
-    //   });
-    // }
-
+  handleEvent(data: MealI) {
+    this.addRecipe(data);
   }
 
+  ngOnInit() {
+    this.addService.recipeItem$.subscribe((recipeItem) => {
+      if (recipeItem) {
+        this.addRecipe(recipeItem);
+      }
+    });
+  }
+   
 }

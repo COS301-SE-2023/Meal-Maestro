@@ -106,3 +106,5 @@ out/
 ### VS Code ###
 .vscode/
 angular.json
+package-lock.json
+package.json

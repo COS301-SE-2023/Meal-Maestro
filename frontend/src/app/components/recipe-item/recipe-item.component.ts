@@ -1,8 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
+import { RecipeDetailsComponent } from '../recipe-details/recipe-details.component';
 
 import { MealI } from '../../models/meal.model';
 import { CommonModule } from '@angular/common';
+import { RecipeItemI } from '../../models/recipeItem.model';
 
 
 @Component({
@@ -15,12 +17,22 @@ import { CommonModule } from '@angular/common';
 
 })
 export class RecipeItemComponent {
-  @Input() image!: string;
-  @Input() title!: string;
+  items: MealI[] = [];
+
+  async openModal(item: any) {
+    const modal = await this.modalController.create({
+      component: RecipeDetailsComponent,
+      componentProps: {
+        item: item,
+        items: this.items
+      }
+    });
+    await modal.present();
+  }
+
+  public passItems(items: MealI[]): void {
+    this.items = items;
+  }
 
   constructor(private modalController: ModalController) { }
-
-  closeModal() {
-    this.modalController.dismiss();
-  }
 }
