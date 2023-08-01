@@ -1,61 +1,125 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { BrowseMealsComponent } from '../../components/browse-meals/browse-meals.component';
-import { MealI } from '../../models/meal.model';
 import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
 import { ErrorHandlerService } from '../../services/services';
+import { DaysMealsI } from '../../models/daysMeals.model';
+import { MealBrowseI } from '../../models/mealBrowse.model';
+import { MealI } from '../../models/interfaces';
 
 @Component({
   selector: 'app-browse',
   templateUrl: './browse.page.html',
   styleUrls: ['./browse.page.scss'],
   standalone: true,
-  imports: [IonicModule,CommonModule, BrowseMealsComponent ]
+  imports: [IonicModule, BrowseMealsComponent, CommonModule ]
 })
-export class BrowsePage {
+export class BrowsePage implements OnInit{
+  // meals: DaysMealsI[];
 
-  // mealsArray: { title: string, description: string, url: string, ingredients: string, instructions:string, cookingTime:string }[] = [
-  //   { title: "Greek Salad with Chicken", description: "A light and refreshing salad featuring a flavorful and protein-packed option for a healthy meal prep.", url: "https://images.unsplash.com/photo-1580013759032-c96505e24c1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1818&q=80",ingredients: "INGREDIENTS :", instructions:"INSTRUCTIONS :", cookingTime:"COOKING TIME :"},
-  //   { title: "Curry Tofu Stir-Fry", description: "It's a balanced and refreshing option packed with protein and nutrients.", url: "https://images.unsplash.com/photo-1564834724105-918b73d1b9e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=388&q=80",ingredients: "INGREDIENTS :", instructions:"INSTRUCTIONS :", cookingTime:"COOKING TIME :" },
-  //   { title: "Fried Chicken Tenders", description: "Crispy and golden-brown on the outside, tender and juicy on the inside, the classic comfort food favorite", url: "https://images.unsplash.com/photo-1614398751058-eb2e0bf63e53?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1014&q=80", ingredients: "INGREDIENTS :", instructions:"INSTRUCTIONS :", cookingTime:"COOKING TIME :" },
-  //   { title: "Spaghetti & Prawns", description: "This Italian-inspired recipe is a crowd-pleaser and can be made in advance, making it perfect for meal prepping.", url: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80", ingredients: "INGREDIENTS :", instructions:"INSTRUCTIONS :", cookingTime:"COOKING TIME :" },
-  //   // Additional entries...
-    
-  // ];
-
-  meals : MealI[] = [];
-
-  constructor(public r : Router
-    , private mealGenerationservice:MealGenerationService
-    , private errorHandlerService:ErrorHandlerService) { }
+  popularMeals: MealI[] = [];
+  searchedMeals : MealI[] = [];
+  noResultsFound: boolean = false;
+  Searched: boolean = false;
+  Loading : boolean = false;
+  searchQuery: string='';
+  searchResults: any;
+  
+  
+  constructor(public r : Router,
+    private mealGenerationservice:MealGenerationService,
+    private errorHandlerService:ErrorHandlerService,) 
+    { 
+      this.searchQuery = '';
+    }
 
  async ngOnInit() {
-  for (let index = 0; index < 8; index++) {
-    this.mealGenerationservice.getMeal().subscribe({
+    this.mealGenerationservice.getPopularMeals().subscribe({
       next: (data) => {
-        if(Array.isArray(data)){
-          this.meals.push(...data);
-        }
-        else {
-          this.meals.push(data);
-        }
-        
-        console.log(this.meals);
+        this.Searched = false;
+        this.popularMeals = this.popularMeals.concat(data);
+   
+        console.log(this.popularMeals);
       },
       error: (err) => {
         this.errorHandlerService.presentErrorToast(
           'Error loading meal items', err
         )
       }
+      
     })
-    
-  }
-    
-  
-
-
-  }
+ 
 }
+ 
+
+// Function to handle the search bar input event
+onSearch(event: Event) {
+  // Get the search query from the event object
+  
+  const customEvent = event as CustomEvent<any>;
+  const query: string = customEvent.detail.value;
+
+  if(query == "") {
+    this.ngOnInit();
+    return;
+  }
+
+ // const query: string = event.detail.value;
+ // this.searchQuery = event.detail.value;
+
+  // Call the getSearchedMeals function with the new search query
+ // this.mealGenerationservice.getSearchedMeals(query).subscribe;
+  this.mealGenerationservice.getSearchedMeals(query).subscribe({
+    next: (data) => {
+       this.Searched = true;
+
+      if (data.length === 0) {
+        this.noResultsFound = true;
+       // console.log(this.searchedMeals);
+      }
+      else {
+        //this.Searched = true;
+        this.noResultsFound = false;
+        this.searchedMeals = data;
+        console.log(this.searchedMeals);
+      }
+      
+    },
+    error: (err) => {
+      this.errorHandlerService.presentErrorToast('Error loading meal items', err);
+    },
+  });
+
+}
+
+  cancel() {
+    this.Searched = false
+    console.log(this.Searched)
+  }
+
+ 
+
+  RefreshMeals(event:any) {
+    this.Loading = true;
+    setTimeout(() => {
+      this.Loading = false;
+      event.target.complete();
+    },2000);
+  }
+
+// generateSearchMeals(query: string) {
+//   // Call the service function to get the searched meals with the provided query
+//   this.mealGenerationservice.getSearchedMeals(query).subscribe({
+//     next: (data) => {
+//       // Update the searchedMeals array with the data returned from the service
+//       this.searchedMeals = data;
+//       console.log(this.searchedMeals);
+//     },
+//   })
+// }
+
+}
+

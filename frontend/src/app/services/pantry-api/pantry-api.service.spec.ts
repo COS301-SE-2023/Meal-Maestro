@@ -1,7 +1,7 @@
 import { of } from 'rxjs';
 import { FoodItemI } from '../../models/interfaces';
 import { PantryApiService } from './pantry-api.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 
 describe('PantryApiService', () => {
   let service: PantryApiService;
@@ -35,11 +35,11 @@ describe('PantryApiService', () => {
       }
     ];
 
-    httpClientSpy.post.and.returnValue(of(expectedItems));
+    httpClientSpy.post.and.returnValue(of(new HttpResponse({body: expectedItems})));
 
     service.getPantryItems().subscribe({
-      next: items => {
-        expect(items)
+      next: res => {
+        expect(res.body)
           .withContext('expected items')
           .toEqual(expectedItems);
         done();
@@ -59,11 +59,11 @@ describe('PantryApiService', () => {
       "weight": 0.1,
     };
 
-    httpClientSpy.post.and.returnValue(of(expectedItem));
+    httpClientSpy.post.and.returnValue(of(new HttpResponse({body: expectedItem})));
 
     service.addToPantry(expectedItem).subscribe({
-      next: item => {
-        expect(item)
+      next: res => {
+        expect(res.body)
           .withContext('expected item')
           .toEqual(expectedItem);
         done();
@@ -83,13 +83,13 @@ describe('PantryApiService', () => {
       "weight": 0.1,
     };
 
-    httpClientSpy.post.and.returnValue(of(expectedItem));
+    httpClientSpy.post.and.returnValue(of(new HttpResponse({status: 200})));
 
     service.deletePantryItem(expectedItem).subscribe({
-      next: item => {
-        expect(item)
-          .withContext('expected item')
-          .toEqual(expectedItem);
+      next: res => {
+        expect(res.status)
+          .withContext('expected HTTP status code 200')
+          .toEqual(200);
         done();
       },
       error: done.fail
@@ -107,13 +107,13 @@ describe('PantryApiService', () => {
       "weight": 0.1,
     };
 
-    httpClientSpy.post.and.returnValue(of(expectedItem));
+    httpClientSpy.post.and.returnValue(of(new HttpResponse({status: 200})));
 
     service.updatePantryItem(expectedItem).subscribe({
-      next: item => {
-        expect(item)
-          .withContext('expected item')
-          .toEqual(expectedItem);
+      next: res => {
+        expect(res.status)
+          .withContext('expected HTTP status code 200')
+          .toEqual(200);
         done();
       },
       error: done.fail

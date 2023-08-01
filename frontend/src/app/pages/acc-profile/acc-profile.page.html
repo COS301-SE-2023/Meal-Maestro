@@ -9,19 +9,20 @@
     </ion-button>
     <ion-card>
       <ion-list>
-        <ion-label>Username</ion-label>
         <ion-item>
-        Franko
-      </ion-item>
-      <ion-item>
-        <ion-label>Email</ion-label>
-        example@gmail.com
-      </ion-item>
-      <ion-item>
-        <ion-label>Password</ion-label>
-        .......
-      </ion-item>
+          <ion-label>Username</ion-label>
+          {{user.username}}
+        </ion-item>
+        <ion-item>
+          <ion-label>Email</ion-label>
+          {{user.email}}
+        </ion-item>
+        <ion-item>
+          <ion-label>Password</ion-label>
+          ********
+        </ion-item>
       </ion-list>
     </ion-card>
+    <ion-button expand="block" color="danger" (click)="logout()">Logout</ion-button>
 </ion-content>
 

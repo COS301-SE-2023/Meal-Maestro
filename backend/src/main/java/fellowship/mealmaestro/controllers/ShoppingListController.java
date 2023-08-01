@@ -3,13 +3,13 @@ package fellowship.mealmaestro.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import fellowship.mealmaestro.models.FoodModel;
-import fellowship.mealmaestro.models.ShoppingListRequestModel;
-import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.services.ShoppingListService;
 import jakarta.validation.Valid;
 
@@ -20,22 +20,51 @@ public class ShoppingListController {
     private ShoppingListService shoppingListService;
 
     @PostMapping("/addToShoppingList")
-    public FoodModel addToShoppingList(@Valid @RequestBody ShoppingListRequestModel request){
-        return shoppingListService.addToShoppingList(request);
+    public ResponseEntity<FoodModel> addToShoppingList(@Valid @RequestBody FoodModel request, @RequestHeader("Authorization") String token){
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        String authToken = token.substring(7);
+        return ResponseEntity.ok(shoppingListService.addToShoppingList(request, authToken));
     }
 
     @PostMapping("/removeFromShoppingList")
-    public void removeFromShoppingList(@Valid @RequestBody ShoppingListRequestModel request){
-        shoppingListService.removeFromShoppingList(request);
+    public ResponseEntity<Void> removeFromShoppingList(@Valid @RequestBody FoodModel request, @RequestHeader("Authorization") String token){
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        String authToken = token.substring(7);
+        shoppingListService.removeFromShoppingList(request, authToken);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/updateShoppingList")
-    public void updateShoppingList(@Valid @RequestBody ShoppingListRequestModel request){
-        shoppingListService.updateShoppingList(request);
+    public ResponseEntity<Void> updateShoppingList(@Valid @RequestBody FoodModel request, @RequestHeader("Authorization") String token){
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        String authToken = token.substring(7);
+        shoppingListService.updateShoppingList(request, authToken);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/getShoppingList")
-    public List<FoodModel> getShoppingList(@RequestBody UserModel user){
-        return shoppingListService.getShoppingList(user);
+    public ResponseEntity<List<FoodModel>> getShoppingList(@RequestHeader("Authorization") String token){
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        String authToken = token.substring(7);
+        return ResponseEntity.ok(shoppingListService.getShoppingList(authToken));
+    }
+
+    @PostMapping("/buyItem") 
+    public ResponseEntity<List<FoodModel>> buyItem(@Valid @RequestBody FoodModel request, @RequestHeader("Authorization") String token){
+        //Will move item from shopping list to pantry and return updated pantry
+        
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        String authToken = token.substring(7);
+        return ResponseEntity.ok(shoppingListService.buyItem(request, authToken));
     }
 }

@@ -6,29 +6,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fellowship.mealmaestro.models.FoodModel;
-import fellowship.mealmaestro.models.ShoppingListRequestModel;
-import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.repositories.ShoppingListRepository;
+import fellowship.mealmaestro.services.auth.JwtService;
 
 @Service
 public class ShoppingListService {
+
+    @Autowired
+    private JwtService jwtService;
     
     @Autowired
     private ShoppingListRepository shoppingListRepository;
 
-    public FoodModel addToShoppingList(ShoppingListRequestModel request){
-        return shoppingListRepository.addToShoppingList(request);
+    public FoodModel addToShoppingList(FoodModel request, String token){
+        String email = jwtService.extractUserEmail(token);
+        return shoppingListRepository.addToShoppingList(request, email);
     }
 
-    public void removeFromShoppingList(ShoppingListRequestModel request){
-        shoppingListRepository.removeFromShoppingList(request);
+    public void removeFromShoppingList(FoodModel request, String token){
+        String email = jwtService.extractUserEmail(token);
+        shoppingListRepository.removeFromShoppingList(request, email);
     }
 
-    public void updateShoppingList(ShoppingListRequestModel request){
-        shoppingListRepository.updateShoppingList(request);
+    public void updateShoppingList(FoodModel request, String token){
+        String email = jwtService.extractUserEmail(token);
+        shoppingListRepository.updateShoppingList(request, email);
     }
 
-    public List<FoodModel> getShoppingList(UserModel user){
-        return shoppingListRepository.getShoppingList(user);
+    public List<FoodModel> getShoppingList(String token){
+        String email = jwtService.extractUserEmail(token);
+        return shoppingListRepository.getShoppingList(email);
+    }
+
+    public List<FoodModel> buyItem(FoodModel request, String token){
+        String email = jwtService.extractUserEmail(token);
+        return shoppingListRepository.buyItem(request, email);
     }
 }

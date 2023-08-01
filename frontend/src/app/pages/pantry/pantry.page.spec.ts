@@ -5,18 +5,21 @@ import { IonicModule } from '@ionic/angular';
 import { PantryPage } from './pantry.page';
 import { of } from 'rxjs';
 import { FoodItemI } from '../../models/interfaces';
-import { PantryApiService, ShoppingListApiService } from '../../services/services';
+import { AuthenticationService, PantryApiService, ShoppingListApiService } from '../../services/services';
+import { HttpResponse } from '@angular/common/http';
 
 describe('PantryPage', () => {
   let component: PantryPage;
   let fixture: ComponentFixture<PantryPage>;
   let mockPantryService: jasmine.SpyObj<PantryApiService>;
   let mockShoppingListService: jasmine.SpyObj<ShoppingListApiService>;
+  let mockAuthService: jasmine.SpyObj<AuthenticationService>;
   let mockItems: FoodItemI[];
 
   beforeEach(async () => {
     mockPantryService = jasmine.createSpyObj('PantryApiService', ['getPantryItems', 'addToPantry', 'deletePantryItem']);
     mockShoppingListService = jasmine.createSpyObj('ShoppingListApiService', ['getShoppingListItems', 'addToShoppingList', 'deleteShoppingListItem']);
+    mockAuthService = jasmine.createSpyObj('AuthenticationService', ['logout']);
     mockItems = [
       {
         name: 'test',
@@ -30,18 +33,16 @@ describe('PantryPage', () => {
       },
     ];
 
-    const emptyFoodItem: FoodItemI = {
-      name: '',
-      quantity: null,
-      weight: null,
-    };
+    const emptyResponse = new HttpResponse<void>({ body: null, status: 200 });
+    const itemsResponse = new HttpResponse<FoodItemI[]>({ body: mockItems, status: 200 });
+    const itemResponse = new HttpResponse<FoodItemI>({ body: mockItems[0], status: 200 });
 
-    mockPantryService.getPantryItems.and.returnValue(of(mockItems));
-    mockPantryService.addToPantry.and.returnValue(of(mockItems[0]));
-    mockPantryService.deletePantryItem.and.returnValue(of(emptyFoodItem));
-    mockShoppingListService.getShoppingListItems.and.returnValue(of(mockItems));
-    mockShoppingListService.addToShoppingList.and.returnValue(of(mockItems[0]));
-    mockShoppingListService.deleteShoppingListItem.and.returnValue(of(emptyFoodItem));
+    mockPantryService.getPantryItems.and.returnValue(of(itemsResponse));
+    mockPantryService.addToPantry.and.returnValue(of(itemResponse));
+    mockPantryService.deletePantryItem.and.returnValue(of(emptyResponse));
+    mockShoppingListService.getShoppingListItems.and.returnValue(of(itemsResponse));
+    mockShoppingListService.addToShoppingList.and.returnValue(of(itemResponse));
+    mockShoppingListService.deleteShoppingListItem.and.returnValue(of(emptyResponse));
 
 
     await TestBed.configureTestingModule({
@@ -49,6 +50,7 @@ describe('PantryPage', () => {
       providers: [
         { provide: PantryApiService, useValue: mockPantryService },
         { provide: ShoppingListApiService, useValue: mockShoppingListService },
+        { provide: AuthenticationService, useValue: mockAuthService },
       ],
     }).compileComponents();
 

@@ -1,5 +1,5 @@
 import { ShoppingListApiService } from './shopping-list-api.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { FoodItemI } from '../../models/interfaces';
 import { of } from 'rxjs';
 
@@ -35,11 +35,11 @@ describe('ShoppingListApiService', () => {
       }
     ];
 
-    httpClientSpy.post.and.returnValue(of(expectedItems));
+    httpClientSpy.post.and.returnValue(of(new HttpResponse({body: expectedItems})));
 
     service.getShoppingListItems().subscribe({
-      next: items => {
-        expect(items)
+      next: res => {
+        expect(res.body)
           .withContext('expected items')
           .toEqual(expectedItems);
         done();
@@ -59,11 +59,11 @@ describe('ShoppingListApiService', () => {
       "weight": 0.1,
     };
 
-    httpClientSpy.post.and.returnValue(of(expectedItem));
+    httpClientSpy.post.and.returnValue(of(new HttpResponse({body: expectedItem})));
 
     service.addToShoppingList(expectedItem).subscribe({
-      next: item => {
-        expect(item)
+      next: res => {
+        expect(res.body)
           .withContext('expected item')
           .toEqual(expectedItem);
         done();
@@ -83,13 +83,13 @@ describe('ShoppingListApiService', () => {
       "weight": 0.1,
     };
 
-    httpClientSpy.post.and.returnValue(of(expectedItem));
+    httpClientSpy.post.and.returnValue(of(new HttpResponse({status: 200})));
 
     service.updateShoppingListItem(expectedItem).subscribe({
-      next: item => {
-        expect(item)
-          .withContext('expected item')
-          .toEqual(expectedItem);
+      next: res => {
+        expect(res.status)
+          .withContext('expected HTTP status code 200')
+          .toEqual(200);
         done();
       },
       error: done.fail
@@ -107,13 +107,13 @@ describe('ShoppingListApiService', () => {
       "weight": 0.1,
     };
 
-    httpClientSpy.post.and.returnValue(of(expectedItem));
+    httpClientSpy.post.and.returnValue(of(new HttpResponse({status: 200})));
 
     service.deleteShoppingListItem(expectedItem).subscribe({
-      next: item => {
-        expect(item)
-          .withContext('expected item')
-          .toEqual(expectedItem);
+      next: res => {
+        expect(res.status)
+          .withContext('expected HTTP status code 200')
+          .toEqual(200);
         done();
       },
       error: done.fail

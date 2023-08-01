@@ -25,7 +25,6 @@ export class SignupPage {
   constructor(private router: Router, private errorHandlerService: ErrorHandlerService, private auth: AuthenticationService ) { }
 
   async signup(form: any) {
-    console.log(form);
     if (form.initial !== form.verify) {
       this.errorHandlerService.presentErrorToast('Passwords do not match', 'Passwords do not match');
       return;
@@ -37,29 +36,28 @@ export class SignupPage {
       email: form.email,
     }
 
-    this.auth.checkUser(newUser).subscribe({
-      next: data => {
-        if (data) {
-          this.errorHandlerService.presentErrorToast('Username or email already exists', 'Username or email already exists');
-        } else {
-          this.auth.createUser(newUser).subscribe({
-            next: () => {
-            this.errorHandlerService.presentSuccessToast('Signup successful');
+    this.auth.register(newUser).subscribe({
+      next: (response) => {
+        if (response.status == 200) {
+          if (response.body) {
+            this.auth.setToken(response.body.token);
+            this.errorHandlerService.presentSuccessToast('Registration successful');
             this.router.navigate(['app/tabs/home']);
-            },
-            error: error => {
-            this.errorHandlerService.presentErrorToast('Signup failed', error);
-            }
-          });
-        }
+          }
+        } 
       },
-      error: error => {
-        this.errorHandlerService.presentErrorToast('Signup failed', error);
+      error: (error) => {
+        if (error.status == 400){
+          this.errorHandlerService.presentErrorToast('Email already exists', 'Email already exists');
+        }else{
+          this.errorHandlerService.presentErrorToast('Unexpected error. Please try again', error);
+        }
       }
     });
   }
 
   goToLogin() {
     this.router.navigate(['../']);
+    localStorage.removeItem('token');
   }
 }

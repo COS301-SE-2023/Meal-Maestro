@@ -13,7 +13,7 @@
 
     "test:dev": "ng test --browsers=ChromeHeadless --watch=false --code-coverage ",
 
-    "test:unit": ".\\backend\\gradlew.bat -p backend test"
+    "test:unit": "./gradlew test"
   },
   "private": true,
   "dependencies": {
@@ -31,10 +31,11 @@
     "@capacitor/status-bar": "5.0.4",
     "@ionic/angular": "^7.0.0",
     "@types/chart.js": "^2.9.37",
-    "axios": "^1.4.0",
     "chart.js": "^4.3.0",
     "cordova-plugin-advanced-http": "^3.3.1",
+    "dotenv": "^16.3.1",
     "ionicons": "^7.0.0",
+    "neo4j-driver": "^5.10.0",
     "openai": "^3.3.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",

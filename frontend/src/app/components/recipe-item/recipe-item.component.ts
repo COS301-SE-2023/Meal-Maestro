@@ -1,34 +1,38 @@
 import { Component, Input } from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
+import { RecipeDetailsComponent } from '../recipe-details/recipe-details.component';
+
 import { MealI } from '../../models/meal.model';
 import { CommonModule } from '@angular/common';
+import { RecipeItemI } from '../../models/recipeItem.model';
+
 
 @Component({
   selector: 'app-recipe-item',
   templateUrl: './recipe-item.component.html',
   styleUrls: ['./recipe-item.component.scss'],
   standalone: true,
+
   imports: [IonicModule, CommonModule]
+
 })
 export class RecipeItemComponent {
-  // @Input() image!: string;
-  // @Input() title!: string;
-  @Input() meal!:MealI;
+  items: MealI[] = [];
+
+  async openModal(item: any) {
+    const modal = await this.modalController.create({
+      component: RecipeDetailsComponent,
+      componentProps: {
+        item: item,
+        items: this.items
+      }
+    });
+    await modal.present();
+  }
+
+  public passItems(items: MealI[]): void {
+    this.items = items;
+  }
+
   constructor(private modalController: ModalController) { }
-
-  closeModal() {
-    this.modalController.dismiss();
-  }
-  isModalOpen = false;
-  currentObject :any
-  setOpen(isOpen: boolean, o :any) {
-    if(o==null)
-      o = this.currentObject
-    this.isModalOpen = isOpen;
-    this.setCurrent(o)
-  }
-  setCurrent(o : any) {
-    this.currentObject = o;
-  }
 }
-

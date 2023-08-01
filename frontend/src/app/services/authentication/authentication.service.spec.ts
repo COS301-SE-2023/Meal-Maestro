@@ -1,37 +1,46 @@
 import { of } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { UserI } from '../../models/interfaces';
+import { AuthResponseI } from '../../models/authResponse.model';
 
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
   let httpClientSpy: jasmine.SpyObj<HttpClient>;
+  let routerSpy: jasmine.SpyObj<any>;
+  let mockUser: UserI;
+  let mockAuthResponse: AuthResponseI;
 
   beforeEach(() => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
-    service = new AuthenticationService(httpClientSpy as any);
+    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+    service = new AuthenticationService(httpClientSpy as any, routerSpy as any);
+
+    mockUser = {
+      "username": "test",
+      "email": "test@example.com",
+      "password": "test"
+    };
+
+    mockAuthResponse = {
+      "token": "test",
+    }
+
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should return true if user is able to login', (done: DoneFn) => {
-    const mockUser: UserI = {
-      "username": "test",
-      "email": "test@example.com",
-      "password": "test"
-    };
+  it('should login user', (done: DoneFn) => {
 
-    const expectedResponse: boolean = true;
-
-    httpClientSpy.post.and.returnValue(of(expectedResponse));
+    httpClientSpy.post.and.returnValue(of(new HttpResponse({ body: mockAuthResponse })));
 
     service.login(mockUser).subscribe({
       next: response => {
-        expect(response)
+        expect(response.body)
           .withContext('expected response')
-          .toEqual(expectedResponse);
+          .toEqual(mockAuthResponse);
         done();
       },
       error: done.fail
@@ -42,22 +51,15 @@ describe('AuthenticationService', () => {
       .toBe(1);
   });
 
-  it('#checkUser should return true if user exists', (done: DoneFn) => {
-    const mockUser: UserI = {
-      "username": "test",
-      "email": "test@example.com",
-      "password": "test"
-    };
+  it('should register user', (done: DoneFn) => {
 
-    const expectedResponse: boolean = true;
+    httpClientSpy.post.and.returnValue(of(new HttpResponse({ body: mockAuthResponse })));
 
-    httpClientSpy.post.and.returnValue(of(expectedResponse));
-
-    service.checkUser(mockUser).subscribe({
+    service.register(mockUser).subscribe({
       next: response => {
-        expect(response)
+        expect(response.body)
           .withContext('expected response')
-          .toEqual(expectedResponse);
+          .toEqual(mockAuthResponse);
         done();
       },
       error: done.fail
@@ -68,22 +70,15 @@ describe('AuthenticationService', () => {
       .toBe(1);
   });
 
-  it('#createUser should return void', (done: DoneFn) => {
-    const mockUser: UserI = {
-      "username": "test",
-      "email": "test@example.com",
-      "password": "test"
-    };
+  it('should find user', (done: DoneFn) => {
 
-    const expectedResponse: void = undefined;
+    httpClientSpy.post.and.returnValue(of(new HttpResponse({ body: mockUser })));
 
-    httpClientSpy.post.and.returnValue(of(expectedResponse));
-
-    service.createUser(mockUser).subscribe({
+    service.findUser(mockUser.email).subscribe({
       next: response => {
-        expect(response)
+        expect(response.body)
           .withContext('expected response')
-          .toEqual(expectedResponse);
+          .toEqual(mockUser);
         done();
       },
       error: done.fail
@@ -92,6 +87,15 @@ describe('AuthenticationService', () => {
     expect(httpClientSpy.post.calls.count())
       .withContext('one call')
       .toBe(1);
+  });
+
+  it('should set token', () => {
+    const token = 'test';
+    service.setToken(token);
+
+    expect(localStorage.getItem('token'))
+      .withContext('token set')
+      .toEqual(token);
   });
 
 });
