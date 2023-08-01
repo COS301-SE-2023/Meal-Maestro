@@ -1,13 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 
 import { RecipeBookApiService } from './recipe-book-api.service';
+import { HttpClient } from '@angular/common/http';
 
 describe('RecipeBookApiService', () => {
   let service: RecipeBookApiService;
+  let httpClientSpy: jasmine.SpyObj<HttpClient>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(RecipeBookApiService);
+    httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
+    service = new RecipeBookApiService(httpClientSpy as any);
   });
 
   it('should be created', () => {
