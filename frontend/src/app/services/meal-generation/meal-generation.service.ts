@@ -108,17 +108,17 @@ export class MealGenerationService {
     );
   }
 
-  getPopularMeals():Observable<MealBrowseI[]> {
-    return this.http.get<MealBrowseI[]>(
+  getPopularMeals():Observable<MealI[]> {
+    return this.http.get<MealI[]>(
       this.url+'/getPopularMeals',
       // {},
       // {observe: 'response'}
     );
   }
 
-  getSearchedMeals(query: string): Observable<MealBrowseI[]> {
+  getSearchedMeals(query: string): Observable<MealI[]> {
     const params = { query: query }; // backend expects the query parameter
-    return this.http.get<MealBrowseI[]>(
+    return this.http.get<MealI[]>(
       this.url + '/getSearchedMeals', 
       { params: params });
   }

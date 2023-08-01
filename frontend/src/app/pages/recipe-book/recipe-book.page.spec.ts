@@ -1,17 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RecipeBookPage } from './recipe-book.page';
-import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
+import { AuthenticationService, RecipeBookApiService } from '../../services/services';
 
 describe('RecipeBookPage', () => {
   let component: RecipeBookPage;
   let fixture: ComponentFixture<RecipeBookPage>;
-  let mockMealGenerationService: jasmine.SpyObj<MealGenerationService>;
+  let mockRecipeBookApiService: jasmine.SpyObj<RecipeBookApiService>;
+  let authServiceSpy: jasmine.SpyObj<AuthenticationService>;
 
   beforeEach(async() => {
     await TestBed.configureTestingModule({
       imports: [RecipeBookPage],
       providers: [
-        { provide: MealGenerationService, useValue: mockMealGenerationService },
+        { provide: RecipeBookApiService, useValue: mockRecipeBookApiService },
+        { provide: AuthenticationService, useValue: authServiceSpy },
       ],
     }).compileComponents();
     fixture = TestBed.createComponent(RecipeBookPage);

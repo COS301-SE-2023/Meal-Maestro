@@ -2,18 +2,18 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { BrowseMealsComponent } from './browse-meals.component';
-import { MealBrowseI } from '../../models/mealBrowse.model';
+import { MealI } from '../../models/interfaces';
 
 describe('BrowseMealsComponent', () => {
   let component: BrowseMealsComponent;
   let fixture: ComponentFixture<BrowseMealsComponent>;
-  let mockMeal: MealBrowseI;
+  let mockMeal: MealI;
 
   beforeEach(waitForAsync(() => {
     mockMeal = {
       name: 'test',
       description: 'test',
-      url: 'test',
+      image: 'test',
       ingredients: 'test',
       instructions: 'test',
       cookingTime: 'test',

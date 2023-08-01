@@ -1,7 +1,7 @@
 export interface MealI {
     name: string;
     description: string; 
-    url: string;
+    image: string;
     ingredients:string; 
     instructions:string; 
     cookingTime:string;

@@ -42,7 +42,7 @@ public class BrowseRepository {
                 "WITH m, rand() as random\n" +
                 "ORDER BY random\n" +
                 "RETURN m.name AS name, m.instructions AS instructions, m.description AS description, " +
-                "m.url AS url, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
+                "m.image AS image, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
                 Values.parameters("email", email));
 
         while (result.hasNext()) {
@@ -50,10 +50,10 @@ public class BrowseRepository {
             String name = record.get("name").asString();
             String instructions = record.get("instructions").asString();
             String description = record.get("description").asString();
-            String url = record.get("url").asString();
+            String image = record.get("image").asString();
             String ingredients = record.get("ingredients").asString();
             String cookingTime = record.get("cookingTime").asString();
-            randomMeals.add(new MealModel(name, instructions, description, url, ingredients, cookingTime));
+            randomMeals.add(new MealModel(name, instructions, description, image, ingredients, cookingTime));
         }
 
         return randomMeals;
@@ -101,13 +101,13 @@ public class BrowseRepository {
         List<MealModel> matchingPopularMeals = new ArrayList<>();
         // org.neo4j.driver.Result result = transaction.run("MATCH (m:Meal {name: $name})\n" +
         //         "RETURN m.name AS name, m.instructions AS instructions, m.description AS description, " +
-        //         "m.url AS url, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
+        //         "m.image AS image, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
         //         Values.parameters("email", email));
         org.neo4j.driver.Result result = transaction.run(
             "MATCH (m:Meal)\n" +
             "WHERE m.name =~ $namePattern OR m.ingredients =~ $namePattern OR m.description =~ $namePattern\n" + // Use regular expression matching
             "RETURN m.name AS name, m.instructions AS instructions, m.description AS description, " +
-            "m.url AS url, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
+            "m.image AS image, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
             Values.parameters("namePattern", "(?i).*" + mealName + ".*") // (?i) for case-insensitive
         );
 
@@ -116,11 +116,11 @@ public class BrowseRepository {
             String name = record.get("name").asString();
             String instructions = record.get("instructions").asString();
             String description = record.get("description").asString();
-            String url = record.get("url").asString();
+            String image = record.get("image").asString();
             String ingredients = record.get("ingredients").asString();
             String cookingTime = record.get("cookingTime").asString();
-           // return new MealModel(name, instructions, description, url, ingredients, cookingTime);
-           matchingPopularMeals.add(new MealModel(name, instructions, description, url, ingredients, cookingTime));
+           // return new MealModel(name, instructions, description, image, ingredients, cookingTime);
+           matchingPopularMeals.add(new MealModel(name, instructions, description, image, ingredients, cookingTime));
         }
 
         return matchingPopularMeals; 

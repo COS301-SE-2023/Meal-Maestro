@@ -12,11 +12,11 @@ public class MealModel {
     @NotBlank(message = "A Meal Name is required")
     private String name;
 
+    @NotBlank(message = "An image is required")
+    private String image;
+
     @NotBlank(message = "A Description is required")
     private String description;
-
-    @NotBlank(message = "A Url is required")
-    private String url;
 
     @NotBlank(message = "Ingredients are required")
     private String ingredients;
@@ -28,11 +28,11 @@ public class MealModel {
     private String cookingTime;
     public MealModel(){};
 
-    public MealModel(String name, String instructions,String description, String url, String ingredients, String cookingTime){
+    public MealModel(String name, String instructions,String description, String image, String ingredients, String cookingTime){
         this.name = name;
         this.instructions = instructions;
         this.description = description;
-        this.url = url;
+        this.image = image;
         this.ingredients = ingredients;
         this.cookingTime = cookingTime;
     }
@@ -61,12 +61,12 @@ public class MealModel {
         this.description = description;
     }
 
-    public String geturl(){
-        return this.url;
+    public String getimage(){
+        return this.image;
     }
 
-    public void seturl(String url){
-        this.url = url;
+    public void setimage(String image){
+        this.image = image;
     }
 
     public String getingredients(){
@@ -91,5 +91,6 @@ public class MealModel {
         this.ingredients = mealModel.getingredients();
         this.instructions = mealModel.getinstructions();
         this.description = mealModel.getdescription();
+        this.image = mealModel.getimage();
     }
 }

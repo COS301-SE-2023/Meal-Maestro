@@ -10,6 +10,8 @@ describe('HomePage', () => {
   let mockMealGenerationService: jasmine.SpyObj<MealGenerationService>;
 
   beforeEach(async () => {
+    // mockMealGenerationService = jasmine.createSpyObj('MealGenerationService', ['generateMeals']);
+
     await TestBed.configureTestingModule({
       imports: [HomePage, IonicModule, DailyMealsComponent],
       providers: [
