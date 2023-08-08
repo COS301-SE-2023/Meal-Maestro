@@ -26,7 +26,7 @@ export class PantryApiService {
       {
         "name": item.name,
         "quantity": item.quantity,
-        "weight": item.weight,
+        "unit": item.unit,
       },
       {observe: 'response'});
   }
@@ -37,7 +37,7 @@ export class PantryApiService {
       {
         "name": item.name,
         "quantity": item.quantity,
-        "weight": item.weight,
+        "unit": item.unit,
       },
       {observe: 'response'});
   }
@@ -48,7 +48,7 @@ export class PantryApiService {
       {
         "name": item.name,
         "quantity": item.quantity,
-        "weight": item.weight,
+        "unit": item.unit,
       },
       {observe: 'response'});
   }

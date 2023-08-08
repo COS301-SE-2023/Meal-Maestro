@@ -30,7 +30,7 @@ export class PantryPage implements OnInit{
   newItem: FoodItemI = {
     name: '',
     quantity: null,
-    weight: null,
+    unit: 'unit',
   };
 
   constructor(public r : Router, 
@@ -112,7 +112,7 @@ export class PantryPage implements OnInit{
               this.newItem = {
                 name: '',
                 quantity: null,
-                weight: null,
+                unit: 'unit',
               };
               this.isQuantity = false;
             }
@@ -147,7 +147,7 @@ export class PantryPage implements OnInit{
               this.newItem = {
                 name: '',
                 quantity: null,
-                weight: null,
+                unit: 'unit',
               };
               this.isQuantity = false;
             }
@@ -268,7 +268,7 @@ export class PantryPage implements OnInit{
     this.newItem = {
       name: '',
       quantity: null,
-      weight: null,
+      unit: 'unit',
     };
     this.isQuantity = false;
   }
@@ -278,13 +278,12 @@ export class PantryPage implements OnInit{
       this.errorHandlerService.presentErrorToast('Please enter a name for the item', 'No name entered');
       return;
     }
-    if ((this.newItem.quantity !== null && this.newItem.quantity < 0) || 
-          (this.newItem.weight !== null && this.newItem.weight < 0)){
-      this.errorHandlerService.presentErrorToast('Please enter a valid quantity or weight', 'Invalid quantity or weight');
+    if ((this.newItem.quantity !== null && this.newItem.quantity < 0)){
+      this.errorHandlerService.presentErrorToast('Please enter a valid quantity', 'Invalid quantity');
       return;
     }
-    if (this.newItem.quantity === null && this.newItem.weight === null){
-      this.errorHandlerService.presentErrorToast('Please enter a quantity or weight', 'No quantity or weight entered');
+    if (this.newItem.quantity === null){
+      this.errorHandlerService.presentErrorToast('Please enter a quantity', 'No quantity entered');
       return;
     }
     this.modal.dismiss(this.newItem, 'confirm');
@@ -365,11 +364,11 @@ export class PantryPage implements OnInit{
   sortAmountDescending(): void {
     if (this.segment === 'pantry'){
       this.pantryItems.sort((a, b) => {
-        return (a.quantity! + a.weight!) > (b.quantity! + b.weight!) ? -1 : 1;
+        return (a.quantity!) > (b.quantity!) ? -1 : 1;
       });
     } else if (this.segment === 'shopping'){
       this.shoppingItems.sort((a, b) => {
-        return (a.quantity! + a.weight!) > (b.quantity! + b.weight!) ? -1 : 1;
+        return (a.quantity!) > (b.quantity!) ? -1 : 1;
       });
     }
   }
@@ -377,11 +376,11 @@ export class PantryPage implements OnInit{
   sortAmountAscending(): void {
     if (this.segment === 'pantry'){
       this.pantryItems.sort((a, b) => {
-        return (a.quantity! + a.weight!) < (b.quantity! + b.weight!) ? -1 : 1;
+        return (a.quantity!) < (b.quantity!) ? -1 : 1;
       });
     } else if (this.segment === 'shopping'){
       this.shoppingItems.sort((a, b) => {
-        return (a.quantity! + a.weight!) < (b.quantity! + b.weight!) ? -1 : 1;
+        return (a.quantity!) < (b.quantity!) ? -1 : 1;
       });
     }
   }
