@@ -32,11 +32,11 @@ public class PantryRepository {
     public static TransactionCallback<FoodModel> addToPantryTransaction(FoodModel food, String email){
         return transaction -> {
             transaction.run("MATCH (User{email: $email})-[:HAS_PANTRY]->(p:Pantry) \r\n" + //
-                        "CREATE (p)-[:IN_PANTRY]->(:Food {name: $name, quantity: $quantity, weight: $weight})",
+                        "CREATE (p)-[:IN_PANTRY]->(:Food {name: $name, quantity: $quantity, unit: $unit})",
 
             Values.parameters("email", email, "name", food.getName(),
-                        "quantity", food.getQuantity(), "weight", food.getWeight()));
-            FoodModel addedFood = new FoodModel(food.getName(), food.getQuantity(), food.getWeight());
+                        "quantity", food.getQuantity(), "unit", food.getUnit()));
+            FoodModel addedFood = new FoodModel(food.getName(), food.getQuantity(), food.getUnit());
             return addedFood;
         };
     }
@@ -61,13 +61,13 @@ public class PantryRepository {
     public static TransactionCallback<List<FoodModel>> getPantryTransaction(String email){
         return transaction -> {
             var result = transaction.run("MATCH (User{email: $email})-[:HAS_PANTRY]->(p:Pantry)-[:IN_PANTRY]->(f:Food) \r\n" + //
-                        "RETURN f.name AS name, f.quantity AS quantity, f.weight AS weight",
+                        "RETURN f.name AS name, f.quantity AS quantity, f.unit AS unit",
             Values.parameters("email", email));
 
             List<FoodModel> foods = new ArrayList<>();
             while (result.hasNext()){
                 var record = result.next();
-                foods.add(new FoodModel(record.get("name").asString(), record.get("quantity").asInt(), record.get("weight").asInt()));
+                foods.add(new FoodModel(record.get("name").asString(), record.get("quantity").asInt(), record.get("unit").asString()));
             }
             return foods;
         };
@@ -88,9 +88,9 @@ public class PantryRepository {
     public static TransactionCallback<Void> updatePantryTransaction(FoodModel food, String email){
         return transaction -> {
             transaction.run("MATCH (User{email: $email})-[:HAS_PANTRY]->(p:Pantry)-[:IN_PANTRY]->(f:Food {name: $name}) \r\n" + //
-                        "SET f.quantity = $quantity, f.weight = $weight",
+                        "SET f.quantity = $quantity, f.unit = $unit",
             Values.parameters("email", email, "name", food.getName(),
-                        "quantity", food.getQuantity(), "weight", food.getWeight()));
+                        "quantity", food.getQuantity(), "unit", food.getUnit()));
             return null;
         };
     }

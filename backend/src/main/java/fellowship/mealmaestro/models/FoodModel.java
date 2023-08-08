@@ -1,28 +1,23 @@
 package fellowship.mealmaestro.models;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PositiveOrZero;
+
 
 public class FoodModel {
-    @NotBlank(message = "A Food Name is required")
     private String name;
 
-    @PositiveOrZero(message = "Quantity must be a positive number")
     private int quantity;
 
-    @PositiveOrZero(message = "Weight must be a positive number")
-    private int weight;
+    private String unit;
 
     public FoodModel(){
         this.name = "";
         this.quantity = 0;
-        this.weight = 0;
     }
 
-    public FoodModel(String name, int quantity, int weight){
+    public FoodModel(String name, int quantity, String unit){
         this.name = name;
         this.quantity = quantity;
-        this.weight = weight;
+        this.unit = unit;
     }
 
     public String getName(){
@@ -33,8 +28,8 @@ public class FoodModel {
         return this.quantity;
     }
 
-    public int getWeight(){
-        return this.weight;
+    public String getUnit(){
+        return this.unit;
     }
 
     public void setName(String name){
@@ -45,7 +40,7 @@ public class FoodModel {
         this.quantity = quantity;
     }
 
-    public void setWeight(int weight){
-        this.weight = weight;
+    public void setUnit(String unit){
+        this.unit = unit;
     }
 }

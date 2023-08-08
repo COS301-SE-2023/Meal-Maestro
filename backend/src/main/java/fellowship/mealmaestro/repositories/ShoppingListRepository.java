@@ -32,12 +32,12 @@ public class ShoppingListRepository {
     public static TransactionCallback<FoodModel> addToShoppingListTransaction(FoodModel food, String email){
         return transaction -> {
             transaction.run("MATCH (User{email: $email})-[:HAS_LIST]->(s:`Shopping List`) \r\n" + //
-                        "CREATE (s)-[:IN_LIST]->(:Food {name: $name, quantity: $quantity, weight: $weight})",
+                        "CREATE (s)-[:IN_LIST]->(:Food {name: $name, quantity: $quantity, unit: $unit})",
 
             Values.parameters("email", email, "name", food.getName(),
-                        "quantity", food.getQuantity(), "weight", food.getWeight()));
+                        "quantity", food.getQuantity(), "unit", food.getUnit()));
 
-            FoodModel addedFood = new FoodModel(food.getName(), food.getQuantity(), food.getWeight());
+            FoodModel addedFood = new FoodModel(food.getName(), food.getQuantity(), food.getUnit());
             return addedFood;
         };
     }
@@ -60,14 +60,14 @@ public class ShoppingListRepository {
     public static TransactionCallback<List<FoodModel>> getShoppingListTransaction(String email){
         return transaction -> {
             var result = transaction.run("MATCH (User{email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[:IN_LIST]->(f:Food) \r\n" + //
-                        "RETURN f.name AS name, f.quantity AS quantity, f.weight AS weight",
+                        "RETURN f.name AS name, f.quantity AS quantity, f.unit AS unit",
 
             Values.parameters("email", email));
             
             List<FoodModel> foods = new ArrayList<>();
             while (result.hasNext()){
                 var record = result.next();
-                foods.add(new FoodModel(record.get("name").asString(), record.get("quantity").asInt(), record.get("weight").asInt()));
+                foods.add(new FoodModel(record.get("name").asString(), record.get("quantity").asInt(), record.get("unit").asString()));
             }
             return foods;
         };
@@ -88,10 +88,10 @@ public class ShoppingListRepository {
     public static TransactionCallback<Void> updateShoppingListTransaction(FoodModel food, String email){
         return transaction -> {
             transaction.run("MATCH (User{email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[:IN_LIST]->(f:Food {name: $name}) \r\n" + //
-                        "SET f.quantity = $quantity, f.weight = $weight",
+                        "SET f.quantity = $quantity, f.unit = $unit",
 
             Values.parameters("email", email, "name", food.getName(),
-                        "quantity", food.getQuantity(), "weight", food.getWeight()));
+                        "quantity", food.getQuantity(), "unit", food.getUnit()));
             return null;
         };
     }
@@ -134,34 +134,50 @@ public class ShoppingListRepository {
             boolean foodInBoth = findFoodInBoth.single().get(0).asInt() > 0;
 
             if (foodInBoth) {
-                transaction.run(
+                var unitResult = transaction.run(
                     // If food exists in both, update the pantry food and delete the shopping list food
                     "MATCH (u:User{email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[r:IN_LIST]->(f:Food {name: $name}), \r\n" + //
                     "(u)-[:HAS_PANTRY]->(p:`Pantry`)-[:IN_PANTRY]->(fp:Food{name: $name}) \r\n" + //
-                    "SET fp.weight = fp.weight + f.weight, fp.quantity = fp.quantity + f.quantity \r\n" + //
-                    "DELETE r, f",
+                    "SET fp.unit = fp.unit, fp.quantity = fp.quantity + f.quantity \r\n" + //
+                    "WITH f.unit AS unit, f.quantity AS quantity, fp.quantity AS total, r, f \r\n" + //
+                    "DELETE r, f \r\n" +
+                    "RETURN unit, quantity, total",
                     Values.parameters("email", email, "name", food.getName())
                 );
+                // if food unit is different, convert the shopping list food to the pantry food unit
+                // String unit = unitResult.single().get("unit").asString();
+                // int quantity = unitResult.single().get("quantity").asInt();
+                // int total = unitResult.single().get("total").asInt();
+                // if (!unit.equals(food.getUnit())) {
+                //     total = total - quantity;
+                //     quantity = quantity * unitConversion.get(unit) / unitConversion.get(food.getUnit());
+
+                //     transaction.run(
+                //         "MATCH (u:User{email: $email})-[:HAS_PANTRY]->(p:`Pantry`)-[:IN_PANTRY]->(fp:Food{name: $name}) \r\n" + //
+                //         "SET fp.quantity = $total, fp.unit = $unit",
+                //         Values.parameters("email", email, "name", food.getName(), "total", total, "unit", unit)
+                //     );
+                // }
             } else {
                 transaction.run(
                     // If food only exists in shopping list, create it in the pantry and delete it from the shopping list
                     "MATCH (u:User{email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[r:IN_LIST]->(f:Food {name: $name}), \r\n" + //
                     "(u)-[:HAS_PANTRY]->(p:`Pantry`) \r\n" + //
-                    "CREATE (p)-[:IN_PANTRY]->(:Food {name: $name, quantity: f.quantity, weight: f.weight}) \r\n" + //
+                    "CREATE (p)-[:IN_PANTRY]->(:Food {name: $name, quantity: f.quantity, unit: f.unit}) \r\n" + //
                     "DELETE r, f",
                     Values.parameters("email", email, "name", food.getName())
                 );
             }
 
             var result = transaction.run(
-                "MATCH (u:User{email: $email})-[:HAS_PANTRY]->(:`Pantry`)-[:IN_PANTRY]->(f:Food) RETURN f.name AS name, f.quantity AS quantity, f.weight AS weight \r\n", //
+                "MATCH (u:User{email: $email})-[:HAS_PANTRY]->(:`Pantry`)-[:IN_PANTRY]->(f:Food) RETURN f.name AS name, f.quantity AS quantity, f.unit AS unit \r\n", //
                 Values.parameters("email", email)
             );
 
             List<FoodModel> foods = new ArrayList<>();
             while (result.hasNext()){
                 var record = result.next();
-                foods.add(new FoodModel(record.get("name").asString(), record.get("quantity").asInt(), record.get("weight").asInt()));
+                foods.add(new FoodModel(record.get("name").asString(), record.get("quantity").asInt(), record.get("unit").asString()));
             }
             return foods;
         };
