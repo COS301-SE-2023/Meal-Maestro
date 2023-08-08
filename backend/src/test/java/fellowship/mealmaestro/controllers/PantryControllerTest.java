@@ -46,7 +46,7 @@ public class PantryControllerTest {
 
     @Test
     public void addToPantrySuccessTest() throws Exception {
-        FoodModel foodModel = new FoodModel("testFood", 2, 2);
+        FoodModel foodModel = new FoodModel("testFood", 2, "testUnit");
 
         // When addToPantry method is called with any FoodModel and any String, it returns foodModel
         when(pantryService.addToPantry(any(FoodModel.class), any(String.class))).thenReturn(foodModel);
@@ -65,7 +65,7 @@ public class PantryControllerTest {
 
     @Test
     public void addToPantryBadRequestTest() throws Exception {
-        FoodModel foodModel = new FoodModel("testFood", 2, 2);
+        FoodModel foodModel = new FoodModel("testFood", 2, "testUnit");
 
         // When addToPantry method is called with any FoodModel and any String, it returns foodModel
         when(pantryService.addToPantry(any(FoodModel.class), any(String.class))).thenReturn(foodModel);
