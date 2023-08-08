@@ -62,32 +62,6 @@ public class BrowseRepository {
 
 
 
-    // public List<MealModel> getPopularMeals() {
-    //     try (Session session = driver.session()) {
-    //         return session.readTransaction(this::getPopularMealsTransaction);
-    //     }
-    // }
-
- //   public List<MealModel> getPopularMealsTransaction(Transaction tx) {
-        // List<MealModel> popularMeals = new ArrayList<>();
-    
-        // org.neo4j.driver.Result result = tx.run("MATCH (m:Meal)<--(u:User)\n" +
-        //         "WITH m, count(u) as popularity\n" +
-        //         "ORDER BY popularity DESC\n" +
-        //         "LIMIT 10\n" +
-        //         "RETURN m.name AS name, m.recipe AS recipe");
-    
-        // while (result.hasNext()) {
-        //     org.neo4j.driver.Record record = result.next();
-        //     String name = record.get("name").asString();
-        //     String recipe = record.get("recipe").asString();
-        //     popularMeals.add(new MealModel(name, recipe));
-        // }
-    
-        // return getRandomMeals(5);
-        // }
-
-
     public List<MealModel> getSearchedMeals(String mealName, String email) {
         try (Session session = driver.session()) {
             return session.executeRead(getSearchedMealsTransaction(mealName, email));
@@ -97,35 +71,59 @@ public class BrowseRepository {
 
     public TransactionCallback<List<MealModel>> getSearchedMealsTransaction(String mealName, String email) {
         return transaction -> {
-           
-        List<MealModel> matchingPopularMeals = new ArrayList<>();
-        // org.neo4j.driver.Result result = transaction.run("MATCH (m:Meal {name: $name})\n" +
-        //         "RETURN m.name AS name, m.instructions AS instructions, m.description AS description, " +
-        //         "m.url AS url, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
-        //         Values.parameters("email", email));
-        org.neo4j.driver.Result result = transaction.run(
-            "MATCH (m:Meal)\n" +
-            "WHERE m.name =~ $namePattern OR m.ingredients =~ $namePattern OR m.description =~ $namePattern\n" + // Use regular expression matching
-            "RETURN m.name AS name, m.instructions AS instructions, m.description AS description, " +
-            "m.url AS url, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
-            Values.parameters("namePattern", "(?i).*" + mealName + ".*") // (?i) for case-insensitive
-        );
-
-        if (result.hasNext()) {
-            org.neo4j.driver.Record record = result.next();
-            String name = record.get("name").asString();
-            String instructions = record.get("instructions").asString();
-            String description = record.get("description").asString();
-            String url = record.get("url").asString();
-            String ingredients = record.get("ingredients").asString();
-            String cookingTime = record.get("cookingTime").asString();
-           // return new MealModel(name, instructions, description, url, ingredients, cookingTime);
-           matchingPopularMeals.add(new MealModel(name, instructions, description, url, ingredients, cookingTime));
-        }
-
-        return matchingPopularMeals; 
+            List<MealModel> matchingPopularMeals = new ArrayList<>();
+            org.neo4j.driver.Result result = transaction.run(
+                "MATCH (m:Meal)\n" +
+                "WHERE m.name =~ $namePattern OR m.ingredients =~ $namePattern OR m.description =~ $namePattern\n" +
+                "RETURN m.name AS name, m.instructions AS instructions, m.description AS description, " +
+                "m.url AS url, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
+                Values.parameters("namePattern", "(?i).*" + mealName + ".*")
+            );
+    
+            while (result.hasNext()) {
+                org.neo4j.driver.Record record = result.next();
+                String name = record.get("name").asString();
+                String instructions = record.get("instructions").asString();
+                String description = record.get("description").asString();
+                String url = record.get("url").asString();
+                String ingredients = record.get("ingredients").asString();
+                String cookingTime = record.get("cookingTime").asString();
+                
+                matchingPopularMeals.add(new MealModel(name, instructions, description, url, ingredients, cookingTime));
+            }
+    
+            return matchingPopularMeals;
         };
     }
+    
+
+    // public TransactionCallback<List<MealModel>> getSearchedMealsTransaction(String mealName, String email) {
+    //     return transaction -> {
+           
+    //     List<MealModel> matchingPopularMeals = new ArrayList<>();
+    //     org.neo4j.driver.Result result = transaction.run(
+    //         "MATCH (m:Meal)\n" +
+    //         "WHERE m.name =~ $namePattern OR m.ingredients =~ $namePattern OR m.description =~ $namePattern\n" + // Use regular expression matching
+    //         "RETURN m.name AS name, m.instructions AS instructions, m.description AS description, " +
+    //         "m.url AS url, m.ingredients AS ingredients, m.cookingTime AS cookingTime",
+    //         Values.parameters("namePattern", "(?i).*" + mealName + ".*") // (?i) for case-insensitive
+    //     );
+
+    //     if (result.hasNext()) {
+    //         org.neo4j.driver.Record record = result.next();
+    //         String name = record.get("name").asString();
+    //         String instructions = record.get("instructions").asString();
+    //         String description = record.get("description").asString();
+    //         String url = record.get("url").asString();
+    //         String ingredients = record.get("ingredients").asString();
+    //         String cookingTime = record.get("cookingTime").asString();
+    //        // return new MealModel(name, instructions, description, url, ingredients, cookingTime);
+    //        matchingPopularMeals.add(new MealModel(name, instructions, description, url, ingredients, cookingTime));
+    //     }
+
+    //     return matchingPopularMeals; 
+    //     };
+    // }
 
 
 }
