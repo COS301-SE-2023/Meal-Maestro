@@ -358,26 +358,48 @@ export class PantryPage implements OnInit{
   }
 
   sortAmountDescending(): void {
-    if (this.segment === 'pantry'){
-      this.pantryItems.sort((a, b) => {
-        return (a.quantity!) > (b.quantity!) ? -1 : 1;
-      });
-    } else if (this.segment === 'shopping'){
-      this.shoppingItems.sort((a, b) => {
-        return (a.quantity!) > (b.quantity!) ? -1 : 1;
-      });
+    const convertToCommonUnit = (item: FoodItemI) => {
+      let quantity = item.quantity || 0;
+      if (item.unit === 'kg') {
+        quantity *= 1000; // Convert kilograms to grams
+      } else if (item.unit === 'l') {
+        quantity *= 1000; // Convert liters to milliliters, if needed
+      }
+      // Add other unit conversions as needed
+      return quantity;
+    };
+  
+    const sortFunction = (a: FoodItemI, b: FoodItemI) => {
+      return convertToCommonUnit(a) > convertToCommonUnit(b) ? -1 : 1;
+    };
+  
+    if (this.segment === 'pantry') {
+      this.pantryItems.sort(sortFunction);
+    } else if (this.segment === 'shopping') {
+      this.shoppingItems.sort(sortFunction);
     }
   }
 
   sortAmountAscending(): void {
-    if (this.segment === 'pantry'){
-      this.pantryItems.sort((a, b) => {
-        return (a.quantity!) < (b.quantity!) ? -1 : 1;
-      });
-    } else if (this.segment === 'shopping'){
-      this.shoppingItems.sort((a, b) => {
-        return (a.quantity!) < (b.quantity!) ? -1 : 1;
-      });
+    const convertToCommonUnit = (item: FoodItemI) => {
+      let quantity = item.quantity || 0;
+      if (item.unit === 'kg') {
+        quantity *= 1000; // Convert kilograms to grams
+      } else if (item.unit === 'l') {
+        quantity *= 1000; // Convert liters to milliliters, if needed
+      }
+      // Add other unit conversions as needed
+      return quantity;
+    };
+  
+    const sortFunction = (a: FoodItemI, b: FoodItemI) => {
+      return convertToCommonUnit(a) < convertToCommonUnit(b) ? -1 : 1;
+    };
+  
+    if (this.segment === 'pantry') {
+      this.pantryItems.sort(sortFunction);
+    } else if (this.segment === 'shopping') {
+      this.shoppingItems.sort(sortFunction);
     }
   }
 
