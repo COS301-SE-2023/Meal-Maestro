@@ -231,10 +231,12 @@ export class PantryPage implements OnInit{
     error: (err) => {
       if (err.status === 403){
         this.errorHandlerService.presentErrorToast(
-          'Unauthorize access. Please login again.',
+          'Unauthorized access. Please login again.',
           err
         )
         this.auth.logout();
+      } else if (err.status === 409) {
+        this.errorHandlerService.presentErrorToast('Cannot convert units', err);
       } else {
         this.errorHandlerService.presentErrorToast(
           'Error buying item.',

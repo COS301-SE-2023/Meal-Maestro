@@ -139,25 +139,47 @@ public class ShoppingListRepository {
                     "MATCH (u:User{email: $email})-[:HAS_LIST]->(s:`Shopping List`)-[r:IN_LIST]->(f:Food {name: $name}), \r\n" + //
                     "(u)-[:HAS_PANTRY]->(p:`Pantry`)-[:IN_PANTRY]->(fp:Food{name: $name}) \r\n" + //
                     "SET fp.unit = fp.unit, fp.quantity = fp.quantity + f.quantity \r\n" + //
-                    "WITH f.unit AS unit, f.quantity AS quantity, fp.quantity AS total, r, f \r\n" + //
+                    "WITH fp.unit AS unit, f.quantity AS quantity, fp.quantity AS total, r, f \r\n" + //
                     "DELETE r, f \r\n" +
                     "RETURN unit, quantity, total",
                     Values.parameters("email", email, "name", food.getName())
                 );
                 // if food unit is different, convert the shopping list food to the pantry food unit
-                // String unit = unitResult.single().get("unit").asString();
-                // int quantity = unitResult.single().get("quantity").asInt();
-                // int total = unitResult.single().get("total").asInt();
-                // if (!unit.equals(food.getUnit())) {
-                //     total = total - quantity;
-                //     quantity = quantity * unitConversion.get(unit) / unitConversion.get(food.getUnit());
+                var record = unitResult.single();
+                String unit = record.get("unit").asString();
+                double quantity = record.get("quantity").asDouble();
+                double total = record.get("total").asDouble();
+                if (!unit.equals(food.getUnit())){
+                    total = total - quantity;
+                    if (unit.equals("g") && food.getUnit().equals("kg")){
+                        total = total + (quantity * 1000);
+                    } else if (unit.equals("kg") && food.getUnit().equals("g")){
+                        total = total + (quantity / 1000);
+                    } else if (unit.equals("ml") && food.getUnit().equals("l")){
+                        total = total + (quantity * 1000);
+                    } else if (unit.equals("l") && food.getUnit().equals("ml")){
+                        total = total + (quantity / 1000);
+                    } else {
 
-                //     transaction.run(
-                //         "MATCH (u:User{email: $email})-[:HAS_PANTRY]->(p:`Pantry`)-[:IN_PANTRY]->(fp:Food{name: $name}) \r\n" + //
-                //         "SET fp.quantity = $total, fp.unit = $unit",
-                //         Values.parameters("email", email, "name", food.getName(), "total", total, "unit", unit)
-                //     );
-                // }
+                        //RETURN NULL IF CANT CONVERT
+                        return null;
+                    }
+                }
+
+                if (total >= 1000 && (unit.equals("g") || unit.equals("ml"))){
+                    unit = unit.equals("g") ? "kg" : "l";
+                    total = total / 1000;
+                } else if (total < 1 && (unit.equals("kg") || unit.equals("l"))){
+                    unit = unit.equals("kg") ? "g" : "ml";
+                    total = total * 1000;
+                }
+
+                transaction.run(
+                    "MATCH (u:User{email: $email})-[:HAS_PANTRY]->(p:`Pantry`)-[:IN_PANTRY]->(fp:Food{name: $name}) \r\n" + //
+                    "SET fp.quantity = $total, fp.unit = $unit",
+                    Values.parameters("email", email, "name", food.getName(), "total", total, "unit", unit)
+                );
+
             } else {
                 transaction.run(
                     // If food only exists in shopping list, create it in the pantry and delete it from the shopping list

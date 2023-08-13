@@ -65,6 +65,11 @@ public class ShoppingListController {
             return ResponseEntity.badRequest().build();
         }
         String authToken = token.substring(7);
-        return ResponseEntity.ok(shoppingListService.buyItem(request, authToken));
+        List<FoodModel> pantry = shoppingListService.buyItem(request, authToken);
+
+        if (pantry == null) {
+            return ResponseEntity.status(409).build();
+        }
+        return ResponseEntity.ok(pantry);
     }
 }
