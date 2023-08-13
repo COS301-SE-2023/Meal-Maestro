@@ -40,6 +40,11 @@ public class ShoppingListService {
 
     public List<FoodModel> buyItem(FoodModel request, String token){
         String email = jwtService.extractUserEmail(token);
-        return shoppingListRepository.buyItem(request, email);
+        try {
+            shoppingListRepository.buyItem(request, email);
+            return shoppingListRepository.getShoppingList(email);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

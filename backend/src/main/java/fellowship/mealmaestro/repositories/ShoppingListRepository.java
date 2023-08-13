@@ -161,8 +161,7 @@ public class ShoppingListRepository {
                         total = total + (quantity / 1000);
                     } else {
 
-                        //RETURN NULL IF CANT CONVERT
-                        return null;
+                        throw new IllegalArgumentException("Cannot convert " + unit + " to " + food.getUnit());
                     }
                 }
 
