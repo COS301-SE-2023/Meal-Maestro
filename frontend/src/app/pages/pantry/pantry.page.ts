@@ -21,7 +21,6 @@ export class PantryPage implements OnInit{
   @ViewChild(IonModal) modal!: IonModal;
 
   segment: 'pantry'|'shopping'| null = 'pantry';
-  isQuantity: boolean = false;
   isLoading: boolean = false;
   pantryItems: FoodItemI[] = [];
   shoppingItems: FoodItemI[] = [];
@@ -30,7 +29,7 @@ export class PantryPage implements OnInit{
   newItem: FoodItemI = {
     name: '',
     quantity: null,
-    unit: 'unit',
+    unit: 'pcs',
   };
 
   constructor(public r : Router, 
@@ -112,9 +111,8 @@ export class PantryPage implements OnInit{
               this.newItem = {
                 name: '',
                 quantity: null,
-                unit: 'unit',
+                unit: 'pcs',
               };
-              this.isQuantity = false;
             }
           }
         },
@@ -147,9 +145,8 @@ export class PantryPage implements OnInit{
               this.newItem = {
                 name: '',
                 quantity: null,
-                unit: 'unit',
+                unit: 'pcs',
               };
-              this.isQuantity = false;
             }
           }
           
@@ -268,9 +265,8 @@ export class PantryPage implements OnInit{
     this.newItem = {
       name: '',
       quantity: null,
-      unit: 'unit',
+      unit: 'pcs',
     };
-    this.isQuantity = false;
   }
 
   confirmModal(){

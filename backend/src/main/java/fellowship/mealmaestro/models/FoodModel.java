@@ -5,7 +5,7 @@ package fellowship.mealmaestro.models;
 public class FoodModel {
     private String name;
 
-    private int quantity;
+    private double quantity;
 
     private String unit;
 
@@ -14,7 +14,7 @@ public class FoodModel {
         this.quantity = 0;
     }
 
-    public FoodModel(String name, int quantity, String unit){
+    public FoodModel(String name, double quantity, String unit){
         this.name = name;
         this.quantity = quantity;
         this.unit = unit;
@@ -24,7 +24,7 @@ public class FoodModel {
         return this.name;
     }
 
-    public int getQuantity(){
+    public double getQuantity(){
         return this.quantity;
     }
 
@@ -36,7 +36,7 @@ public class FoodModel {
         this.name = name;
     }
 
-    public void setQuantity(int quantity){
+    public void setQuantity(double quantity){
         this.quantity = quantity;
     }
 

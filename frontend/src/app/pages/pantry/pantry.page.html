@@ -111,16 +111,21 @@
               </ion-col>
             </ion-row>
             <ion-row>
-              <ion-col size="9">
-                <ion-item *ngIf="isQuantity">
+              <ion-col size="6">
+                <ion-item>
                   <ion-input label="Quantity" labelPlacement="floating" placeholder="Enter quantity" type="number" [(ngModel)]="newItem.quantity"></ion-input>
                 </ion-item>
-                <ion-item *ngIf="!isQuantity">
-                  <ion-input label="Weight" labelPlacement="floating" placeholder="Enter weight in grams" type="number" [(ngModel)]="newItem.weight"></ion-input>
-                </ion-item>
               </ion-col>
-              <ion-col size="3">
-                  <ion-toggle [(ngModel)]="isQuantity"></ion-toggle>
+              <ion-col size="6">
+                  <ion-item>
+                    <ion-select [(ngModel)]="newItem.unit">
+                      <ion-select-option value="g">g</ion-select-option>
+                      <ion-select-option value="kg">kg</ion-select-option>
+                      <ion-select-option value="ml">ml</ion-select-option>
+                      <ion-select-option value="l">l</ion-select-option>
+                      <ion-select-option value="pcs">pcs</ion-select-option>
+                    </ion-select>
+                  </ion-item>
               </ion-col>
             </ion-row>
           </ion-grid>
@@ -169,17 +174,22 @@
               </ion-col>
             </ion-row>
             <ion-row>
-              <ion-col size="9">
-                <ion-item *ngIf="isQuantity">
+              <ion-col size="6">
+                <ion-item>
                   <ion-input label="Quantity" labelPlacement="floating" placeholder="Enter quantity" type="number" [(ngModel)]="newItem.quantity"></ion-input>
                 </ion-item>
-                <ion-item *ngIf="!isQuantity">
-                  <ion-input label="Weight" labelPlacement="floating" placeholder="Enter weight in grams" type="number" [(ngModel)]="newItem.weight"></ion-input>
+              </ion-col>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-select [(ngModel)]="newItem.unit">
+                    <ion-select-option value="g">g</ion-select-option>
+                    <ion-select-option value="kg">kg</ion-select-option>
+                    <ion-select-option value="ml">ml</ion-select-option>
+                    <ion-select-option value="l">l</ion-select-option>
+                    <ion-select-option value="pcs">pcs</ion-select-option>
+                  </ion-select>
                 </ion-item>
-              </ion-col>
-              <ion-col size="3">
-                  <ion-toggle [(ngModel)]="isQuantity"></ion-toggle>
-              </ion-col>
+            </ion-col>
             </ion-row>
           </ion-grid>
         </ion-content>

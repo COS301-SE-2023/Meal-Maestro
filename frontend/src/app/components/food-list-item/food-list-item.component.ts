@@ -3,6 +3,7 @@ import { ActionSheetController, Animation, AnimationController, IonItemSliding, 
 import { FoodItemI } from '../../models/interfaces';
 import { ErrorHandlerService, PantryApiService, ShoppingListApiService } from '../../services/services';
 import { CommonModule } from '@angular/common';
+import { parse } from 'path';
 
 @Component({
   selector: 'app-food-list-item',
@@ -141,26 +142,36 @@ export class FoodListItemComponent  implements AfterViewInit {
     }
   }
 
-  async choosePicker(){
-    if (this.item.quantity !== 0 && this.item.quantity !== null){
-      this.openQuantityPicker();
-    }
-  }
-
   async openQuantityPicker(){
     const quantityOptions = [];
 
     let quantitySelectedIndex = 0;
 
-    for(let i = 1; i <= 100; i++){
-        quantityOptions.push({
-            text: String(i),
-            value: i
-        });
+    let lowerBound = 0;
+    let upperBound = 100;
+    let decimal = 0;
+    let step = 1;
 
-        if(i === this.item.quantity) {
-          quantitySelectedIndex = i - 1;
-        }
+    // Adjust step based on the unit
+    if (this.item.unit === 'g' || this.item.unit === 'ml') {
+      step = 100;
+      upperBound = 3000;
+    } else if (this.item.unit === 'kg' || this.item.unit === 'l') {
+      step = 0.1;
+      upperBound = 20;
+      decimal = 1;
+    }
+
+    for(let i = lowerBound; i <= upperBound; i += step){
+      let value = parseFloat(i.toFixed(decimal));
+      quantityOptions.push({
+        text: value.toString(),
+        value: value,
+      });
+      
+      if(value === this.item.quantity){
+        quantitySelectedIndex = i / step;
+      }
     }
 
     const picker = await this.pickerController.create({
@@ -182,6 +193,19 @@ export class FoodListItemComponent  implements AfterViewInit {
         {
           text: 'Confirm',
           handler: (value) => {
+
+            if(this.item.unit === 'g' || this.item.unit === 'ml'){
+              if(value.quantity.value >= 1000){
+                this.item.unit = this.item.unit === 'g' ? 'kg' : 'l';
+                value.quantity.value /= 1000;
+              }
+            } else if(this.item.unit === 'kg' || this.item.unit === 'l'){
+              if(value.quantity.value < 1){
+                this.item.unit = this.item.unit === 'kg' ? 'g' : 'ml';
+                value.quantity.value *= 1000;
+              }
+            }
+
             const updatedItem: FoodItemI = {
               name: this.item.name,
               quantity: value.quantity.value,

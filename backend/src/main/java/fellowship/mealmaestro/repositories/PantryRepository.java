@@ -67,7 +67,7 @@ public class PantryRepository {
             List<FoodModel> foods = new ArrayList<>();
             while (result.hasNext()){
                 var record = result.next();
-                foods.add(new FoodModel(record.get("name").asString(), record.get("quantity").asInt(), record.get("unit").asString()));
+                foods.add(new FoodModel(record.get("name").asString(), record.get("quantity").asDouble(), record.get("unit").asString()));
             }
             return foods;
         };

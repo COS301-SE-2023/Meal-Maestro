@@ -16,7 +16,7 @@
   </ion-item>
 
   <ion-item-options side="end" (ionSwipe)="openAddToPantrySheet()">
-    <ion-item-option color="primary" (click)="choosePicker()">
+    <ion-item-option color="primary" (click)="openQuantityPicker()">
       <ion-icon slot="icon-only" name="ellipsis-horizontal-outline"></ion-icon>
     </ion-item-option>
     <ion-item-option color="secondary" (click)="openAddToPantrySheet()" *ngIf="this.segment === 'shopping'" expandable>
