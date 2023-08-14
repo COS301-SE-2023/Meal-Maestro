@@ -9,6 +9,7 @@ import org.neo4j.driver.Values;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import fellowship.mealmaestro.models.UpdateUserRequestModel;
 import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.models.auth.AuthorityRoleModel;
 
@@ -74,18 +75,26 @@ public class UserRepository {
         };
     }
 
-    public UserModel updateUser(UserModel user, String email) {
+    public UserModel updateUser(UpdateUserRequestModel user, String email) {
         try (Session session = driver.session()){
-            session.executeWrite(updateUserTransaction(user.getName(), email));
-            return user;
+            return session.executeWrite(updateUserTransaction(user.getUsername(), email));
         }
     }
 
-    public static TransactionCallback<Void> updateUserTransaction(String username, String email) {
+    public static TransactionCallback<UserModel> updateUserTransaction(String username, String email) {
         return transaction -> {
-            transaction.run("MATCH (n0:User {email: $email}) SET n0.username = $username",
+            var result = transaction.run("MATCH (n0:User {email: $email}) SET n0.username = $username RETURN n0",
             Values.parameters("email", email, "username", username));
-            return null;
+
+            var record = result.single();
+            var node = record.get("n0");
+            UserModel user = new UserModel(
+                node.get("username").asString(), 
+                "", 
+                node.get("email").asString(), 
+                AuthorityRoleModel.USER
+            );
+            return user;
         };
     }
 }
