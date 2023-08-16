@@ -3,24 +3,23 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UserI } from '../../models/user.model';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserApiService {
+  url: String = 'http://localhost:8080';
 
-  url : String = 'http://localhost:8080';
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   updateUsername(user: UserI): Observable<HttpResponse<UserI>> {
     return this.http.put<UserI>(
-      this.url+'/updateUser',
+      this.url + '/updateUser',
       {
-        "username": user.username,
-        "email": user.email,
-        "password": user.password,
+        username: user.username,
+        email: user.email,
+        password: user.password,
       },
-      {observe: 'response'});
+      { observe: 'response' }
+    );
   }
 }

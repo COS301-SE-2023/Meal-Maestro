@@ -1,5 +1,15 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { ActionSheetController, IonicModule, PickerController } from '@ionic/angular';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick,
+  waitForAsync,
+} from '@angular/core/testing';
+import {
+  ActionSheetController,
+  IonicModule,
+  PickerController,
+} from '@ionic/angular';
 
 import { FoodListItemComponent } from './food-list-item.component';
 import { PantryApiService } from '../../services/pantry-api/pantry-api.service';
@@ -18,23 +28,33 @@ describe('FoodListItemComponent', () => {
   let mockPickerController: jasmine.SpyObj<any>;
   let mockItem: FoodItemI;
 
-  const mockElementRef = new ElementRef({ nativeElement: document.createElement('div') });
+  const mockElementRef = new ElementRef({
+    nativeElement: document.createElement('div'),
+  });
 
   beforeEach(waitForAsync(() => {
-    mockPantryService = jasmine.createSpyObj('PantryApiService', ['updatePantryItem']);
-    mockShoppingListService = jasmine.createSpyObj('ShoppingListApiService', ['updateShoppingListItem']);
-    mockActionSheetController = jasmine.createSpyObj('ActionSheetController', ['create']);
+    mockPantryService = jasmine.createSpyObj('PantryApiService', [
+      'updatePantryItem',
+    ]);
+    mockShoppingListService = jasmine.createSpyObj('ShoppingListApiService', [
+      'updateShoppingListItem',
+    ]);
+    mockActionSheetController = jasmine.createSpyObj('ActionSheetController', [
+      'create',
+    ]);
     mockPickerController = jasmine.createSpyObj('PickerController', ['create']);
     mockItem = {
       name: 'test',
       quantity: 1,
-      weight: 1,
+      unit: 'pcs',
     };
 
     const emptyResponse = new HttpResponse<void>({ body: null, status: 200 });
 
     mockPantryService.updatePantryItem.and.returnValue(of(emptyResponse));
-    mockShoppingListService.updateShoppingListItem.and.returnValue(of(emptyResponse));
+    mockShoppingListService.updateShoppingListItem.and.returnValue(
+      of(emptyResponse)
+    );
     mockActionSheetController.create.calls.reset();
 
     TestBed.configureTestingModule({
@@ -65,85 +85,85 @@ describe('FoodListItemComponent', () => {
   });
 
   // describe('openDeleteSheet', () => {
-    // it('should call actionSheetController.create', () => {
-    //   component.openDeleteSheet();
-    //   expect(mockActionSheetController.create).toHaveBeenCalled();
-    // });
+  // it('should call actionSheetController.create', () => {
+  //   component.openDeleteSheet();
+  //   expect(mockActionSheetController.create).toHaveBeenCalled();
+  // });
 
-    // it('should call actionSheetController.create with correct arguments', () => {
-    //   component.openDeleteSheet();
-    //   expect(mockActionSheetController.create).toHaveBeenCalledWith({
-    //     header: 'Are you sure?',
-    //     buttons: [
-    //       {
-    //         text: 'Delete',
-    //         role: 'destructive',
-    //         data: {
-    //           name: mockItem.name,
-    //           quantity: mockItem.quantity,
-    //           weight: mockItem.weight,
-    //         },
-    //       },
-    //       {
-    //         text: 'Cancel',
-    //         role: 'cancel',
-    //         data: {
-    //           action: 'cancel',
-    //         },
-    //       },
-    //     ],
-    //   });
-    // });
+  // it('should call actionSheetController.create with correct arguments', () => {
+  //   component.openDeleteSheet();
+  //   expect(mockActionSheetController.create).toHaveBeenCalledWith({
+  //     header: 'Are you sure?',
+  //     buttons: [
+  //       {
+  //         text: 'Delete',
+  //         role: 'destructive',
+  //         data: {
+  //           name: mockItem.name,
+  //           quantity: mockItem.quantity,
+  //           weight: mockItem.weight,
+  //         },
+  //       },
+  //       {
+  //         text: 'Cancel',
+  //         role: 'cancel',
+  //         data: {
+  //           action: 'cancel',
+  //         },
+  //       },
+  //     ],
+  //   });
+  // });
 
-    // it('should present the action sheet', fakeAsync (() => {
-    //   const mockActionSheet = {
-    //     present: jasmine.createSpy('present').and.returnValue(Promise.resolve()),
-    //     onDidDismiss: () => jasmine.createSpy('onDidDismiss').and.returnValue(Promise.resolve({ role: 'cancel', data: mockItem })),
-    //   };
-    //   mockActionSheetController.create.and.returnValue(Promise.resolve(mockActionSheet));
+  // it('should present the action sheet', fakeAsync (() => {
+  //   const mockActionSheet = {
+  //     present: jasmine.createSpy('present').and.returnValue(Promise.resolve()),
+  //     onDidDismiss: () => jasmine.createSpy('onDidDismiss').and.returnValue(Promise.resolve({ role: 'cancel', data: mockItem })),
+  //   };
+  //   mockActionSheetController.create.and.returnValue(Promise.resolve(mockActionSheet));
 
-    //   component.openDeleteSheet();
-    //   tick();
+  //   component.openDeleteSheet();
+  //   tick();
 
-    //   expect(mockActionSheet.present).toHaveBeenCalled();
-    // }));
+  //   expect(mockActionSheet.present).toHaveBeenCalled();
+  // }));
 
-    // it('should call emit itemDeleted when role is destructive', fakeAsync (() => {
-    //   const mockActionSheet = {
-    //     present: jasmine.createSpy('present').and.returnValue(Promise.resolve()),
-    //     onDidDismiss: () => jasmine.createSpy('onDidDismiss').and.returnValue(Promise.resolve({ role: 'destructive', data: mockItem }))
-    //   };
-    //   mockActionSheetController.create.and.returnValue(Promise.resolve(mockActionSheet));
+  // it('should call emit itemDeleted when role is destructive', fakeAsync (() => {
+  //   const mockActionSheet = {
+  //     present: jasmine.createSpy('present').and.returnValue(Promise.resolve()),
+  //     onDidDismiss: () => jasmine.createSpy('onDidDismiss').and.returnValue(Promise.resolve({ role: 'destructive', data: mockItem }))
+  //   };
+  //   mockActionSheetController.create.and.returnValue(Promise.resolve(mockActionSheet));
 
-    //   spyOn(component.itemDeleted, 'emit');
-    //   component.openDeleteSheet();
-    //   tick();
-    //   // expect(component.itemDeleted.emit);
-    // }));
+  //   spyOn(component.itemDeleted, 'emit');
+  //   component.openDeleteSheet();
+  //   tick();
+  //   // expect(component.itemDeleted.emit);
+  // }));
 
-    // it('should not call emit itemDeleted when role is cancel', fakeAsync (() => {
-    //   const mockActionSheet = {
-    //     present: jasmine.createSpy('present').and.returnValue(Promise.resolve()),
-    //     onDidDismiss: () => jasmine.createSpy('onDidDismiss').and.returnValue(Promise.resolve({ role: 'cancel', data: mockItem }))
-    //   };
-    //   mockActionSheetController.create.and.returnValue(Promise.resolve(mockActionSheet));
+  // it('should not call emit itemDeleted when role is cancel', fakeAsync (() => {
+  //   const mockActionSheet = {
+  //     present: jasmine.createSpy('present').and.returnValue(Promise.resolve()),
+  //     onDidDismiss: () => jasmine.createSpy('onDidDismiss').and.returnValue(Promise.resolve({ role: 'cancel', data: mockItem }))
+  //   };
+  //   mockActionSheetController.create.and.returnValue(Promise.resolve(mockActionSheet));
 
-    //   spyOn(component.itemDeleted, 'emit');
-    //   component.openDeleteSheet();
-    //   tick();
-    //   expect(component.itemDeleted.emit).not.toHaveBeenCalled();
-    // }));
+  //   spyOn(component.itemDeleted, 'emit');
+  //   component.openDeleteSheet();
+  //   tick();
+  //   expect(component.itemDeleted.emit).not.toHaveBeenCalled();
+  // }));
 
-    // it('should call closeItem when role is cancel', async () => {
-    //   const mockActionSheet = {
-    //     present: jasmine.createSpy('present').and.returnValue(Promise.resolve()),
-    //     onDidDismiss: () => Promise.resolve({ role: 'cancel', data: mockItem }),
-    //   };
-    //   mockActionSheetController.create.and.returnValue(Promise.resolve(mockActionSheet));
-    //   spyOn(component, 'closeItem');
-    //   await component.openDeleteSheet();
-    //   expect(component.closeItem).toHaveBeenCalled();
-    // });
+  // it('should call closeItem when role is cancel', async () => {
+  //   const mockActionSheet = {
+  //     present: jasmine.createSpy('present').and.returnValue(Promise.resolve()),
+  //     onDidDismiss: () => Promise.resolve({ role: 'cancel', data: mockItem }),
+  //   };
+  //   mockActionSheetController.create.and.returnValue(Promise.resolve(mockActionSheet));
+  //   spyOn(component, 'closeItem');
+  //   await component.openDeleteSheet();
+  //   expect(component.closeItem).toHaveBeenCalled();
+  // });
 
   // });
 });

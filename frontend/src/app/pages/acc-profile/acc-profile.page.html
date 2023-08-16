@@ -1,35 +1,41 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>Profile</ion-title>
-    <ion-button size="small" (click)="goBack()"><ion-icon name="arrow-back"></ion-icon></ion-button>
+    <ion-button size="small" (click)="goBack()"
+      ><ion-icon name="arrow-back"></ion-icon
+    ></ion-button>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-card>
+    <ion-item id="username">
+      <ion-label>Username</ion-label>
+      {{user.username}}
+    </ion-item>
+  </ion-card>
 
-    <ion-card>
-      <ion-item id="username">
-        <ion-label>Username</ion-label>
-        {{user.username}}
-      </ion-item>
-    </ion-card>
+  <ion-card>
+    <ion-item>
+      <ion-label>Email</ion-label>
+      {{user.email}}
+    </ion-item>
+  </ion-card>
 
-    <ion-card>
-      <ion-item>
-        <ion-label>Email</ion-label>
-        {{user.email}}
-      </ion-item>
-    </ion-card>
-    
-    <ion-button class="logout" color="danger" (click)="logout()">Logout</ion-button>
-    <ion-button class="delete" fill="outline" color="danger" (click)="logout()">Delete Account</ion-button>
+  <ion-button class="logout" color="danger" (click)="logout()"
+    >Logout</ion-button
+  >
+  <ion-button class="delete" fill="outline" color="danger" (click)="logout()"
+    >Delete Account</ion-button
+  >
 
-    <ion-alert
+  <ion-alert
     trigger="username"
     header="Change Username"
     [inputs]="usernameInputs"
     [buttons]="usernameButtons"
-    (willDismiss)="onUsernameChange($event)">
-    ></ion-alert>
+    (willDismiss)="onUsernameChange($event)"
+  >
+    ></ion-alert
+  >
 </ion-content>
-

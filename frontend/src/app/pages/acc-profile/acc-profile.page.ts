@@ -3,7 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ViewWillEnter } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { AuthenticationService, ErrorHandlerService } from '../../services/services';
+import {
+  AuthenticationService,
+  ErrorHandlerService,
+} from '../../services/services';
 import { UserI } from '../../models/user.model';
 import { UserApiService } from '../../services/user-api/user-api.service';
 
@@ -12,38 +15,43 @@ import { UserApiService } from '../../services/user-api/user-api.service';
   templateUrl: './acc-profile.page.html',
   styleUrls: ['./acc-profile.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule],
 })
-export class AccProfilePage implements OnInit,ViewWillEnter {
+export class AccProfilePage implements OnInit, ViewWillEnter {
   user: UserI;
   usernameButtons = [
     {
       text: 'Cancel',
-      role: 'cancel'
+      role: 'cancel',
     },
     {
       text: 'Confirm',
-      role: 'confirm'
-    }
-  ]
+      role: 'confirm',
+    },
+  ];
   usernameInputs = [
     {
       placeholder: 'Username',
       type: 'text',
-    }
-  ]
-  
-  constructor(private router: Router, private auth: AuthenticationService, private userApi: UserApiService, private errorHandler: ErrorHandlerService) {
+    },
+  ];
+
+  constructor(
+    private router: Router,
+    private auth: AuthenticationService,
+    private userApi: UserApiService,
+    private errorHandler: ErrorHandlerService
+  ) {
     this.user = {
       username: '',
       email: '',
-      password: ''
+      password: '',
     };
-   }
+  }
   ionViewWillEnter(): void {
     this.getUserInfo();
   }
-  
+
   ngOnInit() {
     this.getUserInfo();
   }
@@ -60,12 +68,12 @@ export class AccProfilePage implements OnInit,ViewWillEnter {
         }
       },
       error: (error) => {
-        if (error.status == 403){
-          this.errorHandler.presentErrorToast("You are not logged in.", error)
+        if (error.status == 403) {
+          this.errorHandler.presentErrorToast('You are not logged in.', error);
           this.auth.logout();
         }
-      }
-    })
+      },
+    });
   }
 
   onUsernameChange(event: any) {
@@ -75,23 +83,22 @@ export class AccProfilePage implements OnInit,ViewWillEnter {
       this.userApi.updateUsername(this.user).subscribe({
         next: (response) => {
           if (response.status == 200) {
-            this.errorHandler.presentSuccessToast("Username updated.");
-            if (response.body){
+            this.errorHandler.presentSuccessToast('Username updated.');
+            if (response.body) {
               this.user.name = response.body.name;
               this.user.email = response.body.email;
             }
           }
-        }
-      })
+        },
+      });
     }
   }
-  
+
   goBack() {
-    this.router.navigate(['app/tabs/profile'])
+    this.router.navigate(['app/tabs/profile']);
   }
 
   logout() {
     this.auth.logout();
   }
-
 }

@@ -3,25 +3,41 @@
     <ion-item-option color="danger" (click)="openDeleteSheet()" expandable>
       <ion-icon slot="icon-only" name="trash"></ion-icon>
     </ion-item-option>
-    
   </ion-item-options>
 
-  <ion-item lines="full" [ngClass]="{'low-quantity': item.quantity !== null && item.quantity !== 0 && 
-                                                    (((item.unit === 'g' || item.unit === 'ml') && item.quantity <= 200) || 
-                                                    ((item.unit === 'pcs') && item.quantity <= 5)) &&
-                                                    segment === 'pantry'}">
+  <ion-item
+    lines="full"
+    [ngClass]="{
+      'low-quantity':
+        item.quantity !== null &&
+        item.quantity !== 0 &&
+        (((item.unit === 'g' || item.unit === 'ml') && item.quantity <= 200) ||
+          (item.unit === 'pcs' && item.quantity <= 5)) &&
+        segment === 'pantry'
+    }"
+  >
     <ion-label class="food-name" slot="start">
       {{ item.name }}
     </ion-label>
-    
-    <ion-label class="low-warning" *ngIf="item.quantity !== null && item.quantity !== 0 && 
-                                        (((item.unit === 'g' || item.unit === 'ml') && item.quantity <= 200) || 
-                                        ((item.unit === 'pcs') && item.quantity <= 5)) &&
-    segment === 'pantry'">
-    low
+
+    <ion-label
+      class="low-warning"
+      *ngIf="
+        item.quantity !== null &&
+        item.quantity !== 0 &&
+        (((item.unit === 'g' || item.unit === 'ml') && item.quantity <= 200) ||
+          (item.unit === 'pcs' && item.quantity <= 5)) &&
+        segment === 'pantry'
+      "
+    >
+      low
     </ion-label>
 
-    <ion-label class="food-amount" slot="end" *ngIf="item.quantity !== null && item.quantity !== 0">
+    <ion-label
+      class="food-amount"
+      slot="end"
+      *ngIf="item.quantity !== null && item.quantity !== 0"
+    >
       {{ item.quantity }} {{ item.unit }}
     </ion-label>
   </ion-item>
@@ -30,7 +46,12 @@
     <ion-item-option color="primary" (click)="openQuantityPicker()">
       <ion-icon slot="icon-only" name="ellipsis-horizontal-outline"></ion-icon>
     </ion-item-option>
-    <ion-item-option color="secondary" (click)="openAddToPantrySheet()" *ngIf="this.segment === 'shopping'" expandable>
+    <ion-item-option
+      color="secondary"
+      (click)="openAddToPantrySheet()"
+      *ngIf="this.segment === 'shopping'"
+      expandable
+    >
       <ion-icon slot="icon-only" name="cart"></ion-icon>
     </ion-item-option>
   </ion-item-options>
