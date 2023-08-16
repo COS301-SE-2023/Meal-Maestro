@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fellowship.mealmaestro.models.PantryModel;
 import fellowship.mealmaestro.models.ShoppingListModel;
@@ -15,7 +16,6 @@ import fellowship.mealmaestro.models.auth.AuthenticationResponseModel;
 import fellowship.mealmaestro.models.auth.AuthorityRoleModel;
 import fellowship.mealmaestro.models.auth.RegisterRequestModel;
 import fellowship.mealmaestro.repositories.UserRepository;
-import jakarta.transaction.Transactional;
 
 @Service
 public class AuthenticationService {

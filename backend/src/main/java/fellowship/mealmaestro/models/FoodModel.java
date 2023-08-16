@@ -1,19 +1,21 @@
 package fellowship.mealmaestro.models;
 
+import java.util.UUID;
+
 import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Node("Food")
 public class FoodModel {
     @Id
+    private UUID id;
+
     private String name;
 
     @Version
@@ -22,4 +24,15 @@ public class FoodModel {
     private double quantity;
 
     private String unit;
+
+    public FoodModel(String name, double quantity, String unit) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.quantity = quantity;
+        this.unit = unit;
+    }
+
+    public FoodModel() {
+        this.id = UUID.randomUUID();
+    }
 }

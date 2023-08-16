@@ -35,12 +35,10 @@ public class PantryService {
         String email = jwtService.extractUserEmail(token);
 
         UserModel user = userRepository.findByEmail(email).get();
-        System.out.println("addTo " + user.getPantry());
         PantryModel pantry = user.getPantry();
 
         pantry.getFoods().add(food);
         pantryRepository.save(pantry);
-        userRepository.save(user);
 
         return food;
     }

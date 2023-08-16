@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fellowship.mealmaestro.models.FoodModel;
 import fellowship.mealmaestro.models.PantryModel;
 import fellowship.mealmaestro.models.ShoppingListModel;
 import fellowship.mealmaestro.models.UserModel;
+import fellowship.mealmaestro.repositories.FoodRepository;
 import fellowship.mealmaestro.repositories.PantryRepository;
 import fellowship.mealmaestro.repositories.ShoppingListRepository;
 import fellowship.mealmaestro.repositories.UserRepository;
@@ -30,15 +32,15 @@ public class ShoppingListService {
     @Autowired
     private PantryRepository pantryRepository;
 
+    @Autowired
+    private FoodRepository foodRepository;
+
+    @Transactional
     public FoodModel addToShoppingList(FoodModel food, String token) {
         String email = jwtService.extractUserEmail(token);
 
         UserModel user = userRepository.findByEmail(email).get();
         ShoppingListModel shoppingList = user.getShoppingList();
-
-        if (shoppingList.getFoods() == null) {
-            shoppingList.setFoods(new ArrayList<>());
-        }
 
         shoppingList.getFoods().add(food);
         shoppingListRepository.save(shoppingList);
@@ -46,6 +48,7 @@ public class ShoppingListService {
         return food;
     }
 
+    @Transactional
     public void removeFromShoppingList(FoodModel food, String token) {
         String email = jwtService.extractUserEmail(token);
 
@@ -56,10 +59,13 @@ public class ShoppingListService {
             return;
         }
 
-        shoppingList.getFoods().remove(food);
+        shoppingList.getFoods().removeIf(f -> f.getName().equals(food.getName()));
+        foodRepository.deleteByName(food.getName());
+
         shoppingListRepository.save(shoppingList);
     }
 
+    @Transactional
     public void updateShoppingList(FoodModel food, String token) {
         String email = jwtService.extractUserEmail(token);
 
@@ -81,6 +87,7 @@ public class ShoppingListService {
         shoppingListRepository.save(shoppingList);
     }
 
+    @Transactional
     public List<FoodModel> getShoppingList(String token) {
         String email = jwtService.extractUserEmail(token);
 
@@ -94,6 +101,7 @@ public class ShoppingListService {
         return shoppingList.getFoods();
     }
 
+    @Transactional
     public List<FoodModel> buyItem(FoodModel food, String token) {
         String email = jwtService.extractUserEmail(token);
 
