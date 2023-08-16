@@ -4,7 +4,9 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,15 +15,19 @@ import fellowship.mealmaestro.models.auth.AuthorityRoleModel;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 
+@Data
 @Node("User")
-public class UserModel implements UserDetails{
+public class UserModel implements UserDetails {
+
     @NotBlank(message = "A Username is required")
     private String name;
 
     @NotBlank
     @Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")
     private String password;
+
     @Id
     @NotBlank
     @Email(message = "Email must be valid")
@@ -29,42 +35,51 @@ public class UserModel implements UserDetails{
 
     private AuthorityRoleModel authorityRole;
 
-    public UserModel(){
+    @Version
+    private Long version;
+
+    @Relationship(type = "HAS_PANTRY", direction = Relationship.Direction.OUTGOING)
+    private PantryModel pantry;
+
+    @Relationship(type = "HAS_LIST", direction = Relationship.Direction.OUTGOING)
+    private ShoppingListModel shoppingList;
+
+    public UserModel() {
         this.authorityRole = AuthorityRoleModel.USER;
     }
 
-    public UserModel(String name, String password, String email, AuthorityRoleModel authorityRole){
+    public UserModel(String name, String password, String email, AuthorityRoleModel authorityRole) {
         this.name = name;
         this.password = password;
         this.email = email;
         this.authorityRole = AuthorityRoleModel.USER;
     }
 
-    public String getName(){
+    public String getName() {
         return this.name;
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return this.email;
     }
 
-    public void setName(String name){
+    public void setName(String name) {
         this.name = name;
     }
 
-    public void setPassword(String password){
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public void setEmail(String email){
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public AuthorityRoleModel getAuthorityRole(){
+    public AuthorityRoleModel getAuthorityRole() {
         return this.authorityRole;
     }
 
-    public void setAuthorityRole(AuthorityRoleModel authorityRole){
+    public void setAuthorityRole(AuthorityRoleModel authorityRole) {
         this.authorityRole = authorityRole;
     }
 
@@ -80,12 +95,12 @@ public class UserModel implements UserDetails{
 
     @Override
     public boolean isAccountNonLocked() {
-       return true;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-         return true;
+        return true;
     }
 
     @Override
@@ -94,12 +109,28 @@ public class UserModel implements UserDetails{
     }
 
     @Override
-    public String getUsername(){
+    public String getUsername() {
         return email;
     }
 
     @Override
-    public String getPassword(){
+    public String getPassword() {
         return password;
+    }
+
+    public PantryModel getPantry() {
+        return pantry;
+    }
+
+    public void setPantry(PantryModel pantry) {
+        this.pantry = pantry;
+    }
+
+    public ShoppingListModel getShoppingList() {
+        return shoppingList;
+    }
+
+    public void setShoppingList(ShoppingListModel shoppingList) {
+        this.shoppingList = shoppingList;
     }
 }

@@ -12,21 +12,21 @@ import fellowship.mealmaestro.services.auth.JwtService;
 
 @Service
 public class UserService {
-    
+
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private JwtService jwtService;
 
-    public Optional<UserModel> findByEmail(String email){
+    public Optional<UserModel> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
     public UserModel updateUser(UpdateUserRequestModel user, String token) {
         String authToken = token.substring(7);
         String email = jwtService.extractUserEmail(authToken);
-        return userRepository.updateUser(user, email);
+        return userRepository.updateUser(email, user.getUsername());
     }
 
     public UserModel getUser(String token) {
