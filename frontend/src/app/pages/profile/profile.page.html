@@ -1,14 +1,3 @@
-<!-- <swiper-container>
-  <swiper-slide><div class="swiper-slide">
-   Swiper slide
-  </div></swiper-slide>
-  <swiper-slide><div class="swiper-slide">
-    Swiper slide
-  </div></swiper-slide>
-  <swiper-slide><div class="swiper-slide">
-    Swiper slide
-  </div></swiper-slide>
-</swiper-container> -->
 <ion-header>
   <ion-toolbar>
     <ion-title> Preferences</ion-title>
@@ -16,36 +5,14 @@
 </ion-header>
     
 <ion-content>
-  <!-- <div #swiperContainer class="swiper-container">
-    <div class="swiper-wrapper">
-      
-      <div class="swiper-slide">
-        <img src="path/to/slide1-image.jpg" alt="Slide 1" />
-      </div>
 
-   
-      <div class="swiper-slide">
-        <img src="path/to/slide2-image.jpg" alt="Slide 2" />
-      </div>
+  <ion-card>
+    <ion-button 
+     (click)="navToProfile()"><ion-icon name="person-circle" size="small"></ion-icon>
+    </ion-button>
 
-    </div>
-
-    
-    <div class="swiper-pagination"></div>
-  </div> -->
-
-  <ion-card class="custom-card">
-  <ion-button class="profile-button" (click)="navToProfile()">
-    <ion-icon name="person-circle" size="small"></ion-icon>
-  </ion-button>
-
-  <ion-label class="username-label">{{ user.username }}'s Profile</ion-label>
-
-  <!-- <ion-button class="help-button">
-    <ion-icon name="help-circle-outline"></ion-icon>
-  </ion-button> -->
-</ion-card>
-
+    <ion-label>{{this.user.username}}'s Profile</ion-label>
+  </ion-card>
 <!-- the Goal -->
   <ion-card>
     <ion-card-header>
