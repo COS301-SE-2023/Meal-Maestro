@@ -10,9 +10,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-
     "test:dev": "ng test --browsers=ChromeHeadless --watch=false --code-coverage ",
-
     "test:unit": "./gradlew test"
   },
   "private": true,
@@ -38,6 +36,7 @@
     "neo4j-driver": "^5.10.0",
     "openai": "^3.3.0",
     "rxjs": "~7.5.0",
+    "swiper": "^10.2.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },

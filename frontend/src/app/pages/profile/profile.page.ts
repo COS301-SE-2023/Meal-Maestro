@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ElementRef, ViewChild  } from '@angular/core';
 import { IonicModule, PickerController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { UserPreferencesI } from '../../models/userpreference.model';
@@ -10,8 +10,23 @@ import { SettingsApiService } from '../../services/settings-api/settings-api.ser
 import { UserI } from '../../models/user.model';
 import { AuthenticationService } from '../../services/services';
 
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+
+// import {Swiper} from 'swiper';
+// import { Navigation, Pagination } from 'swiper/modules';
+//import type { SwiperModule } from '../shared.d.ts';
+
+//import 'swiper/css';
+//import 'swipeination/css/navigation';
+//import 'swiper/css/pagination';
+//import 'swiper/swiper-bundle.css';
+
+
+// Swiper.use([Navigation,Pagination]);
 
 @Component({
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'app-profile',
   templateUrl: 'profile.page.html',
   styleUrls: ['profile.page.scss'],
@@ -20,6 +35,8 @@ import { AuthenticationService } from '../../services/services';
 })
 
 export class ProfilePage implements OnInit {
+  @ViewChild('swiperContainer') swiperContainer!: ElementRef;
+
   constructor(
     private router: Router,
     private pickerController: PickerController,
@@ -29,6 +46,7 @@ export class ProfilePage implements OnInit {
     this.selectedPriceRange = '';
   }
 
+ 
   // User data
   user: UserI = {
     username: '',
@@ -103,7 +121,16 @@ export class ProfilePage implements OnInit {
   cookingToggle: boolean = false;
   BMIToggle: boolean = false;
 
-  ngOnInit() {
+  ngOnInit() : void {
+
+  //   const swiper = new Swiper(this.swiperContainer.nativeElement, {
+  //     // Configure Swiper options here
+  //     loop: true,
+  //     autoplay: {
+  //         delay: 3000,
+  //     },
+  // });
+
     this.loadUserSettings();
     this.auth.getUser().subscribe({
       next: (response) => {
