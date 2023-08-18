@@ -35,13 +35,18 @@
     <div class="swiper-pagination"></div>
   </div>
 
-  <ion-card>
-    <ion-button 
-     (click)="navToProfile()"><ion-icon name="person-circle" size="small"></ion-icon>
-    </ion-button>
+  <ion-card class="custom-card">
+  <ion-button class="profile-button" (click)="navToProfile()">
+    <ion-icon name="person-circle" size="small"></ion-icon>
+  </ion-button>
 
-    <ion-label>{{this.user.username}}'s Profile</ion-label>
-  </ion-card>
+  <ion-label class="username-label">{{ user.username }}'s Profile</ion-label>
+
+  <ion-button class="help-button">
+    <ion-icon name="help-circle-outline"></ion-icon>
+  </ion-button>
+</ion-card>
+
 <!-- the Goal -->
   <ion-card>
     <ion-card-header>
