@@ -1,5 +1,5 @@
 export { FoodItemI } from './fooditem.model';
-export { UserPreferencesI } from './userpreference.model';
+export { SettingsI } from './settings.model';
 export { UserI } from './user.model';
 export { MealBrowseI } from './mealBrowse.model';
 export { MealI } from './meal.model';

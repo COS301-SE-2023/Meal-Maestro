@@ -44,6 +44,9 @@ public class UserModel implements UserDetails {
     @Relationship(type = "HAS_LIST", direction = Relationship.Direction.OUTGOING)
     private ShoppingListModel shoppingList;
 
+    @Relationship(type = "HAS_SETTINGS", direction = Relationship.Direction.OUTGOING)
+    private SettingsModel settings;
+
     public UserModel() {
         this.authorityRole = AuthorityRoleModel.USER;
     }
