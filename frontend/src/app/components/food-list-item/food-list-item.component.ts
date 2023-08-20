@@ -102,6 +102,7 @@ export class FoodListItemComponent implements AfterViewInit {
             name: this.item.name,
             quantity: this.item.quantity,
             unit: this.item.unit,
+            id: this.item.id,
           },
         },
         {
@@ -140,6 +141,7 @@ export class FoodListItemComponent implements AfterViewInit {
             name: this.item.name,
             quantity: this.item.quantity,
             unit: this.item.unit,
+            id: this.item.id,
           },
         },
         {
@@ -231,6 +233,7 @@ export class FoodListItemComponent implements AfterViewInit {
               name: this.item.name,
               quantity: value.quantity.value,
               unit: this.item.unit,
+              id: this.item.id,
             };
             if (this.segment === 'pantry') {
               this.pantryService.updatePantryItem(updatedItem).subscribe({

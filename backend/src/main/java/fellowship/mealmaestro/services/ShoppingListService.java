@@ -59,8 +59,8 @@ public class ShoppingListService {
             return;
         }
 
-        shoppingList.getFoods().removeIf(f -> f.getName().equals(food.getName()));
-        foodRepository.deleteByName(food.getName());
+        shoppingList.getFoods().removeIf(f -> f.getId().equals(food.getId()));
+        foodRepository.deleteById(food.getId());
 
         shoppingListRepository.save(shoppingList);
     }
@@ -77,7 +77,7 @@ public class ShoppingListService {
         }
 
         for (FoodModel f : shoppingList.getFoods()) {
-            if (f.getName().equals(food.getName())) {
+            if (f.getId().equals(food.getId())) {
                 f.setQuantity(food.getQuantity());
                 f.setUnit(food.getUnit());
                 break;
@@ -126,7 +126,7 @@ public class ShoppingListService {
                 if (pantryFood.getName().equals(food.getName())) {
                     // pantryFood.setQuantity(pantryFood.getQuantity() + food.getQuantity());
 
-                    if (pantryFood.getUnit() != food.getUnit()) {
+                    if (!pantryFood.getUnit().equals(food.getUnit())) {
                         if (pantryFood.getUnit().equals("g") && food.getUnit().equals("kg")) {
                             pantryFood.setQuantity(pantryFood.getQuantity() + (food.getQuantity() * 1000));
                         } else if (pantryFood.getUnit().equals("kg") && food.getUnit().equals("g")) {
@@ -139,6 +139,8 @@ public class ShoppingListService {
                             throw new IllegalArgumentException(
                                     "Cannot convert " + pantryFood.getUnit() + " to " + food.getUnit());
                         }
+                    } else {
+                        pantryFood.setQuantity(pantryFood.getQuantity() + food.getQuantity());
                     }
 
                     if (pantryFood.getQuantity() >= 1000
@@ -155,14 +157,14 @@ public class ShoppingListService {
             }
             pantry.setFoods(pantryFoods);
             pantryRepository.save(pantry);
-            shoppingList.getFoods().remove(food);
+            shoppingList.getFoods().removeIf(f -> f.getId().equals(food.getId()));
+            foodRepository.deleteById(food.getId());
             shoppingListRepository.save(shoppingList);
         } else {
             // if food does not exist in pantry, add shopping list food to pantry
             pantryFoods.add(food);
-            pantry.setFoods(pantryFoods);
             pantryRepository.save(pantry);
-            shoppingList.getFoods().remove(food);
+            shoppingList.getFoods().removeIf(f -> f.getId().equals(food.getId()));
             shoppingListRepository.save(shoppingList);
         }
 

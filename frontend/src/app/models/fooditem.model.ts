@@ -1,5 +1,6 @@
 export interface FoodItemI {
-    name: string;
-    quantity: number | null;
-    unit: "kg" | "g" | "l" | "ml" | "pcs";
+  name: string;
+  quantity: number | null;
+  unit: 'kg' | 'g' | 'l' | 'ml' | 'pcs';
+  id?: number;
 }

@@ -53,9 +53,8 @@ public class PantryService {
         if (pantry.getFoods() == null) {
             return;
         }
-
-        pantry.getFoods().removeIf(f -> f.getName().equals(food.getName()));
-        foodRepository.deleteByName(food.getName());
+        pantry.getFoods().removeIf(f -> f.getId().equals(food.getId()));
+        foodRepository.deleteById(food.getId());
 
         pantryRepository.save(pantry);
     }
@@ -72,7 +71,7 @@ public class PantryService {
         }
 
         for (FoodModel f : pantry.getFoods()) {
-            if (f.getName().equals(food.getName())) {
+            if (f.getId().equals(food.getId())) {
                 f.setQuantity(food.getQuantity());
                 f.setUnit(food.getUnit());
                 break;

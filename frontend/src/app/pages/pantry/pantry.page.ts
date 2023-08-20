@@ -62,6 +62,7 @@ export class PantryPage implements OnInit {
         if (response.status === 200) {
           if (response.body) {
             this.pantryItems = response.body;
+            console.log(this.pantryItems);
             this.isLoading = false;
             this.sortNameDescending();
           }
