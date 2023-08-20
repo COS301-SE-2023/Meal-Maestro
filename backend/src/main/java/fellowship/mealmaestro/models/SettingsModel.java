@@ -87,7 +87,9 @@ public class SettingsModel {
             this.userBMI = 0;
         } else {
             double heightInMeters = userHeight / 100.0;
-            this.userBMI = userWeight / (heightInMeters * heightInMeters);
+            // set userBMI to 2 decimal places
+            this.userBMI = Math.round((userWeight / (heightInMeters * heightInMeters)) * 100.0) / 100.0;
+
         }
     }
 

@@ -110,7 +110,7 @@ public class SettingsService {
                 s += "The user's macro ratio is: " + protein + " protein, " + carbs + " carbs, " + fat + " fat. ";
             }
 
-            System.out.println("HERE IS = " + s);
+            // System.out.println("HERE IS = " + s);
 
             return s;
 
