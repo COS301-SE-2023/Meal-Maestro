@@ -27,13 +27,13 @@ import fellowship.mealmaestro.services.auth.JwtService;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
-    "JWT_SECRET=secret",
-    "DB_URI=bolt://localhost:7687",
-    "DB_USERNAME=neo4j",
-    "DB_PASSWORD=password"
+        "JWT_SECRET=secret",
+        "DB_URI=bolt://localhost:7687",
+        "DB_USERNAME=neo4j",
+        "DB_PASSWORD=password"
 })
 public class ShoppingListControllerTest {
-    
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -43,12 +43,12 @@ public class ShoppingListControllerTest {
     @MockBean
     private static JwtService jwtService;
 
-
     @Test
     public void addToShoppingListSuccessTest() throws Exception {
-        FoodModel foodModel = new FoodModel("testFood", 2, "testUnit");
+        FoodModel foodModel = new FoodModel("testFood", 2, "testUnit", null);
 
-        // When addToShoppingList method is called with any FoodModel and any String, it returns foodModel
+        // When addToShoppingList method is called with any FoodModel and any String, it
+        // returns foodModel
         when(shoppingListService.addToShoppingList(any(FoodModel.class), any(String.class))).thenReturn(foodModel);
 
         when(jwtService.extractUserEmail(any(String.class))).thenReturn("test@test.com");
@@ -60,14 +60,15 @@ public class ShoppingListControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer testToken..")
                 .content("{\"name\":\"testFood\",\"quantity\":2,\"weight\":2}"))
-            .andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
 
     @Test
     public void addToShoppingListBadRequestTest() throws Exception {
-        FoodModel foodModel = new FoodModel("testFood", 2, "testUnit");
+        FoodModel foodModel = new FoodModel("testFood", 2, "testUnit", null);
 
-        // When addToShoppingList method is called with any FoodModel and any String, it returns foodModel
+        // When addToShoppingList method is called with any FoodModel and any String, it
+        // returns foodModel
         when(shoppingListService.addToShoppingList(any(FoodModel.class), any(String.class))).thenReturn(foodModel);
 
         when(jwtService.extractUserEmail(any(String.class))).thenReturn("test@test.com");
@@ -78,7 +79,7 @@ public class ShoppingListControllerTest {
                 .with(user("user"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"testFood\",\"quantity\":2,\"weight\":2}"))
-            .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -143,12 +144,12 @@ public class ShoppingListControllerTest {
         when(jwtService.extractUserEmail(any(String.class))).thenReturn("test@test.com");
         when(jwtService.generateToken(any(UserDetails.class))).thenReturn("testToken..");
         when(jwtService.isTokenValid(any(String.class), any(UserDetails.class))).thenReturn(true);
-        
+
         mockMvc.perform(post("/getShoppingList")
                 .with(user("user"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer testToken.."))
-            .andExpect(status().isOk());                
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -159,11 +160,11 @@ public class ShoppingListControllerTest {
         when(jwtService.extractUserEmail(any(String.class))).thenReturn("test@test.com");
         when(jwtService.generateToken(any(UserDetails.class))).thenReturn("testToken..");
         when(jwtService.isTokenValid(any(String.class), any(UserDetails.class))).thenReturn(true);
-        
+
         mockMvc.perform(post("/getShoppingList")
                 .with(user("user"))
                 .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest());                
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -174,13 +175,13 @@ public class ShoppingListControllerTest {
         when(jwtService.extractUserEmail(any(String.class))).thenReturn("test@test.com");
         when(jwtService.generateToken(any(UserDetails.class))).thenReturn("testToken..");
         when(jwtService.isTokenValid(any(String.class), any(UserDetails.class))).thenReturn(true);
-        
+
         mockMvc.perform(post("/buyItem")
                 .with(user("user"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer testToken..")
                 .content("{\"name\":\"testFood\",\"quantity\":2,\"weight\":2}"))
-            .andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -191,12 +192,12 @@ public class ShoppingListControllerTest {
         when(jwtService.extractUserEmail(any(String.class))).thenReturn("test@test.com");
         when(jwtService.generateToken(any(UserDetails.class))).thenReturn("testToken..");
         when(jwtService.isTokenValid(any(String.class), any(UserDetails.class))).thenReturn(true);
-        
+
         mockMvc.perform(post("/buyItem")
                 .with(user("user"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"testFood\",\"quantity\":2,\"weight\":2}"))
-            .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest());
     }
-        
+
 }
