@@ -4,7 +4,11 @@ export interface SettingsI {
   foodPreferences: string[];
   calorieAmount: number;
   budgetRange: string;
-  macroRatio: { protein: number; carbs: number; fat: number };
+
+  protein: number;
+  carbs: number;
+  fat: number;
+
   allergies: string[];
   cookingTime: string;
   userHeight: number; //consider moving to account

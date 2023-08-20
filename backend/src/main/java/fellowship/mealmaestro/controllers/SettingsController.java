@@ -14,12 +14,11 @@ import jakarta.validation.Valid;
 @RestController
 public class SettingsController {
 
-     @Autowired
+    @Autowired
     private SettingsService settingsService;
 
-
     @PostMapping("/getSettings")
-    public ResponseEntity<SettingsModel> getSettings(@RequestHeader("Authorization") String token){
+    public ResponseEntity<SettingsModel> getSettings(@RequestHeader("Authorization") String token) {
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
@@ -28,7 +27,8 @@ public class SettingsController {
     }
 
     @PostMapping("/updateSettings")
-    public ResponseEntity<Void> updateSettings(@Valid @RequestBody SettingsModel request, @RequestHeader("Authorization") String token){
+    public ResponseEntity<Void> updateSettings(@Valid @RequestBody SettingsModel request,
+            @RequestHeader("Authorization") String token) {
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }

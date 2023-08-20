@@ -1,6 +1,7 @@
 package fellowship.mealmaestro.services.auth;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fellowship.mealmaestro.models.PantryModel;
+import fellowship.mealmaestro.models.SettingsModel;
 import fellowship.mealmaestro.models.ShoppingListModel;
 import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.models.auth.AuthenticationRequestModel;
@@ -46,6 +48,9 @@ public class AuthenticationService {
 
         user.setPantry(new PantryModel());
         user.setShoppingList(new ShoppingListModel());
+        user.setSettings(new SettingsModel());
+        user.getSettings().setId(UUID.randomUUID());
+        user.getSettings().setAllBoolean();
 
         boolean userExists = userRepository.findByEmail(request.getEmail()).isPresent();
 

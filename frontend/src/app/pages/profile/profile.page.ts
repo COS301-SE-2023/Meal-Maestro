@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule, PickerController } from '@ionic/angular';
+import { IonicModule, PickerController, ViewWillEnter } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { SettingsI } from '../../models/settings.model';
 
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { SettingsApiService } from '../../services/settings-api/settings-api.service';
 
 import { UserI } from '../../models/user.model';
-import { AuthenticationService } from '../../services/services';
+import {
+  AuthenticationService,
+  SettingsApiService,
+} from '../../services/services';
 
 @Component({
   selector: 'app-profile',
@@ -17,7 +19,7 @@ import { AuthenticationService } from '../../services/services';
   standalone: true,
   imports: [IonicModule, FormsModule, CommonModule],
 })
-export class ProfilePage implements OnInit {
+export class ProfilePage implements OnInit, ViewWillEnter {
   constructor(
     private router: Router,
     private pickerController: PickerController,
@@ -40,7 +42,9 @@ export class ProfilePage implements OnInit {
     foodPreferences: [],
     calorieAmount: 0,
     budgetRange: '',
-    macroRatio: { protein: 0, carbs: 0, fat: 0 },
+    protein: 0,
+    carbs: 0,
+    fat: 0,
     allergies: [],
     cookingTime: '',
     userHeight: 0,
@@ -119,6 +123,10 @@ export class ProfilePage implements OnInit {
     });
   }
 
+  ionViewWillEnter(): void {
+    this.loadUserSettings();
+  }
+
   private async loadUserSettings() {
     this.settingsApiService.getSettings().subscribe({
       next: (response) => {
@@ -147,9 +155,9 @@ export class ProfilePage implements OnInit {
             this.settings.foodPreferenceSet = response.body.foodPreferenceSet;
             this.settings.shoppingIntervalSet =
               response.body.shoppingIntervalSet;
-            this.settings.macroRatio.fat = response.body.macroRatio.fat;
-            this.settings.macroRatio.carbs = response.body.macroRatio.carbs;
-            this.settings.macroRatio.protein = response.body.macroRatio.protein;
+            this.settings.fat = response.body.fat;
+            this.settings.carbs = response.body.carbs;
+            this.settings.protein = response.body.protein;
 
             this.displayPreferences = this.settings.foodPreferences;
             this.displayAllergies = this.settings.allergies;
@@ -174,19 +182,19 @@ export class ProfilePage implements OnInit {
   }
 
   private updateSettingsOnServer() {
-    // console.log(this.settings);
-    this.settingsApiService.updateSettings(this.settings).subscribe(
-      (response) => {
+    console.log(this.settings);
+    this.settingsApiService.updateSettings(this.settings).subscribe({
+      next: (response) => {
         if (response.status === 200) {
           // Successfully updated settings on the server
           console.log('Settings updated successfully');
         }
       },
-      (error) => {
+      error: (error) => {
         // Handle error while updating settings
         console.log('Error updating settings', error);
-      }
-    );
+      },
+    });
   }
 
   // Function to navigate to account-profile page
@@ -337,7 +345,7 @@ export class ProfilePage implements OnInit {
             { text: '4', value: 4 },
             { text: '5', value: 5 },
           ],
-          selectedIndex: this.settings.macroRatio.protein, // Set the default selected index
+          selectedIndex: this.settings.protein, // Set the default selected index
         },
         {
           name: 'carbs',
@@ -348,7 +356,7 @@ export class ProfilePage implements OnInit {
             { text: '4', value: 4 },
             { text: '5', value: 5 },
           ],
-          selectedIndex: this.settings.macroRatio.carbs, // Set the default selected index
+          selectedIndex: this.settings.carbs, // Set the default selected index
         },
         {
           name: 'fat',
@@ -359,7 +367,7 @@ export class ProfilePage implements OnInit {
             { text: '4', value: 4 },
             { text: '5', value: 5 },
           ],
-          selectedIndex: this.settings.macroRatio.fat, // Set the default selected index
+          selectedIndex: this.settings.fat, // Set the default selected index
         },
       ],
       buttons: [
@@ -371,9 +379,9 @@ export class ProfilePage implements OnInit {
           text: 'Confirm',
           handler: (value) => {
             // Update the selected macro values based on the selected indexes
-            this.settings.macroRatio.protein = value['protein'].value;
-            this.settings.macroRatio.carbs = value['carbs'].value;
-            this.settings.macroRatio.fat = value['fat'].value;
+            this.settings.protein = value['protein'].value;
+            this.settings.carbs = value['carbs'].value;
+            this.settings.fat = value['fat'].value;
             this.updateSettingsOnServer();
           },
         },
@@ -394,9 +402,9 @@ export class ProfilePage implements OnInit {
       }
       this.isMacroModalOpen = isOpen;
     } else if (this.settings.macroSet === false) {
-      this.settings.macroRatio.protein = 0;
-      this.settings.macroRatio.carbs = 0;
-      this.settings.macroRatio.fat = 0;
+      this.settings.protein = 0;
+      this.settings.carbs = 0;
+      this.settings.fat = 0;
       this.displaying_Macroratio = '';
       this.isMacroModalOpen = isOpen;
     }
@@ -548,7 +556,7 @@ export class ProfilePage implements OnInit {
 
   // Function to update display data
   updateDisplayData() {
-    if (this.settings.shoppingInterval != '') {
+    if (this.settings.shoppingIntervalSet === true) {
       this.shoppingintervalToggle = true;
       this.shoppingInterval = this.settings.shoppingInterval;
       this.settings.shoppingIntervalSet = true;
@@ -582,7 +590,11 @@ export class ProfilePage implements OnInit {
       this.settings.budgetSet = true;
     }
 
-    if (this.settings.macroRatio != null) {
+    if (
+      this.settings.protein != null &&
+      this.settings.carbs != null &&
+      this.settings.fat
+    ) {
       this.macroToggle = true;
 
       this.settings.macroSet = true;
@@ -622,14 +634,18 @@ export class ProfilePage implements OnInit {
 
   // Function to get the displaying macro ratio
   getDisplayMacroratio(): string {
-    console.log(this.settings.macroRatio);
-    if (this.settings && this.settings.macroRatio) {
+    if (
+      this.settings &&
+      this.settings.protein &&
+      this.settings.carbs &&
+      this.settings.fat
+    ) {
       return (
-        this.settings.macroRatio.protein +
+        this.settings.protein +
         ' : ' +
-        this.settings.macroRatio.carbs +
+        this.settings.carbs +
         ' : ' +
-        this.settings.macroRatio.fat
+        this.settings.fat
       );
     } else {
       return 'Not available';
@@ -637,8 +653,9 @@ export class ProfilePage implements OnInit {
   }
 
   calculateBMI() {
-    this.settings.userBMI = Math.round(
-      this.settings.userHeight / this.settings.userWeight
-    );
+    let heightInMeters = this.settings.userHeight / 100;
+    let heightSquared = heightInMeters * heightInMeters;
+    let bmi = this.settings.userWeight / heightSquared;
+    this.settings.userBMI = parseFloat(bmi.toFixed(2));
   }
 }
