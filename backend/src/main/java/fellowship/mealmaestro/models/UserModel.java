@@ -47,6 +47,9 @@ public class UserModel implements UserDetails {
     @Relationship(type = "HAS_SETTINGS", direction = Relationship.Direction.OUTGOING)
     private SettingsModel settings;
 
+    @Relationship(type = "HAS_RECIPE_BOOK", direction = Relationship.Direction.OUTGOING)
+    private RecipeBookModel recipeBook;
+
     public UserModel() {
         this.authorityRole = AuthorityRoleModel.USER;
     }

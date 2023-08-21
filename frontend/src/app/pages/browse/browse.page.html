@@ -1,24 +1,30 @@
-
 <body>
   <ion-header [translucent]="true">
     <ion-toolbar>
       <!-- <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" /> -->
-      <ion-searchbar class="search" (ionChange)="onSearch($event)" (ionClear)="cancel()">
+      <ion-searchbar
+        class="search"
+        (ionChange)="onSearch($event)"
+        (ionClear)="cancel()"
+      >
         <!-- <app-browse-meals *ngFor="let thing of searchedMeals" [searchData]="thing" ></app-browse-meals> -->
       </ion-searchbar>
     </ion-toolbar>
-    <ion-progress-bar *ngIf="Loading===true" type="indeterminate"></ion-progress-bar>
+    <ion-progress-bar
+      *ngIf="Loading===true"
+      type="indeterminate"
+    ></ion-progress-bar>
   </ion-header>
 
   <ion-content [fullscreen]="true" scrollY="true">
-    <ion-refresher slot="fixed" (ionRefresh)="RefreshMeals($event)"></ion-refresher>
+    <ion-refresher
+      slot="fixed"
+      (ionRefresh)="RefreshMeals($event)"
+    ></ion-refresher>
     <!-- <ion-searchbar class="search"></ion-searchbar> -->
     <ion-grid>
-      
       <ion-row>
-      
         <ion-col>
-
           <!-- <div *ngIf="noResultsFound">
             No results found for the entered search query.
           </div>
@@ -41,25 +47,30 @@
           </ng-container> -->
 
           <div *ngIf="!Searched">
-            <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item"></app-browse-meals>
+            <app-browse-meals
+              *ngFor="let item of popularMeals"
+              [mealsData]="item"
+            ></app-browse-meals>
           </div>
 
           <ng-container *ngIf="Searched">
-            <div *ngIf="noResultsFound">
-              No results were found.
-              <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item"></app-browse-meals>
+            <div class="no-results" *ngIf="noResultsFound">
+              No results...
+              <!-- <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item"></app-browse-meals> -->
             </div>
             <div *ngIf="!noResultsFound">
-              <app-browse-meals *ngFor="let item of searchedMeals" [mealsData]="item"></app-browse-meals>
+              <app-browse-meals
+                *ngFor="let item of searchedMeals"
+                [mealsData]="item"
+              ></app-browse-meals>
             </div>
           </ng-container>
-        
 
           <!-- <div *ngIf="searchedMeals.length === 0"> -->
-            <!-- Display the popular meals here -->
-           <!-- <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item"></app-browse-meals> -->
+          <!-- Display the popular meals here -->
+          <!-- <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item"></app-browse-meals> -->
 
-         <!-- </div> -->
+          <!-- </div> -->
           <!-- <ng-container *ngIf="popularMeals.length >= 4">
            
             <div>
@@ -68,7 +79,7 @@
             </div>
          </ng-container>  -->
 
-         <!-- <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item" ></app-browse-meals> -->
+          <!-- <app-browse-meals *ngFor="let item of popularMeals" [mealsData]="item" ></app-browse-meals> -->
 
           <!-- <ion-card button="true" color="primary">
               <ion-card-header>
@@ -83,8 +94,7 @@
           </ion-card> -->
         </ion-col>
 
-    
-      <!-- <ion-col> -->
+        <!-- <ion-col> -->
 
         <!-- <app-browse-meals ></app-browse-meals> -->
 
@@ -99,11 +109,10 @@
             <img src="https://images.unsplash.com/photo-1580013759032-c96505e24c1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1818&q=80">
           </ion-avatar>
         </ion-card> -->
-      <!-- </ion-col> -->
-  
-    </ion-row>
+        <!-- </ion-col> -->
+      </ion-row>
 
-    <!-- <ion-row class="row1">
+      <!-- <ion-row class="row1">
       <ion-col></ion-col>
       <ion-col>
         <ion-card button="true" color="primary">
@@ -140,6 +149,5 @@
         <ion-col></ion-col>
       </ion-row> -->
     </ion-grid>
-  
   </ion-content>
 </body>

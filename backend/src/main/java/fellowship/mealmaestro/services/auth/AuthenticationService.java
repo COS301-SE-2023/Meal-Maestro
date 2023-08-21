@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fellowship.mealmaestro.models.PantryModel;
+import fellowship.mealmaestro.models.RecipeBookModel;
 import fellowship.mealmaestro.models.SettingsModel;
 import fellowship.mealmaestro.models.ShoppingListModel;
 import fellowship.mealmaestro.models.UserModel;
@@ -51,6 +52,7 @@ public class AuthenticationService {
         user.setSettings(new SettingsModel());
         user.getSettings().setId(UUID.randomUUID());
         user.getSettings().setAllBoolean();
+        user.setRecipeBook(new RecipeBookModel());
 
         boolean userExists = userRepository.findByEmail(request.getEmail()).isPresent();
 
