@@ -111,7 +111,7 @@ public class BrowseRepository {
             Values.parameters("namePattern", "(?i).*" + mealName + ".*") // (?i) for case-insensitive
         );
 
-        if (result.hasNext()) {
+        while (result.hasNext()) {
             org.neo4j.driver.Record record = result.next();
             String name = record.get("name").asString();
             String instructions = record.get("instructions").asString();
