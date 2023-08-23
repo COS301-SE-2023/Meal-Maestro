@@ -9,7 +9,7 @@ import { IonicModule } from '@ionic/angular';
   standalone:true,
   imports: [IonicModule],
 })
-export class TutorialComponent  implements OnInit {
+export class TutorialComponent  {
 
   constructor(private modalController: ModalController) { }
 
@@ -17,6 +17,6 @@ export class TutorialComponent  implements OnInit {
     this.modalController.dismiss();
   }
 
-  ngOnInit() {}
+
 
 }

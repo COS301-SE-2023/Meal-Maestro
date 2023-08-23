@@ -5,6 +5,8 @@ import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/services';
 import { UserI } from '../../models/user.model';
+import { ModalController } from '@ionic/angular';
+import { TutorialComponent } from '../../components/tutorial/tutorial.component';
 
 @Component({
   selector: 'app-acc-profile',
@@ -18,13 +20,21 @@ export class AccProfilePage implements OnInit {
   user: UserI;
 
   
-  constructor(private router: Router, private auth: AuthenticationService) {
+  constructor(private router: Router, private auth: AuthenticationService,private modalController: ModalController) {
     this.user = {
       username: '',
       email: '',
       password: ''
     };
    }
+
+   async openModal() {
+      const modal = await this.modalController.create({
+      component: TutorialComponent,
+    });
+
+    await modal.present();
+  }
   
   ngOnInit() {
     this.auth.getUser().subscribe({
