@@ -28,10 +28,7 @@
             </ion-card-content>
 
             <ion-avatar no-padding no-margin>
-              <img
-                src="https://plus.unsplash.com/premium_photo-1675252369719-dd52bc69c3df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80"
-                alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-              />
+              <!-- <img src="{{" dayData.breakfast?.image }} /> -->
             </ion-avatar>
           </div>
 
@@ -48,10 +45,7 @@
                 </ion-toolbar>
               </ion-header>
               <ion-avatar class="background">
-                <img
-                  src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-                  alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-                />
+                <!-- <img src="{{" dayData.breakfast?.image }} /> -->
               </ion-avatar>
               <ion-content class="ion-padding">
                 <h2>Ingredients:</h2>
@@ -64,9 +58,13 @@
             </ng-template>
           </ion-modal>
         </ion-item>
-        <ion-item-options side="end">
-          <ion-item-option color="danger" (click)="handleSync(breakfast)">
-            <ion-icon name="sync-outline"></ion-icon>
+        <ion-item-options side="end" (ionSwipe)="handleRegenerate(breakfast)">
+          <ion-item-option
+            color="danger"
+            (click)="handleRegenerate(breakfast)"
+            expandable
+          >
+            <ion-icon slot="icon-only" name="sync-outline"></ion-icon>
           </ion-item-option>
         </ion-item-options>
         <ion-item-options side="start">
@@ -132,9 +130,13 @@
             </ng-template>
           </ion-modal>
         </ion-item>
-        <ion-item-options side="end">
-          <ion-item-option color="danger" (click)="handleSync(lunch)">
-            <ion-icon name="sync-outline"></ion-icon>
+        <ion-item-options side="end" (ionSwipe)="handleRegenerate(lunch)">
+          <ion-item-option
+            color="danger"
+            (click)="handleRegenerate(lunch)"
+            expandable
+          >
+            <ion-icon slot="icon-only" name="sync-outline"></ion-icon>
           </ion-item-option>
         </ion-item-options>
         <ion-item-options side="start">
@@ -199,9 +201,13 @@
             </ng-template>
           </ion-modal>
         </ion-item>
-        <ion-item-options side="end">
-          <ion-item-option color="danger" (click)="handleSync(dinner)">
-            <ion-icon name="sync-outline"></ion-icon>
+        <ion-item-options side="end" (ionSwipe)="handleRegenerate(dinner)">
+          <ion-item-option
+            color="danger"
+            (click)="handleRegenerate(dinner)"
+            expandable
+          >
+            <ion-icon slot="icon-only" name="sync-outline"></ion-icon>
           </ion-item-option>
         </ion-item-options>
         <ion-item-options side="start">

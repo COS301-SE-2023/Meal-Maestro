@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,9 +18,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import fellowship.mealmaestro.models.DateModel;
 import fellowship.mealmaestro.models.DaysMealsModel;
 import fellowship.mealmaestro.models.MealModel;
-import fellowship.mealmaestro.services.MealDatabseService;
+import fellowship.mealmaestro.services.MealDatabaseService;
 import fellowship.mealmaestro.services.MealManagementService;
 import jakarta.validation.Valid;
 
@@ -31,22 +30,7 @@ public class MealManagementController {
     @Autowired
     private MealManagementService mealManagementService;
     @Autowired
-    private MealDatabseService mealDatabseService;
-
-    public static class DateModel {
-        private DayOfWeek dayOfWeek;
-
-        public void setDayOfWeek(DayOfWeek dayOfWeek) {
-            this.dayOfWeek = dayOfWeek;
-        }
-
-        public DayOfWeek getDayOfWeek() {
-            return this.dayOfWeek;
-        }
-
-        public DateModel() {
-        };
-    }
+    private MealDatabaseService mealDatabseService;
 
     @PostMapping("/getDaysMeals")
     public String dailyMeals(@Valid @RequestBody DateModel request, @RequestHeader("Authorization") String token)
@@ -85,7 +69,6 @@ public class MealManagementController {
     public String meal() throws JsonMappingException, JsonProcessingException {
         return mealManagementService.generateMeal();
     }
-
 
     public static JsonNode findMealSegment(JsonNode jsonNode, String mealType) {
         if (jsonNode.isObject()) {
@@ -126,28 +109,28 @@ public class MealManagementController {
         if (databaseModel.isPresent()) {
             DaysMealsModel newModel = databaseModel.get();
             System.out.println("present");
-         
+
             String meal = request.getMeal();
             if (meal.equals("breakfast")) {
-    
+
                 mealModel = newModel.getBreakfast();
                 mealModel = objectMapper.readValue(mealManagementService.generateMeal(request.getMeal()),
                         MealModel.class);
-         
+
                 newModel.setBreakfast(mealModel);
             } else if (meal.equals("lunch")) {
-           
+
                 mealModel = newModel.getLunch();
                 mealModel = objectMapper.readValue(mealManagementService.generateMeal(request.getMeal()),
                         MealModel.class);
-      
+
                 newModel.setLunch(mealModel);
             } else if (meal.equals("dinner")) {
-         
+
                 mealModel = newModel.getDinner();
                 mealModel = objectMapper.readValue(mealManagementService.generateMeal(request.getMeal()),
                         MealModel.class);
-          
+
                 newModel.setDinner(mealModel);
             }
 
@@ -156,7 +139,7 @@ public class MealManagementController {
             this.mealDatabseService.saveRegeneratedMeal(newModel);
 
             ObjectNode daysMealsModel = objectMapper.valueToTree(newModel);
-       
+
             return daysMealsModel.toString();
 
         }
@@ -164,18 +147,16 @@ public class MealManagementController {
         return daysMealsModel.toString();
     }
 
-
     // @GetMapping("/getPopularMeals")
-    // public String popularMeals() throws JsonMappingException, JsonProcessingException{
-    //     return mealManagementService.generatePopularMeals();
+    // public String popularMeals() throws JsonMappingException,
+    // JsonProcessingException{
+    // return mealManagementService.generatePopularMeals();
     // }
 
     // @GetMapping("/getSearchedMeals")
-    // public String searchedMeals(@RequestParam String query) throws JsonMappingException, JsonProcessingException {
-    //     // Call the mealManagementService to search meals based on the query
-    //     return mealManagementService.generateSearchedMeals(query);
+    // public String searchedMeals(@RequestParam String query) throws
+    // JsonMappingException, JsonProcessingException {
+    // // Call the mealManagementService to search meals based on the query
+    // return mealManagementService.generateSearchedMeals(query);
     // }
- }
-
-
-
+}

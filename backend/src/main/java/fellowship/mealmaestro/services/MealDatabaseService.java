@@ -18,7 +18,7 @@ import fellowship.mealmaestro.repositories.DaysMealsRepository;
 import fellowship.mealmaestro.repositories.MealRepository;
 
 @Service
-public class MealDatabseService {
+public class MealDatabaseService {
     private final MealRepository mealRepository;
 
     public MealRepository getMealRepository() {
@@ -32,7 +32,7 @@ public class MealDatabseService {
     }
 
     @Autowired
-    public MealDatabseService(MealRepository mealRepository, DaysMealsRepository daysMealsRepository) {
+    public MealDatabaseService(MealRepository mealRepository, DaysMealsRepository daysMealsRepository) {
         this.daysMealsRepository = daysMealsRepository;
         this.mealRepository = mealRepository;
 
