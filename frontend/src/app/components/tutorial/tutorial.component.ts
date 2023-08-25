@@ -44,6 +44,10 @@ export class TutorialComponent  {
     this.modalController.dismiss();
   }
 
+  // swiperSlideChange(e: any) {
+  //   console.log('changed: ',e);
+  // }
+
 
 
 }
