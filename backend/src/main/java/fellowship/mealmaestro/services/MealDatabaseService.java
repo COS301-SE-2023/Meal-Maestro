@@ -1,6 +1,8 @@
 package fellowship.mealmaestro.services;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,102 +13,153 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fellowship.mealmaestro.models.DaysMealsModel;
+import fellowship.mealmaestro.models.MealPlanModel;
 import fellowship.mealmaestro.models.MealModel;
 import fellowship.mealmaestro.models.UserModel;
+import fellowship.mealmaestro.models.relationships.HasMeal;
 import fellowship.mealmaestro.repositories.DaysMealsRepository;
 import fellowship.mealmaestro.repositories.MealRepository;
+import fellowship.mealmaestro.repositories.UserRepository;
+import fellowship.mealmaestro.services.auth.JwtService;
 
 @Service
 public class MealDatabaseService {
-    private final MealRepository mealRepository;
-
-    public MealRepository getMealRepository() {
-        return mealRepository;
-    }
-
-    private final DaysMealsRepository daysMealsRepository;
-
-    public DaysMealsRepository getDaysMealsRepository() {
-        return daysMealsRepository;
-    }
+    @Autowired
+    private JwtService jwtService;
 
     @Autowired
-    public MealDatabaseService(MealRepository mealRepository, DaysMealsRepository daysMealsRepository) {
-        this.daysMealsRepository = daysMealsRepository;
-        this.mealRepository = mealRepository;
-
-    }
+    private MealRepository mealRepository;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
-    public void saveDaysMeals(JsonNode daysMealsJson, DayOfWeek date, String token)
+    public List<MealModel> saveMeals(JsonNode daysMealsJson, LocalDate date, String token)
             throws JsonProcessingException, IllegalArgumentException {
 
-        UserModel userModel = userService.getUser(token);
-
+        // Step 1: Map the JsonNode to a MealModel
         ObjectMapper objectMapper = new ObjectMapper();
 
         MealModel breakfast = objectMapper.treeToValue(daysMealsJson.get("breakfast"), MealModel.class);
         MealModel lunch = objectMapper.treeToValue(daysMealsJson.get("lunch"), MealModel.class);
         MealModel dinner = objectMapper.treeToValue(daysMealsJson.get("dinner"), MealModel.class);
 
-        DaysMealsModel daysMealsModel = new DaysMealsModel(breakfast, lunch, dinner, date, userModel);
-        daysMealsRepository.save(daysMealsModel);
+        // Step 2: Save the MealModel to the database
+        breakfast = mealRepository.save(breakfast);
+        lunch = mealRepository.save(lunch);
+        dinner = mealRepository.save(dinner);
+
+        // Step 3: Create a HasMeal relationship between the MealModel and User
+        HasMeal breakfastHasMeal = new HasMeal(breakfast, date, "breakfast");
+        HasMeal lunchHasMeal = new HasMeal(lunch, date, "lunch");
+        HasMeal dinnerHasMeal = new HasMeal(dinner, date, "dinner");
+
+        // Step 4: Add the HasMeal relationship to the User
+        String email = jwtService.extractUserEmail(token);
+        Optional<UserModel> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            UserModel user = optionalUser.get();
+            if (user.getMeals() == null) {
+                user.setMeals(new ArrayList<>());
+            }
+            user.getMeals().add(breakfastHasMeal);
+            user.getMeals().add(lunchHasMeal);
+            user.getMeals().add(dinnerHasMeal);
+
+            userRepository.save(user);
+        } else {
+            // Handle error, user not found
+        }
+
+        // Step 5: Return list of breakfast, lunch, dinner
+        List<MealModel> meals = new ArrayList<MealModel>();
+        meals.add(breakfast);
+        meals.add(lunch);
+        meals.add(dinner);
+        return meals;
     }
 
-    public List<DaysMealsModel> retrieveDaysMealsModel(DayOfWeek date) {
+    public List<MealPlanModel> retrievemealPlanModel(DayOfWeek date) {
         return daysMealsRepository.findMealsForNextWeek(date);
     }
 
-    public Optional<DaysMealsModel> retrieveDatesMealModel(DayOfWeek date) {
+    public Optional<MealPlanModel> retrieveDatesMealModel(DayOfWeek date) {
         return daysMealsRepository.findMealsForDate(date);
     }
 
-    public Optional<DaysMealsModel> fetchDay(DayOfWeek mealDate) {
+    public Optional<MealPlanModel> fetchDay(DayOfWeek mealDate) {
         return daysMealsRepository.findByMealDate(mealDate);
     }
 
-    public void saveRegeneratedMeal(DaysMealsModel daysMealsModel) {
-        daysMealsRepository.save(daysMealsModel);
+    public void saveRegeneratedMeal(MealPlanModel mealPlanModel) {
+        daysMealsRepository.save(mealPlanModel);
     }
 
     public void changeMealForDate(DayOfWeek mealDate, MealModel mealModel, String time) {
 
-        Optional<DaysMealsModel> optionalDaysMealsModel = daysMealsRepository.findByMealDate(mealDate);
-        if (optionalDaysMealsModel.isEmpty()) {
+        Optional<MealPlanModel> optionalmealPlanModel = daysMealsRepository.findByMealDate(mealDate);
+        if (optionalmealPlanModel.isEmpty()) {
             // Handle error, node not found for the given mealDate
             return;
         }
 
-        DaysMealsModel daysMealsModel = optionalDaysMealsModel.get();
+        MealPlanModel mealPlanModel = optionalmealPlanModel.get();
 
         if (time == "breakfast") {
-            daysMealsModel.setBreakfast(mealModel);
+            mealPlanModel.setBreakfast(mealModel);
             MealModel updatedMeal = mealRepository.save(mealModel);
-            daysMealsModel.setBreakfast(updatedMeal);
+            mealPlanModel.setBreakfast(updatedMeal);
         }
         if (time == "lunch") {
-            daysMealsModel.setLunch(mealModel);
+            mealPlanModel.setLunch(mealModel);
             MealModel updatedMeal = mealRepository.save(mealModel);
-            daysMealsModel.setLunch(updatedMeal);
+            mealPlanModel.setLunch(updatedMeal);
         }
         if (time == "dinner") {
-            daysMealsModel.setDinner(mealModel);
+            mealPlanModel.setDinner(mealModel);
             MealModel updatedMeal = mealRepository.save(mealModel);
-            daysMealsModel.setDinner(updatedMeal);
+            mealPlanModel.setDinner(updatedMeal);
         }
 
-        daysMealsRepository.save(daysMealsModel);
+        daysMealsRepository.save(mealPlanModel);
     }
 
-    public Optional<DaysMealsModel> findUsersDaysMeals(DayOfWeek day, String token)
+    public List<MealModel> findUsersMealPlanForDate(LocalDate date, String token)
             throws JsonProcessingException, IllegalArgumentException {
-        UserModel userModel = userService.getUser(token);
+        String email = jwtService.extractUserEmail(token);
 
-        return daysMealsRepository.findById((userModel.getEmail() + day.toString()));
+        UserModel user = userRepository.findByEmail(email).get();
 
+        List<HasMeal> meals = user.getMeals();
+
+        List<MealModel> mealModels = new ArrayList<MealModel>();
+
+        for (HasMeal meal : meals) {
+            if (meal.getDate().equals(date)) {
+                mealModels.add(meal.getMeal());
+            }
+        }
+
+        return mealModels;
+    }
+
+    public void removeOldMeals(LocalDate date, String token) {
+        String email = jwtService.extractUserEmail(token);
+
+        UserModel user = userRepository.findByEmail(email).get();
+
+        List<HasMeal> meals = user.getMeals();
+
+        List<HasMeal> mealsToRemove = new ArrayList<HasMeal>();
+
+        for (HasMeal meal : meals) {
+            if (meal.getDate().equals(date)) {
+                mealsToRemove.add(meal);
+            }
+        }
+
+        meals.removeAll(mealsToRemove);
+
+        userRepository.save(user);
     }
 
 }

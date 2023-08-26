@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import fellowship.mealmaestro.models.auth.AuthorityRoleModel;
+import fellowship.mealmaestro.models.relationships.HasMeal;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -49,6 +50,9 @@ public class UserModel implements UserDetails {
 
     @Relationship(type = "HAS_RECIPE_BOOK", direction = Relationship.Direction.OUTGOING)
     private RecipeBookModel recipeBook;
+
+    @Relationship(type = "HAS_MEAL")
+    private List<HasMeal> meals;
 
     public UserModel() {
         this.authorityRole = AuthorityRoleModel.USER;
@@ -138,5 +142,29 @@ public class UserModel implements UserDetails {
 
     public void setShoppingList(ShoppingListModel shoppingList) {
         this.shoppingList = shoppingList;
+    }
+
+    public SettingsModel getSettings() {
+        return settings;
+    }
+
+    public void setSettings(SettingsModel settings) {
+        this.settings = settings;
+    }
+
+    public RecipeBookModel getRecipeBook() {
+        return recipeBook;
+    }
+
+    public void setRecipeBook(RecipeBookModel recipeBook) {
+        this.recipeBook = recipeBook;
+    }
+
+    public List<HasMeal> getMeals() {
+        return meals;
+    }
+
+    public void setMeals(List<HasMeal> meals) {
+        this.meals = meals;
     }
 }

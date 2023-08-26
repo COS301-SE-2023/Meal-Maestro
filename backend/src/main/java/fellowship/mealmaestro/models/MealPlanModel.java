@@ -7,16 +7,16 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-@Node("DaysMeals")
-public class DaysMealsModel {
+@Node("MealPlan")
+public class MealPlanModel {
 
-    @Relationship(type = "breakfast")
+    @Relationship(type = "BREAKFAST")
     private MealModel breakfast;
 
-    @Relationship(type = "lunch")
+    @Relationship(type = "LUNCH")
     private MealModel lunch;
 
-    @Relationship(type = "dinner")
+    @Relationship(type = "DINNER")
     private MealModel dinner;
 
     @Id
@@ -30,10 +30,10 @@ public class DaysMealsModel {
 
     private String meal;
 
-    public DaysMealsModel() {
+    public MealPlanModel() {
     };
 
-    public DaysMealsModel(MealModel breakfast, MealModel lunch, MealModel dinner, DayOfWeek mealDate, UserModel user) {
+    public MealPlanModel(MealModel breakfast, MealModel lunch, MealModel dinner, DayOfWeek mealDate, UserModel user) {
         this.breakfast = breakfast;
         this.lunch = lunch;
         this.dinner = dinner;

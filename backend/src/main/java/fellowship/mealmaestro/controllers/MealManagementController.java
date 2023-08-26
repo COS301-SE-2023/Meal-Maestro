@@ -1,6 +1,8 @@
 package fellowship.mealmaestro.controllers;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import fellowship.mealmaestro.models.DateModel;
-import fellowship.mealmaestro.models.DaysMealsModel;
+import fellowship.mealmaestro.models.MealPlanModel;
 import fellowship.mealmaestro.models.MealModel;
 import fellowship.mealmaestro.services.MealDatabaseService;
 import fellowship.mealmaestro.services.MealManagementService;
@@ -30,37 +32,35 @@ public class MealManagementController {
     @Autowired
     private MealManagementService mealManagementService;
     @Autowired
-    private MealDatabaseService mealDatabseService;
+    private MealDatabaseService mealDatabaseService;
 
-    @PostMapping("/getDaysMeals")
-    public String dailyMeals(@Valid @RequestBody DateModel request, @RequestHeader("Authorization") String token)
+    @PostMapping("/getMealPlanForDay")
+    public ResponseEntity<List<MealModel>> dailyMeals(@Valid @RequestBody DateModel request,
+            @RequestHeader("Authorization") String token)
             throws JsonMappingException, JsonProcessingException {
         // admin
         if (token == null || token.isEmpty()) {
-            return ResponseEntity.badRequest().build().toString();
+            return ResponseEntity.badRequest().build();
         }
 
-        DayOfWeek dayOfWeek = request.getDayOfWeek();
-        ObjectMapper objectMapper = new ObjectMapper();
+        LocalDate date = request.getDate();
         // retrieve
-        Optional<DaysMealsModel> mealsForWeek = mealDatabseService.findUsersDaysMeals(dayOfWeek, token);
-        if (mealsForWeek.isPresent()) {
-            System.out.println("loaded from database");
-            ObjectNode daysMealsModel = objectMapper.valueToTree(mealsForWeek.get());
 
-            return daysMealsModel.toString();
+        List<MealModel> mealsForWeek = mealDatabaseService.findUsersMealPlanForDate(date, token);
+        if (mealsForWeek.size() > 0) {
+            System.out.println("loaded from database");
+
+            return ResponseEntity.ok(mealsForWeek);
         } else {
             // generate
 
             System.out.println("generated");
 
-            JsonNode mealsModels = mealManagementService.generateDaysMealsJson();
-            // +=
-            // objectMapper.treeToValue(mealManagementService.generateDaysMealsJson(),DaysMealsModel.class);
+            JsonNode mealsModels = mealManagementService.generateMealPlanJson();
             // save
-            mealDatabseService.saveDaysMeals(mealsModels, dayOfWeek, token);
+            List<MealModel> meals = mealDatabaseService.saveMeals(mealsModels, date, token);
             // return
-            return mealsModels.toString();
+            return ResponseEntity.ok(meals);
         }
 
     }
@@ -98,16 +98,16 @@ public class MealManagementController {
     }
 
     @PostMapping("/regenerate")
-    public String regenerate(@Valid @RequestBody DaysMealsModel request, @RequestHeader("Authorization") String token)
+    public String regenerate(@Valid @RequestBody MealPlanModel request, @RequestHeader("Authorization") String token)
             throws JsonMappingException, JsonProcessingException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         MealModel mealModel = new MealModel();
         DayOfWeek dayOfWeek = request.getMealDate();
-        Optional<DaysMealsModel> databaseModel = mealDatabseService.findUsersDaysMeals(dayOfWeek, token);
+        Optional<MealPlanModel> databaseModel = mealDatabaseService.findUsersMealPlan(dayOfWeek, token);
 
         if (databaseModel.isPresent()) {
-            DaysMealsModel newModel = databaseModel.get();
+            MealPlanModel newModel = databaseModel.get();
             System.out.println("present");
 
             String meal = request.getMeal();
@@ -136,15 +136,15 @@ public class MealManagementController {
 
             System.out.println(objectMapper.valueToTree(mealModel).toString());
 
-            this.mealDatabseService.saveRegeneratedMeal(newModel);
+            this.mealDatabaseService.saveRegeneratedMeal(newModel);
 
-            ObjectNode daysMealsModel = objectMapper.valueToTree(newModel);
+            ObjectNode MealPlanModel = objectMapper.valueToTree(newModel);
 
-            return daysMealsModel.toString();
+            return MealPlanModel.toString();
 
         }
-        ObjectNode daysMealsModel = objectMapper.valueToTree(request);
-        return daysMealsModel.toString();
+        ObjectNode MealPlanModel = objectMapper.valueToTree(request);
+        return MealPlanModel.toString();
     }
 
     // @GetMapping("/getPopularMeals")

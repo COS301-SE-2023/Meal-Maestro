@@ -20,7 +20,7 @@ export class MealGenerationService {
   constructor(private http: HttpClient) {}
 
   getDailyMeals(dayOfWeek: String): Observable<DaysMealsI[]> {
-    return this.http.post<any>(this.url + '/getDaysMeals', {
+    return this.http.post<any>(this.url + '/getMealPlanForDay', {
       dayOfWeek: dayOfWeek.toUpperCase(),
     });
   }
