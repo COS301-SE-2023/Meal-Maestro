@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import fellowship.mealmaestro.models.DateModel;
-import fellowship.mealmaestro.models.MealPlanModel;
 import fellowship.mealmaestro.models.MealModel;
 import fellowship.mealmaestro.services.MealDatabaseService;
 import fellowship.mealmaestro.services.MealManagementService;
@@ -46,23 +45,40 @@ public class MealManagementController {
         LocalDate date = request.getDate();
         // retrieve
 
-        List<MealModel> mealsForWeek = mealDatabaseService.findUsersMealPlanForDate(date, token);
-        if (mealsForWeek.size() > 0) {
-            System.out.println("loaded from database");
+        List<MealModel> mealsForDay = mealDatabaseService.findUsersMealPlanForDate(date, token);
+        if (mealsForDay.size() == 0) {
 
-            return ResponseEntity.ok(mealsForWeek);
-        } else {
-            // generate
+            // look to find existing meals that are in the database
+            Optional<MealModel> breakfast = mealDatabaseService.findMealTypeForUser("breakfast", token);
+            Optional<MealModel> lunch = mealDatabaseService.findMealTypeForUser("lunch", token);
+            Optional<MealModel> dinner = mealDatabaseService.findMealTypeForUser("dinner", token);
 
-            System.out.println("generated");
+            // generate meals that aren't present
+            if (!breakfast.isPresent()) {
+                MealModel breakfastGenerated = mealManagementService.generateMeal("breakfast");
+                mealsForDay.add(breakfastGenerated);
+            } else {
+                mealsForDay.add(breakfast.get());
+            }
+            if (!lunch.isPresent()) {
+                MealModel lunchGenerated = mealManagementService.generateMeal("lunch");
+                mealsForDay.add(lunchGenerated);
+            } else {
+                mealsForDay.add(lunch.get());
+            }
+            if (!dinner.isPresent()) {
+                MealModel dinnerGenerated = mealManagementService.generateMeal("dinner");
+                mealsForDay.add(dinnerGenerated);
+            } else {
+                mealsForDay.add(dinner.get());
+            }
 
-            JsonNode mealsModels = mealManagementService.generateMealPlanJson();
             // save
-            List<MealModel> meals = mealDatabaseService.saveMeals(mealsModels, date, token);
+            List<MealModel> meals = mealDatabaseService.saveMeals(mealsForDay, date, token);
             // return
             return ResponseEntity.ok(meals);
         }
-
+        return ResponseEntity.ok(mealsForDay);
     }
 
     @GetMapping("/getMeal")

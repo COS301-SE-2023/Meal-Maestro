@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fellowship.mealmaestro.models.MealPlanModel;
+import fellowship.mealmaestro.models.FoodModel;
 import fellowship.mealmaestro.models.MealModel;
 import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.models.relationships.HasMeal;
@@ -33,15 +34,13 @@ public class MealDatabaseService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<MealModel> saveMeals(JsonNode daysMealsJson, LocalDate date, String token)
+    public List<MealModel> saveMeals(List<MealModel> mealsToSave, LocalDate date, String token)
             throws JsonProcessingException, IllegalArgumentException {
 
-        // Step 1: Map the JsonNode to a MealModel
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        MealModel breakfast = objectMapper.treeToValue(daysMealsJson.get("breakfast"), MealModel.class);
-        MealModel lunch = objectMapper.treeToValue(daysMealsJson.get("lunch"), MealModel.class);
-        MealModel dinner = objectMapper.treeToValue(daysMealsJson.get("dinner"), MealModel.class);
+        // Step 1: Create the MealModel
+        MealModel breakfast = mealsToSave.get(0);
+        MealModel lunch = mealsToSave.get(1);
+        MealModel dinner = mealsToSave.get(2);
 
         // Step 2: Save the MealModel to the database
         breakfast = mealRepository.save(breakfast);
@@ -67,7 +66,7 @@ public class MealDatabaseService {
 
             userRepository.save(user);
         } else {
-            // Handle error, user not found
+            throw new IllegalArgumentException("User not found");
         }
 
         // Step 5: Return list of breakfast, lunch, dinner
@@ -125,6 +124,9 @@ public class MealDatabaseService {
 
     public List<MealModel> findUsersMealPlanForDate(LocalDate date, String token)
             throws JsonProcessingException, IllegalArgumentException {
+
+        removeOldMeals(date, token);
+
         String email = jwtService.extractUserEmail(token);
 
         UserModel user = userRepository.findByEmail(email).get();
@@ -151,8 +153,9 @@ public class MealDatabaseService {
 
         List<HasMeal> mealsToRemove = new ArrayList<HasMeal>();
 
+        // if meal date is before date, remove it
         for (HasMeal meal : meals) {
-            if (meal.getDate().equals(date)) {
+            if (meal.getDate().isBefore(date)) {
                 mealsToRemove.add(meal);
             }
         }
@@ -160,6 +163,43 @@ public class MealDatabaseService {
         meals.removeAll(mealsToRemove);
 
         userRepository.save(user);
+    }
+
+    public Optional<MealModel> findMealTypeForUser(String string, String token) {
+        String email = jwtService.extractUserEmail(token);
+
+        UserModel user = userRepository.findByEmail(email).get();
+        List<MealModel> randomMeals = mealRepository.get100RandomMeals();
+
+        List<HasMeal> meals = user.getMeals();
+
+        // if meal with meal type is present in randomMeals, return it
+        for (MealModel meal : randomMeals) {
+            if (meal.getType().equals(string)) {
+                if (canMakeMeal(user.getPantry().getFoods(), meal.getIngredients())) {
+                    return Optional.of(meal);
+                }
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    public boolean canMakeMeal(List<FoodModel> pantryItems, String ingredients) {
+        String[] ingredientsArray = ingredients.split("\\s+");
+        for (String ingredient : ingredientsArray) {
+            boolean found = false;
+            for (FoodModel pantryItem : pantryItems) {
+                if (pantryItem.getName().toLowerCase().contains(ingredient.toLowerCase())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

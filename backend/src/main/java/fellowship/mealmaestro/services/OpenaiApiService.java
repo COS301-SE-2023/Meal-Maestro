@@ -25,19 +25,19 @@ public class OpenaiApiService {
     private final static String API_KEY;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    static{
+    static {
         String apiKey;
         Dotenv dotenv;
         if (System.getenv("OPENAI_API_KEY") != null) {
             apiKey = System.getenv("OPENAI_API_KEY");
         } else {
-            try{
+            try {
                 dotenv = Dotenv.load();
                 apiKey = dotenv.get("OPENAI_API_KEY");
-            } catch (Exception e){
+            } catch (Exception e) {
                 dotenv = Dotenv.configure()
-                                .ignoreIfMissing()
-                                .load();
+                        .ignoreIfMissing()
+                        .load();
                 apiKey = "No API Key Found";
             }
         }

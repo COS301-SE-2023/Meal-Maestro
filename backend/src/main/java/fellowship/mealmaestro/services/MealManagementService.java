@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import fellowship.mealmaestro.models.MealModel;
+
 @Service
 public class MealManagementService {
 
@@ -138,7 +140,7 @@ public class MealManagementService {
         return mealJson.toString();
     }
 
-    public String generateMeal(String mealType) throws JsonMappingException, JsonProcessingException {
+    public MealModel generateMeal(String mealType) throws JsonMappingException, JsonProcessingException {
 
         JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(mealType));
         int i = 0;
@@ -154,7 +156,8 @@ public class MealManagementService {
             }
             openaiApiService.setBestofN(prevBestOfN);
         }
-        return mealJson.toString();
+        MealModel mealModel = objectMapper.treeToValue(mealJson, MealModel.class);
+        return mealModel;
     }
 
     // public String generatePopularMeals()throws JsonMappingException,

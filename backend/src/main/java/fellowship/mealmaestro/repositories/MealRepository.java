@@ -22,4 +22,12 @@ public interface MealRepository extends Neo4jRepository<MealModel, String> {
             "m.image AS image, m.ingredients AS ingredients, m.cookingTime AS cookingTime")
     List<MealModel> getSearchedMeals(String mealName);
 
+    @Query("MATCH (m:Meal)\n" +
+            "WITH m, rand() as random\n" +
+            "ORDER BY random\n" +
+            "LIMIT 100\n" +
+            "RETURN m.name AS name, m.instructions AS instructions, m.description AS description, " +
+            "m.image AS image, m.ingredients AS ingredients, m.cookingTime AS cookingTime")
+    List<MealModel> get100RandomMeals();
+
 }
