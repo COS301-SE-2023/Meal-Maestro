@@ -157,6 +157,7 @@ public class MealManagementService {
                     if (validate(mealJson))
                         break;
                 }
+                return null;
             }
             ObjectNode mealObject = objectMapper.valueToTree(mealJson);
             mealObject.put("type", mealType);

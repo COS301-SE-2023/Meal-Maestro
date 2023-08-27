@@ -1,6 +1,5 @@
 package fellowship.mealmaestro.controllers;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import fellowship.mealmaestro.models.DateModel;
 import fellowship.mealmaestro.models.MealModel;
@@ -35,8 +32,7 @@ public class MealManagementController {
 
     @PostMapping("/getMealPlanForDay")
     public ResponseEntity<List<MealModel>> dailyMeals(@Valid @RequestBody DateModel request,
-            @RequestHeader("Authorization") String token)
-            throws JsonMappingException, JsonProcessingException {
+            @RequestHeader("Authorization") String token) {
         // admin
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
@@ -114,53 +110,23 @@ public class MealManagementController {
     }
 
     @PostMapping("/regenerate")
-    public String regenerate(@Valid @RequestBody MealPlanModel request, @RequestHeader("Authorization") String token)
+    public ResponseEntity<MealModel> regenerate(@Valid @RequestBody MealModel request,
+            @RequestHeader("Authorization") String token)
             throws JsonMappingException, JsonProcessingException {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        MealModel mealModel = new MealModel();
-        DayOfWeek dayOfWeek = request.getMealDate();
-        Optional<MealPlanModel> databaseModel = mealDatabaseService.findUsersMealPlan(dayOfWeek, token);
+        // Try find an appropriate meal in the database
+        Optional<MealModel> replacementMeal = mealDatabaseService.findMealTypeForUser(request.getType(), token);
+        MealModel returnedMeal = null;
 
-        if (databaseModel.isPresent()) {
-            MealPlanModel newModel = databaseModel.get();
-            System.out.println("present");
-
-            String meal = request.getMeal();
-            if (meal.equals("breakfast")) {
-
-                mealModel = newModel.getBreakfast();
-                mealModel = objectMapper.readValue(mealManagementService.generateMeal(request.getMeal()),
-                        MealModel.class);
-
-                newModel.setBreakfast(mealModel);
-            } else if (meal.equals("lunch")) {
-
-                mealModel = newModel.getLunch();
-                mealModel = objectMapper.readValue(mealManagementService.generateMeal(request.getMeal()),
-                        MealModel.class);
-
-                newModel.setLunch(mealModel);
-            } else if (meal.equals("dinner")) {
-
-                mealModel = newModel.getDinner();
-                mealModel = objectMapper.readValue(mealManagementService.generateMeal(request.getMeal()),
-                        MealModel.class);
-
-                newModel.setDinner(mealModel);
-            }
-
-            System.out.println(objectMapper.valueToTree(mealModel).toString());
-
-            this.mealDatabaseService.saveRegeneratedMeal(newModel);
-
-            ObjectNode MealPlanModel = objectMapper.valueToTree(newModel);
-
-            return MealPlanModel.toString();
-
+        if (replacementMeal.isPresent()) {
+            returnedMeal = mealDatabaseService.replaceMeal(request, replacementMeal.get(), token);
+        } else {
+            // If there is no replacement, generate a new meal
+            MealModel newMeal = mealManagementService.generateMeal(request.getType());
+            returnedMeal = mealDatabaseService.replaceMeal(request, newMeal, token);
         }
-        ObjectNode MealPlanModel = objectMapper.valueToTree(request);
-        return MealPlanModel.toString();
+
+        return ResponseEntity.ok(returnedMeal);
     }
 
     // @GetMapping("/getPopularMeals")

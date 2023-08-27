@@ -1,6 +1,5 @@
 package fellowship.mealmaestro.services;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +7,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fellowship.mealmaestro.models.FoodModel;
 import fellowship.mealmaestro.models.MealModel;
@@ -33,7 +28,7 @@ public class MealDatabaseService {
     private UserRepository userRepository;
 
     public List<MealModel> saveMeals(List<MealModel> mealsToSave, LocalDate date, String token)
-            throws JsonProcessingException, IllegalArgumentException {
+            throws IllegalArgumentException {
 
         // Step 1: Create the MealModel
         MealModel breakfast = mealsToSave.get(0);
@@ -46,9 +41,9 @@ public class MealDatabaseService {
         dinner = mealRepository.save(dinner);
 
         // Step 3: Create a HasMeal relationship between the MealModel and User
-        HasMeal breakfastHasMeal = new HasMeal(breakfast, date, "breakfast");
-        HasMeal lunchHasMeal = new HasMeal(lunch, date, "lunch");
-        HasMeal dinnerHasMeal = new HasMeal(dinner, date, "dinner");
+        HasMeal breakfastHasMeal = new HasMeal(breakfast, date);
+        HasMeal lunchHasMeal = new HasMeal(lunch, date);
+        HasMeal dinnerHasMeal = new HasMeal(dinner, date);
 
         // Step 4: Add the HasMeal relationship to the User
         String email = jwtService.extractUserEmail(token);
@@ -75,12 +70,7 @@ public class MealDatabaseService {
         return meals;
     }
 
-    public void saveRegeneratedMeal(MealPlanModel mealPlanModel) {
-        daysMealsRepository.save(mealPlanModel);
-    }
-
-    public List<MealModel> findUsersMealPlanForDate(LocalDate date, String token)
-            throws JsonProcessingException, IllegalArgumentException {
+    public List<MealModel> findUsersMealPlanForDate(LocalDate date, String token) {
 
         removeOldMeals(date, token);
 
@@ -122,7 +112,7 @@ public class MealDatabaseService {
         userRepository.save(user);
     }
 
-    public Optional<MealModel> findMealTypeForUser(String string, String token) {
+    public Optional<MealModel> findMealTypeForUser(String type, String token) {
         String email = jwtService.extractUserEmail(token);
 
         UserModel user = userRepository.findByEmail(email).get();
@@ -130,7 +120,7 @@ public class MealDatabaseService {
 
         // if meal with meal type is present in randomMeals, return it
         for (MealModel meal : randomMeals) {
-            if (meal.getType().equals(string)) {
+            if (meal.getType().equals(type)) {
                 if (canMakeMeal(user.getPantry().getFoods(), meal.getIngredients())) {
                     return Optional.of(meal);
                 }
@@ -155,6 +145,24 @@ public class MealDatabaseService {
             }
         }
         return true;
+    }
+
+    public MealModel replaceMeal(MealModel oldMeal, MealModel newMeal, String token) {
+        String email = jwtService.extractUserEmail(token);
+
+        UserModel user = userRepository.findByEmail(email).get();
+
+        List<HasMeal> meals = user.getMeals();
+
+        for (HasMeal meal : meals) {
+            if (meal.getMeal().getName().equals(oldMeal.getName())) {
+                meal.setMeal(newMeal);
+            }
+        }
+
+        userRepository.save(user);
+
+        return newMeal;
     }
 
 }

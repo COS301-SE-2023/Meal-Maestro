@@ -19,17 +19,14 @@ public class HasMeal {
 
     private LocalDate date;
 
-    private String mealType; // breakfast, lunch, dinner
-
     public HasMeal() {
         this.id = UUID.randomUUID();
     }
 
-    public HasMeal(MealModel meal, LocalDate date, String mealType) {
+    public HasMeal(MealModel meal, LocalDate date) {
         this.id = UUID.randomUUID();
         this.meal = meal;
         this.date = date;
-        this.mealType = mealType;
     }
 
     public UUID getId() {
@@ -50,13 +47,5 @@ public class HasMeal {
 
     public void setDate(LocalDate date) {
         this.date = date;
-    }
-
-    public String getMealType() {
-        return mealType;
-    }
-
-    public void setMealType(String type) {
-        this.mealType = type;
     }
 }
