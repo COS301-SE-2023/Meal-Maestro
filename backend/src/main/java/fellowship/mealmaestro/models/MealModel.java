@@ -27,6 +27,8 @@ public class MealModel {
     @NotBlank(message = "Cooking time is required")
     private String cookingTime;
 
+    private String type;
+
     public MealModel() {
     };
 
@@ -86,5 +88,13 @@ public class MealModel {
 
     public void setCookingTime(String cookingTime) {
         this.cookingTime = cookingTime;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String mealType) {
+        this.type = mealType;
     }
 }

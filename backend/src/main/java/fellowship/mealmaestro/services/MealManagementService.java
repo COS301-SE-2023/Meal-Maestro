@@ -1,5 +1,8 @@
 package fellowship.mealmaestro.services;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +12,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.github.fge.jsonschema.main.JsonSchema;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
 
 import fellowship.mealmaestro.models.MealModel;
 
@@ -140,24 +147,45 @@ public class MealManagementService {
         return mealJson.toString();
     }
 
-    public MealModel generateMeal(String mealType) throws JsonMappingException, JsonProcessingException {
-
-        JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(mealType));
-        int i = 0;
-        if (mealJson.isMissingNode()) {
-            int prevBestOfN = openaiApiService.getBestofN();
-            Boolean success = false;
-            openaiApiService.setBestofN(prevBestOfN + 1);
-            while (!success && i < 4) {
-                mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(mealType));
-                if (!mealJson.isMissingNode())
-                    success = true;
-                i++;
+    public MealModel generateMeal(String mealType) {
+        try {
+            JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(mealType));
+            int i = 0;
+            if (!validate(mealJson)) {
+                for (i = 0; i < 5; i++) {
+                    mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(mealType));
+                    if (validate(mealJson))
+                        break;
+                }
             }
-            openaiApiService.setBestofN(prevBestOfN);
+            ObjectNode mealObject = objectMapper.valueToTree(mealJson);
+            mealObject.put("type", mealType);
+            mealObject.put("image", ""); // TODO: Add image
+
+            MealModel mealModel = objectMapper.treeToValue(mealObject, MealModel.class);
+            return mealModel;
+        } catch (JsonProcessingException e) {
+            System.out.println("Error mapping meal json to meal model");
+            return null;
         }
-        MealModel mealModel = objectMapper.treeToValue(mealJson, MealModel.class);
-        return mealModel;
+    }
+
+    public boolean validate(JsonNode data) {
+        try {
+            File schemaFile = new File("backend\\src\\main\\java\\fellowship\\mealmaestro\\models\\MealSchema.json");
+            JsonNode schemaNode = objectMapper.readTree(schemaFile);
+
+            JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
+            JsonSchema schema = factory.getJsonSchema(schemaNode);
+
+            ProcessingReport report = schema.validate(data);
+
+            return report.isSuccess();
+
+        } catch (IOException | ProcessingException e) {
+            System.out.println("Error validating meal schema");
+            return false;
+        }
     }
 
     // public String generatePopularMeals()throws JsonMappingException,

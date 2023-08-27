@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'fellowship'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 
 java {
 	sourceCompatibility = '17'
@@ -27,6 +27,7 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+	implementation 'com.github.java-json-tools:json-schema-validator:2.2.14'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'io.github.cdimascio:java-dotenv:5.2.2'

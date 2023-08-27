@@ -13,12 +13,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fellowship.mealmaestro.models.MealPlanModel;
 import fellowship.mealmaestro.models.FoodModel;
 import fellowship.mealmaestro.models.MealModel;
 import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.models.relationships.HasMeal;
-import fellowship.mealmaestro.repositories.DaysMealsRepository;
 import fellowship.mealmaestro.repositories.MealRepository;
 import fellowship.mealmaestro.repositories.UserRepository;
 import fellowship.mealmaestro.services.auth.JwtService;
@@ -77,48 +75,7 @@ public class MealDatabaseService {
         return meals;
     }
 
-    public List<MealPlanModel> retrievemealPlanModel(DayOfWeek date) {
-        return daysMealsRepository.findMealsForNextWeek(date);
-    }
-
-    public Optional<MealPlanModel> retrieveDatesMealModel(DayOfWeek date) {
-        return daysMealsRepository.findMealsForDate(date);
-    }
-
-    public Optional<MealPlanModel> fetchDay(DayOfWeek mealDate) {
-        return daysMealsRepository.findByMealDate(mealDate);
-    }
-
     public void saveRegeneratedMeal(MealPlanModel mealPlanModel) {
-        daysMealsRepository.save(mealPlanModel);
-    }
-
-    public void changeMealForDate(DayOfWeek mealDate, MealModel mealModel, String time) {
-
-        Optional<MealPlanModel> optionalmealPlanModel = daysMealsRepository.findByMealDate(mealDate);
-        if (optionalmealPlanModel.isEmpty()) {
-            // Handle error, node not found for the given mealDate
-            return;
-        }
-
-        MealPlanModel mealPlanModel = optionalmealPlanModel.get();
-
-        if (time == "breakfast") {
-            mealPlanModel.setBreakfast(mealModel);
-            MealModel updatedMeal = mealRepository.save(mealModel);
-            mealPlanModel.setBreakfast(updatedMeal);
-        }
-        if (time == "lunch") {
-            mealPlanModel.setLunch(mealModel);
-            MealModel updatedMeal = mealRepository.save(mealModel);
-            mealPlanModel.setLunch(updatedMeal);
-        }
-        if (time == "dinner") {
-            mealPlanModel.setDinner(mealModel);
-            MealModel updatedMeal = mealRepository.save(mealModel);
-            mealPlanModel.setDinner(updatedMeal);
-        }
-
         daysMealsRepository.save(mealPlanModel);
     }
 
@@ -170,8 +127,6 @@ public class MealDatabaseService {
 
         UserModel user = userRepository.findByEmail(email).get();
         List<MealModel> randomMeals = mealRepository.get100RandomMeals();
-
-        List<HasMeal> meals = user.getMeals();
 
         // if meal with meal type is present in randomMeals, return it
         for (MealModel meal : randomMeals) {
