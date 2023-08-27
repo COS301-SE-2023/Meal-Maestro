@@ -164,16 +164,19 @@ public class MealManagementService {
             mealObject.put("image", ""); // TODO: Add image
 
             MealModel mealModel = objectMapper.treeToValue(mealObject, MealModel.class);
+            System.out.println("Meal model: " + mealModel.toString());
             return mealModel;
         } catch (JsonProcessingException e) {
-            System.out.println("Error mapping meal json to meal model");
+            System.out.println(e.getMessage());
             return null;
         }
     }
 
     public boolean validate(JsonNode data) {
+        System.out.println("Validating meal schema");
+        System.out.println(data.toString());
         try {
-            File schemaFile = new File("backend\\src\\main\\java\\fellowship\\mealmaestro\\models\\MealSchema.json");
+            File schemaFile = new File("src\\main\\resources\\MealSchema.json");
             JsonNode schemaNode = objectMapper.readTree(schemaFile);
 
             JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
@@ -183,8 +186,12 @@ public class MealManagementService {
 
             return report.isSuccess();
 
-        } catch (IOException | ProcessingException e) {
+        } catch (ProcessingException e) {
             System.out.println("Error validating meal schema");
+            return false;
+        } catch (IOException e) {
+            System.out.println("Error reading meal schema file");
+            System.out.println(e.getMessage());
             return false;
         }
     }

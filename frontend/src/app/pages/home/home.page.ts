@@ -5,7 +5,6 @@ import { DaysMealsI } from '../../models/daysMeals.model';
 import { Router } from '@angular/router';
 import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
 import { ErrorHandlerService } from '../../services/services';
-import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { forkJoin } from 'rxjs';
 
@@ -25,53 +24,23 @@ export class HomePage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    for (let index = 0; index < 4; index++) {
-      this.mealGenerationservice
-        .getDailyMeals(this.getDayOfWeek(index))
-        .subscribe({
-          next: (data: DaysMealsI[] | DaysMealsI) => {
-            if (Array.isArray(data)) {
-              const mealsWithDate = data.map((item) => ({
-                ...item,
-                mealDate: this.getDayOfWeek(index),
-              }));
-              this.daysMeals.push(...mealsWithDate);
-            } else {
-              data.mealDate = this.getDayOfWeek(index);
-              this.daysMeals.push(data);
-            }
-          },
-          error: (err) => {
-            this.errorHandlerService.presentErrorToast(
-              'Error loading meal items',
-              err
-            );
-          },
-        });
-
-      const observables = [];
-
-      for (let index = 0; index < 4; index++) {
-        const observable = this.mealGenerationservice.getDailyMeals(
-          this.getDayOfWeek(index)
-        );
-        observables.push(observable);
-      }
-
-      forkJoin(observables).subscribe({
-        next: (dataArray: (DaysMealsI[] | DaysMealsI)[]) => {
-          dataArray.forEach((data, index) => {
-            if (Array.isArray(data)) {
-              const mealsWithDate = data.map((item) => ({
-                ...item,
-                mealDate: this.getDayOfWeek(index),
-              }));
-              this.daysMeals.push(...mealsWithDate);
-            } else {
-              data.mealDate = this.getDayOfWeek(index);
-              this.daysMeals.push(data);
-            }
-          });
+    let date = new Date();
+    for (let index = 0; index < 1; index++) {
+      this.mealGenerationservice.getDailyMeals(date).subscribe({
+        next: (data) => {
+          if (data.body) {
+            let mealsForDay: DaysMealsI = {
+              breakfast: undefined,
+              lunch: undefined,
+              dinner: undefined,
+              mealDate: undefined,
+            };
+            mealsForDay.breakfast = data.body[0];
+            mealsForDay.lunch = data.body[1];
+            mealsForDay.dinner = data.body[2];
+            mealsForDay.mealDate = this.getDayOfWeek(index);
+            this.daysMeals.push(mealsForDay);
+          }
         },
         error: (err) => {
           this.errorHandlerService.presentErrorToast(
@@ -80,6 +49,7 @@ export class HomePage implements OnInit {
           );
         },
       });
+      date = this.addDays(date, 1);
     }
     console.log(this.daysMeals);
   }

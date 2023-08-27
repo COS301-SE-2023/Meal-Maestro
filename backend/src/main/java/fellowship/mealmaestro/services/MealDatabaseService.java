@@ -50,9 +50,6 @@ public class MealDatabaseService {
         Optional<UserModel> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isPresent()) {
             UserModel user = optionalUser.get();
-            if (user.getMeals() == null) {
-                user.setMeals(new ArrayList<>());
-            }
             user.getMeals().add(breakfastHasMeal);
             user.getMeals().add(lunchHasMeal);
             user.getMeals().add(dinnerHasMeal);

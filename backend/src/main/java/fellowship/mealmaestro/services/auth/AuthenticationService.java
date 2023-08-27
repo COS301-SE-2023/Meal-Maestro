@@ -1,5 +1,6 @@
 package fellowship.mealmaestro.services.auth;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ import fellowship.mealmaestro.models.auth.AuthenticationRequestModel;
 import fellowship.mealmaestro.models.auth.AuthenticationResponseModel;
 import fellowship.mealmaestro.models.auth.AuthorityRoleModel;
 import fellowship.mealmaestro.models.auth.RegisterRequestModel;
+import fellowship.mealmaestro.models.relationships.HasMeal;
 import fellowship.mealmaestro.repositories.UserRepository;
 
 @Service
@@ -53,6 +55,7 @@ public class AuthenticationService {
         user.getSettings().setId(UUID.randomUUID());
         user.getSettings().setAllBoolean();
         user.setRecipeBook(new RecipeBookModel());
+        user.setMeals(new ArrayList<HasMeal>());
 
         boolean userExists = userRepository.findByEmail(request.getEmail()).isPresent();
 

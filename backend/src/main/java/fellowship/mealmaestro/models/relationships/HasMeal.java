@@ -1,8 +1,8 @@
 package fellowship.mealmaestro.models.relationships;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import org.springframework.data.neo4j.core.schema.TargetNode;
@@ -12,7 +12,8 @@ import fellowship.mealmaestro.models.MealModel;
 @RelationshipProperties
 public class HasMeal {
     @Id
-    UUID id;
+    @GeneratedValue
+    private Long id;
 
     @TargetNode
     private MealModel meal;
@@ -20,16 +21,14 @@ public class HasMeal {
     private LocalDate date;
 
     public HasMeal() {
-        this.id = UUID.randomUUID();
     }
 
     public HasMeal(MealModel meal, LocalDate date) {
-        this.id = UUID.randomUUID();
         this.meal = meal;
         this.date = date;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 

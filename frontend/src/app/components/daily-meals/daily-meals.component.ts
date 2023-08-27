@@ -20,9 +20,9 @@ export class DailyMealsComponent implements OnInit {
   lunch: string = 'lunch';
   dinner: string = 'dinner';
   mealDate: string | undefined;
-  @Input() todayData!: MealI[];
+  // @Input() todayData!: MealI[];
   @Input() dayData!: DaysMealsI;
-  daysMeals: DaysMealsI[] = [];
+  // daysMeals: DaysMealsI[] = [];
   isBreakfastModalOpen = false;
   isLunchModalOpen = false;
   isDinnerModalOpen = false;
@@ -77,22 +77,32 @@ export class DailyMealsComponent implements OnInit {
     this.addService.setRecipeItem(recipe);
   }
 
-  async handleRegenerate(meal: string) {
+  async handleRegenerate(meal: MealI | undefined) {
     // Function to handle the "Sync" option action
-    console.log('Sync option clicked');
+    console.log('Regen option clicked');
     // Add your custom logic here
-    this.mealGenerationservice.regenerate(this.dayData, meal).subscribe({
-      next: (data) => {
-        data.mealDate = this.dayData.mealDate;
-        this.dayData = data;
-      },
-      error: (err) => {
-        this.errorHandlerService.presentErrorToast(
-          'Error regenerating meal items',
-          err
-        );
-      },
-    });
+    if (meal) {
+      this.mealGenerationservice.regenerate(meal).subscribe({
+        next: (data) => {
+          if (data.body) {
+            console.log(data.body);
+            if (meal.type == 'breakfast') {
+              this.dayData.breakfast = data.body;
+            } else if (meal.type == 'lunch') {
+              this.dayData.lunch = data.body;
+            } else if (meal.type == 'dinner') {
+              this.dayData.dinner = data.body;
+            }
+          }
+        },
+        error: (err) => {
+          this.errorHandlerService.presentErrorToast(
+            'Error regenerating meal items',
+            err
+          );
+        },
+      });
+    }
   }
 
   setCurrent(o: any) {

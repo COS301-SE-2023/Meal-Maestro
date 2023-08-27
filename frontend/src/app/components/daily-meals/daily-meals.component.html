@@ -58,10 +58,13 @@
             </ng-template>
           </ion-modal>
         </ion-item>
-        <ion-item-options side="end" (ionSwipe)="handleRegenerate(breakfast)">
+        <ion-item-options
+          side="end"
+          (ionSwipe)="handleRegenerate(dayData.breakfast)"
+        >
           <ion-item-option
             color="danger"
-            (click)="handleRegenerate(breakfast)"
+            (click)="handleRegenerate(dayData.breakfast)"
             expandable
           >
             <ion-icon slot="icon-only" name="sync-outline"></ion-icon>
@@ -130,10 +133,13 @@
             </ng-template>
           </ion-modal>
         </ion-item>
-        <ion-item-options side="end" (ionSwipe)="handleRegenerate(lunch)">
+        <ion-item-options
+          side="end"
+          (ionSwipe)="handleRegenerate(dayData.lunch)"
+        >
           <ion-item-option
             color="danger"
-            (click)="handleRegenerate(lunch)"
+            (click)="handleRegenerate(dayData.lunch)"
             expandable
           >
             <ion-icon slot="icon-only" name="sync-outline"></ion-icon>
@@ -201,10 +207,13 @@
             </ng-template>
           </ion-modal>
         </ion-item>
-        <ion-item-options side="end" (ionSwipe)="handleRegenerate(dinner)">
+        <ion-item-options
+          side="end"
+          (ionSwipe)="handleRegenerate(dayData.dinner)"
+        >
           <ion-item-option
             color="danger"
-            (click)="handleRegenerate(dinner)"
+            (click)="handleRegenerate(dayData.dinner)"
             expandable
           >
             <ion-icon slot="icon-only" name="sync-outline"></ion-icon>

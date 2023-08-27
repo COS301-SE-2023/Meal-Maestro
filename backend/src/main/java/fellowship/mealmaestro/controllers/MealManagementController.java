@@ -37,6 +37,11 @@ public class MealManagementController {
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+        token = token.substring(7);
+
+        System.out.println("###########################################");
+        System.out.println("GET MEAL PLAN FOR DAY");
+        System.out.println("Date: " + request.getDate());
 
         LocalDate date = request.getDate();
         // retrieve
@@ -71,9 +76,11 @@ public class MealManagementController {
 
             // save
             List<MealModel> meals = mealDatabaseService.saveMeals(mealsForDay, date, token);
+            System.out.println(meals.size());
             // return
             return ResponseEntity.ok(meals);
         }
+
         return ResponseEntity.ok(mealsForDay);
     }
 
@@ -113,6 +120,8 @@ public class MealManagementController {
     public ResponseEntity<MealModel> regenerate(@Valid @RequestBody MealModel request,
             @RequestHeader("Authorization") String token)
             throws JsonMappingException, JsonProcessingException {
+
+        token = token.substring(7);
 
         // Try find an appropriate meal in the database
         Optional<MealModel> replacementMeal = mealDatabaseService.findMealTypeForUser(request.getType(), token);
