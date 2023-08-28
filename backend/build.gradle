@@ -29,6 +29,7 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	implementation 'com.github.java-json-tools:json-schema-validator:2.2.14'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'io.github.cdimascio:java-dotenv:5.2.2'
 	compileOnly 'org.projectlombok:lombok'

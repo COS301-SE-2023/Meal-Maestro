@@ -152,7 +152,7 @@ public class MealManagementService {
             JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(mealType));
             int i = 0;
             if (!validate(mealJson)) {
-                for (i = 0; i < 5; i++) {
+                for (i = 0; i < 1; i++) {
                     mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(mealType));
                     if (validate(mealJson))
                         break;

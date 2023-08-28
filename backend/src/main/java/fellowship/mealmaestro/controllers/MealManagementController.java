@@ -40,8 +40,6 @@ public class MealManagementController {
         token = token.substring(7);
 
         System.out.println("###########################################");
-        System.out.println("GET MEAL PLAN FOR DAY");
-        System.out.println("Date: " + request.getDate());
 
         LocalDate date = request.getDate();
         // retrieve

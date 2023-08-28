@@ -69,7 +69,7 @@ public class MealDatabaseService {
 
     public List<MealModel> findUsersMealPlanForDate(LocalDate date, String token) {
 
-        removeOldMeals(date, token);
+        removeOldMeals(token);
 
         String email = jwtService.extractUserEmail(token);
 
@@ -88,7 +88,7 @@ public class MealDatabaseService {
         return mealModels;
     }
 
-    public void removeOldMeals(LocalDate date, String token) {
+    public void removeOldMeals(String token) {
         String email = jwtService.extractUserEmail(token);
 
         UserModel user = userRepository.findByEmail(email).get();
@@ -97,9 +97,10 @@ public class MealDatabaseService {
 
         List<HasMeal> mealsToRemove = new ArrayList<HasMeal>();
 
-        // if meal date is before date, remove it
+        // if meal date is before today, remove it
+        LocalDate today = LocalDate.now();
         for (HasMeal meal : meals) {
-            if (meal.getDate().isBefore(date)) {
+            if (meal.getDate().isBefore(today)) {
                 mealsToRemove.add(meal);
             }
         }
