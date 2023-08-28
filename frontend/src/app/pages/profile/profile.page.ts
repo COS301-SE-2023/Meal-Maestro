@@ -106,6 +106,7 @@ export class ProfilePage implements OnInit {
     this.loadUserSettings();
     this.auth.getUser().subscribe({
       next: (response) => {
+        console.log(response.body);
         if (response.status == 200) {
           if (response.body && response.body.name) {
             this.user.username = response.body.name;
@@ -329,7 +330,6 @@ export class ProfilePage implements OnInit {
 
   budgetRange_Toggle() {
     this.userpreferences.budgetSet = !this.userpreferences.budgetSet;
-    this.updateSettingsOnServer();
   }
 
   async openPicker() {
@@ -409,7 +409,6 @@ export class ProfilePage implements OnInit {
   }
   macro_Toggle() {
     this.userpreferences.macroSet = !this.userpreferences.macroSet;
-    this.updateSettingsOnServer();
   }
   setOpenAllergies(isOpen: boolean) {
     this.isAllergiesModalOpen = isOpen;
@@ -436,7 +435,6 @@ export class ProfilePage implements OnInit {
   }
   allergies_Toggle() {
     this.userpreferences.allergiesSet = !this.userpreferences.allergiesSet;
-    this.updateSettingsOnServer();
   }
   getSelectedAllergens(): string {
     const selectedAllergens  = [];
@@ -487,7 +485,6 @@ export class ProfilePage implements OnInit {
   }
   cookingtime_Toggle() {
     this.userpreferences.cookingTimeSet = !this.userpreferences.cookingTimeSet;
-    this.updateSettingsOnServer();
   }
   setOpenBMI(isOpen: boolean) {
     this.isBMIModalOpen = isOpen;
@@ -507,7 +504,6 @@ export class ProfilePage implements OnInit {
 
   BMI_Toggle() {
     this.userpreferences.bmiset = !this.userpreferences.bmiset;
-    this.updateSettingsOnServer();
   }
 
   setOpenShopping(isOpen: boolean) {
@@ -517,7 +513,7 @@ export class ProfilePage implements OnInit {
   setOpenShoppingSave(isOpen: boolean) {
     if (this.userpreferences.shoppingIntervalSet === true) {
       if (this.shoppingInterval === 'other') {
-        this.userpreferences.shoppingInterval = this.shoppingIntervalOtherValue.toString();
+        this.userpreferences.shoppingInterval = this.shoppingIntervalOtherValue.toString() + " days";
       } else if (
         this.shoppingInterval == 'weekly' ||
         this.shoppingInterval == 'biweekly' ||
