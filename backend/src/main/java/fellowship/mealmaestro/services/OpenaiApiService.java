@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -17,13 +18,19 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import reactor.core.publisher.Mono;
 
 @Service
 public class OpenaiApiService {
-    private static final String OPENAI_URL = "https://api.openai.com/v1/completions";
+    private static final String OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 
     private final static String API_KEY;
-    private final RestTemplate restTemplate = new RestTemplate();
+
+    private final WebClient webClient;
+
+    public OpenaiApiService(WebClient.Builder webClientBuilder) {
+        this.webClient = webClientBuilder.build();
+    }
 
     static {
         String apiKey;
@@ -44,7 +51,7 @@ public class OpenaiApiService {
         API_KEY = apiKey;
     }
 
-    private String model = "text-davinci-003";
+    private String model = "gpt-3.5-turbo";
     private String stop = "";
 
     private double temperature = 0.5;
@@ -78,6 +85,9 @@ public class OpenaiApiService {
         text = text.replace("\\\"", "\"");
         text = text.replace("\n", "");
         text = text.replace("/r/n", "\\r\\n");
+
+        System.out.println("HERE IS THE RESPONSE: ");
+        System.out.println(text);
         return text;
 
         // return "{\"instructions\":\"1. Preheat oven to 375 degrees/r/n2. Grease a
@@ -108,10 +118,16 @@ public class OpenaiApiService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + API_KEY);
 
-        HttpEntity<String> request = new HttpEntity<String>(jsonRequest, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(OPENAI_URL, request, String.class);
+        String response = webClient.post()
+                .uri(OPENAI_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(h -> h.setAll(headers.toSingleValueMap()))
+                .body(Mono.just(jsonRequest), String.class)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
 
-        return response.getBody();
+        return response;
     }
 
     public String getJSONResponse(String Type, String extendedPrompt) throws JsonProcessingException {
@@ -126,10 +142,16 @@ public class OpenaiApiService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + API_KEY);
 
-        HttpEntity<String> request = new HttpEntity<String>(jsonRequest, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(OPENAI_URL, request, String.class);
+        String response = webClient.post()
+                .uri(OPENAI_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(h -> h.setAll(headers.toSingleValueMap()))
+                .body(Mono.just(jsonRequest), String.class)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
 
-        return response.getBody().replace("\\\"", "\"");
+        return response.replace("\\\"", "\"");
     }
 
     // build on predetermined prompt
