@@ -28,7 +28,6 @@ export class ProfilePage implements OnInit {
   ) {
     this.selectedPriceRange = '';
   }
-
   // User data
   user: UserI = {
     username: '',
@@ -123,25 +122,21 @@ export class ProfilePage implements OnInit {
 
    private async loadUserSettings() {
     this.settingsApiService.getSettings().subscribe({
-    
-    
       next: (response) => {
-       
         if (response.status === 200) {
-         
-          if (response.body) {
-           
-            
+          if (response.body) { 
+            // console.log("loaduser")
+            // console.log(response.body)
             this.userpreferences.goal = response.body.goal;
             this.userpreferences.shoppingInterval = response.body.shoppingInterval;
             this.userpreferences.foodPreferences = response.body.foodPreferences;
-           
             if (response.body.calorieAmount == null) {
               this.userpreferences.calorieAmount = 0;
             }
-            else
+            else 
+            {
             this.userpreferences.calorieAmount = response.body.calorieAmount;
-
+            }
             this.userpreferences.budgetRange = response.body.budgetRange;
             this.userpreferences.allergies = response.body.allergies;
             this.userpreferences.cookingTime = response.body.cookingTime;
@@ -159,11 +154,20 @@ export class ProfilePage implements OnInit {
             this.userpreferences.macroRatio.fat = response.body.macroRatio.fat;
             this.userpreferences.macroRatio.carbs = response.body.macroRatio.carbs;
             this.userpreferences.macroRatio.protein = response.body.macroRatio.protein;
-            
-           
-
             this.displayPreferences = this.userpreferences.foodPreferences;
             this.displayAllergies = this.userpreferences.allergies;
+
+            this.shoppingintervalToggle = this.userpreferences.shoppingIntervalSet;
+            this.preferenceToggle = this.userpreferences.foodPreferenceSet;
+            this.calorieToggle = this.userpreferences.calorieSet;
+            this.budgetToggle = this.userpreferences.budgetSet;
+            this.macroToggle = this.userpreferences.macroSet;
+            this.allergiesToggle = this.userpreferences.allergiesSet;
+            this.cookingToggle = this.userpreferences.cookingTimeSet;
+            this.BMIToggle = this.userpreferences.bmiset;
+            this.shoppingInterval = this.userpreferences.shoppingInterval;
+            this.selectedPriceRange = this.userpreferences.budgetRange;
+            
             this.displaying_Macroratio = this.getDisplayMacroratio();
             this.updateDisplayData();
           }
@@ -187,9 +191,9 @@ export class ProfilePage implements OnInit {
     this.updateSettingsOnServer(); // Update the settings on the server when the goal is set
   }
   
-
+  
   private updateSettingsOnServer() {
-    // console.log(this.userpreferences);
+     console.log(this.userpreferences);
     this.settingsApiService.updateSettings(this.userpreferences).subscribe(
       (response) => {
         if (response.status === 200) {
@@ -242,7 +246,6 @@ export class ProfilePage implements OnInit {
 
   preference_Toggle() {
     this.userpreferences.foodPreferenceSet = !this.userpreferences.foodPreferenceSet;
-    this.updateSettingsOnServer();
   }
 
   getSelectedPreferences(): string {
@@ -282,8 +285,6 @@ export class ProfilePage implements OnInit {
     }
     }
 
-   
-
   setOpenCalorie(isOpen: boolean) {
     this.isCalorieModalOpen = isOpen;
   }
@@ -305,7 +306,6 @@ export class ProfilePage implements OnInit {
 
   calorieAmount_Toggle() {
     this.userpreferences.calorieSet = !this.userpreferences.calorieSet;
-    this.updateSettingsOnServer();
   }
 
   showSelectedCalorieAmount(event: any) {
@@ -389,11 +389,9 @@ export class ProfilePage implements OnInit {
 
     await picker.present();
   }
-
   setOpenMacro(isOpen: boolean) {
     this.isMacroModalOpen = isOpen;
   }
-
   setOpenMacroSave(isOpen: boolean) {
     if (this.userpreferences.macroSet === true) {
       if (!isOpen) {
@@ -409,16 +407,13 @@ export class ProfilePage implements OnInit {
     }
     this.updateSettingsOnServer();
   }
-
   macro_Toggle() {
     this.userpreferences.macroSet = !this.userpreferences.macroSet;
     this.updateSettingsOnServer();
   }
-
   setOpenAllergies(isOpen: boolean) {
     this.isAllergiesModalOpen = isOpen;
   }
-
   setOpenAllergiesSave(isOpen: boolean) {
     if (this.userpreferences.allergiesSet === true) {
       if (
@@ -439,12 +434,10 @@ export class ProfilePage implements OnInit {
     }
     this.updateSettingsOnServer();
   }
-
   allergies_Toggle() {
     this.userpreferences.allergiesSet = !this.userpreferences.allergiesSet;
     this.updateSettingsOnServer();
   }
-
   getSelectedAllergens(): string {
     const selectedAllergens  = [];
     if (this.userpreferences.allergies == null) {
@@ -471,7 +464,6 @@ export class ProfilePage implements OnInit {
       selectedAllergens.push('Soy');
       this.userpreferences.allergies.push('Soy');
     }
-
     if (selectedAllergens.length === 1) {
       return selectedAllergens[0];
     } else if (selectedAllergens.length > 1) {
@@ -481,12 +473,9 @@ export class ProfilePage implements OnInit {
     }
   }
   }
-
-
   setOpenCooking(isOpen: boolean) {
     this.isCookingModalOpen = isOpen;
   }
-
   setOpenCookingSave(isOpen: boolean) {
     if (this.userpreferences.cookingTimeSet === true) {
       this.isCookingModalOpen = isOpen;
@@ -496,24 +485,19 @@ export class ProfilePage implements OnInit {
     }
     this.updateSettingsOnServer();
   }
-
   cookingtime_Toggle() {
     this.userpreferences.cookingTimeSet = !this.userpreferences.cookingTimeSet;
     this.updateSettingsOnServer();
   }
-
   setOpenBMI(isOpen: boolean) {
     this.isBMIModalOpen = isOpen;
   }
-
   setOpenBMISave(isOpen: boolean) {
      if (this.userpreferences.userHeight && this.userpreferences.userWeight) {
       this.updateDisplayData(); // Update the display data when the modal is closed
       this.isBMIModalOpen = isOpen;
 
      }
-    
-
      if (this.userpreferences.bmiset === false) {
       this.userpreferences.userBMI = 0;
       this.isBMIModalOpen = isOpen;
@@ -551,7 +535,7 @@ export class ProfilePage implements OnInit {
 
   shoppingInterval_Toggle() {
     this.userpreferences.shoppingIntervalSet = !this.userpreferences.shoppingIntervalSet;
-    this.updateSettingsOnServer();
+    //this.updateSettingsOnServer();
   }
 
   // Function to update display data
