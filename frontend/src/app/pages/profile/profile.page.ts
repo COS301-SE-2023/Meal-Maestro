@@ -106,7 +106,6 @@ export class ProfilePage implements OnInit {
     this.loadUserSettings();
     this.auth.getUser().subscribe({
       next: (response) => {
-        console.log(response.body);
         if (response.status == 200) {
           if (response.body && response.body.name) {
             this.user.username = response.body.name;
@@ -126,9 +125,14 @@ export class ProfilePage implements OnInit {
       next: (response) => {
         if (response.status === 200) {
           if (response.body) { 
-            // console.log("loaduser")
-            // console.log(response.body)
+            console.log("loaduser")
+            console.log(response.body)
             this.userpreferences.goal = response.body.goal;
+            if (response.body.shoppingInterval != '') {
+              this.userpreferences.shoppingIntervalSet = true;
+            }
+            
+            
             this.userpreferences.shoppingInterval = response.body.shoppingInterval;
             this.userpreferences.foodPreferences = response.body.foodPreferences;
             if (response.body.calorieAmount == null) {
@@ -150,7 +154,7 @@ export class ProfilePage implements OnInit {
             this.userpreferences.macroSet = response.body.macroSet;
             this.userpreferences.budgetSet = response.body.budgetSet;
             this.userpreferences.calorieSet = response.body.calorieSet;
-            this.userpreferences.foodPreferenceSet = response.body.foodPreferenceSet;
+          //  this.userpreferences.foodPreferenceSet = response.body.foodPreferenceSet;
             this.userpreferences.shoppingIntervalSet = response.body.shoppingIntervalSet;
             this.userpreferences.macroRatio.fat = response.body.macroRatio.fat;
             this.userpreferences.macroRatio.carbs = response.body.macroRatio.carbs;
@@ -159,7 +163,7 @@ export class ProfilePage implements OnInit {
             this.displayAllergies = this.userpreferences.allergies;
 
             this.shoppingintervalToggle = this.userpreferences.shoppingIntervalSet;
-            this.preferenceToggle = this.userpreferences.foodPreferenceSet;
+           // this.preferenceToggle = this.userpreferences.foodPreferenceSet;
             this.calorieToggle = this.userpreferences.calorieSet;
             this.budgetToggle = this.userpreferences.budgetSet;
             this.macroToggle = this.userpreferences.macroSet;
@@ -194,7 +198,9 @@ export class ProfilePage implements OnInit {
   
   
   private updateSettingsOnServer() {
-     console.log(this.userpreferences);
+    console.log("update")
+    console.log(this.userpreferences)
+    
     this.settingsApiService.updateSettings(this.userpreferences).subscribe(
       (response) => {
         if (response.status === 200) {
@@ -542,7 +548,7 @@ export class ProfilePage implements OnInit {
     this.userpreferences.shoppingIntervalSet = true;
     }
 
-    if (this.userpreferences.foodPreferences != null) {
+    if (this.userpreferences.foodPreferences != null && this.userpreferences.foodPreferences.length != 0) {
       this.preferenceToggle = true
       if (this.userpreferences.foodPreferences.includes('Vegetarian')) {
         this.preferences.vegetarian = true;
