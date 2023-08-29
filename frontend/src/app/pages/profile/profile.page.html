@@ -291,7 +291,7 @@
                   <ion-radio [disabled]="!userpreferences.budgetSet" value="custom">Custom Amount</ion-radio>
                 </ion-item>
                 <ion-item *ngIf="selectedPriceRange === 'custom'">
-                  <ion-input type="number" label="Enter Custom Amount:" labelPlacement="floating" [(ngModel)]="userpreferences.budgetRange" step="0.01" min="0" placeholder="Enter amount"></ion-input>
+                  <ion-input type="number" label="Enter Custom Amount:" labelPlacement="floating" (input)="validateBudgetInput($event)" [(ngModel)]="userpreferences.budgetRange" step="0.01" min="0" placeholder="Enter amount"></ion-input>
                 </ion-item>
               </ion-radio-group>
             </ion-list>
@@ -525,7 +525,7 @@
             <ion-button (click)="setOpenBMI(false)">Cancel</ion-button>
           </ion-buttons>
           <ion-buttons slot="end">
-            <ion-button (click)="setOpenBMISave(false)" (click)="calculateBMI()" [strong]="true">Confirm</ion-button>
+            <ion-button (click)="setOpenBMISave(false)" [strong]="true">Confirm</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>

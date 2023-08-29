@@ -325,7 +325,14 @@ export class ProfilePage implements OnInit {
 
   setOpenBudgetSave(isOpen: boolean) {
     if (this.userpreferences.budgetSet === true) {
-      this.userpreferences.budgetRange = this.selectedPriceRange;
+      if (this.selectedPriceRange === 'custom') {
+        // Convert to a string if it is a custom value
+        if (!this.userpreferences.budgetRange.toString().includes("R")) {
+        this.userpreferences.budgetRange = "R "+this.userpreferences.budgetRange.toString();
+        }
+      } else {
+        this.userpreferences.budgetRange = this.selectedPriceRange;
+      }
       this.isBudgetModalOpen = isOpen;
     } else if (this.userpreferences.budgetSet === false) {
       this.userpreferences.budgetRange = '';
@@ -334,9 +341,21 @@ export class ProfilePage implements OnInit {
     this.updateSettingsOnServer();
   }
 
+  validateBudgetInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+  
+    input.value = value.replace(/[^0-9.]/g, '');
+  }
+  
+  
   budgetRange_Toggle() {
     this.userpreferences.budgetSet = !this.userpreferences.budgetSet;
+    if (!this.userpreferences.budgetSet && this.selectedPriceRange === 'custom') {
+      this.userpreferences.budgetRange = '';
+    }
   }
+  
 
   async openPicker() {
     const picker = await this.pickerController.create({
@@ -496,17 +515,24 @@ export class ProfilePage implements OnInit {
     this.isBMIModalOpen = isOpen;
   }
   setOpenBMISave(isOpen: boolean) {
-     if (this.userpreferences.userHeight && this.userpreferences.userWeight) {
-      this.updateDisplayData(); // Update the display data when the modal is closed
-      this.isBMIModalOpen = isOpen;
+    if (this.userpreferences.bmiset === true) {
+      
 
+     if (this.userpreferences.userHeight && this.userpreferences.userWeight) {
+      this.calculateBMI();
+      this.updateDisplayData();
+      this.isBMIModalOpen = isOpen;
      }
+    } else
      if (this.userpreferences.bmiset === false) {
+      this.userpreferences.userHeight = 0;
+      this.userpreferences.userWeight = 0;
       this.userpreferences.userBMI = 0;
       this.isBMIModalOpen = isOpen;
     }
     this.updateSettingsOnServer();
-  }
+  
+}
 
   BMI_Toggle() {
     this.userpreferences.bmiset = !this.userpreferences.bmiset;
@@ -583,7 +609,7 @@ export class ProfilePage implements OnInit {
         this.userpreferences.macroSet = true;
       }   
 
-    if (this.userpreferences.allergies != null) {
+    if (this.userpreferences.allergies != null && this.userpreferences.allergies.length != 0) {
         this.allergiesToggle = true
         if (this.userpreferences.allergies.includes('Seafood')) {
           this.allergens.seafood = true;
@@ -633,7 +659,7 @@ export class ProfilePage implements OnInit {
 }
 
 calculateBMI() {
-    this.userpreferences.userBMI = Math.round(this.userpreferences.userHeight /
-        this.userpreferences.userWeight);
+    this.userpreferences.userBMI = Math.round(this.userpreferences.userWeight /
+        this.userpreferences.userHeight*this.userpreferences.userHeight);
  }
 }
