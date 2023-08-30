@@ -9,7 +9,7 @@ export interface UserPreferencesI {
     cookingTime: string;
     userHeight: number; //consider moving to account
     userWeight: number; //consider moving to account
-    userBMI: number;
+    userBMI: number | string;
 
     bmiset : boolean;
     cookingTimeSet : boolean;

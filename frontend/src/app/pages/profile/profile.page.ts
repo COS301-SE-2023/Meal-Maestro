@@ -132,27 +132,24 @@ export class ProfilePage implements OnInit {
               this.userpreferences.shoppingIntervalSet = true;
             }
 
-
-
-if (response.body.shoppingInterval === 'weekly' || response.body.shoppingInterval === 'biweekly' || response.body.shoppingInterval === 'monthly') {
-  this.userpreferences.shoppingInterval = response.body.shoppingInterval;
-  this.shoppingInterval = response.body.shoppingInterval;
-}
-else if (response.body.shoppingInterval.includes("days")) {
-  this.userpreferences.shoppingInterval = "other";  // This will activate the "Other..." radio button
-  this.shoppingIntervalOtherValue = response.body.shoppingInterval;
-}
-else {
-  this.userpreferences.shoppingIntervalSet = false;
-  this.userpreferences.shoppingInterval = '';
-  this.shoppingInterval = '';  // Resetting the radio group
-}
-console.log(this.userpreferences.shoppingInterval)
+            if (response.body.shoppingInterval === 'weekly' || response.body.shoppingInterval === 'biweekly' || response.body.shoppingInterval === 'monthly') {
+              this.userpreferences.shoppingInterval = response.body.shoppingInterval;
+              this.shoppingInterval = response.body.shoppingInterval;
+            }
+            else if (response.body.shoppingInterval.includes("days")) {
+              this.userpreferences.shoppingInterval = "other";  // This will activate the "Other..." radio button
+              this.shoppingIntervalOtherValue = response.body.shoppingInterval;
+            }
+            else {
+              this.userpreferences.shoppingIntervalSet = false;
+              this.userpreferences.shoppingInterval = '';
+              this.shoppingInterval = '';  // Resetting the radio group
+            }
 
           
             this.userpreferences.foodPreferences = response.body.foodPreferences;
-            if (response.body.calorieAmount == null) {
-              this.userpreferences.calorieAmount = 0;
+            if (response.body.calorieAmount == 0) {
+              this.userpreferences.calorieAmount = '';
             }
             else 
             {
@@ -163,6 +160,12 @@ console.log(this.userpreferences.shoppingInterval)
             this.userpreferences.cookingTime = response.body.cookingTime;
             this.userpreferences.userHeight = response.body.userHeight;
             this.userpreferences.userWeight = response.body.userWeight;
+            console.log(" userbmi")
+            console.log(response.body.userBMI)
+            if (response.body.userBMI == 0) {
+              this.userpreferences.userBMI = '';
+            }
+            else
             this.userpreferences.userBMI = response.body.userBMI;
             this.userpreferences.bmiset = response.body.bmiset;
             this.userpreferences.cookingTimeSet = response.body.cookingTimeSet;
@@ -338,7 +341,7 @@ console.log(this.userpreferences.shoppingInterval)
         this.isCalorieModalOpen = isOpen;
       }
     } else if (this.userpreferences.calorieSet === false) {
-      this.userpreferences.calorieAmount = 0;
+      this.userpreferences.calorieAmount = '';
       this.isCalorieModalOpen = isOpen;
     }
     this.updateSettingsOnServer();
@@ -561,7 +564,7 @@ console.log(this.userpreferences.shoppingInterval)
      if (this.userpreferences.bmiset === false) {
       this.userpreferences.userHeight = 0;
       this.userpreferences.userWeight = 0;
-      this.userpreferences.userBMI = 0;
+      this.userpreferences.userBMI = '';
       this.isBMIModalOpen = isOpen;
       this.updateSettingsOnServer();
     }  
