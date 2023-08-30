@@ -118,8 +118,8 @@ public class OpenaiPromptBuilder {
     public Message buildSystemMessage() {
         OpenAIChatRequest.Message systemMessage = new OpenAIChatRequest.Message();
         systemMessage.setRole("system");
-        systemMessage.setText(
-                "You will be given some information about me. You must first use this information to create a meal for me. Then you will return the meal as a JSON object in the following format.{\"name\":\"meal name\",\"description\":\"short description\",\"cookingTime\":\"time to cook\",\"ingredients\":\"list of comma separated ingredients\",\"instructions\":\"numbered step by step instructions separated by new lines\"} Please only return the JSON object");
+        systemMessage.setContent(
+                "You will be given some information about me. You must first use this information to create a meal for me. Then you will return the meal as a JSON object in the following format. {\"name\":\"meal name\",\"description\":\"short description\",\"cookingTime\":\"time to cook\",\"ingredients\":\"list of comma separated ingredients\",\"instructions\":\"numbered step by step instructions separated by new lines\"} Please only return the JSON object");
         return systemMessage;
     }
 
@@ -132,7 +132,7 @@ public class OpenaiPromptBuilder {
 
         OpenAIChatRequest.Message userMessage = new OpenAIChatRequest.Message();
         userMessage.setRole("user");
-        userMessage.setText("I want to cook a " + type + " meal. I have the following foods in my pantry: "
+        userMessage.setContent("I want to cook a " + type + " meal. I have the following foods in my pantry: "
                 + pantryFoods + ". Some other useful information about me: " + settings);
 
         return userMessage;

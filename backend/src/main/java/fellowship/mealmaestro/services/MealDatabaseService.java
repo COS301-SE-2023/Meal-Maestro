@@ -2,6 +2,8 @@ package fellowship.mealmaestro.services;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,6 +87,8 @@ public class MealDatabaseService {
             }
         }
 
+        Collections.sort(mealModels, MEAL_TYPE_COMPARATOR);
+
         return mealModels;
     }
 
@@ -118,10 +122,11 @@ public class MealDatabaseService {
 
         // if meal with meal type is present in randomMeals, return it
         for (MealModel meal : randomMeals) {
+            System.out.println(meal.getType() + " " + type);
             if (meal.getType().equals(type)) {
-                if (canMakeMeal(user.getPantry().getFoods(), meal.getIngredients())) {
-                    return Optional.of(meal);
-                }
+                // if (canMakeMeal(user.getPantry().getFoods(), meal.getIngredients())) {
+                return Optional.of(meal);
+                // }
             }
         }
 
@@ -162,5 +167,25 @@ public class MealDatabaseService {
 
         return newMeal;
     }
+
+    private static final Comparator<MealModel> MEAL_TYPE_COMPARATOR = new Comparator<MealModel>() {
+        @Override
+        public int compare(MealModel m1, MealModel m2) {
+            return orderMealType(m1.getType()).compareTo(orderMealType(m2.getType()));
+        }
+
+        private Integer orderMealType(String type) {
+            switch (type) {
+                case "breakfast":
+                    return 1;
+                case "lunch":
+                    return 2;
+                case "dinner":
+                    return 3;
+                default:
+                    return 4;
+            }
+        }
+    };
 
 }

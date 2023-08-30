@@ -7,7 +7,7 @@ public class OpenAIChatRequest {
     private String model;
     private List<Message> messages;
     private double temperature;
-    private double max_tokens;
+    private int max_tokens;
 
     public OpenAIChatRequest() {
         this.temperature = 0.5;
@@ -34,7 +34,7 @@ public class OpenAIChatRequest {
         return temperature;
     }
 
-    public double getMax_tokens() {
+    public int getMax_tokens() {
         return max_tokens;
     }
 
@@ -50,36 +50,36 @@ public class OpenAIChatRequest {
         this.temperature = temperature;
     }
 
-    public void setMax_tokens(double max_tokens) {
+    public void setMax_tokens(int max_tokens) {
         this.max_tokens = max_tokens;
     }
 
     public static class Message {
         private String role;
-        private String text;
+        private String content;
 
         public Message() {
         }
 
-        public Message(String role, String text) {
+        public Message(String role, String content) {
             this.role = role;
-            this.text = text;
+            this.content = content;
         }
 
         public String getRole() {
             return role;
         }
 
-        public String getText() {
-            return text;
+        public String getContent() {
+            return content;
         }
 
         public void setRole(String role) {
             this.role = role;
         }
 
-        public void setText(String text) {
-            this.text = text;
+        public void setContent(String content) {
+            this.content = content;
         }
     }
 }

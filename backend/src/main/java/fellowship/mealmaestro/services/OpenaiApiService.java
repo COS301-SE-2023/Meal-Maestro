@@ -76,6 +76,7 @@ public class OpenaiApiService {
     private OpenaiPromptBuilder pBuilder = new OpenaiPromptBuilder();
 
     public String fetchMealResponse(String type, String token) throws JsonMappingException, JsonProcessingException {
+        System.out.println("Fetching meal response");
         String jsonResponse = getJSONResponse(type, token);
         JsonNode jsonNode = jsonMapper.readTree(jsonResponse);
 
@@ -90,6 +91,11 @@ public class OpenaiApiService {
         text = text.replace("\\\"", "\"");
         text = text.replace("\n", "");
         text = text.replace("/r/n", "\\r\\n");
+        int index = text.indexOf('{');
+        int lastIndex = text.lastIndexOf('}') + 1;
+        if (index != -1 && lastIndex != -1 && index < lastIndex) {
+            text = text.substring(index, lastIndex);
+        }
 
         System.out.println("HERE IS THE RESPONSE: ");
         System.out.println(text);
@@ -119,10 +125,13 @@ public class OpenaiApiService {
 
         prompt = pBuilder.buildPrompt(Type, token);
         jsonRequest = jsonMapper.writeValueAsString(prompt);
+        System.out.println(jsonRequest);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + API_KEY);
+
+        System.out.println("Sending request to OpenAI");
 
         String response = webClient.post()
                 .uri(OPENAI_URL)

@@ -25,7 +25,7 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     let date = new Date();
-    for (let index = 0; index < 1; index++) {
+    for (let index = 0; index < 4; index++) {
       this.mealGenerationservice.getDailyMeals(date).subscribe({
         next: (data) => {
           if (data.body) {

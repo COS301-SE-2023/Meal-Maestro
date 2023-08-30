@@ -53,18 +53,21 @@ public class MealManagementController {
 
             // generate meals that aren't present
             if (!breakfast.isPresent()) {
+                System.out.println("Generating breakfast");
                 MealModel breakfastGenerated = mealManagementService.generateMeal("breakfast", token);
                 mealsForDay.add(breakfastGenerated);
             } else {
                 mealsForDay.add(breakfast.get());
             }
             if (!lunch.isPresent()) {
+                System.out.println("Generating lunch");
                 MealModel lunchGenerated = mealManagementService.generateMeal("lunch", token);
                 mealsForDay.add(lunchGenerated);
             } else {
                 mealsForDay.add(lunch.get());
             }
             if (!dinner.isPresent()) {
+                System.out.println("Generating dinner");
                 MealModel dinnerGenerated = mealManagementService.generateMeal("dinner", token);
                 mealsForDay.add(dinnerGenerated);
             } else {

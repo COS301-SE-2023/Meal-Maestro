@@ -27,10 +27,11 @@ public class MealManagementService {
 
     public MealModel generateMeal(String mealType, String token) {
         try {
+            System.out.println("Generating meal");
             JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(mealType, token));
             int i = 0;
             if (!validate(mealJson)) {
-                for (i = 0; i < 1; i++) {
+                for (i = 0; i < 4; i++) {
                     mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(mealType, token));
                     if (validate(mealJson))
                         break;
@@ -42,7 +43,7 @@ public class MealManagementService {
             mealObject.put("image", ""); // TODO: Add image
 
             MealModel mealModel = objectMapper.treeToValue(mealObject, MealModel.class);
-            System.out.println("Meal model: " + mealModel.toString());
+            System.out.println("Meal model: " + mealModel.getName());
             return mealModel;
         } catch (JsonProcessingException e) {
             System.out.println(e.getMessage());
