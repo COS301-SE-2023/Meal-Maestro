@@ -2,7 +2,7 @@ export interface UserPreferencesI {
     goal: string;
     shoppingInterval: string;
     foodPreferences: string[];
-    calorieAmount: number;
+    calorieAmount: number | string;
     budgetRange: string;
     macroRatio: {protein: number, carbs: number, fat: number};
     allergies: string[];

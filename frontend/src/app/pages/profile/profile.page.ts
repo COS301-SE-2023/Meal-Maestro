@@ -60,7 +60,7 @@ export class ProfilePage implements OnInit {
 
   // Variables for displaying
   displaying_Macroratio: string | undefined;
-  shoppingIntervalOtherValue: number | undefined | any;
+  shoppingIntervalOtherValue: number | undefined | any = 7;
   shoppingInterval: string | any;
   displayAllergies: string[] | string = '';
   displayPreferences: string[] | string = '' ;
@@ -131,9 +131,25 @@ export class ProfilePage implements OnInit {
             if (response.body.shoppingInterval != '') {
               this.userpreferences.shoppingIntervalSet = true;
             }
-            
-            
-            this.userpreferences.shoppingInterval = response.body.shoppingInterval;
+
+
+
+if (response.body.shoppingInterval === 'weekly' || response.body.shoppingInterval === 'biweekly' || response.body.shoppingInterval === 'monthly') {
+  this.userpreferences.shoppingInterval = response.body.shoppingInterval;
+  this.shoppingInterval = response.body.shoppingInterval;
+}
+else if (response.body.shoppingInterval.includes("days")) {
+  this.userpreferences.shoppingInterval = "other";  // This will activate the "Other..." radio button
+  this.shoppingIntervalOtherValue = response.body.shoppingInterval;
+}
+else {
+  this.userpreferences.shoppingIntervalSet = false;
+  this.userpreferences.shoppingInterval = '';
+  this.shoppingInterval = '';  // Resetting the radio group
+}
+console.log(this.userpreferences.shoppingInterval)
+
+          
             this.userpreferences.foodPreferences = response.body.foodPreferences;
             if (response.body.calorieAmount == null) {
               this.userpreferences.calorieAmount = 0;
@@ -151,7 +167,17 @@ export class ProfilePage implements OnInit {
             this.userpreferences.bmiset = response.body.bmiset;
             this.userpreferences.cookingTimeSet = response.body.cookingTimeSet;
             this.userpreferences.allergiesSet = response.body.allergiesSet;
-            this.userpreferences.macroSet = response.body.macroSet;
+            console.log(response.body.macroRatio.protein)
+            if (response.body.macroRatio.protein > 0 && response.body.macroRatio.carbs > 0 && response.body.macroRatio.fat > 0 && response.body.macroSet === true)
+            {
+              console.log("its true")
+              this.userpreferences.macroSet = true;
+            }
+            else if (response.body.macroRatio.protein === 0 || response.body.macroRatio.carbs === 0 || response.body.macroRatio.fat === 0 || response.body.macroSet === false)
+           {
+            console.log("here")
+                this.userpreferences.macroSet = false;
+            }
             this.userpreferences.budgetSet = response.body.budgetSet;
             this.userpreferences.calorieSet = response.body.calorieSet;
           //  this.userpreferences.foodPreferenceSet = response.body.foodPreferenceSet;
@@ -166,7 +192,7 @@ export class ProfilePage implements OnInit {
            // this.preferenceToggle = this.userpreferences.foodPreferenceSet;
             this.calorieToggle = this.userpreferences.calorieSet;
             this.budgetToggle = this.userpreferences.budgetSet;
-            this.macroToggle = this.userpreferences.macroSet;
+           
             this.allergiesToggle = this.userpreferences.allergiesSet;
             this.cookingToggle = this.userpreferences.cookingTimeSet;
             this.BMIToggle = this.userpreferences.bmiset;
@@ -199,7 +225,14 @@ export class ProfilePage implements OnInit {
   
   private updateSettingsOnServer() {
     console.log("update")
+    //if check to ensure only 1 "days" is in the string 
+    if (this.userpreferences.shoppingInterval.includes("days") && this.userpreferences.shoppingInterval.split("days").length - 1 > 1) {
+      this.userpreferences.shoppingInterval = this.userpreferences.shoppingInterval.replace("days", "").trim();
+    }
+
     console.log(this.userpreferences)
+
+  
     
     this.settingsApiService.updateSettings(this.userpreferences).subscribe(
       (response) => {
@@ -326,7 +359,6 @@ export class ProfilePage implements OnInit {
   setOpenBudgetSave(isOpen: boolean) {
     if (this.userpreferences.budgetSet === true) {
       if (this.selectedPriceRange === 'custom') {
-        // Convert to a string if it is a custom value
         if (!this.userpreferences.budgetRange.toString().includes("R")) {
         this.userpreferences.budgetRange = "R "+this.userpreferences.budgetRange.toString();
         }
@@ -406,7 +438,6 @@ export class ProfilePage implements OnInit {
             this.userpreferences.macroRatio.protein = value['protein'].value;
             this.userpreferences.macroRatio.carbs = value['carbs'].value;
             this.userpreferences.macroRatio.fat = value['fat'].value;
-            this.updateSettingsOnServer();
           },
         },
       ],
@@ -418,11 +449,14 @@ export class ProfilePage implements OnInit {
     this.isMacroModalOpen = isOpen;
   }
   setOpenMacroSave(isOpen: boolean) {
+
     if (this.userpreferences.macroSet === true) {
       if (!isOpen) {
-        this.displaying_Macroratio = this.getDisplayMacroratio(); // Update the display data when the modal is closed
+        this.displaying_Macroratio = this.getDisplayMacroratio();
       }
+     
       this.isMacroModalOpen = isOpen;
+      
     } else if (this.userpreferences.macroSet === false) {
       this.userpreferences.macroRatio.protein = 0;
       this.userpreferences.macroRatio.carbs = 0;
@@ -434,6 +468,7 @@ export class ProfilePage implements OnInit {
   }
   macro_Toggle() {
     this.userpreferences.macroSet = !this.userpreferences.macroSet;
+
   }
   setOpenAllergies(isOpen: boolean) {
     this.isAllergiesModalOpen = isOpen;
@@ -515,23 +550,21 @@ export class ProfilePage implements OnInit {
     this.isBMIModalOpen = isOpen;
   }
   setOpenBMISave(isOpen: boolean) {
-    if (this.userpreferences.bmiset === true) {
-      
-
-     if (this.userpreferences.userHeight && this.userpreferences.userWeight) {
+    if (this.userpreferences.bmiset === true && this.userpreferences.userHeight > 0 && this.userpreferences.userWeight > 0) {
+     if (this.userpreferences.userHeight > 0 && this.userpreferences.userWeight > 0) {
       this.calculateBMI();
       this.updateDisplayData();
+      this.updateSettingsOnServer();
       this.isBMIModalOpen = isOpen;
      }
-    } else
+    } 
      if (this.userpreferences.bmiset === false) {
       this.userpreferences.userHeight = 0;
       this.userpreferences.userWeight = 0;
       this.userpreferences.userBMI = 0;
       this.isBMIModalOpen = isOpen;
-    }
-    this.updateSettingsOnServer();
-  
+      this.updateSettingsOnServer();
+    }  
 }
 
   BMI_Toggle() {
@@ -545,6 +578,7 @@ export class ProfilePage implements OnInit {
   setOpenShoppingSave(isOpen: boolean) {
     if (this.userpreferences.shoppingIntervalSet === true) {
       if (this.shoppingInterval === 'other') {
+  
         this.userpreferences.shoppingInterval = this.shoppingIntervalOtherValue.toString() + " days";
       } else if (
         this.shoppingInterval == 'weekly' ||
@@ -558,13 +592,47 @@ export class ProfilePage implements OnInit {
       this.userpreferences.shoppingInterval = '';
       this.isShoppingModalOpen = isOpen;
     }
+    else if (this.userpreferences.shoppingIntervalSet === false && this.shoppingInterval === 'other') {
+      this.userpreferences.shoppingInterval = '';
+      this.isShoppingModalOpen = isOpen;
+    }
+
     this.updateSettingsOnServer();
   }
 
   shoppingInterval_Toggle() {
     this.userpreferences.shoppingIntervalSet = !this.userpreferences.shoppingIntervalSet;
-    //this.updateSettingsOnServer();
+    if (this.userpreferences.shoppingIntervalSet === false) {
+      this.shoppingInterval = '';
+    }
   }
+
+  // Function to determine what to display for Shopping Interval
+getDisplayShoppingInterval() {
+  if (this.shoppingInterval === 'other') {
+    if (this.shoppingIntervalOtherValue.toString().includes("days")) {
+    return this.shoppingIntervalOtherValue ;
+    }
+    else 
+    {
+      return this.shoppingIntervalOtherValue + " days";
+    }
+  } else {
+    return this.userpreferences.shoppingInterval;
+  }
+}
+
+getDisplayOtherShoppingInterval() {
+
+  if (this.shoppingIntervalOtherValue.toString().includes("days")) {
+    return this.shoppingIntervalOtherValue.toString().replace("days", "").trim();
+  } else {
+    return this.shoppingIntervalOtherValue;
+  }
+}
+
+
+
 
   // Function to update display data
   updateDisplayData() {
@@ -603,11 +671,7 @@ export class ProfilePage implements OnInit {
         this.userpreferences.budgetSet = true;
       }
 
-    if (this.userpreferences.macroRatio != null) {
-        this.macroToggle = true
-      
-        this.userpreferences.macroSet = true;
-      }   
+    
 
     if (this.userpreferences.allergies != null && this.userpreferences.allergies.length != 0) {
         this.allergiesToggle = true
@@ -644,8 +708,7 @@ export class ProfilePage implements OnInit {
 
   // Function to get the displaying macro ratio
   getDisplayMacroratio(): string {
-    console.log(this.userpreferences.macroRatio)
-    if(this.userpreferences && this.userpreferences.macroRatio){
+    if(this.userpreferences.macroSet && this.userpreferences.macroRatio && this.userpreferences.macroRatio.protein > 0 && this.userpreferences.macroRatio.carbs > 0 && this.userpreferences.macroRatio.fat > 0){
         return (
             this.userpreferences.macroRatio.protein +
             ' : ' +
@@ -654,7 +717,7 @@ export class ProfilePage implements OnInit {
             this.userpreferences.macroRatio.fat
         );
     } else {
-        return "Not available";
+        return "";
     }
 }
 

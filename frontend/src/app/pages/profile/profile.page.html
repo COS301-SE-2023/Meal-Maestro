@@ -31,7 +31,7 @@
     <ion-card-subtitle>
       <div class="card-toggle">
         <div class="toggle-label">Shopping Interval</div>
-        <div class="toggle-value">{{ userpreferences.shoppingInterval }}</div>
+        <div class="toggle-value">{{ getDisplayShoppingInterval() }}</div>
         <ion-icon name="chevron-forward-outline" size="medium"></ion-icon>
       </div>
     </ion-card-subtitle>
@@ -80,7 +80,7 @@
               </ion-radio-group>
         
               <ion-item *ngIf="shoppingInterval === 'other'">
-                <ion-label class="range-label">Every {{ shoppingIntervalOtherValue }} day(s)</ion-label>
+                <ion-label class="range-label">Every {{ getDisplayOtherShoppingInterval() }} day(s)</ion-label>
               </ion-item>
               
               <ion-item *ngIf="shoppingInterval === 'other'">
@@ -540,10 +540,10 @@
         </ion-card-subtitle>
             <ion-list>
               <ion-item>
-                <ion-input [disabled]="!userpreferences.bmiset" type="number" [(ngModel)]="userpreferences.userHeight" step="0.01" min="0" placeholder="Enter amount">Height (cm)</ion-input>
+                <ion-input [disabled]="!userpreferences.bmiset" type="number" (input)="validateBudgetInput($event)" [(ngModel)]="userpreferences.userHeight" step="0.01" min="0" placeholder="Enter amount">Height (cm)</ion-input>
               </ion-item>
               <ion-item>
-                <ion-input [disabled]="!userpreferences.bmiset" type="number" [(ngModel)]="userpreferences.userWeight" step="0.01" min="0" placeholder="Enter amount">Weight (kg)</ion-input>
+                <ion-input [disabled]="!userpreferences.bmiset" type="number" (input)="validateBudgetInput($event)" [(ngModel)]="userpreferences.userWeight" step="0.01" min="0" placeholder="Enter amount">Weight (kg)</ion-input>
               </ion-item>
             </ion-list>
           </ion-card-content>
