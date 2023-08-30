@@ -54,16 +54,7 @@ export class DailyMealsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // this.mealGenerationservice.getDailyMeals().subscribe({
-    //   next: (data) => {
-    //     this.dayData = data;
-    //   },
-    //   error: (err) => {
-    //     this.errorHandlerService.presentErrorToast(
-    //       'Error loading meal items', err
-    //     )
-    //   }
-    // })
+    console.log(this.dayData);
   }
 
   handleArchive(meal: string) {
@@ -79,7 +70,7 @@ export class DailyMealsComponent implements OnInit {
 
   async handleRegenerate(meal: MealI | undefined) {
     // Function to handle the "Sync" option action
-    console.log('Regen option clicked');
+    console.log(meal);
     // Add your custom logic here
     if (meal) {
       this.mealGenerationservice.regenerate(meal).subscribe({

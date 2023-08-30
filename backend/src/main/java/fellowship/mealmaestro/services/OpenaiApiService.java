@@ -1,8 +1,5 @@
 package fellowship.mealmaestro.services;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -49,27 +46,6 @@ public class OpenaiApiService {
         API_KEY = apiKey;
     }
 
-    private String model = "gpt-3.5-turbo";
-    private String stop = "";
-
-    private double temperature = 0.5;
-    private double topP = 1.0;
-    private double freqPenalty = 0.0;
-    private double presencePenalty = 0.0;
-
-    private int maximumTokenLength = 800;
-
-    // potential vars
-
-    // will make a few prompts and return best, heavy on token use
-    private int bestOfN = 1;
-    // detect abuse
-    // private String user = "";
-    // echo back prompt and its compeletion
-    // private boolean echo = false;
-    // stream prompt as it generates
-    // private boolean stream = false;
-
     @Autowired
     private ObjectMapper jsonMapper = new ObjectMapper();
     @Autowired
@@ -111,13 +87,6 @@ public class OpenaiApiService {
         // milk/r/nSalt/r/nButter\",\"cookingTime\":\"30 minutes\"}";
     }
 
-    // public String fetchMealResponse(String Type, String extendedPrompt)
-    // throws JsonMappingException, JsonProcessingException {
-    // JsonNode jsonNode = jsonMapper.readTree(getJSONResponse(Type,
-    // extendedPrompt));
-    // return jsonNode.get("text").asText();
-    // }
-
     public String getJSONResponse(String Type, String token) throws JsonProcessingException {
 
         OpenAIChatRequest prompt;
@@ -144,82 +113,5 @@ public class OpenaiApiService {
 
         return response;
     }
-
-    // public String getJSONResponse(String Type, String extendedPrompt) throws
-    // JsonProcessingException {
-
-    // String prompt;
-    // String jsonRequest;
-
-    // prompt = pBuilder.buildPrompt(Type, extendedPrompt);
-    // jsonRequest = buildJsonApiRequest(prompt);
-
-    // HttpHeaders headers = new HttpHeaders();
-    // headers.setContentType(MediaType.APPLICATION_JSON);
-    // headers.set("Authorization", "Bearer " + API_KEY);
-
-    // String response = webClient.post()
-    // .uri(OPENAI_URL)
-    // .contentType(MediaType.APPLICATION_JSON)
-    // .headers(h -> h.setAll(headers.toSingleValueMap()))
-    // .body(Mono.just(jsonRequest), String.class)
-    // .retrieve()
-    // .bodyToMono(String.class)
-    // .block();
-
-    // return response.replace("\\\"", "\"");
-    // }
-
-    // build on predetermined prompt
-    public String buildJsonApiRequest(String prompt) throws JsonProcessingException {
-        Map<String, Object> params = new HashMap<>();
-        params.put("model", model);
-        params.put("prompt", prompt);
-        params.put("temperature", temperature);
-        params.put("max_tokens", maximumTokenLength);
-        params.put("stop", "####");
-        // params.put("top_p", topP);
-        params.put("frequency_penalty", freqPenalty);
-        params.put("presence_penalty", presencePenalty);
-        params.put("n", bestOfN);
-        String res = new ObjectMapper().writeValueAsString(params);
-        res += "\r\n";
-        return res;
-    }
-    ///////////////////////////////////////////////////////////
-
-    // setters ////////////////////////////////////////////////
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public void setStop(String Stop) {
-        this.stop = Stop;
-    }
-
-    public void setTemperature(double x) {
-        this.temperature = x;
-    }
-
-    public void setTopP(double x) {
-        this.topP = x;
-    }
-
-    public void setfreqPenalty(double x) {
-        this.temperature = x;
-    }
-
-    public void setPresencePenalty(double x) {
-        this.temperature = x;
-    }
-
-    public void setBestofN(int x) {
-        this.bestOfN = x;
-    }
-
-    public int getBestofN() {
-        return this.bestOfN;
-    }
-    //////////////////////////////////////////////////////////////
 
 }

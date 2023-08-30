@@ -38,13 +38,9 @@ export class MealGenerationService {
   //   );
   // }
   regenerate(meal: MealI): Observable<HttpResponse<MealI>> {
-    return this.http.post<MealI>(
-      this.url + '/regenerate',
-      {
-        meal: meal,
-      },
-      { observe: 'response' }
-    );
+    return this.http.post<MealI>(this.url + '/regenerate', meal, {
+      observe: 'response',
+    });
   }
 
   // Helper function to get the headers (if needed)

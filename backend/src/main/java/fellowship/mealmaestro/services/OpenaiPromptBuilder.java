@@ -131,9 +131,21 @@ public class OpenaiPromptBuilder {
         String settings = user.getSettings().toString();
 
         OpenAIChatRequest.Message userMessage = new OpenAIChatRequest.Message();
+
+        if (pantryFoods.equals("")) {
+            pantryFoods = "I have no food in my pantry";
+        } else {
+            pantryFoods = "I have the following foods in my pantry: " + pantryFoods + ".";
+        }
+
+        if (settings.equals("")) {
+            settings = "You can make whatever unique meal you want.";
+        } else {
+            settings = "Some other useful information about me: " + settings + ".";
+        }
+
         userMessage.setRole("user");
-        userMessage.setContent("I want to cook a " + type + " meal. I have the following foods in my pantry: "
-                + pantryFoods + ". Some other useful information about me: " + settings);
+        userMessage.setContent("I want to cook a " + type + " meal. " + pantryFoods + ". " + settings);
 
         return userMessage;
     }

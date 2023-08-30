@@ -122,11 +122,10 @@ public class MealDatabaseService {
 
         // if meal with meal type is present in randomMeals, return it
         for (MealModel meal : randomMeals) {
-            System.out.println(meal.getType() + " " + type);
             if (meal.getType().equals(type)) {
-                // if (canMakeMeal(user.getPantry().getFoods(), meal.getIngredients())) {
-                return Optional.of(meal);
-                // }
+                if (canMakeMeal(user.getPantry().getFoods(), meal.getIngredients())) {
+                    return Optional.of(meal);
+                }
             }
         }
 
@@ -158,8 +157,10 @@ public class MealDatabaseService {
         List<HasMeal> meals = user.getMeals();
 
         for (HasMeal meal : meals) {
+            System.out.println(meal.getMeal().getName() + " " + oldMeal.getName());
             if (meal.getMeal().getName().equals(oldMeal.getName())) {
                 meal.setMeal(newMeal);
+                break;
             }
         }
 

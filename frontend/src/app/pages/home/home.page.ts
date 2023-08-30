@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
 import { ErrorHandlerService } from '../../services/services';
 import { CommonModule } from '@angular/common';
-import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -25,29 +24,33 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     let date = new Date();
-    for (let index = 0; index < 4; index++) {
-      this.mealGenerationservice.getDailyMeals(date).subscribe({
-        next: (data) => {
-          if (data.body) {
-            let mealsForDay: DaysMealsI = {
-              breakfast: undefined,
-              lunch: undefined,
-              dinner: undefined,
-              mealDate: undefined,
-            };
-            mealsForDay.breakfast = data.body[0];
-            mealsForDay.lunch = data.body[1];
-            mealsForDay.dinner = data.body[2];
-            mealsForDay.mealDate = this.getDayOfWeek(index);
-            this.daysMeals.push(mealsForDay);
-          }
-        },
-        error: (err) => {
-          this.errorHandlerService.presentErrorToast(
-            'Error loading meal items',
-            err
-          );
-        },
+    for (let index = 0; index < 3; index++) {
+      await new Promise<void>((resolve, reject) => {
+        this.mealGenerationservice.getDailyMeals(date).subscribe({
+          next: (data) => {
+            if (data.body) {
+              let mealsForDay: DaysMealsI = {
+                breakfast: undefined,
+                lunch: undefined,
+                dinner: undefined,
+                mealDate: undefined,
+              };
+              mealsForDay.breakfast = data.body[0];
+              mealsForDay.lunch = data.body[1];
+              mealsForDay.dinner = data.body[2];
+              mealsForDay.mealDate = this.getDayOfWeek(index);
+              this.daysMeals.push(mealsForDay);
+              resolve();
+            }
+          },
+          error: (err) => {
+            this.errorHandlerService.presentErrorToast(
+              'Error loading meal items',
+              err
+            );
+            reject();
+          },
+        });
       });
       date = this.addDays(date, 1);
     }

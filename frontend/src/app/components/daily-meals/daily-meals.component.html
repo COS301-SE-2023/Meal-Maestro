@@ -60,11 +60,11 @@
         </ion-item>
         <ion-item-options
           side="end"
-          (ionSwipe)="handleRegenerate(dayData.breakfast)"
+          (ionSwipe)="handleRegenerate(this.dayData.breakfast)"
         >
           <ion-item-option
             color="danger"
-            (click)="handleRegenerate(dayData.breakfast)"
+            (click)="handleRegenerate(this.dayData.breakfast)"
             expandable
           >
             <ion-icon slot="icon-only" name="sync-outline"></ion-icon>

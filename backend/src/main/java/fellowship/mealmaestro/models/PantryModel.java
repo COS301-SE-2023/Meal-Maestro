@@ -33,9 +33,15 @@ public class PantryModel {
 
     @Override
     public String toString() {
-        String csv = foods.stream()
-                .map(FoodModel::getName)
-                .collect(Collectors.joining(","));
+        String csv;
+
+        if (foods.size() == 0) {
+            csv = "";
+        } else {
+            csv = foods.stream()
+                    .map(FoodModel::getName)
+                    .collect(Collectors.joining(","));
+        }
 
         return csv;
     }

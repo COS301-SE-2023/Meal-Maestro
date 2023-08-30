@@ -112,12 +112,13 @@ public class MealManagementController {
     }
 
     @PostMapping("/regenerate")
-    public ResponseEntity<MealModel> regenerate(@Valid @RequestBody MealModel request,
+    public ResponseEntity<MealModel> regenerate(@RequestBody MealModel request,
             @RequestHeader("Authorization") String token)
             throws JsonMappingException, JsonProcessingException {
 
         token = token.substring(7);
 
+        System.out.println(request.getName());
         // Try find an appropriate meal in the database
         Optional<MealModel> replacementMeal = mealDatabaseService.findMealTypeForUser(request.getType(), token);
         MealModel returnedMeal = null;

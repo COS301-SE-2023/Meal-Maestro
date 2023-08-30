@@ -10,7 +10,7 @@ public class OpenAIChatRequest {
     private int max_tokens;
 
     public OpenAIChatRequest() {
-        this.temperature = 0.5;
+        this.temperature = 1;
         this.max_tokens = 800;
         this.messages = new ArrayList<>();
     }
@@ -18,7 +18,7 @@ public class OpenAIChatRequest {
     public OpenAIChatRequest(String model, List<Message> messages) {
         this.model = model;
         this.messages = messages;
-        this.temperature = 0.5;
+        this.temperature = 1;
         this.max_tokens = 800;
     }
 
