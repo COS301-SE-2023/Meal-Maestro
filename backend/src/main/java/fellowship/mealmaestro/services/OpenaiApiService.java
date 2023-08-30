@@ -4,12 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,6 +14,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fellowship.mealmaestro.models.OpenAIChatRequest;
 import io.github.cdimascio.dotenv.Dotenv;
 import reactor.core.publisher.Mono;
 
@@ -77,11 +75,18 @@ public class OpenaiApiService {
     @Autowired
     private OpenaiPromptBuilder pBuilder = new OpenaiPromptBuilder();
 
-    public String fetchMealResponse(String Type) throws JsonMappingException, JsonProcessingException {
-        String jsonResponse = getJSONResponse(Type);
+    public String fetchMealResponse(String type, String token) throws JsonMappingException, JsonProcessingException {
+        String jsonResponse = getJSONResponse(type, token);
         JsonNode jsonNode = jsonMapper.readTree(jsonResponse);
 
-        String text = jsonNode.get("choices").get(0).get("text").asText();
+        JsonNode contentNode = jsonNode
+                .path("choices")
+                .get(0)
+                .path("message")
+                .path("content");
+
+        String text = contentNode.asText();
+
         text = text.replace("\\\"", "\"");
         text = text.replace("\n", "");
         text = text.replace("/r/n", "\\r\\n");
@@ -100,19 +105,20 @@ public class OpenaiApiService {
         // milk/r/nSalt/r/nButter\",\"cookingTime\":\"30 minutes\"}";
     }
 
-    public String fetchMealResponse(String Type, String extendedPrompt)
-            throws JsonMappingException, JsonProcessingException {
-        JsonNode jsonNode = jsonMapper.readTree(getJSONResponse(Type, extendedPrompt));
-        return jsonNode.get("text").asText();
-    }
+    // public String fetchMealResponse(String Type, String extendedPrompt)
+    // throws JsonMappingException, JsonProcessingException {
+    // JsonNode jsonNode = jsonMapper.readTree(getJSONResponse(Type,
+    // extendedPrompt));
+    // return jsonNode.get("text").asText();
+    // }
 
-    public String getJSONResponse(String Type) throws JsonProcessingException {
+    public String getJSONResponse(String Type, String token) throws JsonProcessingException {
 
-        String prompt;
+        OpenAIChatRequest prompt;
         String jsonRequest;
 
-        prompt = pBuilder.buildPrompt(Type);
-        jsonRequest = buildJsonApiRequest(prompt);
+        prompt = pBuilder.buildPrompt(Type, token);
+        jsonRequest = jsonMapper.writeValueAsString(prompt);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -130,29 +136,30 @@ public class OpenaiApiService {
         return response;
     }
 
-    public String getJSONResponse(String Type, String extendedPrompt) throws JsonProcessingException {
+    // public String getJSONResponse(String Type, String extendedPrompt) throws
+    // JsonProcessingException {
 
-        String prompt;
-        String jsonRequest;
+    // String prompt;
+    // String jsonRequest;
 
-        prompt = pBuilder.buildPrompt(Type, extendedPrompt);
-        jsonRequest = buildJsonApiRequest(prompt);
+    // prompt = pBuilder.buildPrompt(Type, extendedPrompt);
+    // jsonRequest = buildJsonApiRequest(prompt);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Bearer " + API_KEY);
+    // HttpHeaders headers = new HttpHeaders();
+    // headers.setContentType(MediaType.APPLICATION_JSON);
+    // headers.set("Authorization", "Bearer " + API_KEY);
 
-        String response = webClient.post()
-                .uri(OPENAI_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .headers(h -> h.setAll(headers.toSingleValueMap()))
-                .body(Mono.just(jsonRequest), String.class)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+    // String response = webClient.post()
+    // .uri(OPENAI_URL)
+    // .contentType(MediaType.APPLICATION_JSON)
+    // .headers(h -> h.setAll(headers.toSingleValueMap()))
+    // .body(Mono.just(jsonRequest), String.class)
+    // .retrieve()
+    // .bodyToMono(String.class)
+    // .block();
 
-        return response.replace("\\\"", "\"");
-    }
+    // return response.replace("\\\"", "\"");
+    // }
 
     // build on predetermined prompt
     public String buildJsonApiRequest(String prompt) throws JsonProcessingException {

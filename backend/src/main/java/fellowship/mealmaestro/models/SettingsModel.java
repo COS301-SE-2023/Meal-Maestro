@@ -171,4 +171,27 @@ public class SettingsModel {
     public boolean getBmiset() {
         return bmiset;
     }
+
+    @Override
+    public String toString() {
+        String s = "";
+        if (this.goal != null && !this.goal.isEmpty()) {
+            s += "My goal: " + this.goal.toString() + ". ";
+        }
+        if (this.cookingTime != null && !this.cookingTime.isEmpty()) {
+            s += "My cooking time is around " + this.cookingTime.toString() + ". ";
+        }
+        if (this.foodPreferences != null && !this.foodPreferences.isEmpty()) {
+            String foodPref = String.join(", ", this.foodPreferences);
+            s += "I eat like a " + foodPref + ". ";
+        }
+        if (this.calorieAmount != 0) {
+            s += "My average daily calorie goal is: " + this.calorieAmount + ". ";
+        }
+        if (this.allergies != null && !this.allergies.isEmpty()) {
+            String allergens = String.join(", ", this.allergies);
+            s += "My allergens: " + allergens + ". ";
+        }
+        return s;
+    }
 }

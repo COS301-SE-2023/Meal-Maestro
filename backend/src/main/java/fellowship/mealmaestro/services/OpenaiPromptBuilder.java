@@ -1,6 +1,7 @@
 package fellowship.mealmaestro.services;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,51 +10,69 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fellowship.mealmaestro.models.OpenAIChatRequest;
+import fellowship.mealmaestro.models.UserModel;
+import fellowship.mealmaestro.models.OpenAIChatRequest.Message;
+import fellowship.mealmaestro.repositories.UserRepository;
+import fellowship.mealmaestro.services.auth.JwtService;
+
 @Service
 public class OpenaiPromptBuilder {
 
     @Autowired
-    private SettingsService settingsService;
+    private JwtService jwtService;
 
-    public String buildPrompt(String Type) throws JsonProcessingException {
+    @Autowired
+    private UserRepository userRepository;
+
+    public OpenAIChatRequest buildPrompt(String type, String token) throws JsonProcessingException {
         String prompt = "";
-        String preferenceString = settingsService.ALL_SETTINGS;
-        prompt += buildContext(Type, preferenceString);
-        prompt += buildGoal();
-        prompt += buildFormat();
-        prompt += buildSubtasks();
-        prompt += buildExample();
-        prompt += " ";
+        // String preferenceString = settingsService.ALL_SETTINGS;
+        // prompt += buildContext(type, preferenceString);
+        // prompt += buildGoal();
+        // prompt += buildFormat();
+        // prompt += buildSubtasks();
+        // prompt += buildExample();
+        // prompt += " ";
+
+        OpenAIChatRequest request = new OpenAIChatRequest();
+        request.setModel("gpt-3.5-turbo");
+
+        OpenAIChatRequest.Message systemMessage = buildSystemMessage();
+        OpenAIChatRequest.Message userMessage = buildUserMessage(type, token);
+
+        request.setMessages(List.of(systemMessage, userMessage));
 
         System.out.println("HERE IS THE PROMPT: ");
         System.out.println(prompt);
 
-        return prompt;
+        return request;
     }
 
-    public String buildPrompt(String Type, String extendedPrompt) throws JsonProcessingException {
-        String prompt = "";
+    // public String buildPrompt(String type, String extendedPrompt) throws
+    // JsonProcessingException {
+    // String prompt = "";
 
-        prompt += buildContext(Type, extendedPrompt);
-        prompt += buildGoal();
-        prompt += buildFormat();
-        prompt += buildSubtasks();
-        prompt += buildExample();
-        // prompt += "\r\n";
+    // prompt += buildContext(type, extendedPrompt);
+    // prompt += buildGoal();
+    // prompt += buildFormat();
+    // prompt += buildSubtasks();
+    // prompt += buildExample();
+    // // prompt += "\r\n";
 
-        return prompt;
-    }
+    // return prompt;
+    // }
 
-    public String buildContext(String Type) {
+    public String buildContext(String type) {
         String res = "";
-        res = ("Act as a system that creates a meal for a user.The meal should be a " + Type
+        res = ("Act as a system that creates a meal for a user.The meal should be a " + type
                 + " and should not be difficult to cook.");
         return res;
     }
 
-    public String buildContext(String Type, String extendedPropmpt) {
+    public String buildContext(String type, String extendedPropmpt) {
         String res = "";
-        res = ("Act as a system that creates a meal for a user.The meal should be a " + Type
+        res = ("Act as a system that creates a meal for a user. The meal should be a " + type
                 + " and should not be difficult to cook." + extendedPropmpt);
         return res;
     }
@@ -71,7 +90,7 @@ public class OpenaiPromptBuilder {
         params.put("description", "short description of meal");
         params.put("cookingTime", "meal cooking time");
         params.put("ingredients", "list of ingredients seperated by a new line");
-        params.put("instructions", "step by step instructions, numbered, and seperated by new lines");
+        params.put("instructions", "step by step instructions, numbered, and separated by new lines");
 
         return new ObjectMapper().writeValueAsString(params.toString());
 
@@ -94,5 +113,28 @@ public class OpenaiPromptBuilder {
                 "1. Bring a pot of water to a boil and then add a dash of salt and the Pasta/r/n2. Brown the mince in a pan/r/n3. Add the tomato sauce to the mince and set to simmer/r/n4. Safely remove and strain the pasta/r/n5. Turn off the mince and sauce when ready");
 
         return new ObjectMapper().writeValueAsString(params);
+    }
+
+    public Message buildSystemMessage() {
+        OpenAIChatRequest.Message systemMessage = new OpenAIChatRequest.Message();
+        systemMessage.setRole("system");
+        systemMessage.setText(
+                "You will be given some information about me. You must first use this information to create a meal for me. Then you will return the meal as a JSON object in the following format.{\"name\":\"meal name\",\"description\":\"short description\",\"cookingTime\":\"time to cook\",\"ingredients\":\"list of comma separated ingredients\",\"instructions\":\"numbered step by step instructions separated by new lines\"} Please only return the JSON object");
+        return systemMessage;
+    }
+
+    public Message buildUserMessage(String type, String token) {
+        String email = jwtService.extractUserEmail(token);
+
+        UserModel user = userRepository.findByEmail(email).get();
+        String pantryFoods = user.getPantry().toString();
+        String settings = user.getSettings().toString();
+
+        OpenAIChatRequest.Message userMessage = new OpenAIChatRequest.Message();
+        userMessage.setRole("user");
+        userMessage.setText("I want to cook a " + type + " meal. I have the following foods in my pantry: "
+                + pantryFoods + ". Some other useful information about me: " + settings);
+
+        return userMessage;
     }
 }

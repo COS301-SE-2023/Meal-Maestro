@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,19 +53,19 @@ public class MealManagementController {
 
             // generate meals that aren't present
             if (!breakfast.isPresent()) {
-                MealModel breakfastGenerated = mealManagementService.generateMeal("breakfast");
+                MealModel breakfastGenerated = mealManagementService.generateMeal("breakfast", token);
                 mealsForDay.add(breakfastGenerated);
             } else {
                 mealsForDay.add(breakfast.get());
             }
             if (!lunch.isPresent()) {
-                MealModel lunchGenerated = mealManagementService.generateMeal("lunch");
+                MealModel lunchGenerated = mealManagementService.generateMeal("lunch", token);
                 mealsForDay.add(lunchGenerated);
             } else {
                 mealsForDay.add(lunch.get());
             }
             if (!dinner.isPresent()) {
-                MealModel dinnerGenerated = mealManagementService.generateMeal("dinner");
+                MealModel dinnerGenerated = mealManagementService.generateMeal("dinner", token);
                 mealsForDay.add(dinnerGenerated);
             } else {
                 mealsForDay.add(dinner.get());
@@ -80,11 +79,6 @@ public class MealManagementController {
         }
 
         return ResponseEntity.ok(mealsForDay);
-    }
-
-    @GetMapping("/getMeal")
-    public String meal() throws JsonMappingException, JsonProcessingException {
-        return mealManagementService.generateMeal();
     }
 
     public static JsonNode findMealSegment(JsonNode jsonNode, String mealType) {
@@ -129,7 +123,7 @@ public class MealManagementController {
             returnedMeal = mealDatabaseService.replaceMeal(request, replacementMeal.get(), token);
         } else {
             // If there is no replacement, generate a new meal
-            MealModel newMeal = mealManagementService.generateMeal(request.getType());
+            MealModel newMeal = mealManagementService.generateMeal(request.getType(), token);
             returnedMeal = mealDatabaseService.replaceMeal(request, newMeal, token);
         }
 

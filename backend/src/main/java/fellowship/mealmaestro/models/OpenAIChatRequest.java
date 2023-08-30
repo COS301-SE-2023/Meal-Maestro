@@ -1,5 +1,6 @@
 package fellowship.mealmaestro.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OpenAIChatRequest {
@@ -11,6 +12,7 @@ public class OpenAIChatRequest {
     public OpenAIChatRequest() {
         this.temperature = 0.5;
         this.max_tokens = 800;
+        this.messages = new ArrayList<>();
     }
 
     public OpenAIChatRequest(String model, List<Message> messages) {
@@ -55,6 +57,9 @@ public class OpenAIChatRequest {
     public static class Message {
         private String role;
         private String text;
+
+        public Message() {
+        }
 
         public Message(String role, String text) {
             this.role = role;
