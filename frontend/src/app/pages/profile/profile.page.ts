@@ -20,6 +20,7 @@ import { AuthenticationService } from '../../services/services';
 })
 
 export class ProfilePage implements OnInit {
+
   constructor(
     private router: Router,
     private pickerController: PickerController,
@@ -227,23 +228,15 @@ export class ProfilePage implements OnInit {
             this.displaying_Macroratio = this.getDisplayMacroratio();
             this.updateDisplayData();
 
-            this.initialshoppinginterval = this.userpreferences.shoppingInterval;
-            this.initialpreference = this.userpreferences.foodPreferences;
-            this.initialcalorie = this.userpreferences.calorieAmount;
-            this.initialbudget = this.userpreferences.budgetRange;
-            this.initialmacro = this.userpreferences.macroRatio;
-            this.initialallergies = this.userpreferences.allergies;
-            this.initialcooking = this.userpreferences.cookingTime;
-            this.initialBMI = this.userpreferences.userBMI;
-            this.initialshoppingintervalToggle = this.userpreferences.shoppingIntervalSet;
-            this.initialpreferenceToggle = this.userpreferences.foodPreferenceSet;
-            this.initialcalorieToggle = this.userpreferences.calorieSet;
-            this.initialbudgetToggle = this.userpreferences.budgetSet;
-            this.initialmacroToggle = this.userpreferences.macroSet;
-            this.initialallergiesToggle = this.userpreferences.allergiesSet;
-            this.initialcookingToggle = this.userpreferences.cookingTimeSet;
-            this.initialBMIToggle = this.userpreferences.bmiset;
-
+            this.setInitialAllergies()
+            this.setInitialBMI()
+            this.setInitialBudget()
+            this.setInitialCalorie()
+            this.setInitialCooking()
+            this.setIntialPreference()
+            this.setInitialMacro()
+            this.setInitialShopping()
+            this.setInitialBMI();
 
           }
                   }
@@ -323,6 +316,7 @@ export class ProfilePage implements OnInit {
       this.displayPreferences = '';
       this.isPreferencesModalOpen = isOpen;
     }
+    this.setIntialPreference();
     this.updateSettingsOnServer();
   }
 
@@ -384,7 +378,9 @@ export class ProfilePage implements OnInit {
       this.userpreferences.calorieAmount = '';
       this.isCalorieModalOpen = isOpen;
     }
+    this.setInitialCalorie();
     this.updateSettingsOnServer();
+    
   }
 
   calorieAmount_Toggle() {
@@ -414,6 +410,7 @@ export class ProfilePage implements OnInit {
       this.userpreferences.budgetRange = '';
       this.isBudgetModalOpen = isOpen;
     }
+    this.setInitialBudget();
     this.updateSettingsOnServer();
   }
 
@@ -509,6 +506,7 @@ export class ProfilePage implements OnInit {
       this.displaying_Macroratio = '';
       this.isMacroModalOpen = isOpen;
     }
+    this.setInitialMacro();
     this.updateSettingsOnServer();
   }
   macro_Toggle() {
@@ -536,6 +534,7 @@ export class ProfilePage implements OnInit {
       this.displayAllergies = '';
       this.isAllergiesModalOpen = isOpen;
     }
+    this.setInitialAllergies();
     this.updateSettingsOnServer();
   }
   allergies_Toggle() {
@@ -587,6 +586,7 @@ export class ProfilePage implements OnInit {
       this.userpreferences.cookingTime = '';
       this.isCookingModalOpen = isOpen;
     }
+    this.setInitialCooking();
     this.updateSettingsOnServer();
   }
   cookingtime_Toggle() {
@@ -610,8 +610,10 @@ export class ProfilePage implements OnInit {
       this.userpreferences.userWeight = 0;
       this.userpreferences.userBMI = '';
       this.isBMIModalOpen = isOpen;
-      this.updateSettingsOnServer();
-    }  
+     }
+    this.setInitialBMI();
+    this.updateSettingsOnServer();
+    
 }
 
   BMI_Toggle() {
@@ -649,7 +651,7 @@ export class ProfilePage implements OnInit {
       this.userpreferences.shoppingInterval = '';
       this.isShoppingModalOpen = isOpen;
     }
-
+    this.setInitialShopping();
     this.updateSettingsOnServer();
   }
 
@@ -787,6 +789,56 @@ calculateBMI() {
         this.userpreferences.userHeight*this.userpreferences.userHeight);
  }
 
+
+ setInitialShopping()
+ {
+    this.initialshoppinginterval = this.userpreferences.shoppingInterval;
+    this.initialshoppingintervalToggle = this.userpreferences.shoppingIntervalSet;
+ }
+
+ setIntialPreference()
+  {
+    this.initialpreference = this.userpreferences.foodPreferences;
+    this.initialpreferenceToggle = this.userpreferences.foodPreferenceSet;
+  }
+
+  setInitialCalorie()
+  {
+    this.initialcalorie = this.userpreferences.calorieAmount;
+    this.initialcalorieToggle = this.userpreferences.calorieSet;
+  }
+
+  setInitialBudget()
+  {
+    this.initialbudget = this.userpreferences.budgetRange;
+    this.initialbudgetToggle = this.userpreferences.budgetSet;
+  }
+
+  setInitialMacro()
+  {
+    this.initialmacro = this.userpreferences.macroRatio;
+    this.initialmacroToggle = this.userpreferences.macroSet;
+  }
+
+  setInitialAllergies()
+  {
+    this.initialallergies = this.userpreferences.allergies;
+    this.initialallergiesToggle = this.userpreferences.allergiesSet;
+  }
+
+  setInitialCooking()
+  {
+    this.initialcooking = this.userpreferences.cookingTime;
+    this.initialcookingToggle = this.userpreferences.cookingTimeSet;
+  }
+
+  setInitialBMI()
+  {
+    this.initialBMI = this.userpreferences.userBMI;
+    this.initialBMIToggle = this.userpreferences.bmiset;
+  }
+
+
  resetShopping()
 {
  
@@ -861,4 +913,12 @@ resetBMI()
   this.BMIToggle = this.initialBMIToggle;
 }
 
+disabledConfirmShopping() {
+  if (this.shoppingintervalToggle === true && this.shoppingInterval === '') {
+    return false;
+  } else if (this.shoppingintervalToggle === false ) {
+    return true;
+  } 
+  return false;
+}
 }

@@ -46,7 +46,7 @@
             <ion-button (click)="setOpenShopping(false)">Cancel</ion-button>
           </ion-buttons>
           <ion-buttons slot="end">
-            <ion-button (click)="setOpenShoppingSave(false)" [strong]="true">Confirm</ion-button>
+            <ion-button [disabled]="disabledConfirmShopping()" (click)="setOpenShoppingSave(false)" [strong]="true">Confirm</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
