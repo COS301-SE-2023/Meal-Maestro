@@ -623,8 +623,13 @@ export class ProfilePage implements OnInit {
   }
 
   setOpenShopping(isOpen: boolean) {
+    if (isOpen === false) {
     this.resetShopping();
     this.isShoppingModalOpen = isOpen;
+    }
+    else if (isOpen === true) {
+    this.isShoppingModalOpen = isOpen;
+    }
   }
 
   setOpenShoppingSave(isOpen: boolean) {
@@ -780,7 +785,9 @@ calculateBMI() {
 
  resetShopping()
 {
+ 
   this.userpreferences.shoppingInterval = this.initialshoppinginterval;
+  this.shoppingintervalToggle = this.initialshoppingintervalToggle;
   this.userpreferences.shoppingIntervalSet = this.initialshoppingintervalToggle;
   this.shoppingInterval = this.initialshoppinginterval;
 }
@@ -789,6 +796,7 @@ resetPreference()
 {
   this.userpreferences.foodPreferences = this.initialpreference;
   this.userpreferences.foodPreferenceSet = this.initialpreferenceToggle;
+  this.preferenceToggle = this.initialpreferenceToggle;
   this.displayPreferences = this.initialpreference;
 
 }
@@ -796,6 +804,7 @@ resetPreference()
 resetCalorie()
 {
   this.userpreferences.calorieAmount = this.initialcalorie;
+  this.calorieToggle = this.initialcalorieToggle;
   this.userpreferences.calorieSet = this.initialcalorieToggle;
 }
 
@@ -803,6 +812,7 @@ resetBudget()
 {
   this.userpreferences.budgetRange = this.initialbudget;
   this.userpreferences.budgetSet = this.initialbudgetToggle;
+  this.budgetToggle = this.initialbudgetToggle;
   this.selectedPriceRange = this.initialbudget;
 }
 
@@ -810,6 +820,7 @@ resetMacro()
 {
   this.userpreferences.macroRatio = this.initialmacro;
   this.userpreferences.macroSet = this.initialmacroToggle;
+  this.macroToggle = this.initialmacroToggle;
   this.displaying_Macroratio = this.getDisplayMacroratio();
 }
 
@@ -817,6 +828,7 @@ resetAllergies()
 {
   this.userpreferences.allergies = this.initialallergies;
   this.userpreferences.allergiesSet = this.initialallergiesToggle;
+  this.allergiesToggle = this.initialallergiesToggle;
   this.displayAllergies = this.initialallergies;
 }
 
@@ -824,12 +836,14 @@ resetCooking()
 {
   this.userpreferences.cookingTime = this.initialcooking;
   this.userpreferences.cookingTimeSet = this.initialcookingToggle;
+  this.cookingToggle = this.initialcookingToggle;
 }
 
 resetBMI()
 {
   this.userpreferences.userBMI = this.initialBMI;
   this.userpreferences.bmiset = this.initialBMIToggle;
+  this.BMIToggle = this.initialBMIToggle;
 }
 
 }
