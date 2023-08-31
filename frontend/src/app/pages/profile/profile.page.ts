@@ -92,7 +92,7 @@ export class ProfilePage implements OnInit {
   isBMIModalOpen: boolean = false;
   isShoppingModalOpen: boolean = false;
 
-  //
+  //toggle logic
   shoppingintervalToggle: boolean = false;
   preferenceToggle: boolean = false;
   calorieToggle: boolean = false;
@@ -101,6 +101,29 @@ export class ProfilePage implements OnInit {
   allergiesToggle: boolean = false;
   cookingToggle: boolean = false;
   BMIToggle: boolean = false;
+
+  
+
+  //reset logic for cancel button
+  initialshoppinginterval : string | any;
+  initialpreference : string | any;
+  initialcalorie : number | any;
+  initialbudget : string | any;
+  initialmacro : any;
+  initialallergies : string | any;
+  initialcooking : string | any;
+  initialBMI : number | any;
+  initialshoppingintervalToggle : boolean | any;
+  initialpreferenceToggle : boolean | any;
+  initialcalorieToggle : boolean | any;
+  initialbudgetToggle : boolean | any;
+  initialmacroToggle : boolean | any;
+  initialallergiesToggle : boolean | any;
+  initialcookingToggle : boolean | any;
+  initialBMIToggle : boolean | any;
+
+
+
 
   ngOnInit() {
     this.loadUserSettings();
@@ -204,6 +227,25 @@ export class ProfilePage implements OnInit {
             
             this.displaying_Macroratio = this.getDisplayMacroratio();
             this.updateDisplayData();
+
+            this.initialshoppinginterval = this.userpreferences.shoppingInterval;
+            this.initialpreference = this.userpreferences.foodPreferences;
+            this.initialcalorie = this.userpreferences.calorieAmount;
+            this.initialbudget = this.userpreferences.budgetRange;
+            this.initialmacro = this.userpreferences.macroRatio;
+            this.initialallergies = this.userpreferences.allergies;
+            this.initialcooking = this.userpreferences.cookingTime;
+            this.initialBMI = this.userpreferences.userBMI;
+            this.initialshoppingintervalToggle = this.userpreferences.shoppingIntervalSet;
+            this.initialpreferenceToggle = this.userpreferences.foodPreferenceSet;
+            this.initialcalorieToggle = this.userpreferences.calorieSet;
+            this.initialbudgetToggle = this.userpreferences.budgetSet;
+            this.initialmacroToggle = this.userpreferences.macroSet;
+            this.initialallergiesToggle = this.userpreferences.allergiesSet;
+            this.initialcookingToggle = this.userpreferences.cookingTimeSet;
+            this.initialBMIToggle = this.userpreferences.bmiset;
+
+
           }
                   }
       },
@@ -264,6 +306,7 @@ export class ProfilePage implements OnInit {
 
   setOpenPreferences(isOpen: boolean) {
     this.isPreferencesModalOpen = isOpen;
+    this.resetPreference();
   }
 
   setOpenPreferencesSave(isOpen: boolean) {
@@ -330,6 +373,7 @@ export class ProfilePage implements OnInit {
 
   setOpenCalorie(isOpen: boolean) {
     this.isCalorieModalOpen = isOpen;
+    this.resetCalorie();
   }
 
   setOpenCalorieSave(isOpen: boolean) {
@@ -357,6 +401,7 @@ export class ProfilePage implements OnInit {
 
   setOpenBudget(isOpen: boolean) {
     this.isBudgetModalOpen = isOpen;
+    this.resetBudget();
   }
 
   setOpenBudgetSave(isOpen: boolean) {
@@ -450,6 +495,7 @@ export class ProfilePage implements OnInit {
   }
   setOpenMacro(isOpen: boolean) {
     this.isMacroModalOpen = isOpen;
+    this.resetMacro();
   }
   setOpenMacroSave(isOpen: boolean) {
 
@@ -471,10 +517,10 @@ export class ProfilePage implements OnInit {
   }
   macro_Toggle() {
     this.userpreferences.macroSet = !this.userpreferences.macroSet;
-
   }
   setOpenAllergies(isOpen: boolean) {
     this.isAllergiesModalOpen = isOpen;
+    this.resetAllergies();
   }
   setOpenAllergiesSave(isOpen: boolean) {
     if (this.userpreferences.allergiesSet === true) {
@@ -535,6 +581,7 @@ export class ProfilePage implements OnInit {
   }
   }
   setOpenCooking(isOpen: boolean) {
+    this.resetCooking();
     this.isCookingModalOpen = isOpen;
   }
   setOpenCookingSave(isOpen: boolean) {
@@ -550,6 +597,7 @@ export class ProfilePage implements OnInit {
     this.userpreferences.cookingTimeSet = !this.userpreferences.cookingTimeSet;
   }
   setOpenBMI(isOpen: boolean) {
+    this.resetBMI();
     this.isBMIModalOpen = isOpen;
   }
   setOpenBMISave(isOpen: boolean) {
@@ -575,6 +623,7 @@ export class ProfilePage implements OnInit {
   }
 
   setOpenShopping(isOpen: boolean) {
+    this.resetShopping();
     this.isShoppingModalOpen = isOpen;
   }
 
@@ -728,4 +777,59 @@ calculateBMI() {
     this.userpreferences.userBMI = Math.round(this.userpreferences.userWeight /
         this.userpreferences.userHeight*this.userpreferences.userHeight);
  }
+
+ resetShopping()
+{
+  this.userpreferences.shoppingInterval = this.initialshoppinginterval;
+  this.userpreferences.shoppingIntervalSet = this.initialshoppingintervalToggle;
+  this.shoppingInterval = this.initialshoppinginterval;
+}
+
+resetPreference()
+{
+  this.userpreferences.foodPreferences = this.initialpreference;
+  this.userpreferences.foodPreferenceSet = this.initialpreferenceToggle;
+  this.displayPreferences = this.initialpreference;
+
+}
+
+resetCalorie()
+{
+  this.userpreferences.calorieAmount = this.initialcalorie;
+  this.userpreferences.calorieSet = this.initialcalorieToggle;
+}
+
+resetBudget()
+{
+  this.userpreferences.budgetRange = this.initialbudget;
+  this.userpreferences.budgetSet = this.initialbudgetToggle;
+  this.selectedPriceRange = this.initialbudget;
+}
+
+resetMacro()
+{
+  this.userpreferences.macroRatio = this.initialmacro;
+  this.userpreferences.macroSet = this.initialmacroToggle;
+  this.displaying_Macroratio = this.getDisplayMacroratio();
+}
+
+resetAllergies()
+{
+  this.userpreferences.allergies = this.initialallergies;
+  this.userpreferences.allergiesSet = this.initialallergiesToggle;
+  this.displayAllergies = this.initialallergies;
+}
+
+resetCooking()
+{
+  this.userpreferences.cookingTime = this.initialcooking;
+  this.userpreferences.cookingTimeSet = this.initialcookingToggle;
+}
+
+resetBMI()
+{
+  this.userpreferences.userBMI = this.initialBMI;
+  this.userpreferences.bmiset = this.initialBMIToggle;
+}
+
 }
