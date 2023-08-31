@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import fellowship.mealmaestro.models.DateModel;
 import fellowship.mealmaestro.models.MealModel;
+import fellowship.mealmaestro.models.RegenerateMealRequest;
 import fellowship.mealmaestro.services.MealDatabaseService;
 import fellowship.mealmaestro.services.MealManagementService;
 import jakarta.validation.Valid;
@@ -112,22 +113,23 @@ public class MealManagementController {
     }
 
     @PostMapping("/regenerate")
-    public ResponseEntity<MealModel> regenerate(@RequestBody MealModel request,
+    public ResponseEntity<MealModel> regenerate(@RequestBody RegenerateMealRequest request,
             @RequestHeader("Authorization") String token)
             throws JsonMappingException, JsonProcessingException {
 
         token = token.substring(7);
 
-        System.out.println(request.getName());
+        System.out.println(request.getMeal().getName());
         // Try find an appropriate meal in the database
-        Optional<MealModel> replacementMeal = mealDatabaseService.findMealTypeForUser(request.getType(), token);
+        Optional<MealModel> replacementMeal = mealDatabaseService.findMealTypeForUser(request.getMeal().getType(),
+                token);
         MealModel returnedMeal = null;
 
         if (replacementMeal.isPresent()) {
             returnedMeal = mealDatabaseService.replaceMeal(request, replacementMeal.get(), token);
         } else {
             // If there is no replacement, generate a new meal
-            MealModel newMeal = mealManagementService.generateMeal(request.getType(), token);
+            MealModel newMeal = mealManagementService.generateMeal(request.getMeal().getType(), token);
             returnedMeal = mealDatabaseService.replaceMeal(request, newMeal, token);
         }
 

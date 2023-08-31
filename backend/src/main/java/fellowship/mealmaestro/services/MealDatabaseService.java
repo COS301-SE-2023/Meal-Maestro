@@ -9,9 +9,11 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fellowship.mealmaestro.models.FoodModel;
 import fellowship.mealmaestro.models.MealModel;
+import fellowship.mealmaestro.models.RegenerateMealRequest;
 import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.models.relationships.HasMeal;
 import fellowship.mealmaestro.repositories.MealRepository;
@@ -29,6 +31,7 @@ public class MealDatabaseService {
     @Autowired
     private UserRepository userRepository;
 
+    @Transactional
     public List<MealModel> saveMeals(List<MealModel> mealsToSave, LocalDate date, String token)
             throws IllegalArgumentException {
 
@@ -149,21 +152,25 @@ public class MealDatabaseService {
         return true;
     }
 
-    public MealModel replaceMeal(MealModel oldMeal, MealModel newMeal, String token) {
+    @Transactional
+    public MealModel replaceMeal(RegenerateMealRequest request, MealModel newMeal, String token) {
         String email = jwtService.extractUserEmail(token);
 
         UserModel user = userRepository.findByEmail(email).get();
+        MealModel oldMeal = request.getMeal();
+        LocalDate date = request.getDate();
 
         List<HasMeal> meals = user.getMeals();
 
         for (HasMeal meal : meals) {
-            System.out.println(meal.getMeal().getName() + " " + oldMeal.getName());
-            if (meal.getMeal().getName().equals(oldMeal.getName())) {
-                meal.setMeal(newMeal);
-                break;
+            if (meal.getDate().equals(date)) {
+                System.out.println("Old meal date: " + date + " New meal date: " + meal.getDate());
+                if (meal.getMeal().getName().equals(oldMeal.getName())) {
+                    userRepository.replaceMeal(date, oldMeal.getName(), newMeal.getName(), email);
+                    break;
+                }
             }
         }
-
         userRepository.save(user);
 
         return newMeal;

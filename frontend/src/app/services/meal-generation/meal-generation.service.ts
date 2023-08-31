@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { MealI } from '../../models/interfaces';
+import { MealI, RegenerateMealRequestI } from '../../models/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -37,10 +37,17 @@ export class MealGenerationService {
   //     })
   //   );
   // }
-  regenerate(meal: MealI): Observable<HttpResponse<MealI>> {
-    return this.http.post<MealI>(this.url + '/regenerate', meal, {
-      observe: 'response',
-    });
+  regenerate(request: RegenerateMealRequestI): Observable<HttpResponse<MealI>> {
+    return this.http.post<MealI>(
+      this.url + '/regenerate',
+      {
+        meal: request.meal,
+        date: request.mealDate?.toISOString().split('T')[0],
+      },
+      {
+        observe: 'response',
+      }
+    );
   }
 
   // Helper function to get the headers (if needed)

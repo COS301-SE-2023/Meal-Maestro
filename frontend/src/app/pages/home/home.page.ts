@@ -84,13 +84,15 @@ export class HomePage implements OnInit {
                 breakfast: undefined,
                 lunch: undefined,
                 dinner: undefined,
+                mealDay: undefined,
                 mealDate: undefined,
               };
               this.isLoading = false;
               mealsForDay.breakfast = data.body[0];
               mealsForDay.lunch = data.body[1];
               mealsForDay.dinner = data.body[2];
-              mealsForDay.mealDate = this.getDayOfWeek(index);
+              mealsForDay.mealDay = this.getDayOfWeek(index);
+              mealsForDay.mealDate = date;
               this.daysMeals.push(mealsForDay);
               resolve();
             }

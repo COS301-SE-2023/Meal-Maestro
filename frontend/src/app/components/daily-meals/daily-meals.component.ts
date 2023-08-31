@@ -5,7 +5,11 @@ import { Router } from '@angular/router';
 import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
 import { DaysMealsI } from '../../models/daysMeals.model';
 import { ErrorHandlerService } from '../../services/services';
-import { MealI, RecipeItemI } from '../../models/interfaces';
+import {
+  MealI,
+  RecipeItemI,
+  RegenerateMealRequestI,
+} from '../../models/interfaces';
 import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
 
 @Component({
@@ -19,10 +23,8 @@ export class DailyMealsComponent implements OnInit {
   breakfast: string = 'breakfast';
   lunch: string = 'lunch';
   dinner: string = 'dinner';
-  mealDate: string | undefined;
-  // @Input() todayData!: MealI[];
+  mealDay: string | undefined;
   @Input() dayData!: DaysMealsI;
-  // daysMeals: DaysMealsI[] = [];
   isBreakfastModalOpen = false;
   isLunchModalOpen = false;
   isDinnerModalOpen = false;
@@ -68,12 +70,17 @@ export class DailyMealsComponent implements OnInit {
     this.addService.setRecipeItem(recipe);
   }
 
-  async handleRegenerate(meal: MealI | undefined) {
+  async handleRegenerate(meal: MealI | undefined, mealDate: Date | undefined) {
     // Function to handle the "Sync" option action
     console.log(meal);
     // Add your custom logic here
-    if (meal) {
-      this.mealGenerationservice.regenerate(meal).subscribe({
+    if (meal && mealDate) {
+      let regenRequest: RegenerateMealRequestI = {
+        meal: meal,
+        mealDate: mealDate,
+      };
+
+      this.mealGenerationservice.regenerate(regenRequest).subscribe({
         next: (data) => {
           if (data.body) {
             console.log(data.body);

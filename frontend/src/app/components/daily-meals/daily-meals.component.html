@@ -3,7 +3,7 @@
     <div class="label-container">
       <ion-item *ngIf="dayData">
         <!-- Rest of the code -->
-        <ion-label>{{ dayData.mealDate }}</ion-label>
+        <ion-label>{{ dayData.mealDay }}</ion-label>
       </ion-item>
 
       <span class="line"></span>
@@ -60,11 +60,15 @@
         </ion-item>
         <ion-item-options
           side="end"
-          (ionSwipe)="handleRegenerate(this.dayData.breakfast)"
+          (ionSwipe)="
+            handleRegenerate(this.dayData.breakfast, this.dayData.mealDate)
+          "
         >
           <ion-item-option
             color="danger"
-            (click)="handleRegenerate(this.dayData.breakfast)"
+            (click)="
+              handleRegenerate(this.dayData.breakfast, this.dayData.mealDate)
+            "
             expandable
           >
             <ion-icon slot="icon-only" name="sync-outline"></ion-icon>
@@ -135,11 +139,11 @@
         </ion-item>
         <ion-item-options
           side="end"
-          (ionSwipe)="handleRegenerate(dayData.lunch)"
+          (ionSwipe)="handleRegenerate(dayData.lunch, this.dayData.mealDate)"
         >
           <ion-item-option
             color="danger"
-            (click)="handleRegenerate(dayData.lunch)"
+            (click)="handleRegenerate(dayData.lunch, this.dayData.mealDate)"
             expandable
           >
             <ion-icon slot="icon-only" name="sync-outline"></ion-icon>
@@ -209,11 +213,11 @@
         </ion-item>
         <ion-item-options
           side="end"
-          (ionSwipe)="handleRegenerate(dayData.dinner)"
+          (ionSwipe)="handleRegenerate(dayData.dinner, this.dayData.mealDate)"
         >
           <ion-item-option
             color="danger"
-            (click)="handleRegenerate(dayData.dinner)"
+            (click)="handleRegenerate(dayData.dinner, this.dayData.mealDate)"
             expandable
           >
             <ion-icon slot="icon-only" name="sync-outline"></ion-icon>
