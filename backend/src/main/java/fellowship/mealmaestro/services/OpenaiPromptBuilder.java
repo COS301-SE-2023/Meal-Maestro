@@ -162,7 +162,11 @@ public class OpenaiPromptBuilder {
         }
 
         userMessage.setRole("user");
-        userMessage.setContent("I want to cook a " + type + " meal. " + pantryFoods + ". " + settings);
+        if (random < 0.5) {
+            userMessage.setContent("I want to cook a " + type + " meal. " + pantryFoods + ". " + settings);
+        } else {
+            userMessage.setContent("I want to cook a " + type + " meal. " + settings + ". " + pantryFoods);
+        }
 
         return userMessage;
     }
