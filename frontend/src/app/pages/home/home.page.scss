@@ -31,9 +31,19 @@ ion-card {
   }
 }
 
-.loading-gif {
+#svg-container {
+  width: 90%;
+  scale: 0.8;
   position: absolute;
-  top: 40%;
-  left: 25%;
-  z-index: 9999;
+  top: 30%;
+  left: 5%;
+}
+
+.fade-out {
+  opacity: 1;
+  transition: opacity 0.2s ease-out;
+}
+
+.fade-out.ng-hide {
+  opacity: 0;
 }

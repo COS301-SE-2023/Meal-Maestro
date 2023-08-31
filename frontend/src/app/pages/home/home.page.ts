@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { DailyMealsComponent } from '../../components/daily-meals/daily-meals.component';
 import { DaysMealsI } from '../../models/daysMeals.model';
@@ -16,45 +16,38 @@ import { CommonModule } from '@angular/common';
 })
 export class HomePage implements OnInit {
   daysMeals: DaysMealsI[] = [];
+  isLoading = true;
   constructor(
     public r: Router,
+    private renderer: Renderer2,
+    private el: ElementRef,
     private mealGenerationservice: MealGenerationService,
     private errorHandlerService: ErrorHandlerService
   ) {}
 
   async ngOnInit() {
-    let date = new Date();
-    for (let index = 0; index < 3; index++) {
-      await new Promise<void>((resolve, reject) => {
-        this.mealGenerationservice.getDailyMeals(date).subscribe({
-          next: (data) => {
-            if (data.body) {
-              let mealsForDay: DaysMealsI = {
-                breakfast: undefined,
-                lunch: undefined,
-                dinner: undefined,
-                mealDate: undefined,
-              };
-              mealsForDay.breakfast = data.body[0];
-              mealsForDay.lunch = data.body[1];
-              mealsForDay.dinner = data.body[2];
-              mealsForDay.mealDate = this.getDayOfWeek(index);
-              this.daysMeals.push(mealsForDay);
-              resolve();
-            }
-          },
-          error: (err) => {
-            this.errorHandlerService.presentErrorToast(
-              'Error loading meal items',
-              err
-            );
-            reject();
-          },
-        });
+    fetch('assets/burger.svg')
+      .then((response) => response.text())
+      .then((svg) => {
+        this.renderer.setProperty(
+          this.el.nativeElement.querySelector('#svg-container'),
+          'innerHTML',
+          svg
+        );
+        return fetch('assets/burger.js');
+      })
+      .then((response) => response.text())
+      .then((js) => {
+        const script = this.renderer.createElement('script');
+        script.type = 'text/javascript';
+        script.innerHTML = js;
+        this.renderer.appendChild(
+          this.el.nativeElement.querySelector('#svg-container'),
+          script
+        );
       });
-      date = this.addDays(date, 1);
-    }
-    console.log(this.daysMeals);
+
+    await this.getMeals();
   }
 
   private getDayOfWeek(dayOffset: number): string {
@@ -78,5 +71,42 @@ export class HomePage implements OnInit {
     const result = new Date(date);
     result.setDate(result.getDate() + days);
     return result;
+  }
+
+  async getMeals() {
+    let date = new Date();
+    for (let index = 0; index < 3; index++) {
+      await new Promise<void>((resolve, reject) => {
+        this.mealGenerationservice.getDailyMeals(date).subscribe({
+          next: (data) => {
+            if (data.body) {
+              let mealsForDay: DaysMealsI = {
+                breakfast: undefined,
+                lunch: undefined,
+                dinner: undefined,
+                mealDate: undefined,
+              };
+              this.isLoading = false;
+              mealsForDay.breakfast = data.body[0];
+              mealsForDay.lunch = data.body[1];
+              mealsForDay.dinner = data.body[2];
+              mealsForDay.mealDate = this.getDayOfWeek(index);
+              this.daysMeals.push(mealsForDay);
+              resolve();
+            }
+          },
+          error: (err) => {
+            this.errorHandlerService.presentErrorToast(
+              'Error loading meal items',
+              err
+            );
+            this.isLoading = false;
+            reject();
+          },
+        });
+      });
+      date = this.addDays(date, 1);
+    }
+    console.log(this.daysMeals);
   }
 }
