@@ -26,7 +26,7 @@ export class ProfilePage implements OnInit {
     private settingsApiService: SettingsApiService,
     private auth: AuthenticationService
   ) {
-    this.selectedPriceRange = '';
+   
   }
   // User data
   user: UserI = {
@@ -65,7 +65,7 @@ export class ProfilePage implements OnInit {
   displayAllergies: string[] | string = '';
   displayPreferences: string[] | string = '' ;
   selectedPreferences: string | any;
-  selectedPriceRange: string;
+  selectedPriceRange: string | any;
 
   // Check if possible to change
   preferences = {
@@ -102,8 +102,6 @@ export class ProfilePage implements OnInit {
   cookingToggle: boolean = false;
   BMIToggle: boolean = false;
 
-  
-
   //reset logic for cancel button
   initialshoppinginterval : string | any;
   initialpreference : string | any;
@@ -121,9 +119,6 @@ export class ProfilePage implements OnInit {
   initialallergiesToggle : boolean | any;
   initialcookingToggle : boolean | any;
   initialBMIToggle : boolean | any;
-
-
-
 
   ngOnInit() {
     this.loadUserSettings();
@@ -160,13 +155,13 @@ export class ProfilePage implements OnInit {
               this.shoppingInterval = response.body.shoppingInterval;
             }
             else if (response.body.shoppingInterval.includes("days")) {
-              this.userpreferences.shoppingInterval = "other";  // This will activate the "Other..." radio button
+              this.userpreferences.shoppingInterval = "other";  
               this.shoppingIntervalOtherValue = response.body.shoppingInterval;
             }
             else {
               this.userpreferences.shoppingIntervalSet = false;
               this.userpreferences.shoppingInterval = '';
-              this.shoppingInterval = '';  // Resetting the radio group
+              this.shoppingInterval = ''; 
             }
 
           
@@ -178,13 +173,22 @@ export class ProfilePage implements OnInit {
             {
             this.userpreferences.calorieAmount = response.body.calorieAmount;
             }
-            this.userpreferences.budgetRange = response.body.budgetRange;
+
+            console.log("budget")
+            console.log(response.body.budgetRange)
+            if (response.body.budgetRange.includes("R")) {
+              this.userpreferences.budgetRange = response.body.budgetRange;
+              this.selectedPriceRange = "custom";
+            }
+            else
+            {
+              this.userpreferences.budgetRange = response.body.budgetRange;
+              this.selectedPriceRange = response.body.budgetRange;
+            }
             this.userpreferences.allergies = response.body.allergies;
             this.userpreferences.cookingTime = response.body.cookingTime;
             this.userpreferences.userHeight = response.body.userHeight;
             this.userpreferences.userWeight = response.body.userWeight;
-            console.log(" userbmi")
-            console.log(response.body.userBMI)
             if (response.body.userBMI == 0) {
               this.userpreferences.userBMI = '';
             }
@@ -193,20 +197,16 @@ export class ProfilePage implements OnInit {
             this.userpreferences.bmiset = response.body.bmiset;
             this.userpreferences.cookingTimeSet = response.body.cookingTimeSet;
             this.userpreferences.allergiesSet = response.body.allergiesSet;
-            console.log(response.body.macroRatio.protein)
             if (response.body.macroRatio.protein > 0 && response.body.macroRatio.carbs > 0 && response.body.macroRatio.fat > 0 && response.body.macroSet === true)
             {
-              console.log("its true")
               this.userpreferences.macroSet = true;
             }
             else if (response.body.macroRatio.protein === 0 || response.body.macroRatio.carbs === 0 || response.body.macroRatio.fat === 0 || response.body.macroSet === false)
            {
-            console.log("here")
                 this.userpreferences.macroSet = false;
             }
             this.userpreferences.budgetSet = response.body.budgetSet;
             this.userpreferences.calorieSet = response.body.calorieSet;
-          //  this.userpreferences.foodPreferenceSet = response.body.foodPreferenceSet;
             this.userpreferences.shoppingIntervalSet = response.body.shoppingIntervalSet;
             this.userpreferences.macroRatio.fat = response.body.macroRatio.fat;
             this.userpreferences.macroRatio.carbs = response.body.macroRatio.carbs;
@@ -215,7 +215,6 @@ export class ProfilePage implements OnInit {
             this.displayAllergies = this.userpreferences.allergies;
 
             this.shoppingintervalToggle = this.userpreferences.shoppingIntervalSet;
-           // this.preferenceToggle = this.userpreferences.foodPreferenceSet;
             this.calorieToggle = this.userpreferences.calorieSet;
             this.budgetToggle = this.userpreferences.budgetSet;
            
@@ -223,7 +222,7 @@ export class ProfilePage implements OnInit {
             this.cookingToggle = this.userpreferences.cookingTimeSet;
             this.BMIToggle = this.userpreferences.bmiset;
             this.shoppingInterval = this.userpreferences.shoppingInterval;
-            this.selectedPriceRange = this.userpreferences.budgetRange;
+            
             
             this.displaying_Macroratio = this.getDisplayMacroratio();
             this.updateDisplayData();
@@ -277,8 +276,6 @@ export class ProfilePage implements OnInit {
 
     console.log(this.userpreferences)
 
-  
-    
     this.settingsApiService.updateSettings(this.userpreferences).subscribe(
       (response) => {
         if (response.status === 200) {
@@ -292,7 +289,6 @@ export class ProfilePage implements OnInit {
       }
     );
   }
-
   // Function to navigate to account-profile page
   navToProfile() {
     this.router.navigate(['acc-profile']);
@@ -722,13 +718,21 @@ getDisplayOtherShoppingInterval() {
       this.userpreferences.calorieSet = true;
       }
 
-    if (this.userpreferences.budgetRange != '') {
+      console.log("budgetupdatedisplay")
+      console.log(this.userpreferences.budgetRange)
+    if (this.userpreferences.budgetRange.includes("R")) {
+        this.budgetToggle = true
+        this.selectedPriceRange = "custom";
+        this.userpreferences.budgetSet = true;
+        console.log("budget- custom")
+    }
+    else if (!this.userpreferences.budgetRange.includes("R")) {
         this.budgetToggle = true
         this.selectedPriceRange = this.userpreferences.budgetRange;
         this.userpreferences.budgetSet = true;
+        console.log("budget- not custom")
       }
 
-    
 
     if (this.userpreferences.allergies != null && this.userpreferences.allergies.length != 0) {
         this.allergiesToggle = true
@@ -810,10 +814,21 @@ resetCalorie()
 
 resetBudget()
 {
-  this.userpreferences.budgetRange = this.initialbudget;
-  this.userpreferences.budgetSet = this.initialbudgetToggle;
+  console.log("resetbudget")
+  if (this.initialbudget.includes("R") && this.initialbudgetToggle === true) {
+   this.userpreferences.budgetRange = this.initialbudget;
+   this.selectedPriceRange = "custom";
+   this.userpreferences.budgetSet = this.initialbudgetToggle;
+   this.budgetToggle = this.initialbudgetToggle;
+  }
+  else if (!this.initialbudget.includes("R") && this.initialbudgetToggle === true)
+  {
+    this.userpreferences.budgetRange = this.initialbudget;
+    this.selectedPriceRange = this.initialbudget;
+    this.userpreferences.budgetSet = this.initialbudgetToggle;
   this.budgetToggle = this.initialbudgetToggle;
-  this.selectedPriceRange = this.initialbudget;
+  }
+  
 }
 
 resetMacro()
