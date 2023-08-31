@@ -3,6 +3,7 @@ package fellowship.mealmaestro.services;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -130,16 +131,32 @@ public class OpenaiPromptBuilder {
         String pantryFoods = user.getPantry().toString();
         String settings = user.getSettings().toString();
 
+        // random with time as seed
+        Random rand = new Random(System.currentTimeMillis());
+        double random = rand.nextDouble();
+
         OpenAIChatRequest.Message userMessage = new OpenAIChatRequest.Message();
 
         if (pantryFoods.equals("")) {
-            pantryFoods = "I have no food in my pantry";
+            if (random < 0.3) {
+                pantryFoods = "I have no food in my pantry";
+            } else if (random < 0.6) {
+                pantryFoods = "There is no food in my pantry";
+            } else {
+                pantryFoods = "I haven't got any food in my pantry";
+            }
         } else {
-            pantryFoods = "I have the following foods in my pantry: " + pantryFoods + ".";
+            pantryFoods = "I have the following foods in my pantry: " + pantryFoods;
         }
 
         if (settings.equals("")) {
-            settings = "You can make whatever unique meal you want.";
+            if (random < 0.3) {
+                settings = "You can make whatever unique meal you want.";
+            } else if (random < 0.6) {
+                settings = "You can make whatever meal you want.";
+            } else {
+                settings = "You can make whatever meal you want, as long as it is " + type + ".";
+            }
         } else {
             settings = "Some other useful information about me: " + settings + ".";
         }
