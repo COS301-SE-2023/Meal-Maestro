@@ -27,7 +27,6 @@ public class MealManagementService {
 
     public MealModel generateMeal(String mealType, String token) {
         try {
-            System.out.println("Generating meal");
             JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(mealType, token));
             int i = 0;
             if (!validate(mealJson)) {
@@ -43,7 +42,6 @@ public class MealManagementService {
             mealObject.put("image", ""); // TODO: Add image
 
             MealModel mealModel = objectMapper.treeToValue(mealObject, MealModel.class);
-            System.out.println("Meal model: " + mealModel.getName());
             return mealModel;
         } catch (JsonProcessingException e) {
             System.out.println(e.getMessage());
@@ -52,8 +50,6 @@ public class MealManagementService {
     }
 
     public boolean validate(JsonNode data) {
-        System.out.println("Validating meal schema");
-        System.out.println(data.toString());
         try {
             File schemaFile = new File("src\\main\\resources\\MealSchema.json");
             JsonNode schemaNode = objectMapper.readTree(schemaFile);

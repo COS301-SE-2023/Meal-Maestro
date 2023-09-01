@@ -39,8 +39,6 @@ public class MealManagementController {
         }
         token = token.substring(7);
 
-        System.out.println("###########################################");
-
         LocalDate date = request.getDate();
         // retrieve
 
@@ -54,21 +52,18 @@ public class MealManagementController {
 
             // generate meals that aren't present
             if (!breakfast.isPresent()) {
-                System.out.println("Generating breakfast");
                 MealModel breakfastGenerated = mealManagementService.generateMeal("breakfast", token);
                 mealsForDay.add(breakfastGenerated);
             } else {
                 mealsForDay.add(breakfast.get());
             }
             if (!lunch.isPresent()) {
-                System.out.println("Generating lunch");
                 MealModel lunchGenerated = mealManagementService.generateMeal("lunch", token);
                 mealsForDay.add(lunchGenerated);
             } else {
                 mealsForDay.add(lunch.get());
             }
             if (!dinner.isPresent()) {
-                System.out.println("Generating dinner");
                 MealModel dinnerGenerated = mealManagementService.generateMeal("dinner", token);
                 mealsForDay.add(dinnerGenerated);
             } else {
@@ -77,7 +72,6 @@ public class MealManagementController {
 
             // save
             List<MealModel> meals = mealDatabaseService.saveMeals(mealsForDay, date, token);
-            System.out.println(meals.size());
             // return
             return ResponseEntity.ok(meals);
         }
@@ -119,7 +113,6 @@ public class MealManagementController {
 
         token = token.substring(7);
 
-        System.out.println(request.getMeal().getName());
         // Try find an appropriate meal in the database
         Optional<MealModel> replacementMeal = mealDatabaseService.findMealTypeForUser(request.getMeal().getType(),
                 token);

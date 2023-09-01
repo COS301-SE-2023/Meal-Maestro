@@ -156,7 +156,6 @@ public class MealDatabaseService {
     public MealModel replaceMeal(RegenerateMealRequest request, MealModel newMeal, String token) {
         String email = jwtService.extractUserEmail(token);
 
-        UserModel user = userRepository.findByEmail(email).get();
         MealModel oldMeal = request.getMeal();
         LocalDate date = request.getDate();
         mealRepository.save(newMeal);

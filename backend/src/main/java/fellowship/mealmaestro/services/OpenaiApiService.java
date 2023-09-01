@@ -52,7 +52,6 @@ public class OpenaiApiService {
     private OpenaiPromptBuilder pBuilder = new OpenaiPromptBuilder();
 
     public String fetchMealResponse(String type, String token) throws JsonMappingException, JsonProcessingException {
-        System.out.println("Fetching meal response");
         String jsonResponse = getJSONResponse(type, token);
         JsonNode jsonNode = jsonMapper.readTree(jsonResponse);
 
@@ -73,18 +72,7 @@ public class OpenaiApiService {
             text = text.substring(index, lastIndex);
         }
 
-        System.out.println("HERE IS THE RESPONSE: ");
-        System.out.println(text);
         return text;
-
-        // return "{\"instructions\":\"1. Preheat oven to 375 degrees/r/n2. Grease a
-        // baking dish with butter/r/n3. Beat together the eggs, milk, and a pinch of
-        // salt/r/n4. Place the bread slices in the baking dish and pour the egg mixture
-        // over them/r/n5. Bake in the preheated oven for 25 minutes/r/n6. Serve warm
-        // with your favorite toppings\",\"name\":\"Baked French
-        // Toast\",\"description\":\"a delicious breakfast dish of egg-soaked
-        // bread\",\"ingredients\":\"6 slices of bread/r/n3 eggs/r/n3/4 cup of
-        // milk/r/nSalt/r/nButter\",\"cookingTime\":\"30 minutes\"}";
     }
 
     public String getJSONResponse(String Type, String token) throws JsonProcessingException {
@@ -94,7 +82,6 @@ public class OpenaiApiService {
 
         prompt = pBuilder.buildPrompt(Type, token);
         jsonRequest = jsonMapper.writeValueAsString(prompt);
-        System.out.println(jsonRequest);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

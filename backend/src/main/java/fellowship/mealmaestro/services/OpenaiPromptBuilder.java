@@ -33,9 +33,6 @@ public class OpenaiPromptBuilder {
 
         request.setMessages(List.of(systemMessage, userMessage));
 
-        System.out.println("HERE IS THE PROMPT: ");
-        System.out.println(userMessage.getContent());
-
         return request;
     }
 
