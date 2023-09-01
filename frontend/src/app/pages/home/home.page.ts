@@ -16,7 +16,8 @@ import { CommonModule } from '@angular/common';
 })
 export class HomePage implements OnInit {
   daysMeals: DaysMealsI[] = [];
-  isLoading = true;
+  isLoading: boolean = true;
+  showLoading: boolean = true;
   constructor(
     public r: Router,
     private renderer: Renderer2,
@@ -87,7 +88,7 @@ export class HomePage implements OnInit {
                 mealDay: undefined,
                 mealDate: undefined,
               };
-              this.isLoading = false;
+              this.hideLoading();
               mealsForDay.breakfast = data.body[0];
               mealsForDay.lunch = data.body[1];
               mealsForDay.dinner = data.body[2];
@@ -102,7 +103,7 @@ export class HomePage implements OnInit {
               'Error loading meal items',
               err
             );
-            // this.isLoading = false;
+            this.hideLoading();
             reject();
           },
         });
@@ -110,5 +111,13 @@ export class HomePage implements OnInit {
       date = this.addDays(date, 1);
     }
     console.log(this.daysMeals);
+  }
+
+  hideLoading() {
+    this.showLoading = false;
+
+    setTimeout(() => {
+      this.showLoading = false;
+    }, 200);
   }
 }

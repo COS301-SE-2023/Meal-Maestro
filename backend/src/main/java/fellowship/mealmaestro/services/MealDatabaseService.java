@@ -159,20 +159,8 @@ public class MealDatabaseService {
         UserModel user = userRepository.findByEmail(email).get();
         MealModel oldMeal = request.getMeal();
         LocalDate date = request.getDate();
-
-        List<HasMeal> meals = user.getMeals();
-
-        for (HasMeal meal : meals) {
-            if (meal.getDate().equals(date)) {
-                System.out.println("Old meal date: " + date + " New meal date: " + meal.getDate());
-                if (meal.getMeal().getName().equals(oldMeal.getName())) {
-                    userRepository.replaceMeal(date, oldMeal.getName(), newMeal.getName(), email);
-                    break;
-                }
-            }
-        }
-        userRepository.save(user);
-
+        mealRepository.save(newMeal);
+        mealRepository.replaceMeal(date, oldMeal.getName(), newMeal.getName(), email);
         return newMeal;
     }
 
