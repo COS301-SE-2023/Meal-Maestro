@@ -102,7 +102,7 @@ export class HomePage implements OnInit {
               'Error loading meal items',
               err
             );
-            this.isLoading = false;
+            // this.isLoading = false;
             reject();
           },
         });
