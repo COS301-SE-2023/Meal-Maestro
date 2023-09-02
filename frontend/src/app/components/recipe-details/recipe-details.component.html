@@ -21,7 +21,9 @@
   <h4>Preparation Time</h4>
   <p>{{ item.cookingTime }}</p>
   <h4>Ingredients</h4>
-  <p>{{ item.ingredients }}</p>
+    <ul>
+      <li *ngFor="let ingredient of fIng">{{ ingredient }}</li>
+    </ul>
   <h4>Instructions</h4>
     <ol>
       <li *ngFor="let instruction of fIns">{{ instruction }}</li>
