@@ -1,10 +1,14 @@
 package fellowship.mealmaestro.services;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
+@Service
 public class UnsplashService {
     private static final String UNSPLASH_URL = "https://api.unsplash.com/search/photos";
 
@@ -40,16 +44,31 @@ public class UnsplashService {
         headers.set("Authorization", "Client-ID " + API_KEY);
 
         String response = webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(UNSPLASH_URL)
-                        .queryParam("query", query)
-                        .queryParam("per_page", 1)
-                        .build())
+                .uri(UNSPLASH_URL + "?query=" + query + "&per_page=3&orientation=landscape")
                 .headers(httpHeaders -> httpHeaders.addAll(headers))
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
 
         return response;
+    }
+
+    public String fetchPhoto(String query) {
+        String response = searchPhotos(query);
+        ObjectMapper jsonMapper = new ObjectMapper();
+        String photoUrl = "";
+
+        try {
+            photoUrl = jsonMapper.readTree(response)
+                    .path("results")
+                    .get(0)
+                    .path("urls")
+                    .path("regular")
+                    .asText();
+        } catch (Exception e) {
+            System.out.println("Error fetching photo from Unsplash");
+        }
+
+        return photoUrl;
     }
 }

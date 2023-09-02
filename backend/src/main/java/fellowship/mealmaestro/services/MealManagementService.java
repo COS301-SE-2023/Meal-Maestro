@@ -25,6 +25,9 @@ public class MealManagementService {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private UnsplashService unsplashService;
+
     public MealModel generateMeal(String mealType, String token) {
         try {
             JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(mealType, token));
@@ -37,9 +40,13 @@ public class MealManagementService {
                 }
                 return null;
             }
+
+            String imageUrl = "";
+            imageUrl = unsplashService.fetchPhoto(mealJson.get("name").asText());
+
             ObjectNode mealObject = objectMapper.valueToTree(mealJson);
             mealObject.put("type", mealType);
-            mealObject.put("image", ""); // TODO: Add image
+            mealObject.put("image", imageUrl);
 
             MealModel mealModel = objectMapper.treeToValue(mealObject, MealModel.class);
             return mealModel;
