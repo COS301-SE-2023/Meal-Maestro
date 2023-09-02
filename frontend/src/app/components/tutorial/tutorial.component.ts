@@ -1,19 +1,9 @@
-import { Component, ViewChild, ElementRef,  CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, ViewChild, ElementRef,OnInit, AfterViewInit , CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { IonicModule } from '@ionic/angular';
-// import { SwiperContainer } from 'swiper/element';
-// import { Navigation } from '@angular/router';
-// import { register } from 'swiper/element/bundle';
-//import { SwiperModule } from 'swiper/angular';
+import {IonicModule } from '@ionic/angular';
+
 import { CommonModule } from '@angular/common';
-// import Swiper from 'swiper';
-//import { Navigation, Pagination } from 'swiper/modules';
-// register();
-
-//import { Navigation, Pagination } from 'swiper';
-
-
-//SwiperCore.use([Navigation, Pagination]);
+import Swiper from 'swiper';
 
 @Component({
   
@@ -24,29 +14,55 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, IonicModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class TutorialComponent  {
-
-  // @ViewChild('swiperContainer') swiperContainer!: ElementRef;
-  // swiperConfig = {
-  //   pagination: {
-  //     el: '.swiper-pagination',
-  //     type: 'progressbar',
-  //   },
-  //   navigation: {
-  //     nextEl: '.swiper-button-next',
-  //     prevEl: '.swiper-button-prev',
-  //   },
-  // };
+export class TutorialComponent implements OnInit, AfterViewInit {
+  
+  private swiper: Swiper;
 
   constructor(private modalController: ModalController) { }
+
+  ngOnInit() {}
+
+  ngAfterViewInit() {
+    this.swiper = new Swiper('.swiper-container', {
+      // Swiper configuration options
+      pagination: {
+        el: '.swiper-pagination',
+        type: 'progressbar',
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      on: {
+        slideChange: () => {
+          if (this.swiper.isEnd) {
+            this.showPopup();
+          }
+        },
+      },
+    });
+  }
+
+  onSwiper(swiper: Swiper) {
+    this.swiper = swiper;
+  }
+
+  onSlideChange() {
+    if (this.swiper.isEnd) {
+      this.showPopup();
+    }
+  }
 
   closeModal() {
     this.modalController.dismiss();
   }
 
-  // swiperSlideChange(e: any) {
-  //   console.log('changed: ',e);
-  // }
+  showPopup() {
+    // Show your popup here (you can implement your own custom modal logic)
+    alert('DONE');
+  }
+  
+  
 
 
 

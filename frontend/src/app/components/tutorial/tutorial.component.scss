@@ -1,7 +1,17 @@
   swiper-container {
-      width: 100%;
-      height: 100%;
+    width: 100%;
+    height: 100%;
+  //  background-image: url('https://unsplash.com/photos/a-dirt-road-in-the-middle-of-a-grassy-field-9BKSdvsRSuA');
+    
      // background-color: red;
+  }
+
+
+  img {
+    width: 100%;
+    height: 100%;
+    background-size: cover; /* Adjust to your needs */
+    background-repeat: no-repeat;
   }
 
   swiper-slide {
@@ -12,3 +22,4 @@
       justify-content: center;
       align-items: center;
   }
+  swiper-button-next { color: red; }
