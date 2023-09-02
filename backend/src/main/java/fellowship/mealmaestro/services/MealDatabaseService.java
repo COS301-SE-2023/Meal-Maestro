@@ -95,7 +95,7 @@ public class MealDatabaseService {
         return mealModels;
     }
 
-    public void removeOldMeals(String token) {
+    public void removeOldMeals(String token) { // TODO: double check this works
         String email = jwtService.extractUserEmail(token);
 
         UserModel user = userRepository.findByEmail(email).get();
