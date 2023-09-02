@@ -18,6 +18,7 @@ export class RecipeDetailsComponent implements OnInit {
   @Input() items!: MealI[];
 
   fIns: string[] = [];
+  fIng: string[] = [];
 
   constructor(private modalController: ModalController, private addService: AddRecipeService) { }
 
@@ -25,11 +26,20 @@ export class RecipeDetailsComponent implements OnInit {
     if (this.item && this.item.instructions) {
       this.formatIns(this.item.instructions);
     }
+
+    if (this.item && this.item.ingredients) {
+      this.formatIng(this.item.ingredients);
+    }
   }
 
   private formatIns(ins: string) {
     const insArr: string[] = ins.split(/\d+\.\s+/);
     this.fIns = insArr.filter(instruction => instruction.trim() !== '');
+  }
+
+  private formatIng(ing: string) {
+    const ingArr: string[] = ing.split(/,\s*(?![^[]*\])/);
+    this.fIng = ingArr.map((ingredient) => ingredient.trim());
   }
 
   closeModal() {
