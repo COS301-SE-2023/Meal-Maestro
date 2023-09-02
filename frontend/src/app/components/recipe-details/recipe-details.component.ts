@@ -17,9 +17,20 @@ export class RecipeDetailsComponent implements OnInit {
   @Input() item!: MealI;
   @Input() items!: MealI[];
 
+  fIns: string[] = [];
+
   constructor(private modalController: ModalController, private addService: AddRecipeService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.item && this.item.instructions) {
+      this.formatIns(this.item.instructions);
+    }
+  }
+
+  private formatIns(ins: string) {
+    const insArr: string[] = ins.split(/\d+\.\s+/);
+    this.fIns = insArr.filter(instruction => instruction.trim() !== '');
+  }
 
   closeModal() {
     this.modalController.dismiss();
