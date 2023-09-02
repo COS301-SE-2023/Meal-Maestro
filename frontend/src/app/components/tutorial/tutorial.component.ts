@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef,OnInit, AfterViewInit , CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import {IonicModule } from '@ionic/angular';
-
+import { AuthenticationService, ErrorHandlerService } from '../../services/services';
 import { CommonModule } from '@angular/common';
 import Swiper from 'swiper';
 
@@ -18,7 +18,7 @@ export class TutorialComponent implements OnInit, AfterViewInit {
   
   private swiper: Swiper;
 
-  constructor(private modalController: ModalController) { }
+  constructor(private modalController: ModalController, private errorHandlerService: ErrorHandlerService) { }
 
   ngOnInit() {}
 
@@ -49,6 +49,7 @@ export class TutorialComponent implements OnInit, AfterViewInit {
 
   onSlideChange() {
     if (this.swiper.isEnd) {
+      //this.errorHandlerService.presentSuccessToast('Registration successful');
       this.showPopup();
     }
   }
