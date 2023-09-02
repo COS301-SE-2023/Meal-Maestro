@@ -622,14 +622,18 @@ export class ProfilePage implements OnInit {
 
   setOpenShopping(isOpen: boolean) {
     if (isOpen === false) {
-      console.log("reset")
+      console.log("resetClose")
       console.log(this.userpreferences.shoppingInterval)
-      // this.userpreferences.shoppingInterval = "other"
     this.resetShopping()
     console.log(this.userpreferences.shoppingInterval)
     this.isShoppingModalOpen = isOpen;
     }
     else if (isOpen === true) {
+      console.log("resetOpen")
+      console.log(this.userpreferences.shoppingInterval)
+      if (this.userpreferences.shoppingInterval.includes("days")) {
+        this.shoppingIntervalOtherValue = this.userpreferences.shoppingInterval.replace("days", "").trim();
+      }
     this.isShoppingModalOpen = isOpen;
     }
   }
