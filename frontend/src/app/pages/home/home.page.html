@@ -1,16 +1,27 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Your Meals</ion-title>
+    <ion-title>What's on the Menu?</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large" style="color: black">Your Meals</ion-title>
+      <ion-title size="large" style="color: black"
+        >What's on the Menu?</ion-title
+      >
     </ion-toolbar>
   </ion-header>
-  
+
+  <div
+    *ngIf="showLoading"
+    id="parent-container"
+    [ngClass]="{'ng-hide': !isLoading, 'fade-out': true}"
+  >
+    <div id="svg-container"></div>
+    <div id="loading">Loading</div>
+  </div>
+
   <ion-list lines="inset" class="list-container">
     <app-daily-meals *ngFor="let item of daysMeals" [dayData]="item">
     </app-daily-meals>

@@ -2,55 +2,72 @@ package fellowship.mealmaestro.models;
 
 import java.util.List;
 
+import java.util.UUID;
 
-import java.util.Map;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.Node;
 
-public class SettingsModel{
+import lombok.Data;
 
-    private String goal; 
+@Data
+@Node("Settings")
+public class SettingsModel {
+
+    @Id
+    private UUID id;
+
+    @Version
+    private Long version;
+
+    private String goal;
     private String shoppingInterval;
     private List<String> foodPreferences;
     private int calorieAmount;
     private String budgetRange;
-    private Map<String, Integer> macroRatio;
+    private int protein;
+    private int carbs;
+    private int fat;
 
     private List<String> allergies;
     private String cookingTime;
-    private int userHeight; // consider moving to account
-    private int userWeight; // consider moving to account
-    private int userBMI;
+    private double userHeight; // consider moving to account
+    private double userWeight; // consider moving to account
+    private double userBMI;
 
-    private boolean BMISet = false;
-    private boolean cookingTimeSet = false;
-    private boolean allergiesSet = false;
-    private boolean macroSet = false;
-    private boolean budgetSet = false;
-    private boolean calorieSet = false;
-    private boolean foodPreferenceSet = false;
-    private boolean shoppingIntervalSet = false;
+    private boolean bmiset;
+    private boolean cookingTimeSet;
+    private boolean allergiesSet;
+    private boolean macroSet;
+    private boolean budgetSet;
+    private boolean calorieSet;
+    private boolean foodPreferenceSet;
+    private boolean shoppingIntervalSet;
 
     public SettingsModel() {
         // Empty constructor with all booleans set to false by default
     }
 
     public SettingsModel(String goal, String shoppingInterval, List<String> foodPreferences, int calorieAmount,
-                         String budgetRange, Map<String, Integer> macroRatio, List<String> allergies, String cookingTime,
-                         int userHeight, int userWeight, int userBMI, boolean BMISet, boolean cookingTimeSet,
-                         boolean allergiesSet, boolean macroSet, boolean budgetSet, boolean calorieSet,
-                         boolean foodPreferenceSet, boolean shoppingIntervalSet) {
+            String budgetRange, int protein, int carbs, int fat, List<String> allergies, String cookingTime,
+            double userHeight, double userWeight, double userBMI, boolean bmiset, boolean cookingTimeSet,
+            boolean allergiesSet, boolean macroSet, boolean budgetSet, boolean calorieSet,
+            boolean foodPreferenceSet, boolean shoppingIntervalSet, UUID id) {
         this.goal = goal;
         this.shoppingInterval = shoppingInterval;
         this.foodPreferences = foodPreferences;
         this.calorieAmount = calorieAmount;
         this.budgetRange = budgetRange;
-        this.macroRatio =  macroRatio;
-        
+        this.protein = protein;
+        this.carbs = carbs;
+        this.fat = fat;
+
         this.allergies = allergies;
         this.cookingTime = cookingTime;
         this.userHeight = userHeight;
         this.userWeight = userWeight;
         this.userBMI = userBMI;
-        this.BMISet = BMISet;
+        this.bmiset = bmiset;
         this.cookingTimeSet = cookingTimeSet;
         this.allergiesSet = allergiesSet;
         this.macroSet = macroSet;
@@ -58,168 +75,123 @@ public class SettingsModel{
         this.calorieSet = calorieSet;
         this.foodPreferenceSet = foodPreferenceSet;
         this.shoppingIntervalSet = shoppingIntervalSet;
+        this.id = id;
     }
 
-    public String getGoal() {
-        return goal;
-    }
-
-    public void setGoal(String goal) {
-        this.goal = goal;
-    }
-
-    public String getShoppingInterval() {
-        return shoppingInterval;
-    }
-
-    public void setShoppingInterval(String shoppingInterval) {
-        this.shoppingInterval = shoppingInterval;
-    }
-
-    public List<String> getFoodPreferences() {
-        return foodPreferences;
-    }
-
-    public void setFoodPreferences(List<String> foodPreferences) {
-        this.foodPreferences = foodPreferences;
-    }
-
-    public int getCalorieAmount() {
-    
-        return calorieAmount;
-    }
-
-    public void setCalorieAmount(int calorieAmount) {
-        this.calorieAmount = calorieAmount;
-    }
-
-    public String getBudgetRange() {
-        return budgetRange;
-    }
-
-    public void setBudgetRange(String budgetRange) {
-        this.budgetRange = budgetRange;
-    }
-
-    public Map<String, Integer> getMacroRatio() {
-        return macroRatio;
-    }
-
-    public void setMacroRatio(Map<String, Integer> macroRatio) {
-        this.macroRatio = macroRatio;
-    }
-
-    public List<String> getAllergies() {
-        return allergies;
-    }
-
-    public void setAllergies(List<String> allergies) {
-        this.allergies = allergies;
-    }
-
-    public String getCookingTime() {
-        return cookingTime;
-    }
-
-    public void setCookingTime(String cookingTime) {
-        this.cookingTime = cookingTime;
-    }
-
-    public int getUserHeight() {
-        return userHeight;
-    }
-
-    public void setUserHeight(int userHeight) {
-        this.userHeight = userHeight;
-    }
-
-    public int getUserWeight() {
-        return userWeight;
-    }
-
-    public void setUserWeight(int userWeight) {
-        this.userWeight = userWeight;
-    }
-
-    public int getUserBMI() {
+    public double getUserBMI() {
         return userBMI;
     }
 
-    public void setUserBMI(int userHeight, int userWeight) {
+    public void setUserBMI(double userHeight, double userWeight) {
         if (userWeight == 0) {
             this.userBMI = 0;
         } else {
-            this.userBMI = userHeight/userWeight;
+            double heightInMeters = userHeight / 100.0;
+            // set userBMI to 2 decimal places
+            this.userBMI = Math.round((userWeight / (heightInMeters * heightInMeters)) * 100.0) / 100.0;
+
         }
     }
 
-    public void setUserBMI(int userBMI) {
+    public void setUserBMI(double userBMI) {
         this.userBMI = userBMI;
     }
 
-    public boolean isBMISet() {
-        return BMISet;
+    public void setAllBoolean() {
+        this.bmiset = false;
+        this.cookingTimeSet = false;
+        this.allergiesSet = false;
+        this.macroSet = false;
+        this.budgetSet = false;
+        this.calorieSet = false;
+        this.foodPreferenceSet = false;
+        this.shoppingIntervalSet = false;
     }
 
-    public void setBMISet(boolean BMISet) {
-        this.BMISet = BMISet;
-    }
-
-    public boolean isCookingTimeSet() {
-        return cookingTimeSet;
-    }
-
-    public void setCookingTimeSet(boolean cookingTimeSet) {
-        this.cookingTimeSet = cookingTimeSet;
-    }
-
-    public boolean isAllergiesSet() {
-        return allergiesSet;
-    }
-
-    public void setAllergiesSet(boolean allergiesSet) {
-        this.allergiesSet = allergiesSet;
-    }
-
-    public boolean isMacroSet() {
-        return macroSet;
-    }
-
-    public void setMacroSet(boolean macroSet) {
-        this.macroSet = macroSet;
-    }
-
-    public boolean isBudgetSet() {
-        return budgetSet;
-    }
-
-    public void setBudgetSet(boolean budgetSet) {
-        this.budgetSet = budgetSet;
-    }
-
-    public boolean isCalorieSet() {
-        return calorieSet;
-    }
-
-    public void setCalorieSet(boolean calorieSet) {
-        this.calorieSet = calorieSet;
-    }
-
-    public boolean isFoodPreferenceSet() {
-        return foodPreferenceSet;
+    public void setShoppingIntervalSet(boolean shoppingIntervalSet) {
+        this.shoppingIntervalSet = shoppingIntervalSet;
     }
 
     public void setFoodPreferenceSet(boolean foodPreferenceSet) {
         this.foodPreferenceSet = foodPreferenceSet;
     }
 
-    public boolean isShoppingIntervalSet() {
+    public void setCalorieSet(boolean calorieSet) {
+        this.calorieSet = calorieSet;
+    }
+
+    public void setBudgetSet(boolean budgetSet) {
+        this.budgetSet = budgetSet;
+    }
+
+    public void setMacroSet(boolean macroSet) {
+        this.macroSet = macroSet;
+    }
+
+    public void setAllergiesSet(boolean allergiesSet) {
+        this.allergiesSet = allergiesSet;
+    }
+
+    public void setCookingTimeSet(boolean cookingTimeSet) {
+        this.cookingTimeSet = cookingTimeSet;
+    }
+
+    public void setBmiset(boolean bmiset) {
+        this.bmiset = bmiset;
+    }
+
+    public boolean getShoppingIntervalSet() {
         return shoppingIntervalSet;
     }
 
-    public void setShoppingIntervalSet(boolean shoppingIntervalSet) {
-        this.shoppingIntervalSet = shoppingIntervalSet;
+    public boolean getFoodPreferenceSet() {
+        return foodPreferenceSet;
     }
-   
 
+    public boolean getCalorieSet() {
+        return calorieSet;
+    }
+
+    public boolean getBudgetSet() {
+        return budgetSet;
+    }
+
+    public boolean getMacroSet() {
+        return macroSet;
+    }
+
+    public boolean getAllergiesSet() {
+        return allergiesSet;
+    }
+
+    public boolean getCookingTimeSet() {
+        return cookingTimeSet;
+    }
+
+    public boolean getBmiset() {
+        return bmiset;
+    }
+
+    @Override
+    public String toString() {
+        String s = "";
+        if (this.goal != null && !this.goal.isEmpty()) {
+            s += "My goal: " + this.goal.toString() + ". ";
+        }
+        if (this.cookingTime != null && !this.cookingTime.isEmpty()) {
+            s += "My cooking time is around " + this.cookingTime.toString() + ". ";
+        }
+        if (this.foodPreferences != null && !this.foodPreferences.isEmpty()) {
+            String foodPref = String.join(", ", this.foodPreferences);
+            s += "I eat like a " + foodPref + ". ";
+        }
+        if (this.calorieAmount != 0) {
+            s += "My average daily calorie goal is: " + this.calorieAmount + ". ";
+        }
+        if (this.allergies != null && !this.allergies.isEmpty()) {
+            String allergens = String.join(", ", this.allergies);
+            s += "My allergens: " + allergens + ". ";
+        }
+        return s;
+    }
 }

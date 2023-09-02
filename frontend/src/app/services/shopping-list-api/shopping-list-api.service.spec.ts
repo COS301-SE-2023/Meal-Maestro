@@ -19,109 +19,100 @@ describe('ShoppingListApiService', () => {
   it('should return shopping list items', (done: DoneFn) => {
     const expectedItems: FoodItemI[] = [
       {
-          "name": "Apple",
-          "quantity": 1,
-          "weight": 0.1,
+        name: 'Apple',
+        quantity: 1,
+        unit: 'pcs',
       },
       {
-          "name": "Banana",
-          "quantity": 2,
-          "weight": 0.2,
+        name: 'Banana',
+        quantity: 2,
+        unit: 'pcs',
       },
       {
-          "name": "Orange",
-          "quantity": 3,
-          "weight": 0.3,
-      }
+        name: 'Orange',
+        quantity: 3,
+        unit: 'pcs',
+      },
     ];
 
-    httpClientSpy.post.and.returnValue(of(new HttpResponse({body: expectedItems})));
+    httpClientSpy.post.and.returnValue(
+      of(new HttpResponse({ body: expectedItems }))
+    );
 
     service.getShoppingListItems().subscribe({
-      next: res => {
-        expect(res.body)
-          .withContext('expected items')
-          .toEqual(expectedItems);
+      next: (res) => {
+        expect(res.body).withContext('expected items').toEqual(expectedItems);
         done();
       },
-      error: done.fail
+      error: done.fail,
     });
 
-    expect(httpClientSpy.post.calls.count())
-      .withContext('one call')
-      .toBe(1);
+    expect(httpClientSpy.post.calls.count()).withContext('one call').toBe(1);
   });
 
   it('should return item added to shopping list', (done: DoneFn) => {
     const expectedItem: FoodItemI = {
-      "name": "Apple",
-      "quantity": 1,
-      "weight": 0.1,
+      name: 'Apple',
+      quantity: 1,
+      unit: 'pcs',
     };
 
-    httpClientSpy.post.and.returnValue(of(new HttpResponse({body: expectedItem})));
+    httpClientSpy.post.and.returnValue(
+      of(new HttpResponse({ body: expectedItem }))
+    );
 
     service.addToShoppingList(expectedItem).subscribe({
-      next: res => {
-        expect(res.body)
-          .withContext('expected item')
-          .toEqual(expectedItem);
+      next: (res) => {
+        expect(res.body).withContext('expected item').toEqual(expectedItem);
         done();
       },
-      error: done.fail
+      error: done.fail,
     });
 
-    expect(httpClientSpy.post.calls.count())
-      .withContext('one call')
-      .toBe(1);
+    expect(httpClientSpy.post.calls.count()).withContext('one call').toBe(1);
   });
 
   it('should update item in shopping list', (done: DoneFn) => {
     const expectedItem: FoodItemI = {
-      "name": "Apple",
-      "quantity": 1,
-      "weight": 0.1,
+      name: 'Apple',
+      quantity: 1,
+      unit: 'pcs',
     };
 
-    httpClientSpy.post.and.returnValue(of(new HttpResponse({status: 200})));
+    httpClientSpy.post.and.returnValue(of(new HttpResponse({ status: 200 })));
 
     service.updateShoppingListItem(expectedItem).subscribe({
-      next: res => {
+      next: (res) => {
         expect(res.status)
           .withContext('expected HTTP status code 200')
           .toEqual(200);
         done();
       },
-      error: done.fail
+      error: done.fail,
     });
 
-    expect(httpClientSpy.post.calls.count())
-      .withContext('one call')
-      .toBe(1);
+    expect(httpClientSpy.post.calls.count()).withContext('one call').toBe(1);
   });
 
   it('should delete item from shopping list', (done: DoneFn) => {
     const expectedItem: FoodItemI = {
-      "name": "Apple",
-      "quantity": 1,
-      "weight": 0.1,
+      name: 'Apple',
+      quantity: 1,
+      unit: 'pcs',
     };
 
-    httpClientSpy.post.and.returnValue(of(new HttpResponse({status: 200})));
+    httpClientSpy.post.and.returnValue(of(new HttpResponse({ status: 200 })));
 
     service.deleteShoppingListItem(expectedItem).subscribe({
-      next: res => {
+      next: (res) => {
         expect(res.status)
           .withContext('expected HTTP status code 200')
           .toEqual(200);
         done();
       },
-      error: done.fail
+      error: done.fail,
     });
 
-    expect(httpClientSpy.post.calls.count())
-      .withContext('one call')
-      .toBe(1);
+    expect(httpClientSpy.post.calls.count()).withContext('one call').toBe(1);
   });
-
 });

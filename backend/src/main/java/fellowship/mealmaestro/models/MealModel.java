@@ -26,9 +26,14 @@ public class MealModel {
 
     @NotBlank(message = "Cooking time is required")
     private String cookingTime;
-    public MealModel(){};
 
-    public MealModel(String name, String instructions,String description, String image, String ingredients, String cookingTime){
+    private String type;
+
+    public MealModel() {
+    };
+
+    public MealModel(String name, String instructions, String description, String image, String ingredients,
+            String cookingTime) {
         this.name = name;
         this.instructions = instructions;
         this.description = description;
@@ -37,60 +42,59 @@ public class MealModel {
         this.cookingTime = cookingTime;
     }
 
-    public String getName(){
+    public String getName() {
         return this.name;
     }
 
-    public void setName(String name){
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getinstructions(){
+    public String getInstructions() {
         return this.instructions;
     }
 
-    public void setinstructions(String instructions){
+    public void setInstructions(String instructions) {
         this.instructions = instructions;
     }
 
-    public String getdescription(){
+    public String getDescription() {
         return this.description;
     }
 
-    public void setdescription(String description){
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getimage(){
+    public String getImage() {
         return this.image;
     }
 
-    public void setimage(String image){
+    public void setImage(String image) {
         this.image = image;
     }
 
-    public String getingredients(){
+    public String getIngredients() {
         return this.ingredients;
     }
 
-    public void setingredients(String ingredients){
+    public void setIngredients(String ingredients) {
         this.ingredients = ingredients;
     }
 
-    public String getcookingTime(){
+    public String getCookingTime() {
         return this.cookingTime;
     }
 
-    public void setcookingTime(String cookingTime){
+    public void setCookingTime(String cookingTime) {
         this.cookingTime = cookingTime;
     }
 
-    public void copyFromOtherModel(MealModel mealModel){
-        this.name = mealModel.getName();
-        this.cookingTime = mealModel.getcookingTime();
-        this.ingredients = mealModel.getingredients();
-        this.instructions = mealModel.getinstructions();
-        this.description = mealModel.getdescription();
-        this.image = mealModel.getimage();
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String mealType) {
+        this.type = mealType;
     }
 }

@@ -1,51 +1,34 @@
 package fellowship.mealmaestro.models;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PositiveOrZero;
+import java.util.UUID;
 
+// import org.springframework.data.annotation.Version;
+import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.Node;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+@Node("Food")
 public class FoodModel {
-    @NotBlank(message = "A Food Name is required")
+    @Id
+    private UUID id;
+
     private String name;
 
-    @PositiveOrZero(message = "Quantity must be a positive number")
-    private int quantity;
+    private double quantity;
 
-    @PositiveOrZero(message = "Weight must be a positive number")
-    private int weight;
+    private String unit;
 
-    public FoodModel(){
-        this.name = "";
-        this.quantity = 0;
-        this.weight = 0;
-    }
-
-    public FoodModel(String name, int quantity, int weight){
+    public FoodModel(String name, double quantity, String unit, UUID id) {
+        this.id = id;
         this.name = name;
         this.quantity = quantity;
-        this.weight = weight;
+        this.unit = unit;
     }
 
-    public String getName(){
-        return this.name;
-    }
-
-    public int getQuantity(){
-        return this.quantity;
-    }
-
-    public int getWeight(){
-        return this.weight;
-    }
-
-    public void setName(String name){
-        this.name = name;
-    }
-
-    public void setQuantity(int quantity){
-        this.quantity = quantity;
-    }
-
-    public void setWeight(int weight){
-        this.weight = weight;
+    public FoodModel() {
     }
 }

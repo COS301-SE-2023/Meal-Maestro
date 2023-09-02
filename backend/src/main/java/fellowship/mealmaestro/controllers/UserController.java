@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import fellowship.mealmaestro.models.UpdateUserRequestModel;
 import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.models.auth.AuthenticationRequestModel;
 import fellowship.mealmaestro.models.auth.AuthenticationResponseModel;
@@ -55,7 +56,7 @@ public class UserController {
 
     @PutMapping("/updateUser")
     public ResponseEntity<UserModel> updateUser(
-        @RequestBody UserModel user,
+        @RequestBody UpdateUserRequestModel user,
         @RequestHeader("Authorization") String token
     ){
         return ResponseEntity.ok(userService.updateUser(user, token));
@@ -65,6 +66,8 @@ public class UserController {
     public ResponseEntity<UserModel> getUser(
         @RequestHeader("Authorization") String token
     ){
-        return ResponseEntity.ok(userService.getUser(token));
+        UserModel user = userService.getUser(token);
+        user.setPassword("");
+        return ResponseEntity.ok(user);
     }
 }

@@ -4,62 +4,69 @@ import { Observable } from 'rxjs';
 import { FoodItemI } from '../../models/interfaces';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ShoppingListApiService {
-
   url: String = 'http://localhost:8080';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getShoppingListItems(): Observable<HttpResponse<FoodItemI[]>> {
     return this.http.post<FoodItemI[]>(
       this.url + '/getShoppingList',
       {},
-      { observe: 'response' });
+      { observe: 'response' }
+    );
   }
 
   addToShoppingList(item: FoodItemI): Observable<HttpResponse<FoodItemI>> {
     return this.http.post<FoodItemI>(
       this.url + '/addToShoppingList',
       {
-        "name": item.name,
-        "quantity": item.quantity,
-        "weight": item.weight,
+        name: item.name,
+        quantity: item.quantity,
+        unit: item.unit,
       },
-      { observe: 'response' });
+      { observe: 'response' }
+    );
   }
 
   updateShoppingListItem(item: FoodItemI): Observable<HttpResponse<void>> {
     return this.http.post<void>(
       this.url + '/updateShoppingList',
       {
-        "name": item.name,
-        "quantity": item.quantity,
-        "weight": item.weight,
+        name: item.name,
+        quantity: item.quantity,
+        unit: item.unit,
+        id: item.id,
       },
-      { observe: 'response' });
+      { observe: 'response' }
+    );
   }
 
   deleteShoppingListItem(item: FoodItemI): Observable<HttpResponse<void>> {
     return this.http.post<void>(
       this.url + '/removeFromShoppingList',
       {
-        "name": item.name,
-        "quantity": item.quantity,
-        "weight": item.weight,
+        name: item.name,
+        quantity: item.quantity,
+        unit: item.unit,
+        id: item.id,
       },
-      { observe: 'response' });
+      { observe: 'response' }
+    );
   }
 
   buyItem(item: FoodItemI): Observable<HttpResponse<FoodItemI[]>> {
     return this.http.post<FoodItemI[]>(
       this.url + '/buyItem',
       {
-        "name": item.name,
-        "quantity": item.quantity,
-        "weight": item.weight,
+        name: item.name,
+        quantity: item.quantity,
+        unit: item.unit,
+        id: item.id,
       },
-      { observe: 'response' });
+      { observe: 'response' }
+    );
   }
 }

@@ -6,27 +6,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fellowship.mealmaestro.models.MealModel;
-import fellowship.mealmaestro.repositories.BrowseRepository;
-import fellowship.mealmaestro.services.auth.JwtService;
-
+import fellowship.mealmaestro.repositories.MealRepository;
 
 @Service
 public class BrowseService {
-    
-    @Autowired
-    private JwtService jwtService;
-    
-    @Autowired
-    private BrowseRepository browseRepository;
 
-    public List<MealModel> getPopularMeals(String token){
-        String email = jwtService.extractUserEmail(token);
-        return browseRepository.getPopularMeals(email);
+    @Autowired
+    private MealRepository mealRepository;
+
+    public List<MealModel> getPopularMeals() {
+
+        // return 5 random meals
+        return mealRepository.getPopularMeals();
     }
 
-    public List<MealModel> getSearchedMeals(String mealName, String token){
-        String email = jwtService.extractUserEmail(token);
-        return browseRepository.getSearchedMeals(mealName,email);
+    public List<MealModel> getSearchedMeals(String mealName) {
+
+        // return meals that contain the mealName
+        return mealRepository.getSearchedMeals(mealName);
     }
 
 }

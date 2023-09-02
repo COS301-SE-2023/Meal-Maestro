@@ -15,21 +15,21 @@ import fellowship.mealmaestro.services.UserService;
 
 @Configuration
 public class ApplicationConfig {
-    
+
     private final UserService userService;
 
-    public ApplicationConfig(UserService userService){
+    public ApplicationConfig(UserService userService) {
         this.userService = userService;
     }
 
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         return username -> userService.findByEmail(username)
-            .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found"));
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService());
         provider.setPasswordEncoder(passwordEncoder());
@@ -39,7 +39,6 @@ public class ApplicationConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-        //TODO
     }
 
     @Bean
