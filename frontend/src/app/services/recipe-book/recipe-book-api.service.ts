@@ -4,55 +4,56 @@ import { UserI, RecipeItemI, MealI } from '../../models/interfaces';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RecipeBookApiService {
-
   user: UserI = {
     username: localStorage.getItem('user') ?? '',
     email: localStorage.getItem('email') ?? '',
-    password: '', 
-  }
+    password: '',
+  };
 
-  url : String = 'http://localhost:8080';
+  url: String = 'http://localhost:8080';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getAllRecipes(): Observable<HttpResponse<MealI[]>> { 
+  getAllRecipes(): Observable<HttpResponse<MealI[]>> {
     return this.http.post<MealI[]>(
-      this.url+'/getAllRecipes',
+      this.url + '/getAllRecipes',
       {},
-      {observe: 'response'}
+      { observe: 'response' }
     );
   }
 
   addRecipe(item: MealI): Observable<HttpResponse<MealI>> {
     return this.http.post<MealI>(
-      this.url+'/addRecipe',
+      this.url + '/addRecipe',
       {
-        "name":item.name,
-        "description":item.description,
-        "image":item.image,
-        "ingredients":item.ingredients,
-        "instructions":item.instructions,
-        "cookingTime":item.cookingTime
+        name: item.name,
+        description: item.description,
+        image: item.image,
+        ingredients: item.ingredients,
+        instructions: item.instructions,
+        cookingTime: item.cookingTime,
+        type: item.type,
       },
-      {observe: 'response'}
+      { observe: 'response' }
     );
   }
 
   removeRecipe(item: MealI): Observable<HttpResponse<void>> {
     return this.http.post<void>(
-      this.url+'/removeRecipe',
-      {        
-        "name":item.name,
-        "description":item.description,
-        "image":item.image,
-        "ingredients":item.ingredients,
-        "instructions":item.instructions,
-        "cookingTime":item.cookingTime        
+      this.url + '/removeRecipe',
+      {
+        name: item.name,
+        description: item.description,
+        image: item.image,
+        ingredients: item.ingredients,
+        instructions: item.instructions,
+        cookingTime: item.cookingTime,
+        type: item.type,
       },
-      {observe: 'response'}
+      { observe: 'response' }
     );
   }
 }
