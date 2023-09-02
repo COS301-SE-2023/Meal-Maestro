@@ -136,7 +136,7 @@
             <ion-button (click)="setOpenPreferences(false)">Cancel</ion-button>
           </ion-buttons>
           <ion-buttons slot="end">
-            <ion-button (click)="setOpenPreferencesSave(false)" [strong]="true">Confirm</ion-button>
+            <ion-button [disabled]="disabledConfirmPreference()" (click)="setOpenPreferencesSave(false)" [strong]="true">Confirm</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
@@ -263,7 +263,7 @@
             <ion-button (click)="setOpenBudget(false)">Cancel</ion-button>
           </ion-buttons>
           <ion-buttons slot="end">
-            <ion-button (click)="setOpenBudgetSave(false)" [strong]="true">Confirm</ion-button>
+            <ion-button [disabled]="disabledConfirmBudget()" (click)="setOpenBudgetSave(false)" [strong]="true">Confirm</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
@@ -459,7 +459,7 @@
             <ion-button (click)="setOpenCooking(false)">Cancel</ion-button>
           </ion-buttons>
           <ion-buttons slot="end">
-            <ion-button (click)="setOpenCookingSave(false)" [strong]="true">Confirm</ion-button>
+            <ion-button [disabled]="disabledCalorieCookingTime()" (click)="setOpenCookingSave(false)" [strong]="true">Confirm</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>

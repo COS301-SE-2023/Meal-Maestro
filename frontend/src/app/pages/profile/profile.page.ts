@@ -622,7 +622,11 @@ export class ProfilePage implements OnInit {
 
   setOpenShopping(isOpen: boolean) {
     if (isOpen === false) {
-    this.resetShopping();
+      console.log("reset")
+      console.log(this.userpreferences.shoppingInterval)
+      // this.userpreferences.shoppingInterval = "other"
+    this.resetShopping()
+    console.log(this.userpreferences.shoppingInterval)
     this.isShoppingModalOpen = isOpen;
     }
     else if (isOpen === true) {
@@ -841,6 +845,12 @@ calculateBMI() {
 
  resetShopping()
 {
+  if (this.userpreferences.shoppingInterval.includes("days")) {
+     const temp = this.userpreferences.shoppingInterval;
+    this.userpreferences.shoppingInterval = "other";  
+    this.shoppingIntervalOtherValue = temp;
+  }
+
  
   this.userpreferences.shoppingInterval = this.initialshoppinginterval;
   this.shoppingintervalToggle = this.initialshoppingintervalToggle;
@@ -913,12 +923,35 @@ resetBMI()
   this.BMIToggle = this.initialBMIToggle;
 }
 
-disabledConfirmShopping() {
-  if (this.shoppingintervalToggle === true && this.shoppingInterval === '') {
-    return false;
-  } else if (this.shoppingintervalToggle === false ) {
-    return true;
-  } 
-  return false;
+
+
+disabledConfirmShopping(): boolean {
+  if (this.userpreferences.shoppingIntervalSet) {
+    return !this.shoppingInterval; 
+  }
+  return false; 
 }
+
+disabledConfirmPreference(): boolean {
+  if (this.userpreferences.foodPreferenceSet) {
+    return !this.displayPreferences; 
+  }
+  return false; 
+}
+
+disabledConfirmBudget(): boolean {
+  if (this.userpreferences.budgetSet) {
+    return !this.selectedPriceRange; 
+  }
+  return false; 
+}
+
+disabledCalorieCookingTime(): boolean {
+  if (this.userpreferences.cookingTimeSet) {
+    return !this.userpreferences.cookingTime; 
+  }
+  return false; 
+}
+
+
 }
