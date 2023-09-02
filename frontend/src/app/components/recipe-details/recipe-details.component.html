@@ -23,5 +23,7 @@
   <h4>Ingredients</h4>
   <p>{{ item.ingredients }}</p>
   <h4>Instructions</h4>
-  <p>{{ item.instructions }}</p>
+    <ol>
+      <li *ngFor="let instruction of fIns">{{ instruction }}</li>
+    </ol>
 </ion-content>
