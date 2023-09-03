@@ -136,7 +136,7 @@ public class MealDatabaseService {
     }
 
     public boolean canMakeMeal(List<FoodModel> pantryItems, String ingredients) {
-        String[] ingredientsArray = ingredients.split("\\s+");
+        String[] ingredientsArray = ingredients.split(",");
         for (String ingredient : ingredientsArray) {
             boolean found = false;
             for (FoodModel pantryItem : pantryItems) {

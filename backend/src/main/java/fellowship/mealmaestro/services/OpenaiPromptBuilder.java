@@ -57,6 +57,8 @@ public class OpenaiPromptBuilder {
 
         OpenAIChatRequest.Message userMessage = new OpenAIChatRequest.Message();
 
+        System.out.println("1st random: " + random);
+
         if (pantryFoods.equals("")) {
             if (random < 0.3) {
                 pantryFoods = "I have no food in my pantry";
@@ -68,6 +70,9 @@ public class OpenaiPromptBuilder {
         } else {
             pantryFoods = "I have the following foods in my pantry: " + pantryFoods;
         }
+
+        random = rand.nextDouble();
+        System.out.println("2nd random: " + random);
 
         if (settings.equals("")) {
             if (random < 0.3) {
@@ -81,6 +86,8 @@ public class OpenaiPromptBuilder {
             settings = "Some other useful information about me: " + settings + ".";
         }
 
+        random = rand.nextDouble();
+        System.out.println("3rd random: " + random);
         userMessage.setRole("user");
         if (random < 0.5) {
             userMessage.setContent("I want to cook a " + type + " meal. " + pantryFoods + ". " + settings);

@@ -13,6 +13,7 @@ public interface MealRepository extends Neo4jRepository<MealModel, String> {
         @Query("MATCH (m:Meal)\n" +
                         "WITH m, rand() as random\n" +
                         "ORDER BY random\n" +
+                        "LIMIT 10\n" +
                         "RETURN m.name AS name, m.instructions AS instructions, m.description AS description, " +
                         "m.image AS image, m.ingredients AS ingredients, m.cookingTime AS cookingTime, m.type AS type")
         List<MealModel> getPopularMeals(); // TODO: add limit and popularity
