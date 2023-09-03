@@ -1,4 +1,11 @@
-import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  Renderer2,
+  ViewChildren,
+} from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { DailyMealsComponent } from '../../components/daily-meals/daily-meals.component';
 import { DaysMealsI } from '../../models/daysMeals.model';
@@ -15,9 +22,12 @@ import { CommonModule } from '@angular/common';
   imports: [IonicModule, DailyMealsComponent, CommonModule],
 })
 export class HomePage implements OnInit {
+  @ViewChildren(DailyMealsComponent) mealCards!: QueryList<DailyMealsComponent>;
+
   daysMeals: DaysMealsI[] = [];
   isLoading: boolean = true;
   showLoading: boolean = true;
+
   constructor(
     public r: Router,
     private renderer: Renderer2,

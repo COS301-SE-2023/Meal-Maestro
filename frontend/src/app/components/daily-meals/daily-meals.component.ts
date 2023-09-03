@@ -1,6 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Input } from '@angular/core';
-import { IonicModule, IonicSlides } from '@ionic/angular';
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewChild,
+  ViewChildren,
+  QueryList,
+  Renderer2,
+  ElementRef,
+} from '@angular/core';
+import { IonItemSliding, IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
 import { DaysMealsI } from '../../models/daysMeals.model';
@@ -20,6 +29,7 @@ import { AddRecipeService } from '../../services/recipe-book/add-recipe.service'
   imports: [CommonModule, IonicModule],
 })
 export class DailyMealsComponent implements OnInit {
+  @ViewChildren(IonItemSliding) slidingItems!: QueryList<IonItemSliding>;
   breakfast: string = 'breakfast';
   lunch: string = 'lunch';
   dinner: string = 'dinner';
@@ -30,6 +40,19 @@ export class DailyMealsComponent implements OnInit {
   isDinnerModalOpen = false;
   isModalOpen = false;
   currentObject: DaysMealsI | undefined;
+  isBreakfastLoading: boolean = false;
+  isLunchLoading: boolean = false;
+  isDinnerLoading: boolean = false;
+
+  constructor(
+    public r: Router,
+    private mealGenerationservice: MealGenerationService,
+    private errorHandlerService: ErrorHandlerService,
+    private addService: AddRecipeService,
+    private renderer: Renderer2,
+    private el: ElementRef
+  ) {}
+
   setOpen(isOpen: boolean, mealType: string) {
     if (mealType === 'breakfast') {
       this.isBreakfastModalOpen = isOpen;
@@ -48,12 +71,6 @@ export class DailyMealsComponent implements OnInit {
       }
     }
   }
-  constructor(
-    public r: Router,
-    private mealGenerationservice: MealGenerationService,
-    private errorHandlerService: ErrorHandlerService,
-    private addService: AddRecipeService
-  ) {}
 
   ngOnInit() {
     console.log(this.dayData);
@@ -67,6 +84,9 @@ export class DailyMealsComponent implements OnInit {
     else if (meal == 'lunch') recipe = this.dayData.lunch;
     else recipe = this.dayData.dinner;
 
+    console.log('button clicked');
+
+    this.closeItem();
     this.addService.setRecipeItem(recipe);
   }
 
@@ -75,20 +95,28 @@ export class DailyMealsComponent implements OnInit {
     console.log(meal);
     // Add your custom logic here
     if (meal && mealDate) {
+      this.closeItem();
+      if (meal.type == 'breakfast') this.isBreakfastLoading = true;
+      else if (meal.type == 'lunch') this.isLunchLoading = true;
+      else this.isDinnerLoading = true;
+
       let regenRequest: RegenerateMealRequestI = {
         meal: meal,
         mealDate: mealDate,
       };
-
+      this.fetchLoadingSvg(meal.type);
       this.mealGenerationservice.regenerate(regenRequest).subscribe({
         next: (data) => {
           if (data.body) {
             console.log(data.body);
             if (meal.type == 'breakfast') {
+              this.isBreakfastLoading = false;
               this.dayData.breakfast = data.body;
             } else if (meal.type == 'lunch') {
+              this.isLunchLoading = false;
               this.dayData.lunch = data.body;
             } else if (meal.type == 'dinner') {
+              this.isDinnerLoading = false;
               this.dayData.dinner = data.body;
             }
           }
@@ -105,5 +133,24 @@ export class DailyMealsComponent implements OnInit {
 
   setCurrent(o: any) {
     this.currentObject = o;
+  }
+
+  closeItem() {
+    this.slidingItems.forEach((item: IonItemSliding) => {
+      item.close();
+    });
+  }
+
+  fetchLoadingSvg(name: string) {
+    fetch('assets/regen.svg')
+      .then((response) => response.text())
+      .then((svg) => {
+        this.renderer.setProperty(
+          this.el.nativeElement.querySelector('.' + name + '-svg-container'),
+          'innerHTML',
+          svg
+        );
+        return;
+      });
   }
 }

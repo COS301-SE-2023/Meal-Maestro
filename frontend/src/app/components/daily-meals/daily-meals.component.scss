@@ -2,28 +2,22 @@ ion-avatar {
   width: 100%;
   height: 15vh;
   --border-radius: 0%;
-
 }
 ion-item-sliding {
- 
   --ion-padding: 0px;
- }
+}
 
 ion-item {
- width: 100%;
- display: block;
- --ion-padding: 0px;
-
-
-
-
+  width: 100%;
+  display: block;
+  --ion-padding: 0px;
 }
 ion-card {
   padding: 0%;
   --ion-padding: 0px;
 }
 
-.div1 img{
+.div1 img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -31,10 +25,9 @@ ion-card {
 }
 
 .no-style {
-  --padding-start:0;
+  --padding-start: 0;
   --padding-end: 0;
   padding-right: 0%;
-
 }
 .side {
   display: inline;
@@ -52,4 +45,17 @@ ion-card {
   background-color: var(--ion-color-primary);
   margin-left: 8px;
   margin-right: 8px;
+}
+
+.svg-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+  scale: 0.7;
+}
+
+.hidden-card {
+  display: none !important;
 }
