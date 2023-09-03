@@ -397,22 +397,61 @@ export class ProfilePage implements OnInit {
   }
 
   setOpenBudgetSave(isOpen: boolean) {
-    if (this.userpreferences.budgetSet === true) {
-      if (this.selectedPriceRange === 'custom') {
-        if (!this.userpreferences.budgetRange.toString().includes("R")) {
-        this.userpreferences.budgetRange = "R "+this.userpreferences.budgetRange.toString();
-        }
-      } else {
-        this.userpreferences.budgetRange = this.selectedPriceRange;
-      }
-      this.isBudgetModalOpen = isOpen;
-    } else if (this.userpreferences.budgetSet === false) {
-      this.userpreferences.budgetRange = '';
-      this.isBudgetModalOpen = isOpen;
+    console.log('Entering setOpenBudgetSave');
+    console.log('Initial userpreferences.budgetRange:', this.userpreferences.budgetRange);
+    console.log('Selected Price Range:', this.selectedPriceRange);
+  
+   if (this.userpreferences.budgetSet === true) {
+    console.log('Budget is set to true');
+    if (this.selectedPriceRange !== "custom") {
+    console.log('Budget is not custom');
+    this.userpreferences.budgetRange = this.selectedPriceRange;
     }
+    else if (this.selectedPriceRange === "custom") {
+      console.log('Budget is custom');
+      console.log('this.userpreferences.budgetRange:', this.userpreferences.budgetRange);
+      if (this.userpreferences.budgetRange === '' || this.userpreferences.budgetRange === "high" || this.userpreferences.budgetRange === "medium" || this.userpreferences.budgetRange === "low") {
+        console.log('Budget is empty');
+        this.userpreferences.budgetRange = 'R 100';
+      }
+      else if (this.userpreferences.budgetRange !== '' && this.userpreferences.budgetRange !== "high" && this.userpreferences.budgetRange !== "medium" && this.userpreferences.budgetRange !== "low") {
+        console.log('Budget is not empty');
+        if (this.userpreferences.budgetRange !== null && this.userpreferences.budgetRange !== undefined) {
+          const budgetString = this.userpreferences.budgetRange.toString();
+          const rCount = (budgetString.match(/R/g) || []).length;
+        
+          // Check if the string contains only numbers and/or an "R"
+          const isValid = /^[R]?[0-9\s]*$/.test(budgetString);
+        
+          if (!isValid) {
+            console.log('Invalid characters found. Removing them.');
+            this.userpreferences.budgetRange = budgetString.replace(/[^0-9R\s]/g, '');
+          }
+        
+          if (rCount > 1) {
+            console.log('Multiple Rs found. Removing extra Rs.');
+            this.userpreferences.budgetRange = budgetString.replace(/R/g, '').trim();
+            this.userpreferences.budgetRange = 'R ' + this.userpreferences.budgetRange;
+          } else if (rCount === 1) {
+            console.log('Only one R found. Cleaning up spaces.');
+            this.userpreferences.budgetRange = budgetString.replace("R", "").trim();
+            this.userpreferences.budgetRange = 'R ' + this.userpreferences.budgetRange;
+          } else {
+            console.log('No R found. Adding one.');
+            this.userpreferences.budgetRange = 'R ' + budgetString;
+          }
+        }
+      }        
+
+    }
+   }
+
     this.setInitialBudget();
     this.updateSettingsOnServer();
   }
+  
+
+  
 
   validateBudgetInput(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -944,6 +983,8 @@ disabledConfirmPreference(): boolean {
 }
 
 disabledConfirmBudget(): boolean {
+
+
   if (this.userpreferences.budgetSet) {
     return !this.selectedPriceRange; 
   }
