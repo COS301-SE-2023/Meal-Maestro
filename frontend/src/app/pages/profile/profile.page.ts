@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule, PickerController } from '@ionic/angular';
+import { IonicModule, PickerController, ToastController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { UserPreferencesI } from '../../models/userpreference.model';
 
@@ -20,12 +20,14 @@ import { AuthenticationService } from '../../services/services';
 })
 
 export class ProfilePage implements OnInit {
+  
 
   constructor(
     private router: Router,
     private pickerController: PickerController,
     private settingsApiService: SettingsApiService,
-    private auth: AuthenticationService
+    private auth: AuthenticationService,
+    private toastController: ToastController
   ) {
    
   }
@@ -165,7 +167,6 @@ export class ProfilePage implements OnInit {
               this.shoppingInterval = ''; 
             }
 
-          
             this.userpreferences.foodPreferences = response.body.foodPreferences;
             if (response.body.calorieAmount == 0) {
               this.userpreferences.calorieAmount = '';
@@ -397,60 +398,49 @@ export class ProfilePage implements OnInit {
   }
 
   setOpenBudgetSave(isOpen: boolean) {
-    console.log('Entering setOpenBudgetSave');
-    console.log('Initial userpreferences.budgetRange:', this.userpreferences.budgetRange);
-    console.log('Selected Price Range:', this.selectedPriceRange);
+    console.log('setOpenBudgetSave called with:', isOpen); // Debug 1
   
-   if (this.userpreferences.budgetSet === true) {
-    console.log('Budget is set to true');
-    if (this.selectedPriceRange !== "custom") {
-    console.log('Budget is not custom');
-    this.userpreferences.budgetRange = this.selectedPriceRange;
-    }
-    else if (this.selectedPriceRange === "custom") {
-      console.log('Budget is custom');
-      console.log('this.userpreferences.budgetRange:', this.userpreferences.budgetRange);
-      if (this.userpreferences.budgetRange === '' || this.userpreferences.budgetRange === "high" || this.userpreferences.budgetRange === "medium" || this.userpreferences.budgetRange === "low") {
-        console.log('Budget is empty');
-        this.userpreferences.budgetRange = 'R 100';
-      }
-      else if (this.userpreferences.budgetRange !== '' && this.userpreferences.budgetRange !== "high" && this.userpreferences.budgetRange !== "medium" && this.userpreferences.budgetRange !== "low") {
-        console.log('Budget is not empty');
+    if (this.userpreferences.budgetSet === true) {
+      console.log('Budget is set.'); // Debug 2
+  
+      if (this.selectedPriceRange === 'custom') {
+        console.log('Custom range selected.'); // Debug 3
+  
         if (this.userpreferences.budgetRange !== null && this.userpreferences.budgetRange !== undefined) {
+          console.log('Budget range is neither null nor undefined.'); // Debug 4
+  
           const budgetString = this.userpreferences.budgetRange.toString();
           const rCount = (budgetString.match(/R/g) || []).length;
-        
-          // Check if the string contains only numbers and/or an "R"
+  
           const isValid = /^[R]?[0-9\s]*$/.test(budgetString);
-        
+  
           if (!isValid) {
-            console.log('Invalid characters found. Removing them.');
             this.userpreferences.budgetRange = budgetString.replace(/[^0-9R\s]/g, '');
           }
-        
+  
           if (rCount > 1) {
-            console.log('Multiple Rs found. Removing extra Rs.');
             this.userpreferences.budgetRange = budgetString.replace(/R/g, '').trim();
             this.userpreferences.budgetRange = 'R ' + this.userpreferences.budgetRange;
-          } else if (rCount === 1) {
-            console.log('Only one R found. Cleaning up spaces.');
-            this.userpreferences.budgetRange = budgetString.replace("R", "").trim();
-            this.userpreferences.budgetRange = 'R ' + this.userpreferences.budgetRange;
-          } else {
-            console.log('No R found. Adding one.');
+          } else if (rCount === 0) {
             this.userpreferences.budgetRange = 'R ' + budgetString;
           }
         }
-      }        
-
+      } else {
+        this.userpreferences.budgetRange = this.selectedPriceRange;
+      }
+  
+      this.isBudgetModalOpen = false;
+      console.log('Attempting to close the modal.'); // Debug 5
+    } else {
+      this.userpreferences.budgetRange = '';
+      this.isBudgetModalOpen = false;
     }
-   }
-
+  
     this.setInitialBudget();
     this.updateSettingsOnServer();
+    console.log('Function completed.'); // Debug 6
   }
   
-
   
 
   validateBudgetInput(event: Event) {
@@ -669,10 +659,12 @@ export class ProfilePage implements OnInit {
     }
     else if (isOpen === true) {
       console.log("resetOpen")
-      console.log(this.userpreferences.shoppingInterval)
       if (this.userpreferences.shoppingInterval.includes("days")) {
+        this.shoppingInterval = "other";
         this.shoppingIntervalOtherValue = this.userpreferences.shoppingInterval.replace("days", "").trim();
       }
+      console.log(this.userpreferences.shoppingInterval)
+     
     this.isShoppingModalOpen = isOpen;
     }
   }
@@ -762,24 +754,24 @@ getDisplayOtherShoppingInterval() {
 
       }
 
-    if (this.userpreferences.calorieAmount != 0) {
-      this.calorieToggle = true
-      this.userpreferences.calorieSet = true;
-      }
-
-      console.log("budgetupdatedisplay")
-      console.log(this.userpreferences.budgetRange)
-    if (this.userpreferences.budgetRange.includes("R")) {
-        this.budgetToggle = true
+      console.log("budgetupdatedisplay");
+      console.log(this.userpreferences.budgetRange);
+      
+      // Convert budgetRange to a string to avoid type errors
+      const budgetString = this.userpreferences.budgetRange ? this.userpreferences.budgetRange.toString() : '';
+      
+      // Check for the presence of 'R' and whether it's a custom range
+      if (budgetString.includes("R") && ['low', 'moderate', 'high'].indexOf(budgetString.toLowerCase().replace('r ', '')) === -1) {
+        this.budgetToggle = true;
         this.selectedPriceRange = "custom";
         this.userpreferences.budgetSet = true;
-        console.log("budget- custom")
-    }
-    else if (!this.userpreferences.budgetRange.includes("R")) {
-        this.budgetToggle = true
-        this.selectedPriceRange = this.userpreferences.budgetRange;
+        console.log("budget- custom");
+      }
+      else {
+        this.budgetToggle = true;
+        this.selectedPriceRange = budgetString.replace('R ', '');
         this.userpreferences.budgetSet = true;
-        console.log("budget- not custom")
+        console.log("budget- not custom");
       }
 
 
@@ -998,5 +990,15 @@ disabledCalorieCookingTime(): boolean {
   return false; 
 }
 
+async presentToast(message: string) {
+  const toast = await this.toastController.create({
+    message: message,
+    duration: 2000,
+    position: 'middle',
+  });
+  toast.present();
+}
+
 
 }
+
