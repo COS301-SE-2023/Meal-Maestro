@@ -5,7 +5,7 @@ import {
   ViewChildren,
   ViewChild,
 } from '@angular/core';
-import { IonModal, IonicModule } from '@ionic/angular';
+import { IonModal, IonicModule, ViewWillEnter } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,6 +15,7 @@ import { OverlayEventDetail } from '@ionic/core/components';
 import {
   AuthenticationService,
   ErrorHandlerService,
+  LoginService,
   PantryApiService,
   ShoppingListApiService,
 } from '../../services/services';
@@ -26,7 +27,7 @@ import {
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, FoodListItemComponent],
 })
-export class PantryPage implements OnInit {
+export class PantryPage implements OnInit, ViewWillEnter {
   @ViewChildren(FoodListItemComponent)
   foodListItem!: QueryList<FoodListItemComponent>;
   @ViewChild(IonModal) modal!: IonModal;
@@ -48,11 +49,19 @@ export class PantryPage implements OnInit {
     private pantryService: PantryApiService,
     private shoppingListService: ShoppingListApiService,
     private errorHandlerService: ErrorHandlerService,
-    private auth: AuthenticationService
+    private auth: AuthenticationService,
+    private loginService: LoginService
   ) {}
 
   async ngOnInit() {
     this.fetchItems();
+  }
+
+  async ionViewWillEnter() {
+    if (!this.loginService.isPantryRefreshed()) {
+      this.fetchItems();
+      this.loginService.setPantryRefreshed(true);
+    }
   }
 
   async fetchItems() {

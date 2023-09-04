@@ -6,12 +6,16 @@ import {
   Renderer2,
   ViewChildren,
 } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ViewWillEnter } from '@ionic/angular';
 import { DailyMealsComponent } from '../../components/daily-meals/daily-meals.component';
 import { DaysMealsI } from '../../models/daysMeals.model';
 import { Router } from '@angular/router';
-import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
-import { ErrorHandlerService } from '../../services/services';
+import {
+  AuthenticationService,
+  ErrorHandlerService,
+  LoginService,
+  MealGenerationService,
+} from '../../services/services';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -21,7 +25,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [IonicModule, DailyMealsComponent, CommonModule],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, ViewWillEnter {
   @ViewChildren(DailyMealsComponent) mealCards!: QueryList<DailyMealsComponent>;
 
   daysMeals: DaysMealsI[] = [];
@@ -33,7 +37,9 @@ export class HomePage implements OnInit {
     private renderer: Renderer2,
     private el: ElementRef,
     private mealGenerationservice: MealGenerationService,
-    private errorHandlerService: ErrorHandlerService
+    private errorHandlerService: ErrorHandlerService,
+    private loginService: LoginService,
+    private auth: AuthenticationService
   ) {}
 
   async ngOnInit() {
@@ -59,6 +65,16 @@ export class HomePage implements OnInit {
       });
 
     await this.getMeals();
+  }
+
+  async ionViewWillEnter() {
+    if (!this.loginService.isHomeRefreshed()) {
+      this.daysMeals = [];
+      this.showLoading = true;
+      this.isLoading = true;
+      this.loginService.setHomeRefreshed(true);
+      await this.getMeals();
+    }
   }
 
   private getDayOfWeek(dayOffset: number): string {
@@ -109,12 +125,22 @@ export class HomePage implements OnInit {
             }
           },
           error: (err) => {
-            this.errorHandlerService.presentErrorToast(
-              'Error loading meal items',
-              err
-            );
-            this.hideLoading();
-            reject();
+            if (err.status === 403) {
+              this.errorHandlerService.presentErrorToast(
+                'Unauthorized access. Please login again.',
+                err
+              );
+              reject();
+              this.hideLoading();
+              this.auth.logout();
+            } else {
+              this.errorHandlerService.presentErrorToast(
+                'Error loading meal items',
+                err
+              );
+              this.hideLoading();
+              reject();
+            }
           },
         });
       });

@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 import { UserI } from '../../models/user.model';
 import {
   AuthenticationService,
+  ErrorHandlerService,
+  LoginService,
   SettingsApiService,
 } from '../../services/services';
 
@@ -24,7 +26,9 @@ export class ProfilePage implements OnInit, ViewWillEnter {
     private router: Router,
     private pickerController: PickerController,
     private settingsApiService: SettingsApiService,
-    private auth: AuthenticationService
+    private auth: AuthenticationService,
+    private loginService: LoginService,
+    private errorHandlerService: ErrorHandlerService
   ) {
     this.selectedPriceRange = '';
   }
@@ -118,13 +122,52 @@ export class ProfilePage implements OnInit, ViewWillEnter {
         }
       },
       error: (error) => {
-        console.log(error);
+        if (error.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorized access. Please login again.',
+            error
+          );
+          this.auth.logout();
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Unexpected error while loading user data',
+            error
+          );
+        }
       },
     });
   }
 
   ionViewWillEnter(): void {
-    this.loadUserSettings();
+    if (this.loginService.isSettingsRefreshed()) {
+      this.loadUserSettings();
+      this.auth.getUser().subscribe({
+        next: (response) => {
+          if (response.status == 200) {
+            if (response.body && response.body.name) {
+              this.user.username = response.body.name;
+              this.user.email = response.body.email;
+              this.user.password = response.body.password;
+            }
+          }
+        },
+        error: (error) => {
+          if (error.status === 403) {
+            this.errorHandlerService.presentErrorToast(
+              'Unauthorized access. Please login again.',
+              error
+            );
+            this.auth.logout();
+          } else {
+            this.errorHandlerService.presentErrorToast(
+              'Unexpected error while loading user data',
+              error
+            );
+          }
+        },
+      });
+      this.loginService.setSettingsRefreshed(false);
+    }
   }
 
   private async loadUserSettings() {
@@ -168,10 +211,16 @@ export class ProfilePage implements OnInit, ViewWillEnter {
       },
       error: (err) => {
         if (err.status === 403) {
-          console.log('Unauthorized access. Please login again.', err);
-          this.router.navigate(['../']);
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorized access. Please login again.',
+            err
+          );
+          this.auth.logout();
         } else {
-          console.log('Error loading user settings', err);
+          this.errorHandlerService.presentErrorToast(
+            'Unexpected error while loading user settings',
+            err
+          );
         }
       },
     });
@@ -192,7 +241,18 @@ export class ProfilePage implements OnInit, ViewWillEnter {
       },
       error: (error) => {
         // Handle error while updating settings
-        console.log('Error updating settings', error);
+        if (error.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorized access. Please login again.',
+            error
+          );
+          this.auth.logout();
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Unexpected error while updating settings',
+            error
+          );
+        }
       },
     });
   }
