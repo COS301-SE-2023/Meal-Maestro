@@ -29,6 +29,9 @@ public class MealManagementService {
     private UnsplashService unsplashService;
 
     public MealModel generateMeal(String mealType, String token) {
+        MealModel defaultMeal = new MealModel("Bread", "1. Toast the bread", "Delicious Bread",
+                "https://images.unsplash.com/photo-1598373182133-52452f7691ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                "Bread", "5 minutes");
         try {
             JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(mealType, token));
             int i = 0;
@@ -38,7 +41,7 @@ public class MealManagementService {
                     if (validate(mealJson))
                         break;
                 }
-                return null;
+                return defaultMeal;
             }
 
             String imageUrl = "";
@@ -52,7 +55,7 @@ public class MealManagementService {
             return mealModel;
         } catch (JsonProcessingException e) {
             System.out.println(e.getMessage());
-            return null;
+            return defaultMeal;
         }
     }
 

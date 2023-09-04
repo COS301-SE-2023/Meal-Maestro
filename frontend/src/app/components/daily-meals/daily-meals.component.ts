@@ -3,7 +3,6 @@ import {
   Component,
   OnInit,
   Input,
-  ViewChild,
   ViewChildren,
   QueryList,
   Renderer2,
@@ -14,11 +13,7 @@ import { Router } from '@angular/router';
 import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
 import { DaysMealsI } from '../../models/daysMeals.model';
 import { ErrorHandlerService } from '../../services/services';
-import {
-  MealI,
-  RecipeItemI,
-  RegenerateMealRequestI,
-} from '../../models/interfaces';
+import { MealI, RegenerateMealRequestI } from '../../models/interfaces';
 import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
 
 @Component({
@@ -92,8 +87,6 @@ export class DailyMealsComponent implements OnInit {
 
   async handleRegenerate(meal: MealI | undefined, mealDate: Date | undefined) {
     // Function to handle the "Sync" option action
-    console.log(meal);
-    // Add your custom logic here
     if (meal && mealDate) {
       this.closeItem();
       if (meal.type == 'breakfast') this.isBreakfastLoading = true;
