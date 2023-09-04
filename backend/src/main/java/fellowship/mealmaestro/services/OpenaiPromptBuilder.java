@@ -13,6 +13,7 @@ import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.models.OpenAIChatRequest.Message;
 import fellowship.mealmaestro.repositories.UserRepository;
 import fellowship.mealmaestro.services.auth.JwtService;
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class OpenaiPromptBuilder {
@@ -22,6 +23,13 @@ public class OpenaiPromptBuilder {
 
     @Autowired
     private UserRepository userRepository;
+
+    private Random rand;
+
+    @PostConstruct
+    public void init() {
+        rand = new Random(System.currentTimeMillis());
+    }
 
     public OpenAIChatRequest buildPrompt(String type, String token) throws JsonProcessingException {
 
@@ -51,8 +59,6 @@ public class OpenaiPromptBuilder {
         String pantryFoods = user.getPantry().toString();
         String settings = user.getSettings().toString();
 
-        // random with time as seed
-        Random rand = new Random(System.currentTimeMillis());
         double random = rand.nextDouble();
 
         OpenAIChatRequest.Message userMessage = new OpenAIChatRequest.Message();

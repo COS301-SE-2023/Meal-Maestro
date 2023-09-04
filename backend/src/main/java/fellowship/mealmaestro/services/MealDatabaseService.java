@@ -46,9 +46,9 @@ public class MealDatabaseService {
         dinner = mealRepository.save(dinner);
 
         // Step 3: Create a HasMeal relationship between the MealModel and User
-        HasMeal breakfastHasMeal = new HasMeal(breakfast, date);
-        HasMeal lunchHasMeal = new HasMeal(lunch, date);
-        HasMeal dinnerHasMeal = new HasMeal(dinner, date);
+        HasMeal breakfastHasMeal = new HasMeal(breakfast, date, "breakfast");
+        HasMeal lunchHasMeal = new HasMeal(lunch, date, "lunch");
+        HasMeal dinnerHasMeal = new HasMeal(dinner, date, "dinner");
 
         // Step 4: Add the HasMeal relationship to the User
         String email = jwtService.extractUserEmail(token);
@@ -95,7 +95,7 @@ public class MealDatabaseService {
         return mealModels;
     }
 
-    public void removeOldMeals(String token) { // TODO: double check this works
+    public void removeOldMeals(String token) {
         String email = jwtService.extractUserEmail(token);
 
         UserModel user = userRepository.findByEmail(email).get();
@@ -159,7 +159,7 @@ public class MealDatabaseService {
         MealModel oldMeal = request.getMeal();
         LocalDate date = request.getDate();
         mealRepository.save(newMeal);
-        mealRepository.replaceMeal(date, oldMeal.getName(), newMeal.getName(), email);
+        mealRepository.replaceMeal(date, oldMeal.getName(), newMeal.getName(), email, oldMeal.getType());
         return newMeal;
     }
 

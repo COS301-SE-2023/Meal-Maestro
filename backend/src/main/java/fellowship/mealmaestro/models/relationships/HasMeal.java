@@ -20,12 +20,15 @@ public class HasMeal {
 
     private LocalDate date;
 
+    private String mealType;
+
     public HasMeal() {
     }
 
-    public HasMeal(MealModel meal, LocalDate date) {
+    public HasMeal(MealModel meal, LocalDate date, String mealType) {
         this.meal = meal;
         this.date = date;
+        this.mealType = mealType;
     }
 
     public Long getId() {
@@ -46,5 +49,13 @@ public class HasMeal {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public void setMealType(String mealType) {
+        this.mealType = mealType;
+    }
+
+    public String getMealType() {
+        return mealType;
     }
 }

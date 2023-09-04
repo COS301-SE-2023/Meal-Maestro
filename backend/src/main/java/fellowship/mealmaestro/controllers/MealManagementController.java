@@ -59,12 +59,21 @@ public class MealManagementController {
             }
             if (!lunch.isPresent()) {
                 MealModel lunchGenerated = mealManagementService.generateMeal("lunch", token);
+                // if lunch name is the same as breakfast name, generate a new lunch
+                // while (lunchGenerated.getName().equals(breakfast.get().getName())) {
+                // lunchGenerated = mealManagementService.generateMeal("lunch", token);
+                // }
                 mealsForDay.add(lunchGenerated);
             } else {
                 mealsForDay.add(lunch.get());
             }
             if (!dinner.isPresent()) {
                 MealModel dinnerGenerated = mealManagementService.generateMeal("dinner", token);
+                // if dinner name is the same as breakfast or lunch name, generate a new dinner
+                // while (dinnerGenerated.getName().equals(breakfast.get().getName())
+                // || dinnerGenerated.getName().equals(lunch.get().getName())) {
+                // dinnerGenerated = mealManagementService.generateMeal("dinner", token);
+                // }
                 mealsForDay.add(dinnerGenerated);
             } else {
                 mealsForDay.add(dinner.get());
