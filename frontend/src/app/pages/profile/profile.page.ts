@@ -61,7 +61,6 @@ export class ProfilePage implements OnInit {
     shoppingIntervalSet: false,
   };
 
-  // Variables for displaying
   displaying_Macroratio: string | undefined;
   shoppingIntervalOtherValue: number | undefined | any = 7;
   shoppingInterval: string | any;
@@ -70,7 +69,6 @@ export class ProfilePage implements OnInit {
   selectedPreferences: string | any;
   selectedPriceRange: string | any;
 
-  // Check if possible to change
   preferences = {
     vegetarian: false,
     vegan: false,
@@ -85,7 +83,6 @@ export class ProfilePage implements OnInit {
     eggs: false,
   };
 
-  // Modal controllers
   isPreferencesModalOpen: boolean = false;
   isCalorieModalOpen: boolean = false;
   isBudgetModalOpen: boolean = false;
@@ -112,11 +109,15 @@ export class ProfilePage implements OnInit {
   initialpreferenceVegan : string | any;
   initialpreferenceGlutenIntolerant : string | any;
   initialpreferenceLactoseIntolerant : string | any;
-  
   initialcalorie : number | any;
   initialbudget : string | any;
   initialmacro : any;
   initialallergies : string | any;
+  initialallergiesSeafood : string | any;
+  initialallergiesNuts : string | any;
+  initialallergiesEggs : string | any;
+  initialallergiesSoy : string | any;
+
   initialcooking : string | any;
   initialBMI : number | any;
   initialshoppingintervalToggle : boolean | any;
@@ -308,6 +309,15 @@ export class ProfilePage implements OnInit {
     console.log('Saving Preferences');
     if (this.userpreferences.foodPreferenceSet === true) {
       this.getSelectedPreferences();  // This will update this.userpreferences.foodPreferences
+      if (
+        !this.preferences.vegetarian &&
+        !this.preferences.vegan &&
+        !this.preferences.glutenIntolerant &&
+        !this.preferences.lactoseIntolerant
+      ) {
+        this.presentToast('Please select at least one food preference. If you have no food preferences, please uncheck the food preferences toggle.');
+        return;
+      }
       if (!isOpen) {
         this.updateDisplayData(); // Update the display data when the modal is closed
       }
@@ -548,17 +558,19 @@ export class ProfilePage implements OnInit {
   setOpenAllergiesSave(isOpen: boolean) {
     if (this.userpreferences.allergiesSet === true) {
       if (
-        this.allergens.seafood ||
-        this.allergens.nuts ||
-        this.allergens.eggs ||
-        this.allergens.soy
+        !this.allergens.seafood &&
+        !this.allergens.nuts &&
+        !this.allergens.eggs &&
+        !this.allergens.soy
       ) {
-        if (!isOpen) {
-          this.displayAllergies = this.getSelectedAllergens(); // Update the display data when the modal is closed
-        }
-        this.isAllergiesModalOpen = isOpen;
+        this.presentToast('Please select at least one allergen. if you have no allergies, please uncheck the allergies toggle.');
+        return;
       }
-    } else if (this.userpreferences.allergiesSet === false) {
+      if (!isOpen) {
+        this.displayAllergies = this.getSelectedAllergens(); // Update the display data when the modal is closed
+      }
+      this.isAllergiesModalOpen = isOpen;
+    } else {
       this.userpreferences.allergies = [];
       this.displayAllergies = '';
       this.isAllergiesModalOpen = isOpen;
@@ -566,6 +578,7 @@ export class ProfilePage implements OnInit {
     this.setInitialAllergies();
     this.updateSettingsOnServer();
   }
+
   allergies_Toggle() {
     this.userpreferences.allergiesSet = !this.userpreferences.allergiesSet;
   }
@@ -865,6 +878,10 @@ calculateBMI() {
 
   setInitialAllergies()
   {
+    this.initialallergiesSeafood = this.allergens.seafood;
+    this.initialallergiesNuts = this.allergens.nuts;
+    this.initialallergiesEggs = this.allergens.eggs;
+    this.initialallergiesSoy = this.allergens.soy;
     this.initialallergies = this.userpreferences.allergies;
     this.initialallergiesToggle = this.userpreferences.allergiesSet;
   }
@@ -947,6 +964,10 @@ resetMacro()
 
 resetAllergies()
 {
+  this.allergens.seafood = this.initialallergiesSeafood;
+  this.allergens.nuts = this.initialallergiesNuts;
+  this.allergens.eggs = this.initialallergiesEggs;
+  this.allergens.soy = this.initialallergiesSoy;
   this.userpreferences.allergies = this.initialallergies;
   this.userpreferences.allergiesSet = this.initialallergiesToggle;
   this.allergiesToggle = this.initialallergiesToggle;
@@ -1002,8 +1023,7 @@ disabledCalorieCookingTime(): boolean {
 async presentToast(message: string) {
   const toast = await this.toastController.create({
     message: message,
-    duration: 2000,
-    position: 'middle',
+    duration: 2000
   });
   toast.present();
 }
