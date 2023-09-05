@@ -108,6 +108,11 @@ export class ProfilePage implements OnInit {
   //reset logic for cancel button
   initialshoppinginterval : string | any;
   initialpreference : string | any;
+  initialpreferenceVegetarian : string | any;
+  initialpreferenceVegan : string | any;
+  initialpreferenceGlutenIntolerant : string | any;
+  initialpreferenceLactoseIntolerant : string | any;
+  
   initialcalorie : number | any;
   initialbudget : string | any;
   initialmacro : any;
@@ -300,19 +305,14 @@ export class ProfilePage implements OnInit {
   }
 
   setOpenPreferencesSave(isOpen: boolean) {
+    console.log('Saving Preferences');
     if (this.userpreferences.foodPreferenceSet === true) {
-      if (
-        this.preferences.vegetarian ||
-        this.preferences.vegan ||
-        this.preferences.glutenIntolerant ||
-        this.preferences.lactoseIntolerant
-      ) {
-        if (!isOpen) {
-          this.updateDisplayData(); // Update the display data when the modal is closed
-        }
-        this.isPreferencesModalOpen = isOpen;
+      this.getSelectedPreferences();  // This will update this.userpreferences.foodPreferences
+      if (!isOpen) {
+        this.updateDisplayData(); // Update the display data when the modal is closed
       }
-    } else if (this.userpreferences.foodPreferenceSet === false) {
+      this.isPreferencesModalOpen = isOpen;
+    } else {
       this.userpreferences.foodPreferences = [];
       this.displayPreferences = '';
       this.isPreferencesModalOpen = isOpen;
@@ -835,11 +835,15 @@ calculateBMI() {
     this.initialshoppingintervalToggle = this.userpreferences.shoppingIntervalSet;
  }
 
- setIntialPreference()
-  {
-    this.initialpreference = this.userpreferences.foodPreferences;
-    this.initialpreferenceToggle = this.userpreferences.foodPreferenceSet;
-  }
+ setIntialPreference() {
+  console.log('Setting Initial Preferences');
+  this.initialpreference = this.userpreferences.foodPreferences;
+  this.initialpreferenceToggle = this.userpreferences.foodPreferenceSet;
+  this.initialpreferenceVegetarian = this.preferences.vegetarian;
+  this.initialpreferenceVegan = this.preferences.vegan;
+  this.initialpreferenceGlutenIntolerant = this.preferences.glutenIntolerant;
+  this.initialpreferenceLactoseIntolerant = this.preferences.lactoseIntolerant;
+}
 
   setInitialCalorie()
   {
@@ -893,13 +897,18 @@ calculateBMI() {
   this.shoppingInterval = this.initialshoppinginterval;
 }
 
-resetPreference()
-{
+resetPreference() {
+  console.log('Resetting Preferences');
+  // Reset both userpreferences and preferences objects
+  this.preferences.vegetarian = this.initialpreferenceVegetarian;
+  this.preferences.vegan = this.initialpreferenceVegan;
+  this.preferences.glutenIntolerant = this.initialpreferenceGlutenIntolerant;
+  this.preferences.lactoseIntolerant = this.initialpreferenceLactoseIntolerant;
+
   this.userpreferences.foodPreferences = this.initialpreference;
   this.userpreferences.foodPreferenceSet = this.initialpreferenceToggle;
   this.preferenceToggle = this.initialpreferenceToggle;
   this.displayPreferences = this.initialpreference;
-
 }
 
 resetCalorie()
