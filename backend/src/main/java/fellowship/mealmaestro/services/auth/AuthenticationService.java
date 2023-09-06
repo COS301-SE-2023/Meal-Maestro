@@ -10,16 +10,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fellowship.mealmaestro.models.PantryModel;
-import fellowship.mealmaestro.models.RecipeBookModel;
-import fellowship.mealmaestro.models.SettingsModel;
-import fellowship.mealmaestro.models.ShoppingListModel;
-import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.models.auth.AuthenticationRequestModel;
 import fellowship.mealmaestro.models.auth.AuthenticationResponseModel;
 import fellowship.mealmaestro.models.auth.AuthorityRoleModel;
 import fellowship.mealmaestro.models.auth.RegisterRequestModel;
-import fellowship.mealmaestro.models.relationships.HasMeal;
+import fellowship.mealmaestro.models.neo4j.PantryModel;
+import fellowship.mealmaestro.models.neo4j.RecipeBookModel;
+import fellowship.mealmaestro.models.neo4j.SettingsModel;
+import fellowship.mealmaestro.models.neo4j.ShoppingListModel;
+import fellowship.mealmaestro.models.neo4j.UserModel;
+import fellowship.mealmaestro.models.neo4j.relationships.HasMeal;
 import fellowship.mealmaestro.repositories.UserRepository;
 
 @Service

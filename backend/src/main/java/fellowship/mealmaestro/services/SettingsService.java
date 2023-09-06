@@ -3,8 +3,8 @@ package fellowship.mealmaestro.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import fellowship.mealmaestro.models.SettingsModel;
-import fellowship.mealmaestro.models.UserModel;
+import fellowship.mealmaestro.models.neo4j.SettingsModel;
+import fellowship.mealmaestro.models.neo4j.UserModel;
 import fellowship.mealmaestro.repositories.SettingsRepository;
 import fellowship.mealmaestro.repositories.UserRepository;
 import fellowship.mealmaestro.services.auth.JwtService;

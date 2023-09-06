@@ -20,7 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
-import fellowship.mealmaestro.models.FoodModel;
+import fellowship.mealmaestro.models.neo4j.FoodModel;
 import fellowship.mealmaestro.services.ShoppingListService;
 import fellowship.mealmaestro.services.auth.JwtService;
 

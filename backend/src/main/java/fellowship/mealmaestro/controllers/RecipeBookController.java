@@ -3,7 +3,7 @@ package fellowship.mealmaestro.controllers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import fellowship.mealmaestro.models.MealModel;
+import fellowship.mealmaestro.models.neo4j.MealModel;
 import fellowship.mealmaestro.services.RecipeBookService;
 import jakarta.validation.Valid;
 
@@ -19,7 +19,8 @@ public class RecipeBookController {
     }
 
     @PostMapping("/addRecipe")
-    public ResponseEntity<MealModel> addRecipe(@Valid @RequestBody MealModel request, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<MealModel> addRecipe(@Valid @RequestBody MealModel request,
+            @RequestHeader("Authorization") String token) {
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
@@ -29,7 +30,8 @@ public class RecipeBookController {
     }
 
     @PostMapping("/removeRecipe")
-    public ResponseEntity<Void> removeRecipe(@Valid @RequestBody MealModel request, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<Void> removeRecipe(@Valid @RequestBody MealModel request,
+            @RequestHeader("Authorization") String token) {
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }

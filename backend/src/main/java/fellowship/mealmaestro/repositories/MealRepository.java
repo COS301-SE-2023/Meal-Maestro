@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 
-import fellowship.mealmaestro.models.MealModel;
+import fellowship.mealmaestro.models.neo4j.MealModel;
 
 public interface MealRepository extends Neo4jRepository<MealModel, String> {
 

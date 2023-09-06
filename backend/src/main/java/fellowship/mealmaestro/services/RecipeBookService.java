@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import fellowship.mealmaestro.models.MealModel;
-import fellowship.mealmaestro.models.RecipeBookModel;
-import fellowship.mealmaestro.models.UserModel;
+import fellowship.mealmaestro.models.neo4j.MealModel;
+import fellowship.mealmaestro.models.neo4j.RecipeBookModel;
+import fellowship.mealmaestro.models.neo4j.UserModel;
 import fellowship.mealmaestro.repositories.RecipeBookRepository;
 import fellowship.mealmaestro.repositories.UserRepository;
 import fellowship.mealmaestro.services.auth.JwtService;

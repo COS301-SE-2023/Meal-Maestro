@@ -16,9 +16,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import fellowship.mealmaestro.models.DateModel;
-import fellowship.mealmaestro.models.MealModel;
 import fellowship.mealmaestro.models.RegenerateMealRequest;
+import fellowship.mealmaestro.models.neo4j.DateModel;
+import fellowship.mealmaestro.models.neo4j.MealModel;
 import fellowship.mealmaestro.services.MealDatabaseService;
 import fellowship.mealmaestro.services.MealManagementService;
 import jakarta.validation.Valid;

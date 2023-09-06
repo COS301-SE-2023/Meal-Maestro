@@ -15,7 +15,7 @@ import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 
-import fellowship.mealmaestro.models.MealModel;
+import fellowship.mealmaestro.models.neo4j.MealModel;
 
 @Service
 public class MealManagementService {

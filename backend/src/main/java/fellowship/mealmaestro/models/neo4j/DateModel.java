@@ -1,4 +1,4 @@
-package fellowship.mealmaestro.models;
+package fellowship.mealmaestro.models.neo4j;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

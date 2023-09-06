@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fellowship.mealmaestro.models.FoodModel;
-import fellowship.mealmaestro.models.PantryModel;
-import fellowship.mealmaestro.models.UserModel;
+import fellowship.mealmaestro.models.neo4j.FoodModel;
+import fellowship.mealmaestro.models.neo4j.PantryModel;
+import fellowship.mealmaestro.models.neo4j.UserModel;
 import fellowship.mealmaestro.repositories.FoodRepository;
 import fellowship.mealmaestro.repositories.PantryRepository;
 import fellowship.mealmaestro.repositories.UserRepository;

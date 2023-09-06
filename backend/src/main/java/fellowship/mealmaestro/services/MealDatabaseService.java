@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fellowship.mealmaestro.models.FoodModel;
-import fellowship.mealmaestro.models.MealModel;
 import fellowship.mealmaestro.models.RegenerateMealRequest;
-import fellowship.mealmaestro.models.UserModel;
-import fellowship.mealmaestro.models.relationships.HasMeal;
+import fellowship.mealmaestro.models.neo4j.FoodModel;
+import fellowship.mealmaestro.models.neo4j.MealModel;
+import fellowship.mealmaestro.models.neo4j.UserModel;
+import fellowship.mealmaestro.models.neo4j.relationships.HasMeal;
 import fellowship.mealmaestro.repositories.MealRepository;
 import fellowship.mealmaestro.repositories.UserRepository;
 import fellowship.mealmaestro.services.auth.JwtService;

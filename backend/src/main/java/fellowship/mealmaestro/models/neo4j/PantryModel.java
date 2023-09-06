@@ -1,8 +1,9 @@
-package fellowship.mealmaestro.models;
+package fellowship.mealmaestro.models.neo4j;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
@@ -14,19 +15,34 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-@Node("Shopping List")
-public class ShoppingListModel {
+@Node("Pantry")
+public class PantryModel {
     @Id
     private UUID id;
 
     @Version
     private Long version;
 
-    @Relationship(type = "IN_LIST")
+    @Relationship(type = "IN_PANTRY")
     private List<FoodModel> foods;
 
-    public ShoppingListModel() {
+    public PantryModel() {
         this.id = UUID.randomUUID();
         this.foods = new ArrayList<FoodModel>();
+    }
+
+    @Override
+    public String toString() {
+        String csv;
+
+        if (foods.size() == 0) {
+            csv = "";
+        } else {
+            csv = foods.stream()
+                    .map(FoodModel::getName)
+                    .collect(Collectors.joining(","));
+        }
+
+        return csv;
     }
 }

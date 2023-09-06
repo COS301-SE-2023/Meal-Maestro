@@ -1,4 +1,4 @@
-package fellowship.mealmaestro.models;
+package fellowship.mealmaestro.models.neo4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,19 +14,19 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-@Node("Recipe Book")
-public class RecipeBookModel {
+@Node("Shopping List")
+public class ShoppingListModel {
     @Id
     private UUID id;
 
     @Version
     private Long version;
 
-    @Relationship(type = "CONTAINS_RECIPE")
-    private List<MealModel> recipes;
+    @Relationship(type = "IN_LIST")
+    private List<FoodModel> foods;
 
-    public RecipeBookModel() {
+    public ShoppingListModel() {
         this.id = UUID.randomUUID();
-        this.recipes = new ArrayList<MealModel>();
+        this.foods = new ArrayList<FoodModel>();
     }
 }

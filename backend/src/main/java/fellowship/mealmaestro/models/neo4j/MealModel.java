@@ -1,4 +1,4 @@
-package fellowship.mealmaestro.models;
+package fellowship.mealmaestro.models.neo4j;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.neo4j.core.schema.Node;

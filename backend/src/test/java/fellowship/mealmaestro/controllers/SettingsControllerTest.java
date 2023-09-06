@@ -14,17 +14,16 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import fellowship.mealmaestro.models.SettingsModel;
+import fellowship.mealmaestro.models.neo4j.SettingsModel;
 import fellowship.mealmaestro.services.SettingsService;
 
 @SpringBootTest
-
 
 public class SettingsControllerTest {
 
     @InjectMocks
     SettingsController settingsController;
-    
+
     @Mock
     SettingsService settingsService;
 
@@ -43,15 +42,15 @@ public class SettingsControllerTest {
         
         assertEquals(200, responseEntity.getStatusCodeValue());
     }
-    
+
     @Test
     public void testUpdateSettings() {
         SettingsModel settings = new SettingsModel();
         settings.setUserHeight(180);
         settings.setUserWeight(75);
-        
+
         ResponseEntity<Void> responseEntity = settingsController.updateSettings(settings, "Bearer validToken");
-        
+
         assertEquals(200, responseEntity.getStatusCodeValue());
     }
 }

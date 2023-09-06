@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import fellowship.mealmaestro.models.FoodModel;
+import fellowship.mealmaestro.models.neo4j.FoodModel;
 import fellowship.mealmaestro.services.PantryService;
 import jakarta.validation.Valid;
 
