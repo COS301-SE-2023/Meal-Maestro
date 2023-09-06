@@ -3,4 +3,5 @@ export interface FoodItemI {
   quantity: number | null;
   unit: 'kg' | 'g' | 'l' | 'ml' | 'pcs';
   id?: number;
+  price?: number;
 }
