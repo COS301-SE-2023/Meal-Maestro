@@ -4,22 +4,26 @@ import { BrowsePage } from './browse.page';
 import { IonicModule } from '@ionic/angular';
 
 import { RecipeItemComponent } from '../../components/recipe-item/recipe-item.component';
-import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
-
+import {
+  AuthenticationService,
+  MealGenerationService,
+} from '../../services/services';
 
 describe('BrowsePage', () => {
   let component: BrowsePage;
   let fixture: ComponentFixture<BrowsePage>;
   let mockMealGenerationService: jasmine.SpyObj<MealGenerationService>;
+  let mockAuthService: jasmine.SpyObj<AuthenticationService>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
+    mockAuthService = jasmine.createSpyObj('AuthenticationService', ['logout']);
 
+    await TestBed.configureTestingModule({
       imports: [BrowsePage, IonicModule, RecipeItemComponent],
       providers: [
         { provide: MealGenerationService, useValue: mockMealGenerationService },
+        { provide: AuthenticationService, useValue: mockAuthService },
       ],
-
     }).compileComponents();
 
     fixture = TestBed.createComponent(BrowsePage);
