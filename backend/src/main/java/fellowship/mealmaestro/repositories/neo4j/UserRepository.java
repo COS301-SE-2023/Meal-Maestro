@@ -1,4 +1,4 @@
-package fellowship.mealmaestro.repositories;
+package fellowship.mealmaestro.repositories.neo4j;
 
 import java.util.Optional;
 

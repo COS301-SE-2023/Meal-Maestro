@@ -11,10 +11,10 @@ import fellowship.mealmaestro.models.neo4j.FoodModel;
 import fellowship.mealmaestro.models.neo4j.PantryModel;
 import fellowship.mealmaestro.models.neo4j.ShoppingListModel;
 import fellowship.mealmaestro.models.neo4j.UserModel;
-import fellowship.mealmaestro.repositories.FoodRepository;
-import fellowship.mealmaestro.repositories.PantryRepository;
-import fellowship.mealmaestro.repositories.ShoppingListRepository;
-import fellowship.mealmaestro.repositories.UserRepository;
+import fellowship.mealmaestro.repositories.neo4j.FoodRepository;
+import fellowship.mealmaestro.repositories.neo4j.PantryRepository;
+import fellowship.mealmaestro.repositories.neo4j.ShoppingListRepository;
+import fellowship.mealmaestro.repositories.neo4j.UserRepository;
 import fellowship.mealmaestro.services.auth.JwtService;
 
 @Service

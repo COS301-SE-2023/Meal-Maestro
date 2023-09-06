@@ -16,8 +16,8 @@ import fellowship.mealmaestro.models.neo4j.FoodModel;
 import fellowship.mealmaestro.models.neo4j.MealModel;
 import fellowship.mealmaestro.models.neo4j.UserModel;
 import fellowship.mealmaestro.models.neo4j.relationships.HasMeal;
-import fellowship.mealmaestro.repositories.MealRepository;
-import fellowship.mealmaestro.repositories.UserRepository;
+import fellowship.mealmaestro.repositories.neo4j.MealRepository;
+import fellowship.mealmaestro.repositories.neo4j.UserRepository;
 import fellowship.mealmaestro.services.auth.JwtService;
 
 @Service

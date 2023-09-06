@@ -8,8 +8,8 @@ import java.util.List;
 import fellowship.mealmaestro.models.neo4j.MealModel;
 import fellowship.mealmaestro.models.neo4j.RecipeBookModel;
 import fellowship.mealmaestro.models.neo4j.UserModel;
-import fellowship.mealmaestro.repositories.RecipeBookRepository;
-import fellowship.mealmaestro.repositories.UserRepository;
+import fellowship.mealmaestro.repositories.neo4j.RecipeBookRepository;
+import fellowship.mealmaestro.repositories.neo4j.UserRepository;
 import fellowship.mealmaestro.services.auth.JwtService;
 
 @Service

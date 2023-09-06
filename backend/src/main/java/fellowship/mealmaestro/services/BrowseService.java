@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fellowship.mealmaestro.models.neo4j.MealModel;
-import fellowship.mealmaestro.repositories.MealRepository;
+import fellowship.mealmaestro.repositories.neo4j.MealRepository;
 
 @Service
 public class BrowseService {

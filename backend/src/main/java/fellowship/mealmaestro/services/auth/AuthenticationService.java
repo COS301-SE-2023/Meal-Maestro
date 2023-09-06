@@ -20,7 +20,7 @@ import fellowship.mealmaestro.models.neo4j.SettingsModel;
 import fellowship.mealmaestro.models.neo4j.ShoppingListModel;
 import fellowship.mealmaestro.models.neo4j.UserModel;
 import fellowship.mealmaestro.models.neo4j.relationships.HasMeal;
-import fellowship.mealmaestro.repositories.UserRepository;
+import fellowship.mealmaestro.repositories.neo4j.UserRepository;
 
 @Service
 public class AuthenticationService {

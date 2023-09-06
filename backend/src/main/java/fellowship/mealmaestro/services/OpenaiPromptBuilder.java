@@ -11,7 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import fellowship.mealmaestro.models.OpenAIChatRequest;
 import fellowship.mealmaestro.models.OpenAIChatRequest.Message;
 import fellowship.mealmaestro.models.neo4j.UserModel;
-import fellowship.mealmaestro.repositories.UserRepository;
+import fellowship.mealmaestro.repositories.neo4j.UserRepository;
 import fellowship.mealmaestro.services.auth.JwtService;
 import jakarta.annotation.PostConstruct;
 

@@ -12,7 +12,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import fellowship.mealmaestro.models.neo4j.SettingsModel;
-import fellowship.mealmaestro.repositories.SettingsRepository;
+import fellowship.mealmaestro.repositories.neo4j.SettingsRepository;
 import fellowship.mealmaestro.services.auth.JwtService;
 
 import java.util.Arrays;
