@@ -2,6 +2,7 @@ package fellowship.mealmaestro.models.mongo;
 
 import java.time.LocalDate;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Getter;
@@ -11,6 +12,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class VisitedLinkModel {
+    @Id
     private String link;
 
     private LocalDate lastVisited;
