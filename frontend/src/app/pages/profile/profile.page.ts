@@ -305,6 +305,8 @@ export class ProfilePage implements OnInit {
     this.resetPreference();
   }
 
+
+
   setOpenPreferencesSave(isOpen: boolean) {
     console.log('Saving Preferences');
     if (this.userpreferences.foodPreferenceSet === true) {

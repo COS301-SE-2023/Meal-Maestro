@@ -6,13 +6,15 @@
     
 <ion-content>
 
-  <ion-card>
-    <ion-button 
-     (click)="navToProfile()"><ion-icon name="person-circle" size="small"></ion-icon>
-    </ion-button>
-
-    <ion-label>{{this.user.username}}'s Profile</ion-label>
+  <ion-card class="profile-card">
+    <ion-card-content class="profile-content">
+      <ion-button class="profile-button" (click)="navToProfile()">
+        <ion-icon name="person-circle" class="profile-icon"></ion-icon>
+      </ion-button>
+      <ion-label class="profile-label">{{ this.user.username }}'s Profile</ion-label>
+    </ion-card-content>
   </ion-card>
+  
 <!-- the Goal -->
   <ion-card>
     <ion-card-header>
