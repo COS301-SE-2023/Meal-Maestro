@@ -49,4 +49,17 @@ export class LoginService {
     this.recipeBookRefreshed = false;
     this.settingsRefreshed = false;
   }
+
+  toString(): string {
+    return (
+      'homeRefreshed: ' +
+      this.homeRefreshed +
+      ', pantryRefreshed: ' +
+      this.pantryRefreshed +
+      ', recipeBookRefreshed: ' +
+      this.recipeBookRefreshed +
+      ', settingsRefreshed: ' +
+      this.settingsRefreshed
+    );
+  }
 }

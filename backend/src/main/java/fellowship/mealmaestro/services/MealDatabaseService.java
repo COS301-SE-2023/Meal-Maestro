@@ -72,6 +72,7 @@ public class MealDatabaseService {
         return meals;
     }
 
+    @Transactional
     public List<MealModel> findUsersMealPlanForDate(LocalDate date, String token) {
 
         removeOldMeals(token);
@@ -117,6 +118,7 @@ public class MealDatabaseService {
         userRepository.save(user);
     }
 
+    @Transactional
     public Optional<MealModel> findMealTypeForUser(String type, String token) {
         String email = jwtService.extractUserEmail(token);
 

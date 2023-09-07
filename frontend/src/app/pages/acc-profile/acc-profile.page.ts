@@ -52,9 +52,7 @@ export class AccProfilePage implements OnInit, ViewWillEnter {
     this.getUserInfo();
   }
 
-  ngOnInit() {
-    this.getUserInfo();
-  }
+  ngOnInit() {}
 
   async getUserInfo() {
     this.auth.getUser().subscribe({

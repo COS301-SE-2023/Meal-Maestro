@@ -21,7 +21,8 @@ public class FoodModelM {
 
     private double price;
 
-    public FoodModelM(String barcode, String name, double quantity, String unit, double price) {
+    public FoodModelM(String barcode, String name, double quantity, String unit,
+            double price) {
         this.barcode = barcode;
         this.name = name;
         this.quantity = quantity;
@@ -34,7 +35,8 @@ public class FoodModelM {
 
     @Override
     public String toString() {
-        return "FoodModelM [barcode=" + barcode + ", name=" + name + ", price=" + price + ", quantity=" + quantity
+        return "FoodModelM [barcode=" + barcode + ", name=" + name + ", price=" +
+                price + ", quantity=" + quantity
                 + ", unit=" + unit + "]";
     }
 }

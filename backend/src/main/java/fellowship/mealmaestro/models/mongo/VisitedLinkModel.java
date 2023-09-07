@@ -27,6 +27,7 @@ public class VisitedLinkModel {
 
     @Override
     public String toString() {
-        return "VisitedLinkModel [lastVisited=" + lastVisited + ", link=" + link + "]";
+        return "VisitedLinkModel [lastVisited=" + lastVisited + ", link=" + link +
+                "]";
     }
 }

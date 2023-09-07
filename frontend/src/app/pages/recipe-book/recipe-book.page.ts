@@ -32,13 +32,7 @@ export class RecipeBookPage implements OnInit {
     private loginService: LoginService
   ) {}
 
-  ngOnInit() {
-    this.addService.recipeItem$.subscribe((recipeItem) => {
-      if (recipeItem) {
-        this.addRecipe(recipeItem);
-      }
-    });
-  }
+  ngOnInit() {}
 
   async ionViewWillEnter() {
     if (!this.loginService.isRecipeBookRefreshed()) {

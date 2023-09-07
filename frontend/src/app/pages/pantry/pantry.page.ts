@@ -23,6 +23,7 @@ import {
   LoginService,
   PantryApiService,
   ShoppingListApiService,
+  BarcodeApiService,
 } from '../../services/services';
 
 @Component({
@@ -37,7 +38,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
   foodListItem!: QueryList<FoodListItemComponent>;
   @ViewChild(IonModal) modal!: IonModal;
 
-  isBarcodeSupported: boolean = false;
+  isBarcodeSupported: boolean = true;
   segment: 'pantry' | 'shopping' | null = 'pantry';
   isLoading: boolean = false;
   pantryItems: FoodItemI[] = [];
@@ -56,15 +57,14 @@ export class PantryPage implements OnInit, ViewWillEnter {
     private shoppingListService: ShoppingListApiService,
     private errorHandlerService: ErrorHandlerService,
     private auth: AuthenticationService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private barcodeApiService: BarcodeApiService
   ) {}
 
   async ngOnInit() {
-    BarcodeScanner.isSupported().then((result) => {
-      this.isBarcodeSupported = result.supported;
-    });
-
-    this.fetchItems();
+    // BarcodeScanner.isSupported().then((result) => {
+    //   this.isBarcodeSupported = result.supported;
+    // });
   }
 
   async ionViewWillEnter() {
@@ -453,25 +453,32 @@ export class PantryPage implements OnInit, ViewWillEnter {
   }
 
   async scan(): Promise<void> {
-    const granted = await this.requestPermissions();
-    if (!granted) {
-      this.errorHandlerService.presentErrorToast(
-        'Please grant camera permissions to use this feature',
-        'Camera permissions not granted'
-      );
-      return;
-    }
+    // const granted = await this.requestPermissions();
+    // if (!granted) {
+    //   this.errorHandlerService.presentErrorToast(
+    //     'Please grant camera permissions to use this feature',
+    //     'Camera permissions not granted'
+    //   );
+    //   return;
+    // }
 
-    const result = await BarcodeScanner.scan();
+    // const result = await BarcodeScanner.scan();
 
-    if (
-      result.barcodes.length === 0 ||
-      result.barcodes[0].displayValue === '' ||
-      result.barcodes[0].displayValue === null ||
-      result.barcodes[0].displayValue === undefined
-    ) {
-      return;
-    }
+    // if (
+    //   result.barcodes.length === 0 ||
+    //   result.barcodes[0].displayValue === '' ||
+    //   result.barcodes[0].displayValue === null ||
+    //   result.barcodes[0].displayValue === undefined
+    // ) {
+    //   return;
+    // }
+    let result = {
+      barcodes: [
+        {
+          displayValue: '13761238123', // for testing
+        },
+      ],
+    };
 
     this.sendBarcode(result);
   }
@@ -481,7 +488,38 @@ export class PantryPage implements OnInit, ViewWillEnter {
     return camera === 'granted' || camera === 'limited';
   }
 
-  async sendBarcode(result: ScanResult): Promise<void> {
+  async sendBarcode(result: any): Promise<void> {
+    // replace any with ScanResult
     let code = result.barcodes[0].displayValue;
+
+    this.barcodeApiService.findProduct(code).subscribe({
+      next: (response) => {
+        if (response.status === 200) {
+          if (response.body) {
+            this.newItem = {
+              name: response.body.name,
+              quantity: response.body.quantity,
+              unit: response.body.unit,
+              price: response.body.price,
+            };
+            this.modal.present();
+          }
+        }
+      },
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorized access. Please login again.',
+            err
+          );
+          this.auth.logout();
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Error finding product',
+            err
+          );
+        }
+      },
+    });
   }
 }
