@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
-import { RecipeItemI } from '../../models/recipeItem.model';
 import { RecipeBookPage } from '../../pages/recipe-book/recipe-book.page';
 import { CommonModule } from '@angular/common';
 import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
@@ -38,7 +37,7 @@ export class RecipeDetailsComponent implements OnInit {
   }
 
   private formatIng(ing: string) {
-    const ingArr: string[] = ing.split(/,\s*(?![^[]*\])/);
+    const ingArr: string[] = ing.split(/,[^()]*?(?![^(]*\))/);
     this.fIng = ingArr.map((ingredient) => ingredient.trim());
   }
 
