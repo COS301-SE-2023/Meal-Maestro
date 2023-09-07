@@ -72,3 +72,11 @@ ion-segment-button.md {
   --color-checked: var(--ion-color-primary);
   --indicator-height: 4px;
 }
+
+ion-fab-button.fab-button-disabled {
+  --background: #7fb688 !important;
+}
+
+ion-fab-button.fab-button-in-list {
+  --background: #acf7b7;
+}

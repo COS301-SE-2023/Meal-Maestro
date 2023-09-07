@@ -13,6 +13,11 @@ import { FoodListItemComponent } from '../../components/food-list-item/food-list
 import { FoodItemI } from '../../models/interfaces';
 import { OverlayEventDetail } from '@ionic/core/components';
 import {
+  BarcodeScanner,
+  Barcode,
+  ScanResult,
+} from '@capacitor-mlkit/barcode-scanning';
+import {
   AuthenticationService,
   ErrorHandlerService,
   LoginService,
@@ -32,6 +37,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
   foodListItem!: QueryList<FoodListItemComponent>;
   @ViewChild(IonModal) modal!: IonModal;
 
+  isBarcodeSupported: boolean = false;
   segment: 'pantry' | 'shopping' | null = 'pantry';
   isLoading: boolean = false;
   pantryItems: FoodItemI[] = [];
@@ -54,6 +60,10 @@ export class PantryPage implements OnInit, ViewWillEnter {
   ) {}
 
   async ngOnInit() {
+    BarcodeScanner.isSupported().then((result) => {
+      this.isBarcodeSupported = result.supported;
+    });
+
     this.fetchItems();
   }
 
@@ -440,5 +450,38 @@ export class PantryPage implements OnInit, ViewWillEnter {
     } else if (this.segment === 'shopping') {
       this.shoppingItems.sort(sortFunction);
     }
+  }
+
+  async scan(): Promise<void> {
+    const granted = await this.requestPermissions();
+    if (!granted) {
+      this.errorHandlerService.presentErrorToast(
+        'Please grant camera permissions to use this feature',
+        'Camera permissions not granted'
+      );
+      return;
+    }
+
+    const result = await BarcodeScanner.scan();
+
+    if (
+      result.barcodes.length === 0 ||
+      result.barcodes[0].displayValue === '' ||
+      result.barcodes[0].displayValue === null ||
+      result.barcodes[0].displayValue === undefined
+    ) {
+      return;
+    }
+
+    this.sendBarcode(result);
+  }
+
+  async requestPermissions(): Promise<boolean> {
+    const { camera } = await BarcodeScanner.requestPermissions();
+    return camera === 'granted' || camera === 'limited';
+  }
+
+  async sendBarcode(result: ScanResult): Promise<void> {
+    let code = result.barcodes[0].displayValue;
   }
 }

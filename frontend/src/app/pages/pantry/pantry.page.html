@@ -102,7 +102,13 @@
       <ion-fab-button id="open-add-modal">
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button id="open-barcode-pantry">
+    </ion-fab-list>
+    <ion-fab-list side="start">
+      <ion-fab-button
+        id="open-barcode-pantry"
+        (click)="scan()"
+        [disabled]="!isBarcodeSupported"
+      >
         <ion-icon name="scan"></ion-icon>
       </ion-fab-button>
     </ion-fab-list>
@@ -185,7 +191,13 @@
       <ion-fab-button id="open-add-modal-shopping">
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button id="open-barcode-shopping">
+    </ion-fab-list>
+    <ion-fab-list side="start">
+      <ion-fab-button
+        id="open-barcode-shopping"
+        (click)="scan()"
+        [disabled]="!isBarcodeSupported"
+      >
         <ion-icon name="scan"></ion-icon>
       </ion-fab-button>
     </ion-fab-list>
