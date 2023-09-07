@@ -33,3 +33,34 @@
   flex: 1;
   text-align: left;
 }
+
+.profile-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-content {
+  display: flex;
+  align-items: center;
+}
+
+.profile-button {
+  margin-right: 10px;
+}
+
+.profile-icon {
+  font-size: 32px;
+  color: #007bff;
+}
+
+.profile-label {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
