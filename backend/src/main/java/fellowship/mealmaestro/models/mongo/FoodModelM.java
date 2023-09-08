@@ -13,6 +13,8 @@ public class FoodModelM {
     @Id
     private String barcode;
 
+    private String store;
+
     private String name;
 
     private double quantity;

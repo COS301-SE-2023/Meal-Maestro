@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import fellowship.mealmaestro.models.mongo.Barcode;
+import fellowship.mealmaestro.models.mongo.findBarcodeRequest;
 import fellowship.mealmaestro.models.mongo.FoodModelM;
 import fellowship.mealmaestro.services.BarcodeService;
 
@@ -18,12 +18,12 @@ public class ProductController {
     private BarcodeService barcodeService;
 
     @PostMapping("/findProduct")
-    public ResponseEntity<FoodModelM> findProduct(@RequestBody Barcode request,
+    public ResponseEntity<FoodModelM> findProduct(@RequestBody findBarcodeRequest request,
             @RequestHeader("Authorization") String token) {
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(barcodeService.findProduct(request.getBarcode()));
+        return ResponseEntity.ok(barcodeService.findProduct(request));
     }
 
     @PostMapping("/addProduct")

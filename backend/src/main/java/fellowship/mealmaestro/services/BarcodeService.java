@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fellowship.mealmaestro.models.mongo.FoodModelM;
+import fellowship.mealmaestro.models.mongo.findBarcodeRequest;
 import fellowship.mealmaestro.repositories.mongo.FoodMRepository;
 
 @Service
@@ -14,9 +15,10 @@ public class BarcodeService {
     @Autowired
     private FoodMRepository foodMRepository;
 
-    public FoodModelM findProduct(String code) {
-        System.out.println(code);
-        Optional<FoodModelM> product = foodMRepository.findById(code);
+    public FoodModelM findProduct(findBarcodeRequest request) {
+        System.out.println(request.getStore());
+        Optional<FoodModelM> product = foodMRepository.findInDynamicCollection(request.getBarcode(),
+                request.getStore());
         if (product.isEmpty()) {
             FoodModelM nullProduct = new FoodModelM();
             nullProduct.setName("");
@@ -29,6 +31,6 @@ public class BarcodeService {
     }
 
     public FoodModelM addProduct(FoodModelM product) {
-        return foodMRepository.save(product);
+        return foodMRepository.saveInDynamicCollection(product);
     }
 }

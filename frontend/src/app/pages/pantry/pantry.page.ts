@@ -496,13 +496,17 @@ export class PantryPage implements OnInit, ViewWillEnter {
       next: (response) => {
         if (response.status === 200) {
           if (response.body) {
-            this.newItem = {
-              name: response.body.name,
-              quantity: response.body.quantity,
-              unit: response.body.unit,
-              price: response.body.price,
-            };
-            this.modal.present();
+            if (response.body.name === '') {
+              this.barcodeNotFound(code);
+            } else {
+              this.newItem = {
+                name: response.body.name,
+                quantity: response.body.quantity,
+                unit: response.body.unit,
+                price: response.body.price,
+              };
+              this.modal.present();
+            }
           }
         }
       },
@@ -521,5 +525,9 @@ export class PantryPage implements OnInit, ViewWillEnter {
         }
       },
     });
+  }
+
+  async barcodeNotFound(code: string) {
+    //IMPLEMENT
   }
 }
