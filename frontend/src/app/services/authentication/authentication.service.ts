@@ -10,7 +10,7 @@ import { LoginService } from '../login/login.service';
   providedIn: 'root',
 })
 export class AuthenticationService {
-  url: String = 'http://localhost:8080';
+  url: string = 'http://localhost:8080';
 
   constructor(
     private http: HttpClient,

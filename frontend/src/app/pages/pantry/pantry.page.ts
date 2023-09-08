@@ -5,7 +5,13 @@ import {
   ViewChildren,
   ViewChild,
 } from '@angular/core';
-import { IonModal, IonicModule, ViewWillEnter } from '@ionic/angular';
+import {
+  AlertController,
+  AlertInput,
+  IonModal,
+  IonicModule,
+  ViewWillEnter,
+} from '@ionic/angular';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -45,6 +51,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
   shoppingItems: FoodItemI[] = [];
   searchTerm: string = '';
   currentSort: string = 'name-down';
+  stores: string[] = [];
   newItem: FoodItemI = {
     name: '',
     quantity: null,
@@ -58,7 +65,8 @@ export class PantryPage implements OnInit, ViewWillEnter {
     private errorHandlerService: ErrorHandlerService,
     private auth: AuthenticationService,
     private loginService: LoginService,
-    private barcodeApiService: BarcodeApiService
+    private barcodeApiService: BarcodeApiService,
+    private alertController: AlertController
   ) {}
 
   async ngOnInit() {
@@ -71,6 +79,18 @@ export class PantryPage implements OnInit, ViewWillEnter {
     if (!this.loginService.isPantryRefreshed()) {
       this.fetchItems();
       this.loginService.setPantryRefreshed(true);
+    }
+    if (!this.loginService.isStoresRefreshed()) {
+      this.barcodeApiService.fetchStores().subscribe({
+        next: (response) => {
+          if (response.status === 200) {
+            if (response.body) {
+              this.stores = response.body;
+            }
+          }
+        },
+      });
+      this.loginService.setStoresRefreshed(true);
     }
   }
 
@@ -480,7 +500,11 @@ export class PantryPage implements OnInit, ViewWillEnter {
       ],
     };
 
-    this.sendBarcode(result);
+    if (this.loginService.isShoppingAt() === '') {
+      this.askShoppingLocation(result);
+    } else {
+      this.sendBarcode(result);
+    }
   }
 
   async requestPermissions(): Promise<boolean> {
@@ -490,44 +514,117 @@ export class PantryPage implements OnInit, ViewWillEnter {
 
   async sendBarcode(result: any): Promise<void> {
     // replace any with ScanResult
+    console.log(result.barcodes[0].displayValue);
     let code = result.barcodes[0].displayValue;
 
-    this.barcodeApiService.findProduct(code).subscribe({
-      next: (response) => {
-        if (response.status === 200) {
-          if (response.body) {
-            if (response.body.name === '') {
-              this.barcodeNotFound(code);
-            } else {
-              this.newItem = {
-                name: response.body.name,
-                quantity: response.body.quantity,
-                unit: response.body.unit,
-                price: response.body.price,
-              };
-              this.modal.present();
+    this.barcodeApiService
+      .findProduct(code, this.loginService.isShoppingAt())
+      .subscribe({
+        next: (response) => {
+          if (response.status === 200) {
+            if (response.body) {
+              if (response.body.name === '') {
+                this.barcodeNotFound(code);
+              } else {
+                this.newItem = {
+                  name: response.body.name,
+                  quantity: response.body.quantity,
+                  unit: response.body.unit,
+                  price: response.body.price,
+                };
+                this.modal.present();
+              }
             }
           }
-        }
-      },
-      error: (err) => {
-        if (err.status === 403) {
-          this.errorHandlerService.presentErrorToast(
-            'Unauthorized access. Please login again.',
-            err
-          );
-          this.auth.logout();
-        } else {
-          this.errorHandlerService.presentErrorToast(
-            'Error finding product',
-            err
-          );
-        }
-      },
-    });
+        },
+        error: (err) => {
+          if (err.status === 403) {
+            this.errorHandlerService.presentErrorToast(
+              'Unauthorized access. Please login again.',
+              err
+            );
+            this.auth.logout();
+          } else {
+            this.errorHandlerService.presentErrorToast(
+              'Error finding product',
+              err
+            );
+          }
+        },
+      });
   }
 
   async barcodeNotFound(code: string) {
     //IMPLEMENT
+  }
+
+  async askShoppingLocation(code: any) {
+    const alert = await this.alertController.create({
+      header: 'Shopping Location',
+      message: 'Where are you shopping?',
+      inputs: [
+        ...this.stores.map((store) => ({
+          label: store,
+          type: 'radio' as const,
+          value: store,
+        })),
+        {
+          label: 'Other',
+          type: 'radio',
+          value: 'Other',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Confirm',
+          handler: (data) => {
+            if (data === 'Other') {
+              this.askNewShoppingLocation(code);
+              return;
+            }
+            this.loginService.setShoppingAt(data);
+            this.sendBarcode(code);
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async askNewShoppingLocation(code: any) {
+    const alert = await this.alertController.create({
+      header: 'Shopping Location',
+      message: 'Where are you shopping?',
+      inputs: [
+        {
+          name: 'store',
+          type: 'text',
+          placeholder: 'Store',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Confirm',
+          handler: (data) => {
+            //Need to do some error handling here
+
+            this.loginService.setShoppingAt(data.store);
+            this.loginService.setStoresRefreshed(false);
+            this.sendBarcode(code);
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }

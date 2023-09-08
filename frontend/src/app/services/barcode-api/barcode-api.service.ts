@@ -7,17 +7,27 @@ import { FoodItemI } from '../../models/interfaces';
   providedIn: 'root',
 })
 export class BarcodeApiService {
-  url: String = 'http://localhost:8080';
+  url: string = 'http://localhost:8080';
 
   constructor(private http: HttpClient) {}
 
-  findProduct(barcode: String): Observable<HttpResponse<FoodItemI>> {
+  findProduct(
+    barcode: string,
+    store: string
+  ): Observable<HttpResponse<FoodItemI>> {
     return this.http.post<FoodItemI>(
       this.url + '/findProduct',
       {
         barcode: barcode,
+        store: store,
       },
       { observe: 'response' }
     );
+  }
+
+  fetchStores(): Observable<HttpResponse<string[]>> {
+    return this.http.get<string[]>(this.url + '/fetchStores', {
+      observe: 'response',
+    });
   }
 }
