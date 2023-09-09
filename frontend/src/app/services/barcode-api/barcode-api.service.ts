@@ -24,10 +24,4 @@ export class BarcodeApiService {
       { observe: 'response' }
     );
   }
-
-  fetchStores(): Observable<HttpResponse<string[]>> {
-    return this.http.get<string[]>(this.url + '/fetchStores', {
-      observe: 'response',
-    });
-  }
 }

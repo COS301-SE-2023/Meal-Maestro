@@ -51,7 +51,6 @@ export class PantryPage implements OnInit, ViewWillEnter {
   shoppingItems: FoodItemI[] = [];
   searchTerm: string = '';
   currentSort: string = 'name-down';
-  stores: string[] = [];
   newItem: FoodItemI = {
     name: '',
     quantity: null,
@@ -79,18 +78,6 @@ export class PantryPage implements OnInit, ViewWillEnter {
     if (!this.loginService.isPantryRefreshed()) {
       this.fetchItems();
       this.loginService.setPantryRefreshed(true);
-    }
-    if (!this.loginService.isStoresRefreshed()) {
-      this.barcodeApiService.fetchStores().subscribe({
-        next: (response) => {
-          if (response.status === 200) {
-            if (response.body) {
-              this.stores = response.body;
-            }
-          }
-        },
-      });
-      this.loginService.setStoresRefreshed(true);
     }
   }
 
@@ -524,7 +511,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
           if (response.status === 200) {
             if (response.body) {
               if (response.body.name === '') {
-                this.barcodeNotFound(code);
+                this.barcodeNotFound();
               } else {
                 this.newItem = {
                   name: response.body.name,
@@ -554,24 +541,16 @@ export class PantryPage implements OnInit, ViewWillEnter {
       });
   }
 
-  async barcodeNotFound(code: string) {
+  async barcodeNotFound() {
     //IMPLEMENT
-  }
-
-  async askShoppingLocation(code: any) {
     const alert = await this.alertController.create({
-      header: 'Shopping Location',
-      message: 'Where are you shopping?',
+      header: 'Barcode not found',
+      message: 'Please enter the name of the item',
       inputs: [
-        ...this.stores.map((store) => ({
-          label: store,
-          type: 'radio' as const,
-          value: store,
-        })),
         {
-          label: 'Other',
-          type: 'radio',
-          value: 'Other',
+          name: 'name',
+          type: 'text',
+          placeholder: 'Name',
         },
       ],
       buttons: [
@@ -582,12 +561,12 @@ export class PantryPage implements OnInit, ViewWillEnter {
         {
           text: 'Confirm',
           handler: (data) => {
-            if (data === 'Other') {
-              this.askNewShoppingLocation(code);
-              return;
-            }
-            this.loginService.setShoppingAt(data);
-            this.sendBarcode(code);
+            this.newItem = {
+              name: data.name,
+              quantity: null,
+              unit: 'pcs',
+            };
+            this.modal.present();
           },
         },
       ],
@@ -596,15 +575,20 @@ export class PantryPage implements OnInit, ViewWillEnter {
     await alert.present();
   }
 
-  async askNewShoppingLocation(code: any) {
+  async askShoppingLocation(code: any) {
     const alert = await this.alertController.create({
       header: 'Shopping Location',
       message: 'Where are you shopping?',
       inputs: [
         {
-          name: 'store',
-          type: 'text',
-          placeholder: 'Store',
+          label: 'Woolworths',
+          type: 'radio',
+          value: 'Woolworths',
+        },
+        {
+          label: 'Checkers',
+          type: 'radio',
+          value: 'Checkers',
         },
       ],
       buttons: [
@@ -615,10 +599,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
         {
           text: 'Confirm',
           handler: (data) => {
-            //Need to do some error handling here
-
-            this.loginService.setShoppingAt(data.store);
-            this.loginService.setStoresRefreshed(false);
+            this.loginService.setShoppingAt(data);
             this.sendBarcode(code);
           },
         },
