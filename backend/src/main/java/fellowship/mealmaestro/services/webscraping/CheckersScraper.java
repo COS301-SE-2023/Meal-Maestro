@@ -7,13 +7,20 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import fellowship.mealmaestro.models.mongo.FoodModelM;
+import fellowship.mealmaestro.models.mongo.ToVisitLinkModel;
+import fellowship.mealmaestro.models.mongo.VisitedLinkModel;
+import fellowship.mealmaestro.repositories.mongo.ToVisitLinkRepository;
+import fellowship.mealmaestro.repositories.mongo.VisitedLinkRepository;
+import fellowship.mealmaestro.services.BarcodeService;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.jsoup.Jsoup;
@@ -22,20 +29,43 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class CheckersScraper {
+    @Autowired
+    private ToVisitLinkRepository toVisitLinkRepository;
+
+    @Autowired
+    private VisitedLinkRepository visitedLinkRepository;
+
+    @Autowired
+    private BarcodeService barcodeService;
+
+    public void getLocLinks() {
+        // Visit categories sitemap to get all locs
+        Optional<VisitedLinkModel> visited = visitedLinkRepository
+                .findById("https://www.checkers.co.za/sitemap/medias/Category-checkersZA-0.xml");
+
+        if (visited.isPresent()) {
+            System.out.println("Skipping sitemap, already visited");
+            return;
+        }
+
+        try {
+            Document doc = Jsoup.connect("https://www.checkers.co.za/sitemap/medias/Category-checkersZA-0.xml").get();
+
+            Elements links = doc.select("loc");
+
+            // Filter out non-food links
+            for (int i = 0; i < links.size(); i++) {
+                String link = links.get(i).text();
+                if (link.contains("food") || link.contains("Food")) {
+                    toVisitLinkRepository.save(new ToVisitLinkModel(link));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void scrape() {
-        System.setProperty("webdriver.chrome.driver",
-                "C:\\Users\\Ethan\\Downloads\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
-
-        ChromeOptions options = new ChromeOptions();
-        // options.addArguments("--headless");
-        options.addArguments("--blink-settings=imagesEnabled=false");
-        options.addArguments("--disable-extensions");
-        options.addArguments("--user-agent=FellowshipBot-UniversityOfPretoria-FinalYearProject");
-
-        WebDriver driver = new ChromeDriver(options);
-        Duration timeout = Duration.ofSeconds(15);
-        WebDriverWait wait = new WebDriverWait(driver, timeout);
 
         // Visit categories sitemap to get all locs
         // driver.get("https://www.checkers.co.za/sitemap/medias/Category-checkersZA-0.xml");
