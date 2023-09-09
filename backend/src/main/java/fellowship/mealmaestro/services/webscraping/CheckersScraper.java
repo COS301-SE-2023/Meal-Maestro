@@ -38,8 +38,11 @@ public class CheckersScraper {
     @Autowired
     private BarcodeService barcodeService;
 
+    private long lastRequestTime;
+
     public void getLocLinks() {
         // Visit categories sitemap to get all locs
+        lastRequestTime = 0;
         Optional<VisitedLinkModel> visited = visitedLinkRepository
                 .findById("https://www.checkers.co.za/sitemap/medias/Category-checkersZA-0.xml");
 
@@ -57,7 +60,7 @@ public class CheckersScraper {
             for (int i = 0; i < links.size(); i++) {
                 String link = links.get(i).text();
                 if (link.contains("food") || link.contains("Food")) {
-                    toVisitLinkRepository.save(new ToVisitLinkModel(link));
+                    toVisitLinkRepository.save(new ToVisitLinkModel(link, "category"));
                 }
             }
         } catch (Exception e) {
@@ -65,32 +68,23 @@ public class CheckersScraper {
         }
     }
 
+    public ToVisitLinkModel getNextLink() {
+        // Get next link to visit
+        Optional<ToVisitLinkModel> toVisitLink = toVisitLinkRepository.findNext();
+
+        if (toVisitLink.isPresent()) {
+            return toVisitLink.get();
+        }
+
+        return null;
+    }
+
     public void scrape() {
 
-        // Visit categories sitemap to get all locs
-        // driver.get("https://www.checkers.co.za/sitemap/medias/Category-checkersZA-0.xml");
-
-        // String domString = driver.getPageSource();
-
-        // Document doc = Jsoup.parse(domString);
-        // Elements links = doc.select("loc");
-
-        // Filter out non-food links
-        List<String> foodLinks = new ArrayList<String>();
-        // for (int i = 0; i < links.size(); i++) {
-        // String link = links.get(i).text();
-        // if (link.contains("food") || link.contains("Food")) {
-        // foodLinks.add(link);
-        // }
-        // }
-
-        long lastRequestTime = 0;
-
-        foodLinks.add("file:///D:\\Code\\MessingAround\\app\\src\\main\\java\\messingaround\\applep1.html");
-        foodLinks.add("file:///D:\\Code\\MessingAround\\app\\src\\main\\java\\messingaround\\milk.html");
+        // foodLinks.add("file:///D:\\Code\\MessingAround\\app\\src\\main\\java\\messingaround\\applep1.html");
+        // foodLinks.add("file:///D:\\Code\\MessingAround\\app\\src\\main\\java\\messingaround\\milk.html");
 
         // Visit each food category page and get all product links
-        Set<String> visitedLinks = new HashSet<String>();
         List<String> productLinks = new ArrayList<String>();
         List<String> paginationLinks = new ArrayList<String>();
         List<FoodModelM> foodModels = new ArrayList<FoodModelM>();

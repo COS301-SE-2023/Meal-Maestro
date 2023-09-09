@@ -17,9 +17,18 @@ public class VisitedLinkModel {
 
     private LocalDate lastVisited;
 
-    public VisitedLinkModel(String link, LocalDate lastVisited) {
+    private String type;
+
+    public VisitedLinkModel(String link, LocalDate lastVisited, String type) {
         this.link = link;
         this.lastVisited = lastVisited;
+        this.type = type;
+    }
+
+    public VisitedLinkModel(String link, String type) {
+        this.link = link;
+        this.type = type;
+        this.lastVisited = LocalDate.now();
     }
 
     public VisitedLinkModel() {

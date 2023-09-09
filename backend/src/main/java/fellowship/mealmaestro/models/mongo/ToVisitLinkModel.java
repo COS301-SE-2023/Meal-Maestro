@@ -13,8 +13,11 @@ public class ToVisitLinkModel {
     @Id
     private String link;
 
-    public ToVisitLinkModel(String link) {
+    private String type;
+
+    public ToVisitLinkModel(String link, String type) {
         this.link = link;
+        this.type = type;
     }
 
     public ToVisitLinkModel() {
