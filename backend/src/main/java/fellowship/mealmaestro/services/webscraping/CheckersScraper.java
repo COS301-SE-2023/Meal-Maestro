@@ -259,6 +259,7 @@ public class CheckersScraper {
         }
 
         // Handle link
+        System.out.println("###" + System.currentTimeMillis() + "###");
         handleLink(toVisitLink);
     }
 }
