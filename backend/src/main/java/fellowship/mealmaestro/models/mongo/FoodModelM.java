@@ -51,6 +51,10 @@ public class FoodModelM {
         this.price = Double.parseDouble(price);
     }
 
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
     public void setAmount(String amount) {
         Pattern pattern = Pattern.compile("([0-9.]+)([a-zA-Z]+)");
         Matcher matcher = pattern.matcher(amount);

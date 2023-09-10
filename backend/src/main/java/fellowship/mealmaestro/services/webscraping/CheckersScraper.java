@@ -1,12 +1,5 @@
 package fellowship.mealmaestro.services.webscraping;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import fellowship.mealmaestro.models.mongo.FoodModelM;
@@ -17,13 +10,8 @@ import fellowship.mealmaestro.repositories.mongo.VisitedLinkRepository;
 import fellowship.mealmaestro.services.BarcodeService;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -97,7 +85,7 @@ public class CheckersScraper {
             }
         }
 
-        Optional<ToVisitLinkModel> toVisitLink = linkService.getNextLink();
+        Optional<ToVisitLinkModel> toVisitLink = linkService.getNextCheckersLink();
         lastRequestTime = System.currentTimeMillis();
 
         if (toVisitLink.isPresent()) {
@@ -174,44 +162,52 @@ public class CheckersScraper {
     }
 
     public void handleProductLink(ToVisitLinkModel link) {
+        // Visit product page and get product info
 
-    }
+        // Check if link has been visited
+        Optional<VisitedLinkModel> visited = visitedLinkRepository.findById(link.getLink());
 
-    public void scrape() {
+        if (visited.isPresent() && visited.get().getLastVisited().plusMonths(1).isAfter(LocalDate.now())) {
+            System.out.println("Skipping " + link.getLink() + ", already visited...");
+            return;
+        }
 
-        // Visit each product page and get product info
-        for (String link : productLinks) {
-            // Check if link has been visited
-            if (visitedLinks.contains(link)) {
-                continue;
-            }
-
-            visitedLinks.add(link);
-            driver.get("file:///D:\\Code\\MessingAround" + link);
-            System.out.println("Visiting " + driver.getTitle());
-
-            // Wait for page to load
-            WebElement element = wait.until(
-                    ExpectedConditions.elementToBeClickable(By.cssSelector("#accessibletabsnavigation0-1")));
-
-            // Full product page dom
-            String dom = driver.getPageSource();
-            Document productDoc = Jsoup.parse(dom);
+        try {
+            // Visit product page
+            Document doc = Jsoup.connect("https://www.checkers.co.za" + link.getLink()).get();
 
             // Get product info
             FoodModelM food = new FoodModelM();
+
             // product name
-            String productName = productDoc.selectFirst("h1.pdp__name").text();
+            Element productNameEl = doc.selectFirst("h1.pdp__name");
+            if (productNameEl == null) {
+                System.out.println("Skipping " + link.getLink() + ", no product name...");
+                return;
+            }
+            String productName = productNameEl.text();
+            if (productName == null || productName.isEmpty()) {
+                System.out.println("Skipping " + link.getLink() + ", no product name...");
+                return;
+            }
             System.out.println("Product name: " + productName);
             food.setName(productName);
 
             // product price
-            String productPrice = productDoc.selectFirst("div.special-price__price").text();
+            Element productPriceEl = doc.selectFirst("div.special-price__price");
+            if (productPriceEl == null) {
+                System.out.println("Skipping " + link.getLink() + ", no product price...");
+                return;
+            }
+            String productPrice = productPriceEl.text();
+            if (productPrice == null || productPrice.isEmpty()) {
+                food.setPrice(-1.0);
+            }
             System.out.println("Product price: " + productPrice);
             food.setPrice(productPrice);
 
             // product details
-            Elements productDetails = productDoc.select("table.pdp__product-information > tbody > tr");
+            Elements productDetails = doc.select("table.pdp__product-information > tbody > tr");
 
             String barcode = "";
             String quantity = "";
@@ -219,7 +215,12 @@ public class CheckersScraper {
             for (Element productDetail : productDetails) {
                 if (productDetail.text().toLowerCase().contains("barcode")) {
                     // select second td
-                    barcode = productDetail.selectFirst("td:nth-child(2)").text();
+                    Element barcodeEl = productDetail.selectFirst("td:nth-child(2)");
+                    if (barcodeEl == null) {
+                        System.out.println("Skipping " + link.getLink() + ", no barcode...");
+                        return;
+                    }
+                    barcode = barcodeEl.text();
                     System.out.println("Barcode: " + barcode);
                     food.setBarcode(barcode);
                 }
@@ -227,18 +228,38 @@ public class CheckersScraper {
                 if (productDetail.text().toLowerCase().contains("weight")
                         || productDetail.text().toLowerCase().contains("volume")) {
                     // select second td
-                    quantity = productDetail.selectFirst("td:nth-child(2)").text();
+                    Element quantityEl = productDetail.selectFirst("td:nth-child(2)");
+                    if (quantityEl == null) {
+                        System.out.println("Skipping " + link.getLink() + ", no quantity...");
+                        return;
+                    }
+                    quantity = quantityEl.text();
                     System.out.println("Quantity: " + quantity);
                     food.setAmount(quantity);
                 }
             }
 
-            // Add food to list
-            foodModels.add(food);
+            if (barcode.isEmpty() || food.getBarcode().equals("")) {
+                System.out.println("Skipping " + link.getLink() + ", no barcode...");
+                return;
+            }
 
-            lastRequestTime = System.currentTimeMillis();
+            // Add food to database
+            barcodeService.addProduct(food);
+
+            // Add link to visited links
+            visitedLinkRepository.save(new VisitedLinkModel(link.getLink(), "product", "Checkers"));
+
+            // Remove link from ToVisitLinks
+            toVisitLinkRepository.deleteById(link.getLink());
+
+            System.out.println("Visited " + link.getLink());
+        } catch (IOException e) {
+            System.out.println("Error visiting " + link.getLink() + ", skipping...");
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+
         }
-
-        driver.quit();
     }
 }
