@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,14 +21,17 @@ import fellowship.mealmaestro.services.auth.JwtService;
 
 @Service
 public class MealDatabaseService {
-    @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
 
-    @Autowired
-    private MealRepository mealRepository;
+    private final MealRepository mealRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public MealDatabaseService(JwtService jwtService, MealRepository mealRepository, UserRepository userRepository) {
+        this.jwtService = jwtService;
+        this.mealRepository = mealRepository;
+        this.userRepository = userRepository;
+    }
 
     @Transactional
     public List<MealModel> saveMeals(List<MealModel> mealsToSave, LocalDate date, String token)

@@ -2,7 +2,6 @@ package fellowship.mealmaestro.services;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fellowship.mealmaestro.models.mongo.FoodModelM;
@@ -12,8 +11,11 @@ import fellowship.mealmaestro.repositories.mongo.FoodMRepository;
 @Service
 public class BarcodeService {
 
-    @Autowired
-    private FoodMRepository foodMRepository;
+    private final FoodMRepository foodMRepository;
+
+    public BarcodeService(FoodMRepository foodMRepository) {
+        this.foodMRepository = foodMRepository;
+    }
 
     public FoodModelM findProduct(findBarcodeRequest request) {
         System.out.println(request.getStore());

@@ -1,6 +1,5 @@
 package fellowship.mealmaestro.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,8 +13,11 @@ import fellowship.mealmaestro.services.BarcodeService;
 @RestController
 public class ProductController {
 
-    @Autowired
-    private BarcodeService barcodeService;
+    private final BarcodeService barcodeService;
+
+    public ProductController(BarcodeService barcodeService) {
+        this.barcodeService = barcodeService;
+    }
 
     @PostMapping("/findProduct")
     public ResponseEntity<FoodModelM> findProduct(@RequestBody findBarcodeRequest request,

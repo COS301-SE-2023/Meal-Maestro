@@ -2,7 +2,6 @@ package fellowship.mealmaestro.services;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fellowship.mealmaestro.models.UpdateUserRequestModel;
@@ -13,11 +12,13 @@ import fellowship.mealmaestro.services.auth.JwtService;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final JwtService jwtService;
 
-    @Autowired
-    private JwtService jwtService;
+    public UserService(UserRepository userRepository, JwtService jwtService) {
+        this.userRepository = userRepository;
+        this.jwtService = jwtService;
+    }
 
     public Optional<UserModel> findByEmail(String email) {
         return userRepository.findByEmail(email);

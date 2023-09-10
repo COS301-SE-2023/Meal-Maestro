@@ -2,7 +2,6 @@ package fellowship.mealmaestro.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -15,8 +14,11 @@ import fellowship.mealmaestro.services.BrowseService;
 @RestController
 public class BrowseController {
 
-    @Autowired
-    private BrowseService browseService;
+    private final BrowseService browseService;
+
+    public BrowseController(BrowseService browseService) {
+        this.browseService = browseService;
+    }
 
     @GetMapping("/getPopularMeals")
     public ResponseEntity<List<MealModel>> getPopularMeals(@RequestHeader("Authorization") String token) {

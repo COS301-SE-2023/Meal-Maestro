@@ -1,7 +1,5 @@
 package fellowship.mealmaestro.services.webscraping;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import fellowship.mealmaestro.models.mongo.FoodModelM;
 import fellowship.mealmaestro.models.mongo.ToVisitLinkModel;
 import fellowship.mealmaestro.models.mongo.VisitedLinkModel;
@@ -19,23 +17,24 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class CheckersScraper {
-    @Autowired
-    private ToVisitLinkRepository toVisitLinkRepository;
+    private final ToVisitLinkRepository toVisitLinkRepository;
 
-    @Autowired
-    private VisitedLinkRepository visitedLinkRepository;
+    private final VisitedLinkRepository visitedLinkRepository;
 
-    @Autowired
-    private LinkService linkService;
+    private final LinkService linkService;
 
-    @Autowired
-    private BarcodeService barcodeService;
+    private final BarcodeService barcodeService;
 
-    private long lastRequestTime;
+    public CheckersScraper(ToVisitLinkRepository toVisitLinkRepository, VisitedLinkRepository visitedLinkRepository,
+            LinkService linkService, BarcodeService barcodeService) {
+        this.toVisitLinkRepository = toVisitLinkRepository;
+        this.visitedLinkRepository = visitedLinkRepository;
+        this.linkService = linkService;
+        this.barcodeService = barcodeService;
+    }
 
     public void getLocLinks() {
         // Visit categories sitemap to get all locs
-        lastRequestTime = 0;
         Optional<VisitedLinkModel> visited = visitedLinkRepository
                 .findById("https://www.checkers.co.za/sitemap/medias/Category-checkersZA-0.xml");
 
@@ -71,22 +70,7 @@ public class CheckersScraper {
 
     public ToVisitLinkModel getNextLink() {
         // Get next link to visit
-
-        long currentTime = System.currentTimeMillis();
-        long timeSinceLastRequest = currentTime - lastRequestTime;
-
-        // Wait 10 seconds between requests
-        if (timeSinceLastRequest < 10000) {
-            try {
-                System.out.println("Waiting " + (10000 - timeSinceLastRequest) + "ms");
-                Thread.sleep(10000 - timeSinceLastRequest);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
         Optional<ToVisitLinkModel> toVisitLink = linkService.getNextCheckersLink();
-        lastRequestTime = System.currentTimeMillis();
 
         if (toVisitLink.isPresent()) {
             return toVisitLink.get();
@@ -111,6 +95,7 @@ public class CheckersScraper {
         // if link has been visited and it has been less than 1 month since last visit,
         // skip
         if (visited.isPresent() && visited.get().getLastVisited().plusMonths(1).isAfter(LocalDate.now())) {
+            toVisitLinkRepository.deleteById(link.getLink());
             System.out.println("Skipping " + link.getLink() + ", already visited...");
             return;
         }
@@ -168,6 +153,7 @@ public class CheckersScraper {
         Optional<VisitedLinkModel> visited = visitedLinkRepository.findById(link.getLink());
 
         if (visited.isPresent() && visited.get().getLastVisited().plusMonths(1).isAfter(LocalDate.now())) {
+            toVisitLinkRepository.deleteById(link.getLink());
             System.out.println("Skipping " + link.getLink() + ", already visited...");
             return;
         }
@@ -261,5 +247,18 @@ public class CheckersScraper {
             e.printStackTrace();
 
         }
+    }
+
+    public void scrape() {
+        // Get next link to visit
+        ToVisitLinkModel toVisitLink = getNextLink();
+
+        if (toVisitLink == null) {
+            System.out.println("No links to visit...");
+            return;
+        }
+
+        // Handle link
+        handleLink(toVisitLink);
     }
 }

@@ -2,7 +2,6 @@ package fellowship.mealmaestro.repositories.mongo;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import fellowship.mealmaestro.models.mongo.FoodModelM;
@@ -10,7 +9,6 @@ import fellowship.mealmaestro.models.mongo.FoodModelM;
 public class DynamicFoodMRepositoryImpl implements DynamicFoodMRepository {
     private final MongoTemplate mongoTemplate;
 
-    @Autowired
     public DynamicFoodMRepositoryImpl(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }

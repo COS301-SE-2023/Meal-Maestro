@@ -3,7 +3,6 @@ package fellowship.mealmaestro.services;
 import java.io.File;
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,13 +19,16 @@ import fellowship.mealmaestro.models.neo4j.MealModel;
 @Service
 public class MealManagementService {
 
-    @Autowired
-    private OpenaiApiService openaiApiService;
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final OpenaiApiService openaiApiService;
+    private final ObjectMapper objectMapper;
+    private final UnsplashService unsplashService;
 
-    @Autowired
-    private UnsplashService unsplashService;
+    public MealManagementService(OpenaiApiService openaiApiService, ObjectMapper objectMapper,
+            UnsplashService unsplashService) {
+        this.openaiApiService = openaiApiService;
+        this.objectMapper = objectMapper;
+        this.unsplashService = unsplashService;
+    }
 
     public MealModel generateMeal(String mealType, String token) {
         MealModel defaultMeal = new MealModel("Bread", "1. Toast the bread", "Delicious Bread",
