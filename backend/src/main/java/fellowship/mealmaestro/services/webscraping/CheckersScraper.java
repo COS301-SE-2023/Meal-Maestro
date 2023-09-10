@@ -68,6 +68,14 @@ public class CheckersScraper {
                     toVisitLinkRepository.save(new ToVisitLinkModel(link, "category", "Checkers"));
                 }
             }
+
+            // Add sitemap to visited links
+            visitedLinkRepository.save(new VisitedLinkModel(
+                    "https://www.checkers.co.za/sitemap/medias/Category-checkersZA-0.xml", "category", "Checkers"));
+            // Remove sitemap from ToVisitLinks
+            toVisitLinkRepository.deleteById(
+                    "https://www.checkers.co.za/sitemap/medias/Category-checkersZA-0.xml");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -151,6 +159,10 @@ public class CheckersScraper {
 
             // Add link to visited links
             visitedLinkRepository.save(new VisitedLinkModel(link.getLink(), "category", "Checkers"));
+
+            // Remove link from ToVisitLinks
+            toVisitLinkRepository.deleteById(link.getLink());
+
             System.out.println("Visited " + link.getLink());
         } catch (IOException e) {
             System.out.println("Error visiting " + link.getLink() + ", skipping...");
@@ -161,6 +173,10 @@ public class CheckersScraper {
 
     }
 
+    public void handleProductLink(ToVisitLinkModel link) {
+
+    }
+
     public void scrape() {
 
         // Visit each product page and get product info
@@ -168,18 +184,6 @@ public class CheckersScraper {
             // Check if link has been visited
             if (visitedLinks.contains(link)) {
                 continue;
-            }
-            long currentTime = System.currentTimeMillis();
-            long timeSinceLastRequest = currentTime - lastRequestTime;
-
-            // Wait 10 seconds between requests
-            if (timeSinceLastRequest < 10000) {
-                try {
-                    System.out.println("Waiting " + (10000 - timeSinceLastRequest) + "ms");
-                    Thread.sleep(10000 - timeSinceLastRequest);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
 
             visitedLinks.add(link);
