@@ -15,9 +15,12 @@ public class ToVisitLinkModel {
 
     private String type;
 
-    public ToVisitLinkModel(String link, String type) {
+    private String store;
+
+    public ToVisitLinkModel(String link, String type, String store) {
         this.link = link;
         this.type = type;
+        this.store = store;
     }
 
     public ToVisitLinkModel() {

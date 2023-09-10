@@ -16,7 +16,9 @@ import fellowship.mealmaestro.repositories.mongo.ToVisitLinkRepository;
 import fellowship.mealmaestro.repositories.mongo.VisitedLinkRepository;
 import fellowship.mealmaestro.services.BarcodeService;
 
+import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,6 +36,9 @@ public class CheckersScraper {
 
     @Autowired
     private VisitedLinkRepository visitedLinkRepository;
+
+    @Autowired
+    private LinkService linkService;
 
     @Autowired
     private BarcodeService barcodeService;
@@ -60,7 +65,7 @@ public class CheckersScraper {
             for (int i = 0; i < links.size(); i++) {
                 String link = links.get(i).text();
                 if (link.contains("food") || link.contains("Food")) {
-                    toVisitLinkRepository.save(new ToVisitLinkModel(link, "category"));
+                    toVisitLinkRepository.save(new ToVisitLinkModel(link, "category", "Checkers"));
                 }
             }
         } catch (Exception e) {
@@ -70,7 +75,22 @@ public class CheckersScraper {
 
     public ToVisitLinkModel getNextLink() {
         // Get next link to visit
-        Optional<ToVisitLinkModel> toVisitLink = toVisitLinkRepository.findNext();
+
+        long currentTime = System.currentTimeMillis();
+        long timeSinceLastRequest = currentTime - lastRequestTime;
+
+        // Wait 10 seconds between requests
+        if (timeSinceLastRequest < 10000) {
+            try {
+                System.out.println("Waiting " + (10000 - timeSinceLastRequest) + "ms");
+                Thread.sleep(10000 - timeSinceLastRequest);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Optional<ToVisitLinkModel> toVisitLink = linkService.getNextLink();
+        lastRequestTime = System.currentTimeMillis();
 
         if (toVisitLink.isPresent()) {
             return toVisitLink.get();
@@ -79,123 +99,69 @@ public class CheckersScraper {
         return null;
     }
 
+    public void handleLink(ToVisitLinkModel toVisitLink) {
+        // Handle link based on type
+        if (toVisitLink.getType().equals("category")) {
+            handleCategoryLink(toVisitLink);
+        } else if (toVisitLink.getType().equals("product")) {
+            handleProductLink(toVisitLink);
+        }
+    }
+
+    public void handleCategoryLink(ToVisitLinkModel link) {
+        // Visit category page and get all product links and pagination links
+        Optional<VisitedLinkModel> visited = visitedLinkRepository.findById(link.getLink());
+
+        // if link has been visited and it has been less than 1 month since last visit,
+        // skip
+        if (visited.isPresent() && visited.get().getLastVisited().plusMonths(1).isAfter(LocalDate.now())) {
+            System.out.println("Skipping " + link.getLink() + ", already visited...");
+            return;
+        }
+
+        try {
+            Document doc = Jsoup.connect("https://www.checkers.co.za" + link.getLink()).get();
+
+            // Get product links
+            Elements productPageLinks = doc.select("h3.item-product__name > a");
+
+            for (int i = 0; i < productPageLinks.size(); i++) {
+                String productPageLink = productPageLinks.get(i).attr("href");
+
+                if (productPageLink != null && !productPageLink.isEmpty()) {
+                    toVisitLinkRepository.save(new ToVisitLinkModel(productPageLink, "product", "Checkers"));
+                }
+            }
+
+            // Get pagination links
+            Element paginationBar = doc.selectFirst("div.pagination-bar.bottom");
+            if (paginationBar != null) {
+                Elements paginationLinksEl = paginationBar.select("a");
+
+                for (Element paginationLink : paginationLinksEl) {
+                    String paginationLinkHref = paginationLink.attr("href");
+
+                    // add to ToVisitLinks if they aren't in VisitedLinks
+                    if (!visitedLinkRepository.existsById(paginationLinkHref)) {
+                        toVisitLinkRepository.save(new ToVisitLinkModel(paginationLinkHref, "category", "Checkers"));
+                    }
+
+                }
+            }
+
+            // Add link to visited links
+            visitedLinkRepository.save(new VisitedLinkModel(link.getLink(), "category", "Checkers"));
+            System.out.println("Visited " + link.getLink());
+        } catch (IOException e) {
+            System.out.println("Error visiting " + link.getLink() + ", skipping...");
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void scrape() {
-
-        // foodLinks.add("file:///D:\\Code\\MessingAround\\app\\src\\main\\java\\messingaround\\applep1.html");
-        // foodLinks.add("file:///D:\\Code\\MessingAround\\app\\src\\main\\java\\messingaround\\milk.html");
-
-        // Visit each food category page and get all product links
-        List<String> productLinks = new ArrayList<String>();
-        List<String> paginationLinks = new ArrayList<String>();
-        List<FoodModelM> foodModels = new ArrayList<FoodModelM>();
-
-        for (String link : foodLinks) {
-            // Check if link has been visited
-            if (visitedLinks.contains(link)) {
-                continue;
-            }
-
-            long currentTime = System.currentTimeMillis();
-            long timeSinceLastRequest = currentTime - lastRequestTime;
-
-            // Wait 10 seconds between requests
-            if (timeSinceLastRequest < 10000) {
-                try {
-                    System.out.println("Waiting " + (10000 - timeSinceLastRequest) + "ms");
-                    Thread.sleep(10000 - timeSinceLastRequest);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            visitedLinks.add(link);
-            driver.get(link);
-            System.out.println("Visiting " + link);
-
-            // Wait for page to load
-            WebElement element = wait
-                    .until(ExpectedConditions.elementToBeClickable(By.cssSelector("h3.item-product__name > a")));
-
-            // Full products page dom
-            String dom = driver.getPageSource();
-            Document productPageDoc = Jsoup.connect(link).get();
-
-            // Get product links
-            Elements productPageLinks = productPageDoc.select("h3.item-product__name > a");
-
-            for (int i = 0; i < productPageLinks.size(); i++) {
-                String productPageLink = productPageLinks.get(i).attr("href");
-                productLinks.add(productPageLink);
-            }
-
-            // Find pagination links if they exist
-            Element paginationBar = productPageDoc.selectFirst("div.pagination-bar.bottom");
-            Elements paginationLinksEl = paginationBar.select("a");
-
-            for (Element paginationLink : paginationLinksEl) {
-                String paginationLinkHref = paginationLink.attr("href");
-
-                // add to pagination links if they aren't in visitedLinks
-                if (!visitedLinks.contains(paginationLinkHref)) {
-                    paginationLinks.add(paginationLinkHref);
-                }
-            }
-
-            // Update last request time
-            lastRequestTime = System.currentTimeMillis();
-        }
-
-        System.out.println("############################################");
-        System.out.println("Main links finished, starting pagination links");
-        System.out.println("############################################");
-
-        // Visit each pagination link and get all product links
-        for (String link : paginationLinks) {
-            // Check if link has been visited
-            if (visitedLinks.contains(link)) {
-                continue;
-            }
-
-            long currentTime = System.currentTimeMillis();
-            long timeSinceLastRequest = currentTime - lastRequestTime;
-
-            // Wait 10 seconds between requests
-            if (timeSinceLastRequest < 10000) {
-                try {
-                    System.out.println("Waiting " + (10000 - timeSinceLastRequest) + "ms");
-                    Thread.sleep(10000 - timeSinceLastRequest);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            visitedLinks.add(link);
-            driver.get("file:///D:\\Code\\MessingAround" + link);
-            System.out.println("Visiting " + link);
-
-            // Wait for page to load
-            WebElement element = wait
-                    .until(ExpectedConditions.elementToBeClickable(By.cssSelector("h3.item-product__name > a")));
-
-            // Full products page dom
-            String dom = driver.getPageSource();
-            Document productPageDoc = Jsoup.parse(dom);
-
-            // Get product links
-            Elements productPageLinks = productPageDoc.select("h3.item-product__name > a");
-
-            for (int i = 0; i < productPageLinks.size(); i++) {
-                String productPageLink = productPageLinks.get(i).attr("href");
-                productLinks.add(productPageLink);
-            }
-
-            // Update last request time
-            lastRequestTime = System.currentTimeMillis();
-        }
-
-        System.out.println("############################################");
-        System.out.println("Finished getting product links");
-        System.out.println("############################################");
 
         // Visit each product page and get product info
         for (String link : productLinks) {
