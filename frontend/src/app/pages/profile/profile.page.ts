@@ -166,7 +166,7 @@ export class ProfilePage implements OnInit, ViewWillEnter {
           }
         },
       });
-      this.loginService.setSettingsRefreshed(false);
+      this.loginService.setSettingsRefreshed(true);
     }
   }
 

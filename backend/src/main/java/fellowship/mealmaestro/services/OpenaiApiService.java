@@ -107,7 +107,7 @@ public class OpenaiApiService {
                     .body(Mono.just(jsonRequest), String.class)
                     .retrieve()
                     .bodyToMono(String.class)
-                    .timeout(Duration.ofSeconds(10))
+                    .timeout(Duration.ofSeconds(30))
                     .block();
 
             return response;
