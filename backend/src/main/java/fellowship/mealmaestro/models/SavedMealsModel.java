@@ -4,6 +4,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import fellowship.mealmaestro.models.neo4j.MealModel;
+import fellowship.mealmaestro.models.neo4j.UserModel;
+
 import java.util.List;
 
 @Node("SavedMeals")
@@ -17,32 +20,36 @@ public class SavedMealsModel {
     @Id
     private String userSavedIdentifier;
 
-    public SavedMealsModel(){};
+    public SavedMealsModel() {
+    };
 
-    public SavedMealsModel(List<MealModel> savedMealList, UserModel user, String userSavedIdentifier){
+    public SavedMealsModel(List<MealModel> savedMealList, UserModel user, String userSavedIdentifier) {
         this.savedMealList = savedMealList;
         this.user = user;
         this.userSavedIdentifier = userSavedIdentifier;
     };
 
-    public List<MealModel> getMealModels(){
+    public List<MealModel> getMealModels() {
         return this.savedMealList;
     }
-    public void setMealModels(List<MealModel> mealModels){
+
+    public void setMealModels(List<MealModel> mealModels) {
         this.savedMealList = mealModels;
     }
 
-    public UserModel getUserModel(){
+    public UserModel getUserModel() {
         return this.user;
     }
-    public void setUser(UserModel user){
+
+    public void setUser(UserModel user) {
         this.user = user;
     }
 
-    public String getUserSavedIdentifier(){
+    public String getUserSavedIdentifier() {
         return this.userSavedIdentifier;
     }
-    public void setUserDateIdentifier(String id){
+
+    public void setUserDateIdentifier(String id) {
         this.userSavedIdentifier = id;
     }
 

@@ -6,6 +6,7 @@ import { RecipeItemComponent } from '../../components/recipe-item/recipe-item.co
 import {
   AuthenticationService,
   ErrorHandlerService,
+  LoginService,
   RecipeBookApiService,
 } from '../../services/services';
 import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
@@ -27,11 +28,23 @@ export class RecipeBookPage implements OnInit {
     private errorHandlerService: ErrorHandlerService,
     private auth: AuthenticationService,
     private actionSheetController: ActionSheetController,
-    private addService: AddRecipeService
+    private addService: AddRecipeService,
+    private loginService: LoginService
   ) {}
 
+  ngOnInit() {
+    this.addService.recipeItem$.subscribe((recipeItem) => {
+      if (recipeItem) {
+        this.addRecipe(recipeItem);
+      }
+    });
+  }
+
   async ionViewWillEnter() {
-    this.getRecipes();
+    if (!this.loginService.isRecipeBookRefreshed()) {
+      this.getRecipes();
+      this.loginService.setRecipeBookRefreshed(true);
+    }
   }
 
   async addRecipe(item: MealI) {
@@ -142,13 +155,5 @@ export class RecipeBookPage implements OnInit {
 
   handleEvent(data: MealI) {
     this.addRecipe(data);
-  }
-
-  ngOnInit() {
-    this.addService.recipeItem$.subscribe((recipeItem) => {
-      if (recipeItem) {
-        this.addRecipe(recipeItem);
-      }
-    });
   }
 }

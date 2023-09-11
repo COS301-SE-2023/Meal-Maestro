@@ -1,13 +1,13 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { BrowseMealsComponent } from '../../components/browse-meals/browse-meals.component';
 import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
-import { ErrorHandlerService } from '../../services/services';
-import { DaysMealsI } from '../../models/daysMeals.model';
-import { MealBrowseI } from '../../models/mealBrowse.model';
+import {
+  AuthenticationService,
+  ErrorHandlerService,
+} from '../../services/services';
 import { MealI } from '../../models/interfaces';
 
 @Component({
@@ -18,8 +18,6 @@ import { MealI } from '../../models/interfaces';
   imports: [IonicModule, BrowseMealsComponent, CommonModule],
 })
 export class BrowsePage implements OnInit {
-  // meals: DaysMealsI[];
-
   popularMeals: MealI[] = [];
   searchedMeals: MealI[] = [];
   noResultsFound: boolean = false;
@@ -31,7 +29,8 @@ export class BrowsePage implements OnInit {
   constructor(
     public r: Router,
     private mealGenerationservice: MealGenerationService,
-    private errorHandlerService: ErrorHandlerService
+    private errorHandlerService: ErrorHandlerService,
+    private auth: AuthenticationService
   ) {
     this.searchQuery = '';
   }
@@ -49,10 +48,18 @@ export class BrowsePage implements OnInit {
         console.log(this.popularMeals);
       },
       error: (err) => {
-        this.errorHandlerService.presentErrorToast(
-          'Error loading meal items',
-          err
-        );
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorized access. Please login again',
+            err
+          );
+          this.auth.logout();
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Error loading meal items',
+            err
+          );
+        }
       },
     });
   }
@@ -86,10 +93,18 @@ export class BrowsePage implements OnInit {
         }
       },
       error: (err) => {
-        this.errorHandlerService.presentErrorToast(
-          'Error loading meal items',
-          err
-        );
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorized access. Please login again',
+            err
+          );
+          this.auth.logout();
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Error loading meal items',
+            err
+          );
+        }
       },
     });
   }

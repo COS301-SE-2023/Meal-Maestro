@@ -6,12 +6,12 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { SettingsApiService } from './settings-api.service';
-import { UserPreferencesI } from '../../models/settings.model';
+import { SettingsI } from '../../models/settings.model';
 
 describe('SettingsApiService', () => {
   let service: SettingsApiService;
   let httpMock: HttpTestingController;
-  let settings: UserPreferencesI;
+  let settings: SettingsI;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -38,7 +38,9 @@ describe('SettingsApiService', () => {
       foodPreferences: ['vegan'],
       calorieAmount: 2000,
       budgetRange: 'low',
-      macroRatio: { protein: 0.3, carbs: 0.4, fat: 0.3 },
+      protein: 0.3,
+      carbs: 0.4,
+      fat: 0.3,
       allergies: ['dairy'],
       cookingTime: '30',
       userHeight: 180,
@@ -73,7 +75,9 @@ describe('SettingsApiService', () => {
       calorieAmount: 2000,
       budgetRange: 'low',
 
-      macroRatio: { protein: 0.3, carbs: 0.4, fat: 0.3 },
+      protein: 0.3,
+      carbs: 0.4,
+      fat: 0.3,
       allergies: ['dairy'],
       cookingTime: '30',
       userHeight: 180,

@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import fellowship.mealmaestro.models.UpdateUserRequestModel;
-import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.models.auth.AuthenticationRequestModel;
 import fellowship.mealmaestro.models.auth.AuthenticationResponseModel;
 import fellowship.mealmaestro.models.auth.RegisterRequestModel;
+import fellowship.mealmaestro.models.neo4j.UserModel;
 import fellowship.mealmaestro.services.UserService;
 import fellowship.mealmaestro.services.auth.AuthenticationService;
 
@@ -27,21 +27,20 @@ public class UserController {
 
     private final AuthenticationService authenticationService;
 
-    public UserController(AuthenticationService authenticationService){
+    public UserController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
     }
 
     @PostMapping("/findByEmail")
-    public UserModel findByEmail(@RequestBody UserModel user){
+    public UserModel findByEmail(@RequestBody UserModel user) {
         return userService.findByEmail(user.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponseModel> register(
-        @RequestBody RegisterRequestModel request
-    ){
+            @RequestBody RegisterRequestModel request) {
         Optional<AuthenticationResponseModel> response = authenticationService.register(request);
-        if(response.isEmpty()){
+        if (response.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(response.get());
@@ -49,23 +48,20 @@ public class UserController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponseModel> authenticate(
-        @RequestBody AuthenticationRequestModel request
-    ){
+            @RequestBody AuthenticationRequestModel request) {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 
     @PutMapping("/updateUser")
     public ResponseEntity<UserModel> updateUser(
-        @RequestBody UpdateUserRequestModel user,
-        @RequestHeader("Authorization") String token
-    ){
+            @RequestBody UpdateUserRequestModel user,
+            @RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(userService.updateUser(user, token));
     }
 
     @GetMapping("/getUser")
     public ResponseEntity<UserModel> getUser(
-        @RequestHeader("Authorization") String token
-    ){
+            @RequestHeader("Authorization") String token) {
         UserModel user = userService.getUser(token);
         user.setPassword("");
         return ResponseEntity.ok(user);

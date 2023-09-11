@@ -4,67 +4,73 @@ import { Observable } from 'rxjs';
 import { UserI } from '../../models/interfaces';
 import { AuthResponseI } from '../../models/authResponse.model';
 import { Router } from '@angular/router';
+import { LoginService } from '../login/login.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthenticationService {
+  url: String = 'http://localhost:8080';
 
-  url : String = 'http://localhost:8080';
-
-  constructor(private http: HttpClient, public r: Router) { }
+  constructor(
+    private http: HttpClient,
+    public r: Router,
+    private l: LoginService
+  ) {}
 
   login(user: UserI): Observable<HttpResponse<AuthResponseI>> {
     return this.http.post<AuthResponseI>(
-      this.url+'/authenticate',
+      this.url + '/authenticate',
       {
-        "email":user.email,
-        "password": user.password
+        email: user.email,
+        password: user.password,
       },
-      {observe: 'response'});
+      { observe: 'response' }
+    );
   }
 
   register(user: UserI): Observable<HttpResponse<AuthResponseI>> {
     return this.http.post<AuthResponseI>(
-      this.url+'/register',
+      this.url + '/register',
       {
-        "username": user.username,
-        "email":user.email,
-        "password": user.password
+        username: user.username,
+        email: user.email,
+        password: user.password,
       },
-      {observe: 'response'});
+      { observe: 'response' }
+    );
   }
 
   findUser(email: string): Observable<HttpResponse<UserI>> {
     return this.http.post<UserI>(
-      this.url+'/findByEmail',
+      this.url + '/findByEmail',
       {
-        "username": '',
-        "email": email,
-        "password": ''
+        username: '',
+        email: email,
+        password: '',
       },
-      {observe: 'response'});
+      { observe: 'response' }
+    );
   }
 
   updateUser(user: UserI): Observable<HttpResponse<UserI>> {
     return this.http.post<UserI>(
-      this.url+'/updateUser',
+      this.url + '/updateUser',
       {
-        "username": user.username,
-        "email": '',
-        "password": ''
+        username: user.username,
+        email: '',
+        password: '',
       },
-      {observe: 'response'});
+      { observe: 'response' }
+    );
   }
 
   getUser(): Observable<HttpResponse<UserI>> {
-    return this.http.get<UserI>(
-      this.url+'/getUser',
-      {observe: 'response'});
+    return this.http.get<UserI>(this.url + '/getUser', { observe: 'response' });
   }
 
   setToken(token: string): void {
-    if (token){
+    if (token) {
       localStorage.setItem('token', token);
     }
   }
@@ -72,6 +78,6 @@ export class AuthenticationService {
   logout(): void {
     localStorage.removeItem('token');
     this.r.navigate(['../']);
+    this.l.resetRefreshed();
   }
-
 }

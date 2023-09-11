@@ -2,6 +2,7 @@ package fellowship.mealmaestro.models;
 
 import java.time.LocalDate;
 
+import fellowship.mealmaestro.models.neo4j.MealModel;
 import lombok.Getter;
 import lombok.Setter;
 

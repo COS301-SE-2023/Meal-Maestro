@@ -11,13 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fellowship.mealmaestro.models.FoodModel;
-import fellowship.mealmaestro.models.MealModel;
 import fellowship.mealmaestro.models.RegenerateMealRequest;
-import fellowship.mealmaestro.models.UserModel;
-import fellowship.mealmaestro.models.relationships.HasMeal;
-import fellowship.mealmaestro.repositories.MealRepository;
-import fellowship.mealmaestro.repositories.UserRepository;
+import fellowship.mealmaestro.models.neo4j.FoodModel;
+import fellowship.mealmaestro.models.neo4j.MealModel;
+import fellowship.mealmaestro.models.neo4j.UserModel;
+import fellowship.mealmaestro.models.neo4j.relationships.HasMeal;
+import fellowship.mealmaestro.repositories.neo4j.MealRepository;
+import fellowship.mealmaestro.repositories.neo4j.UserRepository;
 import fellowship.mealmaestro.services.auth.JwtService;
 
 @Service
@@ -46,9 +46,9 @@ public class MealDatabaseService {
         dinner = mealRepository.save(dinner);
 
         // Step 3: Create a HasMeal relationship between the MealModel and User
-        HasMeal breakfastHasMeal = new HasMeal(breakfast, date);
-        HasMeal lunchHasMeal = new HasMeal(lunch, date);
-        HasMeal dinnerHasMeal = new HasMeal(dinner, date);
+        HasMeal breakfastHasMeal = new HasMeal(breakfast, date, "breakfast");
+        HasMeal lunchHasMeal = new HasMeal(lunch, date, "lunch");
+        HasMeal dinnerHasMeal = new HasMeal(dinner, date, "dinner");
 
         // Step 4: Add the HasMeal relationship to the User
         String email = jwtService.extractUserEmail(token);
@@ -95,7 +95,7 @@ public class MealDatabaseService {
         return mealModels;
     }
 
-    public void removeOldMeals(String token) { // TODO: double check this works
+    public void removeOldMeals(String token) {
         String email = jwtService.extractUserEmail(token);
 
         UserModel user = userRepository.findByEmail(email).get();
@@ -136,7 +136,7 @@ public class MealDatabaseService {
     }
 
     public boolean canMakeMeal(List<FoodModel> pantryItems, String ingredients) {
-        String[] ingredientsArray = ingredients.split("\\s+");
+        String[] ingredientsArray = ingredients.split(",");
         for (String ingredient : ingredientsArray) {
             boolean found = false;
             for (FoodModel pantryItem : pantryItems) {
@@ -159,7 +159,7 @@ public class MealDatabaseService {
         MealModel oldMeal = request.getMeal();
         LocalDate date = request.getDate();
         mealRepository.save(newMeal);
-        mealRepository.replaceMeal(date, oldMeal.getName(), newMeal.getName(), email);
+        mealRepository.replaceMeal(date, oldMeal.getName(), newMeal.getName(), email, oldMeal.getType());
         return newMeal;
     }
 

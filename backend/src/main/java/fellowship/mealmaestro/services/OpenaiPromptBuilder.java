@@ -9,10 +9,11 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import fellowship.mealmaestro.models.OpenAIChatRequest;
-import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.models.OpenAIChatRequest.Message;
-import fellowship.mealmaestro.repositories.UserRepository;
+import fellowship.mealmaestro.models.neo4j.UserModel;
+import fellowship.mealmaestro.repositories.neo4j.UserRepository;
 import fellowship.mealmaestro.services.auth.JwtService;
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class OpenaiPromptBuilder {
@@ -22,6 +23,13 @@ public class OpenaiPromptBuilder {
 
     @Autowired
     private UserRepository userRepository;
+
+    private Random rand;
+
+    @PostConstruct
+    public void init() {
+        rand = new Random(System.currentTimeMillis());
+    }
 
     public OpenAIChatRequest buildPrompt(String type, String token) throws JsonProcessingException {
 
@@ -51,11 +59,11 @@ public class OpenaiPromptBuilder {
         String pantryFoods = user.getPantry().toString();
         String settings = user.getSettings().toString();
 
-        // random with time as seed
-        Random rand = new Random(System.currentTimeMillis());
         double random = rand.nextDouble();
 
         OpenAIChatRequest.Message userMessage = new OpenAIChatRequest.Message();
+
+        System.out.println("1st random: " + random);
 
         if (pantryFoods.equals("")) {
             if (random < 0.3) {
@@ -69,6 +77,9 @@ public class OpenaiPromptBuilder {
             pantryFoods = "I have the following foods in my pantry: " + pantryFoods;
         }
 
+        random = rand.nextDouble();
+        System.out.println("2nd random: " + random);
+
         if (settings.equals("")) {
             if (random < 0.3) {
                 settings = "You can make whatever unique meal you want.";
@@ -81,6 +92,8 @@ public class OpenaiPromptBuilder {
             settings = "Some other useful information about me: " + settings + ".";
         }
 
+        random = rand.nextDouble();
+        System.out.println("3rd random: " + random);
         userMessage.setRole("user");
         if (random < 0.5) {
             userMessage.setContent("I want to cook a " + type + " meal. " + pantryFoods + ". " + settings);

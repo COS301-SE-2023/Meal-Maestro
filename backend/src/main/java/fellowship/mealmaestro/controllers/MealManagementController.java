@@ -16,9 +16,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import fellowship.mealmaestro.models.DateModel;
-import fellowship.mealmaestro.models.MealModel;
 import fellowship.mealmaestro.models.RegenerateMealRequest;
+import fellowship.mealmaestro.models.neo4j.DateModel;
+import fellowship.mealmaestro.models.neo4j.MealModel;
 import fellowship.mealmaestro.services.MealDatabaseService;
 import fellowship.mealmaestro.services.MealManagementService;
 import jakarta.validation.Valid;
@@ -59,12 +59,21 @@ public class MealManagementController {
             }
             if (!lunch.isPresent()) {
                 MealModel lunchGenerated = mealManagementService.generateMeal("lunch", token);
+                // if lunch name is the same as breakfast name, generate a new lunch
+                // while (lunchGenerated.getName().equals(breakfast.get().getName())) {
+                // lunchGenerated = mealManagementService.generateMeal("lunch", token);
+                // }
                 mealsForDay.add(lunchGenerated);
             } else {
                 mealsForDay.add(lunch.get());
             }
             if (!dinner.isPresent()) {
                 MealModel dinnerGenerated = mealManagementService.generateMeal("dinner", token);
+                // if dinner name is the same as breakfast or lunch name, generate a new dinner
+                // while (dinnerGenerated.getName().equals(breakfast.get().getName())
+                // || dinnerGenerated.getName().equals(lunch.get().getName())) {
+                // dinnerGenerated = mealManagementService.generateMeal("dinner", token);
+                // }
                 mealsForDay.add(dinnerGenerated);
             } else {
                 mealsForDay.add(dinner.get());

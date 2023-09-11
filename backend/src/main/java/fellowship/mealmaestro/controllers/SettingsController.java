@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import fellowship.mealmaestro.models.SettingsModel;
+import fellowship.mealmaestro.models.neo4j.SettingsModel;
 import fellowship.mealmaestro.services.SettingsService;
 import jakarta.validation.Valid;
 

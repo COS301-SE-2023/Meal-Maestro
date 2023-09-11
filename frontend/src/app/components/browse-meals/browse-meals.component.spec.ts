@@ -17,10 +17,11 @@ describe('BrowseMealsComponent', () => {
       ingredients: 'test',
       instructions: 'test',
       cookingTime: 'test',
+      type: 'breakfast',
     };
 
     TestBed.configureTestingModule({
-      imports: [IonicModule.forRoot(), BrowseMealsComponent]
+      imports: [IonicModule.forRoot(), BrowseMealsComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BrowseMealsComponent);

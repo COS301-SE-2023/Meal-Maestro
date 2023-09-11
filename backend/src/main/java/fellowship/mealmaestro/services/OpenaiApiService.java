@@ -1,5 +1,8 @@
 package fellowship.mealmaestro.services;
 
+import java.time.Duration;
+import java.util.concurrent.TimeoutException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -53,6 +56,13 @@ public class OpenaiApiService {
 
     public String fetchMealResponse(String type, String token) throws JsonMappingException, JsonProcessingException {
         String jsonResponse = getJSONResponse(type, token);
+        if (jsonResponse.equals("Timeout")) {
+            jsonResponse = getJSONResponse(type, token);
+        }
+        if (jsonResponse.equals("Error") || jsonResponse.equals("Timeout")) {
+            return "{\"error\":\"error\"}";
+        }
+
         JsonNode jsonNode = jsonMapper.readTree(jsonResponse);
 
         JsonNode contentNode = jsonNode
@@ -89,16 +99,27 @@ public class OpenaiApiService {
 
         System.out.println("Sending request to OpenAI");
 
-        String response = webClient.post()
-                .uri(OPENAI_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .headers(h -> h.setAll(headers.toSingleValueMap()))
-                .body(Mono.just(jsonRequest), String.class)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        try {
+            String response = webClient.post()
+                    .uri(OPENAI_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .headers(h -> h.setAll(headers.toSingleValueMap()))
+                    .body(Mono.just(jsonRequest), String.class)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .timeout(Duration.ofSeconds(10))
+                    .block();
 
-        return response;
+            return response;
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof TimeoutException) {
+                System.out.println("Timeout");
+                return "Timeout";
+            } else {
+                System.out.println("Error");
+                return "Error";
+            }
+        }
     }
 
 }
