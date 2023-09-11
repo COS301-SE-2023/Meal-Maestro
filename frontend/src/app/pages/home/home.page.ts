@@ -63,8 +63,6 @@ export class HomePage implements OnInit, ViewWillEnter {
           script
         );
       });
-
-    await this.getMeals();
   }
 
   async ionViewWillEnter() {

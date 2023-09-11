@@ -53,9 +53,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
     private loginService: LoginService
   ) {}
 
-  async ngOnInit() {
-    this.fetchItems();
-  }
+  async ngOnInit() {}
 
   async ionViewWillEnter() {
     if (!this.loginService.isPantryRefreshed()) {
