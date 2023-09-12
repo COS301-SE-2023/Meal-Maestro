@@ -4,7 +4,6 @@ import { RecipeDetailsComponent } from '../recipe-details/recipe-details.compone
 
 import { MealI } from '../../models/meal.model';
 import { CommonModule } from '@angular/common';
-import { RecipeItemI } from '../../models/recipeItem.model';
 
 
 @Component({
