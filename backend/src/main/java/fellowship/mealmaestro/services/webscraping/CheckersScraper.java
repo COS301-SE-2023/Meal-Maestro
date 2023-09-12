@@ -15,7 +15,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CheckersScraper {
     private final ToVisitLinkRepository toVisitLinkRepository;
 
@@ -24,6 +28,8 @@ public class CheckersScraper {
     private final LinkService linkService;
 
     private final BarcodeService barcodeService;
+
+    private static final Logger logger = LoggerFactory.getLogger(CheckersScraper.class);
 
     public CheckersScraper(ToVisitLinkRepository toVisitLinkRepository, VisitedLinkRepository visitedLinkRepository,
             LinkService linkService, BarcodeService barcodeService) {
@@ -90,21 +96,52 @@ public class CheckersScraper {
 
     public void handleCategoryLink(ToVisitLinkModel link) {
         // Visit category page and get all product links and pagination links
+        logger.info("Handling Category Link: " + link.getLink());
         Optional<VisitedLinkModel> visited = visitedLinkRepository.findById(link.getLink());
 
         // if link has been visited and it has been less than 1 month since last visit,
         // skip
         if (visited.isPresent() && visited.get().getLastVisited().plusMonths(1).isAfter(LocalDate.now())) {
             toVisitLinkRepository.deleteById(link.getLink());
-            System.out.println("Skipping " + link.getLink() + ", already visited...");
+            logger.info("Skipping " + link.getLink() + ", already visited...");
             return;
         }
 
         try {
-            Document doc = Jsoup.connect("https://www.checkers.co.za" + link.getLink()).get();
+            // if link starts with /, add domain
+            Document doc;
+            if (link.getLink().startsWith("/")) {
+                doc = Jsoup.connect("http://www.checkers.co.za" + link.getLink()).userAgent(
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.76")
+                        .header("Accept",
+                                "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+                        .header("Accept-Encoding", "gzip, deflate, br")
+                        .header("Accept-Language", "en-US,en;q=0.9")
+                        .get();
+            } else {
+                doc = Jsoup.connect(link.getLink()).userAgent(
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.76")
+                        .header("Accept",
+                                "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+                        .header("Accept-Encoding", "gzip, deflate, br")
+                        .header("Accept-Language", "en-US,en;q=0.9")
+                        .get();
+            }
+            logger.info("Connecting to " + doc.title() + "...");
+            if (doc.title().contains("Captcha")) {
+                logger.info("######################################");
+                logger.info("Error encountered captcha, skipping...");
+                logger.info("######################################");
+                return;
+            }
 
             // Get product links
             Elements productPageLinks = doc.select("h3.item-product__name > a");
+
+            if (productPageLinks == null) {
+                logger.info("Skipping " + link.getLink() + ", no product links...");
+                return;
+            }
 
             for (int i = 0; i < productPageLinks.size(); i++) {
                 String productPageLink = productPageLinks.get(i).attr("href");
@@ -132,13 +169,14 @@ public class CheckersScraper {
 
             // Add link to visited links
             visitedLinkRepository.save(new VisitedLinkModel(link.getLink(), "category", "Checkers"));
+            logger.info("Saving " + link.getLink() + " to visited links...");
 
             // Remove link from ToVisitLinks
             toVisitLinkRepository.deleteById(link.getLink());
 
-            System.out.println("Visited " + link.getLink());
+            logger.info("Visited " + link.getLink());
         } catch (IOException e) {
-            System.out.println("Error visiting " + link.getLink() + ", skipping...");
+            logger.info("Error visiting " + link.getLink() + ", skipping...");
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,30 +188,49 @@ public class CheckersScraper {
         // Visit product page and get product info
 
         // Check if link has been visited
+        logger.info("Handling Product Link: " + link.getLink());
         Optional<VisitedLinkModel> visited = visitedLinkRepository.findById(link.getLink());
 
         if (visited.isPresent() && visited.get().getLastVisited().plusMonths(1).isAfter(LocalDate.now())) {
             toVisitLinkRepository.deleteById(link.getLink());
-            System.out.println("Skipping " + link.getLink() + ", already visited...");
+            logger.info("Skipping " + link.getLink() + ", already visited...");
             return;
         }
 
         try {
             // Visit product page
-            Document doc = Jsoup.connect("https://www.checkers.co.za" + link.getLink()).get();
-
+            // if link starts with /, add domain
+            Document doc;
+            if (link.getLink().startsWith("/")) {
+                doc = Jsoup.connect("http://www.checkers.co.za" + link.getLink()).userAgent(
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36")
+                        .header("Accept",
+                                "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+                        .header("Accept-Encoding", "gzip, deflate, br")
+                        .header("Accept-Language", "en-US,en;q=0.9")
+                        .get();
+            } else {
+                doc = Jsoup.connect(link.getLink()).userAgent(
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36")
+                        .header("Accept",
+                                "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+                        .header("Accept-Encoding", "gzip, deflate, br")
+                        .header("Accept-Language", "en-US,en;q=0.9")
+                        .get();
+            }
+            logger.info("Connecting to " + doc.title() + "...");
             // Get product info
             FoodModelM food = new FoodModelM();
 
             // product name
             Element productNameEl = doc.selectFirst("h1.pdp__name");
             if (productNameEl == null) {
-                System.out.println("Skipping " + link.getLink() + ", no product name...");
+                logger.info("Skipping " + link.getLink() + ", no product name...");
                 return;
             }
             String productName = productNameEl.text();
             if (productName == null || productName.isEmpty()) {
-                System.out.println("Skipping " + link.getLink() + ", no product name...");
+                logger.info("Skipping " + link.getLink() + ", no product name...");
                 return;
             }
             System.out.println("Product name: " + productName);
@@ -182,15 +239,17 @@ public class CheckersScraper {
             // product price
             Element productPriceEl = doc.selectFirst("div.special-price__price");
             if (productPriceEl == null) {
-                System.out.println("Skipping " + link.getLink() + ", no product price...");
-                return;
-            }
-            String productPrice = productPriceEl.text();
-            if (productPrice == null || productPrice.isEmpty()) {
+                logger.info("No product price");
                 food.setPrice(-1.0);
+            } else {
+
+                String productPrice = productPriceEl.text();
+                if (productPrice == null || productPrice.isEmpty()) {
+                    food.setPrice(-1.0);
+                }
+                System.out.println("Product price: " + productPrice);
+                food.setPrice(productPrice);
             }
-            System.out.println("Product price: " + productPrice);
-            food.setPrice(productPrice);
 
             // product details
             Elements productDetails = doc.select("table.pdp__product-information > tbody > tr");
@@ -203,7 +262,7 @@ public class CheckersScraper {
                     // select second td
                     Element barcodeEl = productDetail.selectFirst("td:nth-child(2)");
                     if (barcodeEl == null) {
-                        System.out.println("Skipping " + link.getLink() + ", no barcode...");
+                        logger.info("Skipping " + link.getLink() + ", no barcode...");
                         return;
                     }
                     barcode = barcodeEl.text();
@@ -216,7 +275,7 @@ public class CheckersScraper {
                     // select second td
                     Element quantityEl = productDetail.selectFirst("td:nth-child(2)");
                     if (quantityEl == null) {
-                        System.out.println("Skipping " + link.getLink() + ", no quantity...");
+                        logger.info("Skipping " + link.getLink() + ", no quantity...");
                         return;
                     }
                     quantity = quantityEl.text();
@@ -226,22 +285,25 @@ public class CheckersScraper {
             }
 
             if (barcode.isEmpty() || food.getBarcode().equals("")) {
-                System.out.println("Skipping " + link.getLink() + ", no barcode...");
+                logger.info("Skipping " + link.getLink() + ", no barcode...");
                 return;
             }
 
             // Add food to database
+            food.setStore("Checkers");
             barcodeService.addProduct(food);
+            logger.info("Saving " + food.getName() + " to database...");
 
             // Add link to visited links
             visitedLinkRepository.save(new VisitedLinkModel(link.getLink(), "product", "Checkers"));
+            logger.info("Saving " + link.getLink() + " to visited links...");
 
             // Remove link from ToVisitLinks
             toVisitLinkRepository.deleteById(link.getLink());
 
-            System.out.println("Visited " + link.getLink());
+            logger.info("Visited " + link.getLink());
         } catch (IOException e) {
-            System.out.println("Error visiting " + link.getLink() + ", skipping...");
+            logger.info("Error visiting " + link.getLink() + ", skipping...");
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
@@ -259,7 +321,7 @@ public class CheckersScraper {
         }
 
         // Handle link
-        System.out.println("###" + System.currentTimeMillis() + "###");
+        logger.info("### " + System.currentTimeMillis() + " ###");
         handleLink(toVisitLink);
     }
 }

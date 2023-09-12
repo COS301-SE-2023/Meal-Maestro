@@ -47,8 +47,12 @@ public class FoodModelM {
 
     public void setPrice(String price) {
         // remove R sign
-        price = price.substring(1);
-        this.price = Double.parseDouble(price);
+        Pattern pattern = Pattern.compile("(R)([0-9.]+)");
+        Matcher matcher = pattern.matcher(price);
+
+        if (matcher.find()) {
+            this.price = Double.parseDouble(matcher.group(2));
+        }
     }
 
     public void setPrice(Double price) {

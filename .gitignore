@@ -11,6 +11,12 @@ $RECYCLE.BIN/
 
 *.log
 log.txt
+mealmaestro-logs.txt
+
+
+# ios
+ios/
+android/
 
 .env
 
