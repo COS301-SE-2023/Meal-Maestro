@@ -151,9 +151,11 @@ export class HomePage implements OnInit, ViewWillEnter {
 
   hideLoading() {
     this.showLoading = false;
+    this.isLoading = false;
 
     setTimeout(() => {
       this.showLoading = false;
+      this.isLoading = false;
     }, 200);
   }
 }
