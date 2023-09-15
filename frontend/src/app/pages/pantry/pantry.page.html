@@ -87,6 +87,9 @@
     <div class="empty-list" *ngIf="shoppingItems.length === 0">
       Shopping list is empty :(
     </div>
+    <ion-item class="fixed-price">
+      <ion-label> Total cost: R {{totalShoppingPrice}} </ion-label>
+    </ion-item>
   </div>
 
   <ion-fab

@@ -49,6 +49,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
   isLoading: boolean = false;
   pantryItems: FoodItemI[] = [];
   shoppingItems: FoodItemI[] = [];
+  totalShoppingPrice: number = 0;
   searchTerm: string = '';
   currentSort: string = 'name-down';
   newItem: FoodItemI = {
@@ -120,6 +121,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
             this.shoppingItems = response.body;
             this.isLoading = false;
             this.sortNameDescending();
+            this.calculateTotalPrice();
           }
         }
       },
@@ -190,6 +192,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
                 unit: 'pcs',
                 price: undefined,
               };
+              this.calculateTotalPrice();
             }
           }
         },
@@ -243,6 +246,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
             this.shoppingItems = this.shoppingItems.filter(
               (i) => i.name !== item.name
             );
+            this.calculateTotalPrice();
           }
         },
         error: (err) => {
@@ -273,6 +277,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
               (i) => i.name !== item.name
             );
             this.errorHandlerService.presentSuccessToast('Item Bought!');
+            this.calculateTotalPrice();
           }
         }
       },
@@ -292,6 +297,15 @@ export class PantryPage implements OnInit, ViewWillEnter {
           this.errorHandlerService.presentErrorToast('Error buying item.', err);
         }
       },
+    });
+  }
+
+  calculateTotalPrice() {
+    this.totalShoppingPrice = 0;
+    this.shoppingItems.forEach((item) => {
+      if (item.price) {
+        this.totalShoppingPrice += item.price;
+      }
     });
   }
 

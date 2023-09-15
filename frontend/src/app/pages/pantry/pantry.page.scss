@@ -80,3 +80,13 @@ ion-fab-button.fab-button-disabled {
 ion-fab-button.fab-button-in-list {
   --background: #acf7b7;
 }
+
+ion-item.fixed-price {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  font-weight: bold;
+  font-family: "Roboto", sans-serif;
+  color: #656565;
+  font-size: 20px;
+}
