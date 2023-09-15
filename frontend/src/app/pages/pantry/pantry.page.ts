@@ -44,7 +44,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
   foodListItem!: QueryList<FoodListItemComponent>;
   @ViewChild(IonModal) modal!: IonModal;
 
-  isBarcodeSupported: boolean = true;
+  isBarcodeSupported: boolean = false;
   segment: 'pantry' | 'shopping' | null = 'pantry';
   isLoading: boolean = false;
   pantryItems: FoodItemI[] = [];
@@ -54,7 +54,8 @@ export class PantryPage implements OnInit, ViewWillEnter {
   newItem: FoodItemI = {
     name: '',
     quantity: null,
-    unit: 'pcs',
+    unit: undefined,
+    price: undefined,
   };
 
   constructor(
@@ -69,9 +70,9 @@ export class PantryPage implements OnInit, ViewWillEnter {
   ) {}
 
   async ngOnInit() {
-    // BarcodeScanner.isSupported().then((result) => {
-    //   this.isBarcodeSupported = result.supported;
-    // });
+    BarcodeScanner.isSupported().then((result) => {
+      this.isBarcodeSupported = result.supported;
+    });
   }
 
   async ionViewWillEnter() {
@@ -152,6 +153,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
                 name: '',
                 quantity: null,
                 unit: 'pcs',
+                price: undefined,
               };
             }
           }
@@ -186,6 +188,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
                 name: '',
                 quantity: null,
                 unit: 'pcs',
+                price: undefined,
               };
             }
           }
@@ -313,6 +316,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
       name: '',
       quantity: null,
       unit: 'pcs',
+      price: undefined,
     };
   }
 
@@ -460,32 +464,32 @@ export class PantryPage implements OnInit, ViewWillEnter {
   }
 
   async scan(): Promise<void> {
-    // const granted = await this.requestPermissions();
-    // if (!granted) {
-    //   this.errorHandlerService.presentErrorToast(
-    //     'Please grant camera permissions to use this feature',
-    //     'Camera permissions not granted'
-    //   );
-    //   return;
-    // }
+    const granted = await this.requestPermissions();
+    if (!granted) {
+      this.errorHandlerService.presentErrorToast(
+        'Please grant camera permissions to use this feature',
+        'Camera permissions not granted'
+      );
+      return;
+    }
 
-    // const result = await BarcodeScanner.scan();
+    const result = await BarcodeScanner.scan();
 
-    // if (
-    //   result.barcodes.length === 0 ||
-    //   result.barcodes[0].displayValue === '' ||
-    //   result.barcodes[0].displayValue === null ||
-    //   result.barcodes[0].displayValue === undefined
-    // ) {
-    //   return;
-    // }
-    let result = {
-      barcodes: [
-        {
-          displayValue: '13761238123', // for testing
-        },
-      ],
-    };
+    if (
+      result.barcodes.length === 0 ||
+      result.barcodes[0].displayValue === '' ||
+      result.barcodes[0].displayValue === null ||
+      result.barcodes[0].displayValue === undefined
+    ) {
+      return;
+    }
+    // let result = {
+    //   barcodes: [
+    //     {
+    //       displayValue: '13761238123', // for testing
+    //     },
+    //   ],
+    // };
 
     if (this.loginService.isShoppingAt() === '') {
       this.askShoppingLocation(result);
@@ -565,6 +569,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
               name: data.name,
               quantity: null,
               unit: 'pcs',
+              price: undefined,
             };
             this.modal.present();
           },

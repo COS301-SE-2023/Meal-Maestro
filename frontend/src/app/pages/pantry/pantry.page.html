@@ -262,6 +262,13 @@
               </ion-item>
             </ion-col>
           </ion-row>
+          <ion-row *ngIf="newItem.price !== undefined">
+            <ion-col>
+              <ion-item>
+                <ion-label> Price: R{{ newItem.price }} </ion-label>
+              </ion-item>
+            </ion-col>
+          </ion-row>
         </ion-grid>
       </ion-content>
     </ng-template>
