@@ -22,19 +22,6 @@ export class RecipeItemComponent {
   fIns: string[] = [];
   fIng: string[] = [];
 
-  @ViewChild('modalContent', {static: true}) modalContent!: TemplateRef<any>;
-
-  async openModal() {
-    const modal = await this.modalController.create({
-      component: this.modalContent,
-      componentProps: {
-        item: this.item,
-        items: this.items
-      }
-    });
-    await modal.present();
-  }
-
   public passItems(items: MealI[]): void {
     this.items = items;
   }
