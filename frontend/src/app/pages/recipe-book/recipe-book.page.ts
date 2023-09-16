@@ -22,6 +22,7 @@ import { MealI } from '../../models/meal.model';
 export class RecipeBookPage implements OnInit {
   @ViewChild(RecipeItemComponent) recipeItem!: RecipeItemComponent;
   public items: MealI[] = [];
+  public modalOpen: Boolean;
 
   constructor(
     private recipeService: RecipeBookApiService,

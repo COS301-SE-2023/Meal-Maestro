@@ -21,6 +21,12 @@ export class RecipeItemComponent {
   @Input() item!: MealI;
   fIns: string[] = [];
   fIng: string[] = [];
+  modalOpen: Boolean = false;
+
+  openModal(item: any) {
+    this.item = item;
+    this.modalOpen = true;
+  }
 
   public passItems(items: MealI[]): void {
     this.items = items;
