@@ -25,8 +25,9 @@ export class TutorialComponent implements OnInit, AfterViewInit {
   ngOnInit() {}
 
   ngAfterViewInit() {
-    setTimeout(() => {
-    this.swiper = new Swiper('.swiper-container', {
+    console.log('called');
+    // setTimeout(() => {
+    this.swiper = new Swiper('swiper-container', {
       // Swiper configuration options
       pagination: {
         el: '.swiper-pagination',
@@ -38,24 +39,28 @@ export class TutorialComponent implements OnInit, AfterViewInit {
       },
       on: {
         slideChange: () => {
+          console.log('slides started');
           this.onSlideChange();
+       //   this.onSlideChangeTransitionStart();
         },
         slideChangeTransitionStart: () => {
+          console.log('transition started');
           this.onSlideChangeTransitionStart();
         },
       },
-    });
+   // });
   });
   }
 
   onSlideChange() {
-    if (this.swiper.isEnd) {
-      const video: HTMLVideoElement = this.videoPlayer.nativeElement;
-      video.play();
-    }
+    //if (this.swiper.isEnd) {
+    const video: HTMLVideoElement = this.videoPlayer.nativeElement;
+    video.pause();
+   // }
   }
 
   onSlideChangeTransitionStart() {
+    console.log('slide started');
     const video: HTMLVideoElement = this.videoPlayer.nativeElement;
     video.currentTime = 0; 
   }
