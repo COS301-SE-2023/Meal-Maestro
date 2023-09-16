@@ -40,6 +40,9 @@ export class TutorialComponent implements OnInit, AfterViewInit {
         slideChange: () => {
           this.onSlideChange();
         },
+        slideChangeTransitionStart: () => {
+          this.onSlideChangeTransitionStart();
+        },
       },
     });
   });
@@ -52,15 +55,11 @@ export class TutorialComponent implements OnInit, AfterViewInit {
     }
   }
 
-  playVideo() {
+  onSlideChangeTransitionStart() {
     const video: HTMLVideoElement = this.videoPlayer.nativeElement;
-    video.play();
+    video.currentTime = 0; 
   }
 
-  pauseVideo() {
-    const video: HTMLVideoElement = this.videoPlayer.nativeElement;
-    video.pause();
-  }
 
   onSwiper(swiper: Swiper) {
     this.swiper = swiper;
