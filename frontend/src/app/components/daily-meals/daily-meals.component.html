@@ -153,7 +153,13 @@
                 <h4>Preparation Time</h4>
                 <p>{{ dayData.lunch.cookingTime }}</p>
                 <h4>Ingredients:</h4>
-                
+                  <ul>
+                    <li *ngFor="let ingredient of fIng">{{ ingredient }}</li>
+                  </ul>
+              <h4>Instructions</h4>
+                  <ol>
+                    <li *ngFor="let instruction of fIns">{{ instruction }}</li>
+                  </ol>
               </ion-content>           
           </ion-modal>
         </ion-item>
