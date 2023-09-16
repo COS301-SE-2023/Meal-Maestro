@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { RecipeDetailsComponent } from '../recipe-details/recipe-details.component';
 
@@ -17,17 +17,18 @@ import { AddRecipeService } from '../../services/recipe-book/add-recipe.service'
 
 })
 export class RecipeItemComponent {
-  items: MealI[] = [];
-  item!: MealI;
-
+  @Input() items: MealI[] = [];
+  @Input() item!: MealI;
   fIns: string[] = [];
   fIng: string[] = [];
 
-  async openModal(item: any) {
+  @ViewChild('modalContent', {static: true}) modalContent!: TemplateRef<any>;
+
+  async openModal() {
     const modal = await this.modalController.create({
-      component: RecipeDetailsComponent,
+      component: this.modalContent,
       componentProps: {
-        item: item,
+        item: this.item,
         items: this.items
       }
     });
