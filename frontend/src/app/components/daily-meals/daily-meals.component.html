@@ -129,8 +129,7 @@
             </ion-avatar>
           </div>
 
-          <ion-modal [isOpen]="isLunchModalOpen">
-            <ng-template>
+          <ion-modal [isOpen]="isLunchModalOpen">            
               <ion-header>
                 <ion-toolbar>
                   <ion-title>{{ dayData.lunch?.name }}</ion-title>
@@ -149,8 +148,7 @@
                 <p>{{ dayData.lunch?.instructions }}</p>
                 <h2>Cooking time:</h2>
                 <p>{{ dayData.lunch?.cookingTime }}</p>
-              </ion-content>
-            </ng-template>
+              </ion-content>           
           </ion-modal>
         </ion-item>
         <ion-item-options
