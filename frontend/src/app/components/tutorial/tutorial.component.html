@@ -21,7 +21,7 @@
         <swiper-slide>
           <img src="assets/Home.jpg">
         </swiper-slide>
-        <swiper-slide class="swip" (mouseenter)="playVideo()" (mouseleave)="pauseVideo()">
+        <swiper-slide class="swip" (swiper)="onSwiper($event)">
           <video #videoPlayer src="assets/first.mp4" controls></video>
         </swiper-slide>
         <swiper-slide>

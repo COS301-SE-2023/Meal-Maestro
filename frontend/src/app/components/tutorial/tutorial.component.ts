@@ -17,6 +17,7 @@ import Swiper from 'swiper';
 export class TutorialComponent implements OnInit, AfterViewInit {
   
   private swiper: Swiper;
+  @ViewChild('swiper') swiperElement!: ElementRef;
   @ViewChild('videoPlayer') videoPlayer!: ElementRef;
 
   constructor(private modalController: ModalController, private errorHandlerService: ErrorHandlerService) { }
@@ -24,7 +25,7 @@ export class TutorialComponent implements OnInit, AfterViewInit {
   ngOnInit() {}
 
   ngAfterViewInit() {
-    this.swiper = new Swiper('.swiper-container', {
+    this.swiper = new Swiper(this.swiperElement.nativeElement, {
       // Swiper configuration options
       pagination: {
         el: '.swiper-pagination',
@@ -34,14 +35,19 @@ export class TutorialComponent implements OnInit, AfterViewInit {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
       },
-      // on: {
-      //   slideChange: () => {
-      //     if (this.swiper.isEnd) {
-      //       this.showPopup();
-      //     }
-      //   },
-      // },
+      on: {
+        slideChange: () => {
+          this.onSlideChange();
+        },
+      },
     });
+  }
+
+  onSlideChange() {
+    if (this.swiper.isEnd) {
+      const video: HTMLVideoElement = this.videoPlayer.nativeElement;
+      video.play();
+    }
   }
 
   playVideo() {
