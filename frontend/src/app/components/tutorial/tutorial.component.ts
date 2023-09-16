@@ -25,7 +25,8 @@ export class TutorialComponent implements OnInit, AfterViewInit {
   ngOnInit() {}
 
   ngAfterViewInit() {
-    this.swiper = new Swiper(this.swiperElement.nativeElement, {
+    setTimeout(() => {
+    this.swiper = new Swiper('.swiper-container', {
       // Swiper configuration options
       pagination: {
         el: '.swiper-pagination',
@@ -41,6 +42,7 @@ export class TutorialComponent implements OnInit, AfterViewInit {
         },
       },
     });
+  });
   }
 
   onSlideChange() {
@@ -74,11 +76,4 @@ export class TutorialComponent implements OnInit, AfterViewInit {
   closeModal() {
     this.modalController.dismiss();
   }
-
- 
-  
-  
-
-
-
 }
