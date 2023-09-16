@@ -1,6 +1,5 @@
 import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
 import { IonicModule, ModalController } from '@ionic/angular';
-import { RecipeDetailsComponent } from '../recipe-details/recipe-details.component';
 
 import { MealI } from '../../models/meal.model';
 import { CommonModule } from '@angular/common';
