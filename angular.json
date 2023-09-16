@@ -116,7 +116,7 @@
                 "output": "./svg"
               }
             ],
-            "styles": ["frontend/src/theme/variables.scss", "frontend/src/global.scss","node_modules/swiper/swiper-bundle.css","src/styles.css"],
+            "styles": ["frontend/src/theme/variables.scss", "frontend/src/global.scss","src/styles.css"],
             "scripts": []
           },
           "configurations": {
