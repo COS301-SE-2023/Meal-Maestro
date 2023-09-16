@@ -17,6 +17,7 @@ import Swiper from 'swiper';
 export class TutorialComponent implements OnInit, AfterViewInit {
   
   private swiper: Swiper;
+  @ViewChild('videoPlayer') videoPlayer!: ElementRef;
 
   constructor(private modalController: ModalController, private errorHandlerService: ErrorHandlerService) { }
 
@@ -33,35 +34,42 @@ export class TutorialComponent implements OnInit, AfterViewInit {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
       },
-      on: {
-        slideChange: () => {
-          if (this.swiper.isEnd) {
-            this.showPopup();
-          }
-        },
-      },
+      // on: {
+      //   slideChange: () => {
+      //     if (this.swiper.isEnd) {
+      //       this.showPopup();
+      //     }
+      //   },
+      // },
     });
+  }
+
+  playVideo() {
+    const video: HTMLVideoElement = this.videoPlayer.nativeElement;
+    video.play();
+  }
+
+  pauseVideo() {
+    const video: HTMLVideoElement = this.videoPlayer.nativeElement;
+    video.pause();
   }
 
   onSwiper(swiper: Swiper) {
     this.swiper = swiper;
   }
 
-  onSlideChange() {
-    if (this.swiper.isEnd) {
-      //this.errorHandlerService.presentSuccessToast('Registration successful');
-      this.showPopup();
-    }
-  }
+  // onSlideChange() {
+  //   if (this.swiper.isEnd) {
+  //     //this.errorHandlerService.presentSuccessToast('Registration successful');
+  //     this.showPopup();
+  //   }
+  // }
 
   closeModal() {
     this.modalController.dismiss();
   }
 
-  showPopup() {
-    // Show your popup here (you can implement your own custom modal logic)
-    alert('DONE');
-  }
+ 
   
   
 
