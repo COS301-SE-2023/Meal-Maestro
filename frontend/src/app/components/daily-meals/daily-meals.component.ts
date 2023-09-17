@@ -73,6 +73,10 @@ export class DailyMealsComponent implements OnInit {
     }
   }
 
+  addRecipe(item: MealI) {
+    this.addService.setRecipeItem(item);
+  }
+
   private formatIns(ins: string) {
     const insArr: string[] = ins.split(/\d+\.\s+/);
     this.fIns = insArr.filter(instruction => instruction.trim() !== '');
