@@ -89,6 +89,13 @@ export class DailyMealsComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.dayData);
+    if (this.item && this.item.instructions) {
+      this.formatIns(this.item.instructions);
+    }
+
+    if (this.item && this.item.ingredients) {
+      this.formatIng(this.item.ingredients);
+    }
   }
 
   handleArchive(meal: string) {
