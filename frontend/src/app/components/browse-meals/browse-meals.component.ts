@@ -57,7 +57,7 @@ export class BrowseMealsComponent  implements OnInit {
   }
 
   notSaved(): boolean {
-    return !this.items.includes(this.item);
+    return !this.items.includes(this.item!);
   } 
 
   setCurrent(o : any) {
