@@ -18,6 +18,7 @@ import {
   RecipeBookApiService,
 } from '../../services/services';
 import { CommonModule } from '@angular/common';
+import { MealI } from '../../models/interfaces';
 
 @Component({
   selector: 'app-home',
@@ -32,6 +33,8 @@ export class HomePage implements OnInit, ViewWillEnter {
   daysMeals: DaysMealsI[] = [];
   isLoading: boolean = true;
   showLoading: boolean = true;
+
+  recipeItems: MealI[] = [];
 
   constructor(
     public r: Router,
@@ -65,6 +68,8 @@ export class HomePage implements OnInit, ViewWillEnter {
           script
         );
       });
+
+      this.getRecipes();
   }
 
   async ionViewWillEnter() {
@@ -155,5 +160,32 @@ export class HomePage implements OnInit, ViewWillEnter {
     setTimeout(() => {
       this.showLoading = false;
     }, 200);
+  }
+
+  async getRecipes() {
+    this.recipeService.getAllRecipes().subscribe({
+      next: (response) => {
+        if (response.status === 200) {
+          if (response.body) {
+            this.recipeItems = response.body;
+            this.recipeItem.passItems(this.items);
+          }
+        }
+      },
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorised access. Please log in again',
+            err
+          );
+          this.auth.logout();
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Error loading saved recipes',
+            err
+          );
+        }
+      },
+    });
   }
 }
