@@ -22,6 +22,8 @@ export class BrowseMealsComponent  implements OnInit {
   searchedMeals: MealI[] = [];
   isModalOpen = false;
   currentObject: any;
+  fIns: String[] = [];
+  fIng: String[] = [];
 
   constructor() { }
 
