@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, Input } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { MealI } from '../../models/interfaces';
+import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
 
 @Component({
   selector: 'app-browse-meals',
@@ -25,7 +26,7 @@ export class BrowseMealsComponent  implements OnInit {
   fIns: String[] = [];
   fIng: String[] = [];
 
-  constructor() { }
+  constructor(private addService: AddRecipeService) { }
 
   ngOnInit() {
    // console.log(this.mealsData);
