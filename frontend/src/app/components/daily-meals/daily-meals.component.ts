@@ -41,6 +41,7 @@ export class DailyMealsComponent implements OnInit {
   item: MealI | undefined;
   fIns: String[] = [];
   fIng: String[] = [];
+  @Input() items!: MealI[];
 
   constructor(
     public r: Router,
@@ -86,6 +87,10 @@ export class DailyMealsComponent implements OnInit {
     const ingArr: string[] = ing.split(/,[^()]*?(?![^(]*\))/);
     this.fIng = ingArr.map((ingredient) => ingredient.trim());
   }
+
+  notSaved(): boolean {
+    return !this.items.includes(this.item!);
+  } 
 
   ngOnInit() {
     console.log(this.dayData);

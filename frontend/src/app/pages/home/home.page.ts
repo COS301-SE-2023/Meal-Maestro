@@ -168,7 +168,6 @@ export class HomePage implements OnInit, ViewWillEnter {
         if (response.status === 200) {
           if (response.body) {
             this.recipeItems = response.body;
-            this.recipeItem.passItems(this.items);
           }
         }
       },
