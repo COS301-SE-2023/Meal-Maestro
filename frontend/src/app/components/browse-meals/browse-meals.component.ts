@@ -25,6 +25,7 @@ export class BrowseMealsComponent  implements OnInit {
   currentObject: any;
   fIns: String[] = [];
   fIng: String[] = [];
+  @Input() items!: MealI[];
 
   constructor(private addService: AddRecipeService) { }
 
@@ -54,6 +55,10 @@ export class BrowseMealsComponent  implements OnInit {
   addRecipe(item: MealI) {
     this.addService.setRecipeItem(item);
   }
+
+  notSaved(): boolean {
+    return !this.items.includes(this.item);
+  } 
 
   setCurrent(o : any) {
     this.currentObject = o;
