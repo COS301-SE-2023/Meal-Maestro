@@ -29,7 +29,29 @@ export class BrowseMealsComponent  implements OnInit {
 
   ngOnInit() {
    // console.log(this.mealsData);
-   this.item = this.mealsData;
+    this.item = this.mealsData;
+
+    if (this.item && this.item.instructions) {
+      this.formatIns(this.item.instructions);
+    }
+
+    if (this.item && this.item.ingredients) {
+      this.formatIng(this.item.ingredients);
+    }
+  }
+
+  private formatIns(ins: string) {
+    const insArr: string[] = ins.split(/\d+\.\s+/);
+    this.fIns = insArr.filter(instruction => instruction.trim() !== '');
+  }
+
+  private formatIng(ing: string) {
+    const ingArr: string[] = ing.split(/,[^()]*?(?![^(]*\))/);
+    this.fIng = ingArr.map((ingredient) => ingredient.trim());
+  }
+
+  addRecipe(item: MealI) {
+    this.addService.setRecipeItem(item);
   }
 
   setCurrent(o : any) {
