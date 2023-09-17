@@ -26,7 +26,7 @@ export class BrowsePage implements OnInit {
   Loading: boolean = false;
   searchQuery: string = '';
   searchResults: any;
-  items: MealI[] = [];
+  recipeItems: MealI[] = [];
 
   constructor(
     public r: Router,
@@ -131,7 +131,7 @@ export class BrowsePage implements OnInit {
       next: (response) => {
         if (response.status === 200) {
           if (response.body) {
-            this.items = response.body;
+            this.recipeItems = response.body;
           }
         }
       },
