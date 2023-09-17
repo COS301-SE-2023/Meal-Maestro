@@ -38,6 +38,9 @@ export class DailyMealsComponent implements OnInit {
   isBreakfastLoading: boolean = false;
   isLunchLoading: boolean = false;
   isDinnerLoading: boolean = false;
+  item: MealI | undefined;
+  fIns: String[] = [];
+  fIng: String[] = [];
 
   constructor(
     public r: Router,
@@ -50,21 +53,34 @@ export class DailyMealsComponent implements OnInit {
 
   setOpen(isOpen: boolean, mealType: string) {
     if (mealType === 'breakfast') {
-      this.isBreakfastModalOpen = isOpen;
+      this.isModalOpen = isOpen;
+      this.item = this.dayData.breakfast;
       if (isOpen) {
         this.setCurrent(this.dayData?.breakfast);
       }
     } else if (mealType === 'lunch') {
-      this.isLunchModalOpen = isOpen;
+      this.isModalOpen = isOpen;
+      this.item = this.dayData.lunch;
       if (isOpen) {
         this.setCurrent(this.dayData?.lunch);
       }
     } else if (mealType === 'dinner') {
-      this.isDinnerModalOpen = isOpen;
+      this.isModalOpen = isOpen;
+      this.item = this.dayData.dinner;
       if (isOpen) {
         this.setCurrent(this.dayData?.dinner);
       }
     }
+  }
+
+  private formatIns(ins: string) {
+    const insArr: string[] = ins.split(/\d+\.\s+/);
+    this.fIns = insArr.filter(instruction => instruction.trim() !== '');
+  }
+
+  private formatIng(ing: string) {
+    const ingArr: string[] = ing.split(/,[^()]*?(?![^(]*\))/);
+    this.fIng = ingArr.map((ingredient) => ingredient.trim());
   }
 
   ngOnInit() {

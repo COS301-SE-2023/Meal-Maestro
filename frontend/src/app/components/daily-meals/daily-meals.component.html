@@ -129,17 +129,17 @@
             </ion-avatar>
           </div>
 
-          <ion-modal [isOpen]="isLunchModalOpen">            
+          <ion-modal [isOpen]="isModalOpen">            
               <ion-header>
                 <ion-toolbar>
-                  <ion-title>{{ dayData.lunch?.name }}</ion-title>
+                  <ion-title>{{ item.name }}</ion-title>
                   <ion-buttons slot="end">
                     <ion-button (click)="setOpen(false, 'lunch')">Close</ion-button>
                   </ion-buttons>
                 </ion-toolbar>
               </ion-header>
               <ion-avatar class="background">
-                <img [src]="dayData.lunch?.image" alt="dayData.lunch.name"/>
+                <img [src]="item.image" alt="item.name"/>
               </ion-avatar>
 
               <ion-content class="ion-padding">
@@ -149,9 +149,9 @@
                     Save to Recipe Book
                   </ion-button>
                 </div>
-                <p style="padding-top: 40px;">{{ dayData.lunch.description }}</p>
+                <p style="padding-top: 40px;">{{ item.description }}</p>
                 <h4>Preparation Time</h4>
-                <p>{{ dayData.lunch.cookingTime }}</p>
+                <p>{{ item.cookingTime }}</p>
                 <h4>Ingredients:</h4>
                   <ul>
                     <li *ngFor="let ingredient of fIng">{{ ingredient }}</li>
@@ -245,7 +245,7 @@
                     <li *ngFor="let ingredient of fIng">{{ ingredient }}</li>
                   </ul>
               <h4>Instructions</h4>
-                  <ol>
+                  <ol>+
                     <li *ngFor="let instruction of fIns">{{ instruction }}</li>
                   </ol>
               </ion-content>
