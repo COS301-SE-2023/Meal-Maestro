@@ -25,6 +25,7 @@ export class BrowsePage implements OnInit {
   Loading: boolean = false;
   searchQuery: string = '';
   searchResults: any;
+  items: MealI[] = [];
 
   constructor(
     public r: Router,
