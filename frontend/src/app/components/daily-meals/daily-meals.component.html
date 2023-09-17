@@ -132,26 +132,26 @@
           <ion-modal [isOpen]="isModalOpen">            
               <ion-header>
                 <ion-toolbar>
-                  <ion-title>{{ item.name }}</ion-title>
+                  <ion-title>{{ item!.name }}</ion-title>
                   <ion-buttons slot="end">
                     <ion-button (click)="setOpen(false, 'lunch')">Close</ion-button>
                   </ion-buttons>
                 </ion-toolbar>
               </ion-header>
               <ion-avatar class="background">
-                <img [src]="item.image" alt="item.name"/>
+                <img [src]="item!.image" [alt]="item!.name"/>
               </ion-avatar>
 
               <ion-content class="ion-padding">
                 <div *ngIf="notSaved()">
-                  <ion-button (click)="addRecipe(item)" class="savebutton" fill="outline" shape="round" color="black">
+                  <ion-button (click)="addRecipe(item!)" class="savebutton" fill="outline" shape="round" color="black">
                     <ion-icon slot="start" name="bookmark-outline"></ion-icon> 
                     Save to Recipe Book
                   </ion-button>
                 </div>
-                <p style="padding-top: 40px;">{{ item.description }}</p>
+                <p style="padding-top: 40px;">{{ item!.description }}</p>
                 <h4>Preparation Time</h4>
-                <p>{{ item.cookingTime }}</p>
+                <p>{{ item!.cookingTime }}</p>
                 <h4>Ingredients:</h4>
                   <ul>
                     <li *ngFor="let ingredient of fIng">{{ ingredient }}</li>
@@ -232,7 +232,7 @@
 
               <ion-content class="ion-padding">
                 <div *ngIf="notSaved()">
-                  <ion-button (click)="addRecipe(item)" class="savebutton" fill="outline" shape="round" color="black">
+                  <ion-button (click)="addRecipe(item!)" class="savebutton" fill="outline" shape="round" color="black">
                     <ion-icon slot="start" name="bookmark-outline"></ion-icon> 
                     Save to Recipe Book
                   </ion-button>
