@@ -237,9 +237,9 @@
                     Save to Recipe Book
                   </ion-button>
                 </div>
-                <p style="padding-top: 40px;">{{ dayData.dinner.description }}</p>
+                <p style="padding-top: 40px;">{{ dayData.dinner?.description }}</p>
                 <h4>Preparation Time</h4>
-                <p>{{ dayData.dinner.cookingTime }}</p>
+                <p>{{ dayData.dinner?.cookingTime }}</p>
                 <h4>Ingredients:</h4>
                   <ul>
                     <li *ngFor="let ingredient of fIng">{{ ingredient }}</li>
