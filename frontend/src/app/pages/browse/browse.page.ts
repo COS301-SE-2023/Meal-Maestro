@@ -132,7 +132,6 @@ export class BrowsePage implements OnInit {
         if (response.status === 200) {
           if (response.body) {
             this.items = response.body;
-            this.recipeItem.passItems(this.items);
           }
         }
       },
