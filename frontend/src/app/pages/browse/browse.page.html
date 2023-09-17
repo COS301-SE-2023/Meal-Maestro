@@ -50,6 +50,7 @@
             <app-browse-meals
               *ngFor="let item of popularMeals"
               [mealsData]="item"
+              [items]="recipeItems"
             ></app-browse-meals>
           </div>
 
@@ -62,6 +63,7 @@
               <app-browse-meals
                 *ngFor="let item of searchedMeals"
                 [mealsData]="item"
+                [items]="recipeItems"
               ></app-browse-meals>
             </div>
           </ng-container>
