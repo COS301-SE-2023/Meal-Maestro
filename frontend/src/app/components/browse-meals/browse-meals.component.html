@@ -97,17 +97,15 @@
   <ion-modal [isOpen]="isModalOpen">
       <ion-header>
         <ion-toolbar>
-          <ion-title>{{mealsData.name}}</ion-title>
+          <ion-title>{{item.name}}</ion-title>
           <ion-buttons slot="end">
             <ion-button (click)="setOpen(false,null)">Close</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      <ion-avatar class="background">
-
+      <ion-avatar>
         <img src="{{mealsData.image}}">
         <img alt="{{mealsData.image}}"> 
-
       </ion-avatar>
       <ion-content class="ion-padding">
         <p>{{mealsData.ingredients}}</p> 
