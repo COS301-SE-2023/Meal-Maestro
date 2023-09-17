@@ -91,11 +91,10 @@
   </ion-card-content>
   <ion-avatar>
     <img src="{{mealsData.image}}">
-    <img alt="{{mealsData.image}}">
+    <img alt="{{mealsData.description}}">
   </ion-avatar>
 
   <ion-modal [isOpen]="isModalOpen">
-    <ng-template>
       <ion-header>
         <ion-toolbar>
           <ion-title>{{mealsData.name}}</ion-title>
@@ -115,6 +114,5 @@
       <p>{{mealsData.instructions}}</p> 
       <p>{{mealsData.cookingTime}}</p> 
       </ion-content>
-    </ng-template>
   </ion-modal>
 </ion-card>
