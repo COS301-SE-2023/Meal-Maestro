@@ -37,6 +37,8 @@ export class BrowsePage implements OnInit {
 
   async ngOnInit() {
     this.initialiseItems();
+
+    this.getRecipes();
   }
 
   initialiseItems() {
@@ -119,6 +121,33 @@ export class BrowsePage implements OnInit {
       this.Loading = false;
       event.target.complete();
     }, 2000);
+  }
+
+  async getRecipes() {
+    this.recipeService.getAllRecipes().subscribe({
+      next: (response) => {
+        if (response.status === 200) {
+          if (response.body) {
+            this.items = response.body;
+            this.recipeItem.passItems(this.items);
+          }
+        }
+      },
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorised access. Please log in again',
+            err
+          );
+          this.auth.logout();
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Error loading saved recipes',
+            err
+          );
+        }
+      },
+    });
   }
 
   // generateSearchMeals(query: string) {
