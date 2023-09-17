@@ -15,6 +15,7 @@ import {
   ErrorHandlerService,
   LoginService,
   MealGenerationService,
+  RecipeBookApiService,
 } from '../../services/services';
 import { CommonModule } from '@angular/common';
 
@@ -39,7 +40,8 @@ export class HomePage implements OnInit, ViewWillEnter {
     private mealGenerationservice: MealGenerationService,
     private errorHandlerService: ErrorHandlerService,
     private loginService: LoginService,
-    private auth: AuthenticationService
+    private auth: AuthenticationService,
+    private recipeService: RecipeBookApiService
   ) {}
 
   async ngOnInit() {
