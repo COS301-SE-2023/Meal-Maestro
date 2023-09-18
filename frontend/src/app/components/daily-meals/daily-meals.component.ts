@@ -54,8 +54,10 @@ export class DailyMealsComponent implements OnInit {
 
   setOpen(isOpen: boolean, mealType: string) {
     if (mealType === 'breakfast') {
+      this.item = this.dayData.breakfast;      
+      this.formatIns(this.item!.instructions);
+      this.formatIng(this.item!.ingredients);      
       this.isModalOpen = isOpen;
-      this.item = this.dayData.breakfast;
       if (isOpen) {
         this.setCurrent(this.dayData?.breakfast);
       }
