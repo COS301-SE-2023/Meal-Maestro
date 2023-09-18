@@ -23,6 +23,7 @@ export class RecipeItemComponent {
   modalOpen: Boolean = false;
 
   openModal(item: MealI) {
+    console.log(item.name);
     this.item = item;
     this.modalOpen = true;
   }
@@ -54,7 +55,7 @@ export class RecipeItemComponent {
   }
 
   closeModal() {
-    this.modalController.dismiss();
+    this.modalOpen = false;
   }
 
   notSaved(): boolean {
