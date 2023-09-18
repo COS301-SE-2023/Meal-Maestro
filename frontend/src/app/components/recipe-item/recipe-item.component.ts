@@ -33,7 +33,7 @@ export class RecipeItemComponent {
     this.items = items;
   }
 
-  constructor(private modalController: ModalController, private addService: AddRecipeService) { }
+  constructor(private addService: AddRecipeService) { }
 
   ngOnInit() {
     if (this.item && this.item.instructions) {
