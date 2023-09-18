@@ -130,7 +130,8 @@
           </div>
 
 <!--THIS MODAL IS THE ONLY ONE BEING USED AS OF SEPTEMBER 16-->
-          <ion-modal [isOpen]="isModalOpen">            
+          <ion-modal [isOpen]="isModalOpen">    
+            <ng-template>
               <ion-header>
                 <ion-toolbar>
                   <ion-title>{{ item?.name }}</ion-title>
@@ -161,7 +162,8 @@
                   <ol>
                     <li *ngFor="let instruction of fIns">{{ instruction }}</li>
                   </ol>
-              </ion-content>           
+              </ion-content>       
+            </ng-template>            
           </ion-modal>
         </ion-item>
         <ion-item-options
