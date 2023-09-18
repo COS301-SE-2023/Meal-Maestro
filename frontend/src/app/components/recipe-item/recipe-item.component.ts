@@ -16,8 +16,8 @@ import { AddRecipeService } from '../../services/recipe-book/add-recipe.service'
 
 })
 export class RecipeItemComponent {
-  @Input() items: MealI[] = [];
-  @Input() item!: MealI;
+  items: MealI[] = [];
+  item!: MealI;
   fIns: string[] = [];
   fIng: string[] = [];
   modalOpen: Boolean = false;
