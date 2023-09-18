@@ -17,12 +17,12 @@ import { AddRecipeService } from '../../services/recipe-book/add-recipe.service'
 })
 export class RecipeItemComponent {
   items: MealI[] = [];
-  item!: MealI;
+  item!: MealI | undefined;
   fIns: string[] = [];
   fIng: string[] = [];
   modalOpen: Boolean = false;
 
-  openModal(item: any) {
+  openModal(item: MealI) {
     this.item = item;
     this.modalOpen = true;
   }
@@ -58,7 +58,7 @@ export class RecipeItemComponent {
   }
 
   notSaved(): boolean {
-    return !this.items.includes(this.item);
+    return !this.items.includes(this.item!);
   } 
 
   addRecipe(item: MealI) {
