@@ -24,6 +24,8 @@ export class RecipeItemComponent {
 
   openModal(item: MealI) {
     this.item = item;
+    this.formatIns(this.item.instructions);
+    this.formatIng(this.item.ingredients);
     this.modalOpen = true;
   }
 
