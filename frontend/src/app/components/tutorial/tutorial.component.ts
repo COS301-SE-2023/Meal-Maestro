@@ -26,7 +26,7 @@ export class TutorialComponent implements OnInit, AfterViewInit {
   ngOnInit() {}
 
   ngAfterViewInit() {
-    console.log('called');
+    //console.log('called');
     this.swiper = new Swiper('.swiper-container', {
       // Swiper configuration options
       pagination: {
@@ -52,7 +52,7 @@ export class TutorialComponent implements OnInit, AfterViewInit {
     //   console.log("IN FUNCTION")
     //   this.onSlideChange();
     // })
-    console.log('done');
+   // console.log('done');
   }
 
   onSlideChange() {
