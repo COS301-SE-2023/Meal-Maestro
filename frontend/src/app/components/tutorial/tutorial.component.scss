@@ -22,9 +22,14 @@
   }
 
   .link-button {
-    position: absolute;
+    position: fixed;
     bottom: 20px;
-    right: 200px; 
+    right: 20px; 
+    font-size: 2.5ch;
+    color: white;
+    background: transparent;
+    font-weight: bold;
+   // background-color: white;
   }
   
 
