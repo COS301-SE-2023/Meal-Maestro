@@ -81,14 +81,7 @@ export class TutorialComponent implements OnInit, AfterViewInit {
     this.swiper = swiper;
   }
 
-  // onSlideChange() {
-  //   if (this.swiper.isEnd) {
-  //     //this.errorHandlerService.presentSuccessToast('Registration successful');
-  //     this.showPopup();
-  //   }
-  // }
-
-  closeModal() {
+ closeModal() {
     this.modalController.dismiss();
   }
 }
