@@ -16,7 +16,7 @@ import Swiper from 'swiper';
 })
 export class TutorialComponent implements OnInit, AfterViewInit {
   
-  private swiper: Swiper;
+  private swiper: Swiper = {} as Swiper;
   @ViewChild('swiper') swiperElement!: ElementRef;
   @ViewChild('videoPlayer') videoPlayer!: ElementRef;
 
@@ -47,6 +47,10 @@ export class TutorialComponent implements OnInit, AfterViewInit {
         },
       },
     });
+    // this.swiper.on('slideChange', () => {
+    //   console.log("IN FUNCTION")
+    //   this.onSlideChange();
+    // })
     console.log('done');
   }
 

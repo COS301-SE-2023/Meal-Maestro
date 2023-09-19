@@ -11,7 +11,7 @@
 
 <ion-content scrollY="false">
  <!-- preferneces,pantr,main,browse,recipe -->
-      <swiper-container [loop]="false" pagination="true" navigation="true" >
+      <swiper-container [loop]="false" pagination="true" navigation="true" (slideChange)="onSlideChange()">
         <swiper-slide>
           <img src="assets/preferences.jpg">
         </swiper-slide>
@@ -25,7 +25,7 @@
           <img src="assets/modal.jpg">
         </swiper-slide>
         <swiper-slide class="swip">
-          <video #videoPlayer src="assets/homeTut.mp4" controls autoplay muted></video>
+          <video #videoPlayer src="assets/homeTut.mp4" controls autoplay loop muted></video>
         </swiper-slide>
           <swiper-slide>
           <img src="assets/Browse.jpg">
