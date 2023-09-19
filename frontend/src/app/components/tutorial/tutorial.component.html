@@ -13,7 +13,10 @@
  <!-- preferneces,pantr,main,browse,recipe -->
       <swiper-container [loop]="false" pagination="true" navigation="true" (slideChange)="onSlideChange()">
         <swiper-slide>
-          <img src="assets/preferences.jpg">
+          <div class="slide-background">
+            <img src="assets/preferences.jpg" alt="Background Image">
+          </div>
+          <button (click)="closeModal()" class="link-button">Close Slides</button>
         </swiper-slide>
         <swiper-slide>
           <img src="assets/Pantry.jpg">
