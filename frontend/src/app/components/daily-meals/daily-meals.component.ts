@@ -13,7 +13,7 @@ import { IonItemSliding, IonicModule, NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
 import { DaysMealsI } from '../../models/daysMeals.model';
-import { AuthenticationService, ErrorHandlerService, RecipeBookApiService } from '../../services/services';
+import { AuthenticationService, ErrorHandlerService, LoginService, RecipeBookApiService } from '../../services/services';
 import { MealI, RegenerateMealRequestI } from '../../models/interfaces';
 import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
 
@@ -53,7 +53,8 @@ export class DailyMealsComponent implements OnInit {
     private renderer: Renderer2,
     private el: ElementRef,
     private recipeService: RecipeBookApiService,
-    private auth: AuthenticationService
+    private auth: AuthenticationService,
+    private loginService: LoginService
   ) {}
 
   setOpen(isOpen: boolean, mealType: string) {
@@ -89,6 +90,7 @@ export class DailyMealsComponent implements OnInit {
         if (response.status === 200) {
           if (response.body) {
             this.getRecipes();
+            this.loginService.setRecipeBookRefreshed(false);
             this.errorHandlerService.presentSuccessToast(
               item.name + ' added to Recipe Book'
             );
