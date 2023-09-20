@@ -57,8 +57,33 @@ export class BrowseMealsComponent  implements OnInit {
     this.fIng = ingArr.map((ingredient) => ingredient.trim());
   }
 
-  addRecipe(item: MealI) {
-    this.addService.setRecipeItem(item);
+  async addRecipe(item: MealI) {
+    this.recipeService.addRecipe(item).subscribe({
+      next: (response) => {
+        if (response.status === 200) {
+          if (response.body) {
+            this.getRecipes();
+            this.errorHandlerService.presentSuccessToast(
+              item.name + ' added to Recipe Book'
+            );
+          }
+        }
+      },
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorised access. Please log in again.',
+            err
+          );
+          this.auth.logout();
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Error adding item to your Recipe Book',
+            err
+          );
+        }
+      },
+    });
   }
 
   notSaved(): boolean {
