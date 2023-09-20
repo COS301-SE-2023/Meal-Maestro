@@ -40,8 +40,6 @@ export class BrowsePage implements OnInit {
 
   async ngOnInit() {
     this.initialiseItems();
-
-    this.getRecipes();
   }
 
   initialiseItems() {
