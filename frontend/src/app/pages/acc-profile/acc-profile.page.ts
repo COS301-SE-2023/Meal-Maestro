@@ -18,6 +18,8 @@ import { TutorialComponent } from '../../components/tutorial/tutorial.component'
 export class AccProfilePage implements OnInit {
 
   user: UserI;
+  hovered: boolean = false;
+
 
   
   constructor(private router: Router, private auth: AuthenticationService,private modalController: ModalController) {
@@ -59,6 +61,14 @@ export class AccProfilePage implements OnInit {
 
   logout() {
     this.auth.logout();
+  }
+
+  showTooltip() {
+    this.hovered = true;
+  }
+
+  hideTooltip() {
+    this.hovered = false;
   }
 
 }
