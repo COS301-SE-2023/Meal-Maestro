@@ -95,6 +95,7 @@
   </ion-avatar>
 
   <ion-modal [isOpen]="isModalOpen">
+    <ng-template>
       <ion-header>
         <ion-toolbar>
           <ion-title>{{item?.name}}</ion-title>
@@ -126,6 +127,7 @@
             <li *ngFor="let instruction of fIns">{{ instruction }}</li>
           </ol>
       </ion-content>
+    </ng-template>
   </ion-modal>
 </ion-card>
 
