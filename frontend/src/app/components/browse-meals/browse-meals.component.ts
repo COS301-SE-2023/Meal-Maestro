@@ -3,7 +3,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { MealI } from '../../models/interfaces';
 import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
-import { RecipeBookApiService } from '../../services/services';
+import { AuthenticationService, RecipeBookApiService } from '../../services/services';
 
 @Component({
   selector: 'app-browse-meals',
@@ -30,7 +30,8 @@ export class BrowseMealsComponent  implements OnInit {
 
   constructor(
     private addService: AddRecipeService,
-    private recipeService: RecipeBookApiService) { }
+    private recipeService: RecipeBookApiService,
+    private auth: AuthenticationService) { }
 
   ngOnInit() {
    // console.log(this.mealsData);
