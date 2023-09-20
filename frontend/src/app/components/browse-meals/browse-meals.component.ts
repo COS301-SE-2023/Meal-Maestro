@@ -80,7 +80,7 @@ export class BrowseMealsComponent  implements OnInit {
       next: (response) => {
         if (response.status === 200) {
           if (response.body) {
-            this.recipeItems = response.body;
+            this.items = response.body;
           }
         }
       },
