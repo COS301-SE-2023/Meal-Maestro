@@ -3,7 +3,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { MealI } from '../../models/interfaces';
 import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
-import { AuthenticationService, ErrorHandlerService, RecipeBookApiService } from '../../services/services';
+import { AuthenticationService, ErrorHandlerService, LoginService, RecipeBookApiService } from '../../services/services';
 
 @Component({
   selector: 'app-browse-meals',
@@ -29,7 +29,7 @@ export class BrowseMealsComponent  implements OnInit {
   @Input() items!: MealI[];
 
   constructor(
-    private addService: AddRecipeService,
+    private loginService: LoginService,
     private recipeService: RecipeBookApiService,
     private auth: AuthenticationService,
     private errorHandlerService: ErrorHandlerService) { }
@@ -63,6 +63,7 @@ export class BrowseMealsComponent  implements OnInit {
         if (response.status === 200) {
           if (response.body) {
             this.getRecipes();
+            this.loginService.setRecipeBookRefreshed(false);
             this.errorHandlerService.presentSuccessToast(
               item.name + ' added to Recipe Book'
             );
