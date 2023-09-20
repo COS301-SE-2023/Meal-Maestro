@@ -7,12 +7,13 @@ import {
   QueryList,
   Renderer2,
   ElementRef,
+  ViewChild,
 } from '@angular/core';
-import { IonItemSliding, IonicModule } from '@ionic/angular';
+import { IonItemSliding, IonicModule, NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
 import { DaysMealsI } from '../../models/daysMeals.model';
-import { ErrorHandlerService } from '../../services/services';
+import { AuthenticationService, ErrorHandlerService, RecipeBookApiService } from '../../services/services';
 import { MealI, RegenerateMealRequestI } from '../../models/interfaces';
 import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
 
@@ -42,6 +43,7 @@ export class DailyMealsComponent implements OnInit {
   fIns: String[] = [];
   fIng: String[] = [];
   @Input() items!: MealI[];
+  @ViewChild('saveb') buttonDiv!: ElementRef<HTMLDivElement>;
 
   constructor(
     public r: Router,
@@ -49,7 +51,9 @@ export class DailyMealsComponent implements OnInit {
     private errorHandlerService: ErrorHandlerService,
     private addService: AddRecipeService,
     private renderer: Renderer2,
-    private el: ElementRef
+    private el: ElementRef,
+    private recipeService: RecipeBookApiService,
+    private auth: AuthenticationService
   ) {}
 
   setOpen(isOpen: boolean, mealType: string) {
@@ -73,10 +77,10 @@ export class DailyMealsComponent implements OnInit {
       }
     }
 
-    if (isOpen) {      
+    if (isOpen) {       
       this.formatIns(this.item!.instructions);
       this.formatIng(this.item!.ingredients);   
-    }
+    } 
   }
 
   addRecipe(item: MealI) {
@@ -93,7 +97,7 @@ export class DailyMealsComponent implements OnInit {
     this.fIng = ingArr.map((ingredient) => ingredient.trim());
   }
 
-  notSaved(): boolean {
+  notSaved(): boolean {console.log(this.items.length + " " + this.item?.name);
     return !this.items.includes(this.item!);
   } 
 
@@ -106,6 +110,8 @@ export class DailyMealsComponent implements OnInit {
     if (this.item && this.item.ingredients) {
       this.formatIng(this.item.ingredients);
     }
+
+    this.getRecipes();
   }
 
   handleArchive(meal: string) {
@@ -182,5 +188,31 @@ export class DailyMealsComponent implements OnInit {
         );
         return;
       });
+  }
+
+  async getRecipes() {
+    this.recipeService.getAllRecipes().subscribe({
+      next: (response) => {
+        if (response.status === 200) {
+          if (response.body) {
+            this.items = response.body;
+          }
+        }
+      },
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorised access. Please log in again',
+            err
+          );
+          this.auth.logout();
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Error loading saved recipes',
+            err
+          );
+        }
+      },
+    });
   }
 }
