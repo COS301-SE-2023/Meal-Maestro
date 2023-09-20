@@ -97,7 +97,7 @@ export class DailyMealsComponent implements OnInit {
     this.fIng = ingArr.map((ingredient) => ingredient.trim());
   }
 
-  notSaved(): boolean {console.log(this.items.length + " " + this.item?.name);
+  notSaved(): boolean {
     return !this.items.includes(this.item!);
   } 
 
