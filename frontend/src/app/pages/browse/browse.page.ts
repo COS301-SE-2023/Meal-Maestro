@@ -124,32 +124,6 @@ export class BrowsePage implements OnInit {
     }, 2000);
   }
 
-  async getRecipes() {
-    this.recipeService.getAllRecipes().subscribe({
-      next: (response) => {
-        if (response.status === 200) {
-          if (response.body) {
-            this.recipeItems = response.body;
-          }
-        }
-      },
-      error: (err) => {
-        if (err.status === 403) {
-          this.errorHandlerService.presentErrorToast(
-            'Unauthorised access. Please log in again',
-            err
-          );
-          this.auth.logout();
-        } else {
-          this.errorHandlerService.presentErrorToast(
-            'Error loading saved recipes',
-            err
-          );
-        }
-      },
-    });
-  }
-
   // generateSearchMeals(query: string) {
   //   // Call the service function to get the searched meals with the provided query
   //   this.mealGenerationservice.getSearchedMeals(query).subscribe({
