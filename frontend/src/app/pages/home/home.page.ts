@@ -68,8 +68,6 @@ export class HomePage implements OnInit, ViewWillEnter {
           script
         );
       });
-
-      this.getRecipes();
   }
 
   async ionViewWillEnter() {
@@ -160,31 +158,5 @@ export class HomePage implements OnInit, ViewWillEnter {
     setTimeout(() => {
       this.showLoading = false;
     }, 200);
-  }
-
-  async getRecipes() {
-    this.recipeService.getAllRecipes().subscribe({
-      next: (response) => {
-        if (response.status === 200) {
-          if (response.body) {
-            this.recipeItems = response.body;
-          }
-        }
-      },
-      error: (err) => {
-        if (err.status === 403) {
-          this.errorHandlerService.presentErrorToast(
-            'Unauthorised access. Please log in again',
-            err
-          );
-          this.auth.logout();
-        } else {
-          this.errorHandlerService.presentErrorToast(
-            'Error loading saved recipes',
-            err
-          );
-        }
-      },
-    });
   }
 }
