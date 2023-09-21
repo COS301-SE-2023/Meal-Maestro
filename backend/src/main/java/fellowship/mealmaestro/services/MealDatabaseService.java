@@ -134,6 +134,23 @@ public class MealDatabaseService {
 
         return Optional.empty();
     }
+    public Optional<MealModel> findMealForUser(String mealName, String token) {
+        String email = jwtService.extractUserEmail(token);
+
+        UserModel user = userRepository.findByEmail(email).get();
+        List<MealModel> randomMeals = mealRepository.get100RandomMeals();
+
+        // if meal with meal type is present in randomMeals, return it
+        for (MealModel meal : randomMeals) {
+            if (meal.getName().equals(mealName)) {
+                if (canMakeMeal(user.getPantry().getFoods(), meal.getIngredients())) {
+                    return Optional.of(meal);
+                }
+            }
+        }
+
+        return Optional.empty();
+    }
 
     public boolean canMakeMeal(List<FoodModel> pantryItems, String ingredients) {
         String[] ingredientsArray = ingredients.split(",");
