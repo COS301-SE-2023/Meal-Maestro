@@ -5,6 +5,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import fellowship.mealmaestro.models.neo4j.UserModel;
+import fellowship.mealmaestro.models.neo4j.ViewModel;
 import fellowship.mealmaestro.models.neo4j.relationships.HasLogEntry;
 import fellowship.mealmaestro.repositories.neo4j.UserRepository;
 import java.util.List;
@@ -20,12 +21,29 @@ public class HydrationService {
         //per user
         for(UserModel user : userList){
             List<HasLogEntry> logEntries = userRepository.findUnprocessedLogEntriesForUser(user);
+            ViewModel viewModel = user.getView();
+
             for(HasLogEntry entry : logEntries)
             {
-                
+                String ingredientString = entry.getMeal().getIngredients();
+                //trim ingredient list
+
+                //convert to List<String> 
+
+                //Scores ++ * multiplier
+
+                //update view model
+
+                //set processed
+                entry.setProcessed(true);
             }
         }
 
     }
-   
+    // helper functions to be done
+    //trim
+
+    //convert
+
+    //scores
 }
