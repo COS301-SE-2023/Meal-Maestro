@@ -242,4 +242,8 @@ export class DailyMealsComponent implements OnInit {
       },
     });
   }
+
+  liked(item: MealI) {
+    
+  }
 }
