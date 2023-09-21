@@ -138,16 +138,4 @@ public class MealManagementController {
         return ResponseEntity.ok(returnedMeal);
     }
 
-    // @GetMapping("/getPopularMeals")
-    // public String popularMeals() throws JsonMappingException,
-    // JsonProcessingException{
-    // return mealManagementService.generatePopularMeals();
-    // }
-
-    // @GetMapping("/getSearchedMeals")
-    // public String searchedMeals(@RequestParam String query) throws
-    // JsonMappingException, JsonProcessingException {
-    // // Call the mealManagementService to search meals based on the query
-    // return mealManagementService.generateSearchedMeals(query);
-    // }
 }
