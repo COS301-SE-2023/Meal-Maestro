@@ -77,10 +77,10 @@ public class WebscrapeService {
 
     private void startWoolworthsScraping() {
         LocalDateTime startTime = getStartTime();
-        Duration waitInterval = Duration.ofMinutes(1);  // interval 
+        Duration interval = Duration.ofSeconds(24); // Change this as appropriate
         woolworthsScrapingTask = taskScheduler.scheduleWithFixedDelay(() -> {
             woolworthsScraper.scrapeWoolworths();
-        }, startTime.toInstant(ZoneOffset.ofHours(2)), waitInterval);
+        }, startTime.toInstant(ZoneOffset.ofHours(2)), interval);
         logger.info("Scheduled Woolworths scraping task to start at {}", startTime);
     }
 
