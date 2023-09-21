@@ -1,11 +1,11 @@
 package fellowship.mealmaestro.models.neo4j;
 
 import java.util.HashMap;
-
 import org.springframework.data.neo4j.core.schema.Node;
 
 @Node("View")
 public class ViewModel {
+    
     private HashMap<String,Double> ScoreMap;
 
     public ViewModel() {

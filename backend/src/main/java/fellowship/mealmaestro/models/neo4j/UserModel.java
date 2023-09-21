@@ -58,6 +58,33 @@ public class UserModel implements UserDetails {
     @Relationship(type = "HAS_LOG_ENTRY")
     private List<HasLogEntry> entries;
 
+    @Relationship(type = "HAS_VIEW", direction = Relationship.Direction.OUTGOING)
+    private ViewModel view;
+
+    public Long getVersion() {
+        return this.version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public List<HasLogEntry> getEntries() {
+        return this.entries;
+    }
+
+    public void setEntries(List<HasLogEntry> entries) {
+        this.entries = entries;
+    }
+
+    public ViewModel getView() {
+        return this.view;
+    }
+
+    public void setView(ViewModel view) {
+        this.view = view;
+    }
+
     public UserModel() {
         this.authorityRole = AuthorityRoleModel.USER;
     }
