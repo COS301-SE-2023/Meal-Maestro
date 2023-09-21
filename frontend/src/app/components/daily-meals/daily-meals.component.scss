@@ -64,17 +64,20 @@ ion-card {
   color: black;
   text-transform: capitalize;
   font-size: smaller;
+  margin-right:5px;
+  margin-left: 5px;
 }
 
 .likebutton {
   color: black;
   font-size: smaller;
-  margin-right: 10px;
+  margin-right:5px;
+  margin-left: 5px;
 }
 
 .buttons {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-evenly;
 }
 
 p {
