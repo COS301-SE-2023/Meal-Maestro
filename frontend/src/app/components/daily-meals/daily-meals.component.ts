@@ -13,7 +13,7 @@ import { IonItemSliding, IonicModule, NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
 import { DaysMealsI } from '../../models/daysMeals.model';
-import { AuthenticationService, ErrorHandlerService, LoginService, RecipeBookApiService } from '../../services/services';
+import { AuthenticationService, ErrorHandlerService, LikeDislikeService, LoginService, RecipeBookApiService } from '../../services/services';
 import { MealI, RegenerateMealRequestI } from '../../models/interfaces';
 import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
 
@@ -54,7 +54,8 @@ export class DailyMealsComponent implements OnInit {
     private el: ElementRef,
     private recipeService: RecipeBookApiService,
     private auth: AuthenticationService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private likeDislikeService: LikeDislikeService
   ) {}
 
   setOpen(isOpen: boolean, mealType: string) {
@@ -243,11 +244,31 @@ export class DailyMealsComponent implements OnInit {
     });
   }
 
-  liked(item: MealI) {
-
+  async liked(item: MealI) {
+    this.likeDislikeService.liked(item).subscribe({
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorised access. Please log in again',
+            err
+          );
+          this.auth.logout();
+        }
+      }
+    });
   }
 
-  disliked(item: MealI) {
-    
+  async disliked(item: MealI) {
+    this.likeDislikeService.disliked(item).subscribe({
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorised access. Please log in again',
+            err
+          );
+          this.auth.logout();          
+        }
+      }
+    });
   }
 }
