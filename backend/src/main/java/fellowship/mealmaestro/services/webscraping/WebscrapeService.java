@@ -33,7 +33,8 @@ public class WebscrapeService {
     @PostConstruct
     public void init() {
         System.out.println("WebscrapeService init");
-        startScraping();
+        // Commenting out startScraping() for Checkers
+        // startScraping();
         startWoolworthsScraping();
     }
 
@@ -59,21 +60,12 @@ public class WebscrapeService {
         }
     }
 
+    // Commenting out the Checkers scraping logic
+    /*
     private void startScraping() {
-        LocalDateTime startTime = getStartTime();
-        Duration tenSeconds = Duration.ofSeconds(24);
-        checkersScrapingTask = taskScheduler.scheduleWithFixedDelay(() -> {
-            checkersScraper.scrape();
-        }, startTime.toInstant(ZoneOffset.ofHours(2)), tenSeconds);
-        logger.info("Scheduled Checkers scraping task to start at {}", startTime);
-        
-        // schedule task to stop at 10:40am
-        LocalDateTime stopTime = getStopTime();
-        taskScheduler.schedule(() -> {
-            stopScraping();
-        }, stopTime.toInstant(ZoneOffset.ofHours(2)));
-        logger.info("Scheduled Checkers scraping task to stop at {}", stopTime);
+        // ... (original logic here)
     }
+    */
 
     private void startWoolworthsScraping() {
         LocalDateTime startTime = getStartTime();
@@ -84,15 +76,12 @@ public class WebscrapeService {
         logger.info("Scheduled Woolworths scraping task to start at {}", startTime);
     }
 
+    // Commenting out the Checkers scraping logic
+    /*
     private void stopScraping() {
-        if (checkersScrapingTask != null) {
-            checkersScrapingTask.cancel(false);
-        }
-        logger.info("Stopped Checkers scraping task");
-        
-        // schedule tasks for next day
-        startScraping();
+        // ... (original logic here)
     }
+    */
 
     private void stopWoolworthsScraping() {
         if (woolworthsScrapingTask != null) {
