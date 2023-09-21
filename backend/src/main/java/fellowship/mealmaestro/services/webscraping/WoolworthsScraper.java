@@ -45,6 +45,31 @@ public class WoolworthsScraper {
         }
     }
 
+    public void populateCategoryLinks() {
+        try {
+            Document sitemapIndex = Jsoup.connect("https://www.woolworths.co.za/images/sitemaps/siteIndex.xml").get();
+            Elements sitemaps = sitemapIndex.select("loc");
+            
+            for (Element sitemap : sitemaps) {
+                String sitemapUrl = sitemap.text();
+                if (sitemapUrl.contains("categorySitemap")) {
+                    Document categorySitemap = Jsoup.connect(sitemapUrl).get();
+                    Elements urls = categorySitemap.select("loc");
+    
+                    for (Element url : urls) {
+                        String categoryUrl = url.text();
+                        if (categoryUrl.contains("/Food/")) {
+                            toVisitLinkRepository.save(new ToVisitLinkModel(categoryUrl, "category", "Woolworths"));
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            logger.error("Error fetching sitemaps: ", e);
+        }
+    }
+    
+
     public void handleLink(ToVisitLinkModel toVisitLink) {
         String type = toVisitLink.getType();
         if ("category".equals(type)) {
