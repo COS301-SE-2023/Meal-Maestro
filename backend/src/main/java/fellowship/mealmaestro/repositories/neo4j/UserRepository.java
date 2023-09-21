@@ -1,5 +1,6 @@
 package fellowship.mealmaestro.repositories.neo4j;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
@@ -13,4 +14,7 @@ public interface UserRepository extends Neo4jRepository<UserModel, String> {
 
     @Query("MATCH (n0:User {email: $email}) SET n0.name = $name RETURN n0")
     UserModel updateUser(String email, String username);
+    
+    @Query("MATCH (u:User)-[r:HAS_LOG_ENTRY]->(logEntry) WHERE NOT EXISTS(r.processed) OR NOT r.processed RETURN DISTINCT u")
+    List<UserModel> findUsersWithNewLogEntries();
 }

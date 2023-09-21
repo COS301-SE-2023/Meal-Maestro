@@ -22,6 +22,20 @@ public class HasLogEntry {
 
     private String entryType;
 
+    private boolean processed;
+
+    public boolean isProcessed() {
+        return this.processed;
+    }
+
+    public boolean getProcessed() {
+        return this.processed;
+    }
+
+    public void setProcessed(boolean processed) {
+        this.processed = processed;
+    }
+
     public HasLogEntry() {
     }
 
