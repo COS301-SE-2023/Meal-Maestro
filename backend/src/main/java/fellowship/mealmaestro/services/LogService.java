@@ -1,6 +1,8 @@
 package fellowship.mealmaestro.services;
 
 import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,18 +22,15 @@ public class LogService {
     public void logMeal(String token, MealModel meal, String entryType) {
         UserModel user = userService.getUser(token);
         MealModel dbMeal = null;
-        for(HasMeal m : user.getMeals())
-        {
-            if(m.getMeal().getName().equals(meal.getName()))
-            {
+        for (HasMeal m : user.getMeals()) {
+            if (m.getMeal().getName().equals(meal.getName())) {
                 dbMeal = m.getMeal();
             }
         }
-        if(dbMeal == null)
-            {
-                System.out.println("logging failed");
-                return;
-            }
+        if (dbMeal == null) {
+            System.out.println("logging failed");
+            return;
+        }
         HasLogEntry entry = new HasLogEntry(dbMeal, LocalDate.now(), entryType);
         user.getEntries().add(entry);
         userRepository.save(user);
@@ -39,4 +38,7 @@ public class LogService {
 
     }
 
+    public List<HasLogEntry> findUnprocessedLogEntriesForUser(UserModel user) {
+        return userRepository.findUnprocessedLogEntriesForUser(user);
+    }
 }
