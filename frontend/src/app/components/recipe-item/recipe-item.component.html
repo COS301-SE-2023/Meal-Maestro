@@ -13,7 +13,10 @@
       </ion-avatar>
     
       <ion-content class="ion-padding">        
-        <p>{{ item?.description }}</p>
+        <ion-button (click)="liked(item!)" class="likebutton" fill="outline" shape="round" color="black">
+          <ion-icon name="thumbs-up-outline"></ion-icon>
+        </ion-button>
+        <p style="padding-top: 35px;">{{ item?.description }}</p>
         <h4>Preparation Time</h4>
         <p>{{ item?.cookingTime }}</p>
         <h4>Ingredients</h4>
