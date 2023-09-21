@@ -1,10 +1,5 @@
 package fellowship.mealmaestro.services.webscraping;
 
-import fellowship.mealmaestro.models.mongo.FoodModelM;
-import fellowship.mealmaestro.models.mongo.ToVisitLinkModel;
-import fellowship.mealmaestro.models.mongo.VisitedLinkModel;
-import fellowship.mealmaestro.repositories.mongo.ToVisitLinkRepository;
-import fellowship.mealmaestro.repositories.mongo.VisitedLinkRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,119 +8,86 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import fellowship.mealmaestro.models.mongo.FoodModelM;
+import fellowship.mealmaestro.models.mongo.ToVisitLinkModel;
+import fellowship.mealmaestro.models.mongo.VisitedLinkModel;
+import fellowship.mealmaestro.repositories.mongo.ToVisitLinkRepository;
+import fellowship.mealmaestro.repositories.mongo.VisitedLinkRepository;
+import fellowship.mealmaestro.services.BarcodeService;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class WoolworthsScraper {
-
     private final ToVisitLinkRepository toVisitLinkRepository;
     private final VisitedLinkRepository visitedLinkRepository;
     private final LinkService linkService;
-
+    private final BarcodeService barcodeService;
     private static final Logger logger = LoggerFactory.getLogger(WoolworthsScraper.class);
 
-    public WoolworthsScraper(ToVisitLinkRepository toVisitLinkRepository, VisitedLinkRepository visitedLinkRepository,
-                             LinkService linkService) {
+    public WoolworthsScraper(ToVisitLinkRepository toVisitLinkRepository,
+                             VisitedLinkRepository visitedLinkRepository,
+                             LinkService linkService, BarcodeService barcodeService) {
         this.toVisitLinkRepository = toVisitLinkRepository;
         this.visitedLinkRepository = visitedLinkRepository;
         this.linkService = linkService;
+        this.barcodeService = barcodeService;
     }
 
-    public void scrape() {
-        Optional<ToVisitLinkModel> toVisitLink = linkService.getNextWoolworthsLink();
+    public void scrapeWoolworths() {
+        Optional<ToVisitLinkModel> toVisitLinkOptional = linkService.getNextWoolworthsLink();
 
-        if (toVisitLink.isPresent()) {
-            handleLink(toVisitLink.get());
-        } else {
-            logger.info("No links to visit for Woolworths...");
-        }
-    }
+        if (toVisitLinkOptional.isPresent()) {
+            ToVisitLinkModel toVisitLink = toVisitLinkOptional.get();
+            String categoryUrl = toVisitLink.getLink();
 
-    public void populateCategoryLinks() {
-        try {
-            Document sitemapIndex = Jsoup.connect("https://www.woolworths.co.za/images/sitemaps/siteIndex.xml").get();
-            Elements sitemaps = sitemapIndex.select("loc");
-            
-            for (Element sitemap : sitemaps) {
-                String sitemapUrl = sitemap.text();
-                if (sitemapUrl.contains("categorySitemap")) {
-                    Document categorySitemap = Jsoup.connect(sitemapUrl).get();
-                    Elements urls = categorySitemap.select("loc");
-    
-                    for (Element url : urls) {
-                        String categoryUrl = url.text();
-                        if (categoryUrl.contains("/Food/")) {
-                            toVisitLinkRepository.save(new ToVisitLinkModel(categoryUrl, "category", "Woolworths"));
-                        }
-                    }
-                }
+            Optional<VisitedLinkModel> visitedLinkModelOptional = visitedLinkRepository.findById(categoryUrl);
+
+            if (visitedLinkModelOptional.isPresent()) {
+                logger.info("Skipping " + categoryUrl + ", already visited...");
+                return;
             }
-        } catch (IOException e) {
-            logger.error("Error fetching sitemaps: ", e);
-        }
-    }
-    
 
-    public void handleLink(ToVisitLinkModel toVisitLink) {
-        String type = toVisitLink.getType();
-        if ("category".equals(type)) {
-            handleCategoryLink(toVisitLink);
-        } else if ("product".equals(type)) {
-            handleProductLink(toVisitLink);
-        }
-    }
+            try {
+                Document categoryPage = Jsoup.connect(categoryUrl).get();
+                Elements productCards = categoryPage.select(".product-card");
 
-    public void handleCategoryLink(ToVisitLinkModel link) {
-        try {
-            Document categoryPage = Jsoup.connect(link.getLink()).get();
-            scrapeCategoryPage(categoryPage);
-        } catch (IOException e) {
-            logger.error("Error fetching category page: ", e);
-        }
-    }
+                for (Element card : productCards) {
+                    FoodModelM food = new FoodModelM();
 
-    public void handleProductLink(ToVisitLinkModel link) {
-        try {
-            Document productPage = Jsoup.connect(link.getLink()).get();
-            FoodModelM food = scrapeProductPage(productPage);
-            // Save the food object to the database (adapt this to your needs)
-        } catch (IOException e) {
-            logger.error("Error fetching product page: ", e);
-        }
-    }
+                    String name = card.select(".product-card__name a").text();
+                    food.setName(name);
 
-    public void scrapeCategoryPage(Document categoryPage) {
-        Elements productCards = categoryPage.select(".product-card");
-        for (Element card : productCards) {
-            String productLink = card.select(".product--view").attr("abs:href");
-            toVisitLinkRepository.save(new ToVisitLinkModel(productLink, "product", "Woolworths"));
-        }
-    }
+                    String price = card.select(".price").text();
+                    food.setPrice(Double.parseDouble(price.replaceAll("[^\\d.]", "")));
 
-    public FoodModelM scrapeProductPage(Document productPage) {
-        FoodModelM food = new FoodModelM();
-        String name = productPage.select(".product-card__name a").text();
-        String price = productPage.select(".price").text();
-        String barcode = productPage.select("input[name=catalogRefIds]").val();
-        String weight = extractWeight(name);
-        food.setName(name);
-        food.setPrice(price);
-        food.setBarcode(barcode);
-        food.setAmount(weight);
-        return food;
-    }
+                    String productLink = card.select(".product--view").attr("abs:href");
 
-    public String extractWeight(String name) {
-        Pattern pattern = Pattern.compile("(\\d+(\\.\\d+)?)\\s*(g|kg|ml|l)");
-        Matcher matcher = pattern.matcher(name);
-        if (matcher.find()) {
-            return matcher.group();
+                    Document productPage = Jsoup.connect(productLink).get();
+                    String barcode = productPage.select("input[name=catalogRefIds]").val();
+                    food.setBarcode(barcode);
+
+                    String weight = extractWeight(name);
+                    food.setAmount(weight);
+
+                    barcodeService.addProduct(food);
+
+                    logger.info("Scraped product: " + food.toString());
+                }
+
+                visitedLinkRepository.save(new VisitedLinkModel(categoryUrl, "category", "Woolworths"));
+
+            } catch (IOException e) {
+                logger.error("Error fetching category page: ", e);
+            }
         } else {
-            return "Weight not found";
+            logger.info("No more links to visit.");
         }
+    }
+
+    private String extractWeight(String name) {
+        // ... (Your existing logic for extracting weight)
+        // Return the extracted weight
     }
 }
