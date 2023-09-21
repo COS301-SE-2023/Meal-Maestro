@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-
 import { MealI } from '../../models/meal.model';
 import { CommonModule } from '@angular/common';
-import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
-
+import { AuthenticationService, ErrorHandlerService, LikeDislikeService } from '../../services/services';
 
 @Component({
   selector: 'app-recipe-item',
@@ -33,7 +31,9 @@ export class RecipeItemComponent {
     this.items = items;
   }
 
-  constructor(private addService: AddRecipeService) { }
+  constructor(private likeDislikeService: LikeDislikeService,
+    private errorHandlerService: ErrorHandlerService,
+    private auth: AuthenticationService) { }
 
   ngOnInit() {
     if (this.item && this.item.instructions) {
@@ -63,11 +63,31 @@ export class RecipeItemComponent {
     return !this.items.includes(this.item!);
   } 
 
-  liked(item: MealI) {
-
+  async liked(item: MealI) {
+    this.likeDislikeService.liked(item).subscribe({
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorised access. Please log in again',
+            err
+          );
+          this.auth.logout();
+        }
+      }
+    });
   }
 
-  disliked(item: MealI) {
-    
+  async disliked(item: MealI) {
+    this.likeDislikeService.disliked(item).subscribe({
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorised access. Please log in again',
+            err
+          );
+          this.auth.logout();          
+        }
+      }
+    });
   }
 }
