@@ -22,6 +22,9 @@ public class HasMeal {
 
     private String mealType;
 
+    public HasMeal() {
+    }
+
     public HasMeal(MealModel meal, LocalDate date, String mealType) {
         this.meal = meal;
         this.date = date;
