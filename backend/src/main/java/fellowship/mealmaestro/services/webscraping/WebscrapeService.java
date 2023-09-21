@@ -16,14 +16,17 @@ import jakarta.annotation.PostConstruct;
 public class WebscrapeService {
 
     private final CheckersScraper checkersScraper;
+    private final WoolworthsScraper woolworthsScraper;
     private final TaskScheduler taskScheduler;
 
     private static final Logger logger = LoggerFactory.getLogger(WebscrapeService.class);
 
     private ScheduledFuture<?> checkersScrapingTask;
+    private ScheduledFuture<?> woolworthsScrapingTask;
 
-    public WebscrapeService(CheckersScraper checkersScraper, TaskScheduler taskScheduler) {
+    public WebscrapeService(CheckersScraper checkersScraper, TaskScheduler taskScheduler, WoolworthsScraper woolworthsScraper) {
         this.checkersScraper = checkersScraper;
+        this.woolworthsScraper = woolworthsScraper;
         this.taskScheduler = taskScheduler;
     }
 
@@ -31,6 +34,7 @@ public class WebscrapeService {
     public void init() {
         System.out.println("WebscrapeService init");
         startScraping();
+        startWoolworthsScraping();
     }
 
     private LocalDateTime getStartTime() {
@@ -57,30 +61,43 @@ public class WebscrapeService {
 
     private void startScraping() {
         LocalDateTime startTime = getStartTime();
-
-        // schedule task to start at 6am and use a 10s fixedDelay
         Duration tenSeconds = Duration.ofSeconds(24);
         checkersScrapingTask = taskScheduler.scheduleWithFixedDelay(() -> {
             checkersScraper.scrape();
         }, startTime.toInstant(ZoneOffset.ofHours(2)), tenSeconds);
-        logger.info("Scheduled scraping task to start at {}", startTime);
-
+        logger.info("Scheduled Checkers scraping task to start at {}", startTime);
+        
         // schedule task to stop at 10:40am
         LocalDateTime stopTime = getStopTime();
         taskScheduler.schedule(() -> {
             stopScraping();
         }, stopTime.toInstant(ZoneOffset.ofHours(2)));
-        logger.info("Scheduled scraping task to stop at {}", stopTime);
+        logger.info("Scheduled Checkers scraping task to stop at {}", stopTime);
+    }
+
+    private void startWoolworthsScraping() {
+        LocalDateTime startTime = getStartTime();
+        Duration waitInterval = Duration.ofMinutes(1);  // interval 
+        woolworthsScrapingTask = taskScheduler.scheduleWithFixedDelay(() -> {
+            woolworthsScraper.scrapeWoolworths();
+        }, startTime.toInstant(ZoneOffset.ofHours(2)), waitInterval);
+        logger.info("Scheduled Woolworths scraping task to start at {}", startTime);
     }
 
     private void stopScraping() {
         if (checkersScrapingTask != null) {
             checkersScrapingTask.cancel(false);
         }
-        logger.info("Stopped scraping task");
-
+        logger.info("Stopped Checkers scraping task");
+        
         // schedule tasks for next day
         startScraping();
     }
 
+    private void stopWoolworthsScraping() {
+        if (woolworthsScrapingTask != null) {
+            woolworthsScrapingTask.cancel(false);
+        }
+        logger.info("Stopped Woolworths scraping task");
+    }
 }
