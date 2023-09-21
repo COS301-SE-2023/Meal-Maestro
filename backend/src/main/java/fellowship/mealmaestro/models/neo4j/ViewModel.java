@@ -1,11 +1,7 @@
 package fellowship.mealmaestro.models.neo4j;
 
 import java.util.HashMap;
-
-import javax.script.ScriptEngine;
-
 import org.springframework.data.neo4j.core.schema.Node;
-
 import lombok.Data;
 
 @Node("View")
@@ -15,6 +11,7 @@ public class ViewModel {
         public Double score;
         public Double nScore;
     }
+
     private HashMap<String, Scores> ScoreMap = new HashMap<>();
     private Double max;
     private Double min;
@@ -49,7 +46,7 @@ public class ViewModel {
                 changed = true;
             }
             scores.nScore = normalise(scores.score);
-            if(changed){
+            if (changed) {
                 normalise();
             }
 
@@ -65,11 +62,12 @@ public class ViewModel {
         return 2 * ((Score - min) / (max - min)) - 1;
 
     }
+
     public void normalise() {
-       // return 2 * ((Score - min) / (max - min)) - 1;
-       for(Scores scores : ScoreMap.values()){
+        // return 2 * ((Score - min) / (max - min)) - 1;
+        for (Scores scores : ScoreMap.values()) {
             scores.nScore = 2 * ((scores.score - min) / (max - min)) - 1;
-       }
+        }
     }
 
 }
