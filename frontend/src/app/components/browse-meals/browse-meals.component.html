@@ -109,16 +109,19 @@
       </ion-avatar>
 
       <ion-content class="ion-padding">
-        <div *ngIf="notSaved()">
+        <div *ngIf="notSaved()" class="buttons">
           <ion-button (click)="liked(item!)" class="likebutton" fill="outline" shape="round" color="black">
             <ion-icon name="thumbs-up-outline"></ion-icon>
+          </ion-button>
+          <ion-button (click)="disliked(item!)" class="likebutton" fill="outline" shape="round" color="black">
+            <ion-icon name="thumbs-down-outline"></ion-icon>
           </ion-button>
           <ion-button (click)="addRecipe(item!)" class="savebutton" fill="outline" shape="round" color="black">
             <ion-icon slot="start" name="bookmark-outline"></ion-icon> 
             Save to Recipe Book
           </ion-button>
         </div>
-        <p style="padding-top: 40px;">{{ item?.description }}</p>
+        <p>{{ item?.description }}</p>
         <h4>Preparation Time</h4>
         <p>{{ item?.cookingTime }}</p>
         <h4>Ingredients</h4>
