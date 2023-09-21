@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fellowship.mealmaestro.models.RegenerateMealRequest;
 import fellowship.mealmaestro.models.neo4j.DateModel;
 import fellowship.mealmaestro.models.neo4j.MealModel;
+import fellowship.mealmaestro.services.LogService;
 import fellowship.mealmaestro.services.MealDatabaseService;
 import fellowship.mealmaestro.services.MealManagementService;
 import jakarta.validation.Valid;
@@ -29,6 +30,8 @@ public class MealManagementController {
     private MealManagementService mealManagementService;
     @Autowired
     private MealDatabaseService mealDatabaseService;
+    @Autowired
+    private LogService logService;
 
     @PostMapping("/getMealPlanForDay")
     public ResponseEntity<List<MealModel>> dailyMeals(@Valid @RequestBody DateModel request,
@@ -121,7 +124,7 @@ public class MealManagementController {
             throws JsonMappingException, JsonProcessingException {
 
         token = token.substring(7);
-
+        logService.logMeal(token, request.getMeal(), "regenerate");
         // Try find an appropriate meal in the database
         Optional<MealModel> replacementMeal = mealDatabaseService.findMealTypeForUser(request.getMeal().getType(),
                 token);
