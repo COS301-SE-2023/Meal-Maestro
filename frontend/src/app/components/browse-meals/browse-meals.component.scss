@@ -1,16 +1,18 @@
 .savebutton {
     color: black;
-    position: absolute;
-    right: 5px;
     text-transform: capitalize;
     font-size: smaller;
 }
 
 .likebutton {
     color: black;
-    position: absolute;
-    left: 5px;
     font-size: smaller;
+    margin-right: 10px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: flex-start;
 }
 
 ion-avatar {
