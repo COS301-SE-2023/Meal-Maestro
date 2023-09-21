@@ -13,10 +13,10 @@ public class HydrationService {
     @Autowired
     private UserRepository userRepository;
 
-    @Scheduled(fixedRate = 60 * 1000)
+    @Scheduled(fixedRate = 20 * 60 * 1000)
     public void pollLogs() {
         List<UserModel> userList = userRepository.findUsersWithNewLogEntries();
-
+        
 
     }
    
