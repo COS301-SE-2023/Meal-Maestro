@@ -22,6 +22,9 @@ public class HasLogEntry {
 
     private String entryType;
 
+    public HasLogEntry() {
+    }
+
     public HasLogEntry(MealModel meal, LocalDate date, String entryType) {
         this.meal = meal;
         this.date = date;

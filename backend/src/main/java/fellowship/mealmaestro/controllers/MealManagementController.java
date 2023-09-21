@@ -123,8 +123,10 @@ public class MealManagementController {
             @RequestHeader("Authorization") String token)
             throws JsonMappingException, JsonProcessingException {
 
-        token = token.substring(7);
         logService.logMeal(token, request.getMeal(), "regenerate");
+
+        token = token.substring(7);
+
         // Try find an appropriate meal in the database
         Optional<MealModel> replacementMeal = mealDatabaseService.findMealTypeForUser(request.getMeal().getType(),
                 token);

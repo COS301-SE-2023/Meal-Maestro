@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import fellowship.mealmaestro.models.neo4j.MealModel;
 import fellowship.mealmaestro.models.neo4j.UserModel;
 import fellowship.mealmaestro.models.neo4j.relationships.HasLogEntry;
+import fellowship.mealmaestro.models.neo4j.relationships.HasMeal;
 import fellowship.mealmaestro.repositories.neo4j.UserRepository;
 
 @Service
@@ -19,18 +20,29 @@ public class LogService {
     private UserService userService;
     @Autowired
     private MealDatabaseService mealDatabaseService;
-    @Autowired 
+    @Autowired
     private UserRepository userRepository;
 
-    public void logMeal(String token, MealModel meal, String entryType){
+    public void logMeal(String token, MealModel meal, String entryType) {
         UserModel user = userService.getUser(token);
-        Optional<MealModel> dbMeal = mealDatabaseService.findMealForUser(meal.getName(), token);
-        if(dbMeal.isPresent())
+        MealModel dbMeal = null;
+        for(HasMeal m : user.getMeals())
+        {
+            if(m.getMeal().getName().equals(meal.getName()))
             {
-                HasLogEntry entry = new HasLogEntry(dbMeal.get(),LocalDate.now(), entryType);
-                user.getEntries().add(entry);
-                userRepository.save(user);
-                System.out.println("LogEntry saved! ("+ meal.getName() +","+ entryType +")");
+                dbMeal = m.getMeal();
             }
+        }
+        if(dbMeal == null)
+            {
+                System.out.println("logging failed");
+                return;
+            }
+        HasLogEntry entry = new HasLogEntry(dbMeal, LocalDate.now(), entryType);
+        user.getEntries().add(entry);
+        userRepository.save(user);
+        System.out.println("LogEntry saved! (" + meal.getName() + "," + entryType + ")");
+
     }
+
 }
