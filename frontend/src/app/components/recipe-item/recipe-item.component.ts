@@ -63,7 +63,7 @@ export class RecipeItemComponent {
     return !this.items.includes(this.item!);
   } 
 
-  addRecipe(item: MealI) {
-    this.addService.setRecipeItem(item);
+  liked(item: MealI) {
+    
   }
 }
