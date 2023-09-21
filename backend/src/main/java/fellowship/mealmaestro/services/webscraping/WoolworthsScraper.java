@@ -17,6 +17,8 @@ import fellowship.mealmaestro.services.BarcodeService;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class WoolworthsScraper {
@@ -87,7 +89,12 @@ public class WoolworthsScraper {
     }
 
     private String extractWeight(String name) {
-        // ... (Your existing logic for extracting weight)
-        // Return the extracted weight
+        Pattern pattern = Pattern.compile("(\\d+(\\.\\d+)?)\\s*(g|kg|ml|l)");
+        Matcher matcher = pattern.matcher(name);
+        if (matcher.find()) {
+            return matcher.group();
+        } else {
+            return "Weight not found";
+        }
     }
 }
