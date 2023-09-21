@@ -11,7 +11,7 @@ import fellowship.mealmaestro.models.neo4j.MealModel;
 
 @RelationshipProperties
 public class HasLogEntry {
-@Id
+    @Id
     @GeneratedValue
     private Long id;
 
