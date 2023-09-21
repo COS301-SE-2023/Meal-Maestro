@@ -64,6 +64,10 @@ export class RecipeItemComponent {
   } 
 
   liked(item: MealI) {
+
+  }
+
+  disliked(item: MealI) {
     
   }
 }
