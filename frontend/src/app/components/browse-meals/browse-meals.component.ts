@@ -129,6 +129,10 @@ export class BrowseMealsComponent  implements OnInit {
   }
 
   liked(item: MealI) {
+
+  }
+
+  disliked(item: MealI) {
     
   }
 }
