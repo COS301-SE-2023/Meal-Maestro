@@ -1,11 +1,22 @@
 package fellowship.mealmaestro.models.neo4j;
 
 import java.util.HashMap;
+
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import lombok.Data;
-
+import lombok.Getter;
+import lombok.Setter;
+@Getter
+@Setter
 @Node("View")
 public class ViewModel {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
     @Data
     private class Scores {
         public Double score;
