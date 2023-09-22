@@ -24,7 +24,6 @@ public class HydrationService {
         // per user
         for (UserModel nuser : userList) {
             UserModel user = userRepository.findByEmail(nuser.getEmail()).get();
-            List<HasLogEntry> logEntries = userRepository.findUnprocessedLogEntriesForUser(user);
             ViewModel viewModel = user.getView();
             if(viewModel == null)
             {
