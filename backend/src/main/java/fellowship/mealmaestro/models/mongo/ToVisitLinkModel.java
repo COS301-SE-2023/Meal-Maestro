@@ -14,14 +14,12 @@ public class ToVisitLinkModel {
     @Id
     private String link;
 
-    private String type;
 
     @Indexed
     private String store;
 
-    public ToVisitLinkModel(String link, String type, String store) {
+    public ToVisitLinkModel(String link, String store) {
         this.link = link;
-        this.type = type;
         this.store = store;
     }
 
