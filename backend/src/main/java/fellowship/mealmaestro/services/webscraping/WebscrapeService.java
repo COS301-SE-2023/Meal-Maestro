@@ -3,85 +3,61 @@ package fellowship.mealmaestro.services.webscraping;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.time.Instant; 
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 
+import fellowship.mealmaestro.models.mongo.ToVisitLinkModel;
+import fellowship.mealmaestro.repositories.mongo.ToVisitLinkRepository;
 import jakarta.annotation.PostConstruct;
-
 @Service
 public class WebscrapeService {
 
-    private final CheckersScraper checkersScraper;
     private final WoolworthsScraper woolworthsScraper;
     private final TaskScheduler taskScheduler;
-
     private static final Logger logger = LoggerFactory.getLogger(WebscrapeService.class);
-
-    private ScheduledFuture<?> checkersScrapingTask;
     private ScheduledFuture<?> woolworthsScrapingTask;
+    private final ToVisitLinkRepository toVisitLinkRepository;  
 
-    public WebscrapeService(CheckersScraper checkersScraper, TaskScheduler taskScheduler, WoolworthsScraper woolworthsScraper) {
-        this.checkersScraper = checkersScraper;
+
+    public WebscrapeService(TaskScheduler taskScheduler, WoolworthsScraper woolworthsScraper , ToVisitLinkRepository toVisitLinkRepository) {
         this.woolworthsScraper = woolworthsScraper;
         this.taskScheduler = taskScheduler;
+        this.toVisitLinkRepository = toVisitLinkRepository;
     }
 
     @PostConstruct
     public void init() {
         System.out.println("WebscrapeService init");
-        // Commenting out startScraping() for Checkers
-        // startScraping();
+        woolworthsScraper.populateInternalLinksFromSitemaps();  // Populate internal links from sitemaps
         startWoolworthsScraping();
     }
 
-    private LocalDateTime getStartTime() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime next6AM = now.withHour(13).withMinute(55).withSecond(0);
-
-        if (now.isAfter(next6AM) || now.isEqual(next6AM)) {
-            return next6AM.plusDays(1);
-        } else {
-            return next6AM;
-        }
-    }
-
-    private LocalDateTime getStopTime() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime next1040AM = now.withHour(10).withMinute(40).withSecond(0);
-
-        if (now.isAfter(next1040AM) || now.isEqual(next1040AM)) {
-            return next1040AM.plusDays(1);
-        } else {
-            return next1040AM;
-        }
-    }
-
-    // Commenting out the Checkers scraping logic
-    /*
-    private void startScraping() {
-        // ... (original logic here)
-    }
-    */
-
     private void startWoolworthsScraping() {
-        LocalDateTime startTime = getStartTime();
-        Duration interval = Duration.ofSeconds(24); // Change this as appropriate
+        logger.info("Starting Woolworths scraping task");
+        Duration interval = Duration.ofSeconds(24); 
+    
         woolworthsScrapingTask = taskScheduler.scheduleWithFixedDelay(() -> {
-            woolworthsScraper.scrapeWoolworths();
-        }, startTime.toInstant(ZoneOffset.ofHours(2)), interval);
-        logger.info("Scheduled Woolworths scraping task to start at {}", startTime);
+            Optional<ToVisitLinkModel> toVisitLinkOptional = toVisitLinkRepository.findFirstByStore("Woolworths");
+            if (toVisitLinkOptional.isPresent()) {
+                String categoryUrl = toVisitLinkOptional.get().getLink();
+                woolworthsScraper.scrapeWoolworths(categoryUrl);
+                
+                // Remove the processed link from ToVisitLinkRepository
+                toVisitLinkRepository.delete(toVisitLinkOptional.get());
+            }
+        }, Instant.now(), interval);
+    
+        logger.info("Scheduled Woolworths scraping task to start immediately.");
     }
-
-    // Commenting out the Checkers scraping logic
-    /*
-    private void stopScraping() {
-        // ... (original logic here)
-    }
-    */
+    
 
     private void stopWoolworthsScraping() {
         if (woolworthsScrapingTask != null) {
