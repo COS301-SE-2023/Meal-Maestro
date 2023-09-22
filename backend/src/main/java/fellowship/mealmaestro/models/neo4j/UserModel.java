@@ -55,7 +55,7 @@ public class UserModel implements UserDetails {
     @Relationship(type = "HAS_MEAL")
     private List<HasMeal> meals;
 
-    @Relationship(type = "HAS_LOG_ENTRY")
+    @Relationship(type = "HAS_LOG_ENTRY", direction = Relationship.Direction.OUTGOING)
     private List<HasLogEntry> entries;
 
     @Relationship(type = "HAS_VIEW", direction = Relationship.Direction.OUTGOING)

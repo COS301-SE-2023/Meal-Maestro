@@ -7,8 +7,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-@EnableScheduling
 @SpringBootApplication
+@EnableScheduling
 public class MealmaestroApplication {
 
 	public static void main(String[] args) throws JsonProcessingException {

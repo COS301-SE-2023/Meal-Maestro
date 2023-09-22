@@ -6,10 +6,7 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-@Getter
-@Setter
+
 @Node("View")
 public class ViewModel {
 
@@ -17,55 +14,50 @@ public class ViewModel {
     @GeneratedValue
     private Long id;
 
-    @Data
-    private class Scores {
-        public Double score;
-        public Double nScore;
-    }
-
-    private HashMap<String, Scores> ScoreMap = new HashMap<>();
+    private HashMap<String, Double> ScoreMap = new HashMap<>();
+    private HashMap<String, Double> nScoreMap = new HashMap<>();
     private Double max;
     private Double min;
 
     public ViewModel() {
     }
 
-    public ViewModel(HashMap<String, Scores> ScoreMap) {
+    public ViewModel(HashMap<String, Double> ScoreMap) {
         this.ScoreMap = ScoreMap;
     }
 
-    public HashMap<String, Scores> getScoreMap() {
+    public HashMap<String, Double> getScoreMap() {
         return this.ScoreMap;
     }
 
-    public void setScoreMap(HashMap<String, Scores> ScoreMap) {
+    public void setScoreMap(HashMap<String, Double> ScoreMap) {
         this.ScoreMap = ScoreMap;
     }
 
     public void updateScore(String ingredient, Double Score) {
         if (ScoreMap.containsKey(ingredient)) {
             Boolean changed = false;
-            Scores scores = ScoreMap.get(ingredient);
-            scores.score += Score;
-            if (Score > max) {
+            Double score = ScoreMap.get(ingredient);
+            Double nScore = nScoreMap.get(ingredient);
+            score += Score;
+            if (Score > max || max == null) {
                 max = Score;
                 changed = true;
             }
 
-            if (Score < min) {
+            if (Score < min || min == null) {
                 min = Score;
                 changed = true;
             }
-            scores.nScore = normalise(scores.score);
+            nScore = normalise(Score);
             if (changed) {
                 normalise();
             }
 
         } else {
-            Scores scores = new Scores();
-            scores.score = Score;
-            scores.nScore = 0.0;
-            ScoreMap.put(ingredient, scores);
+            
+            ScoreMap.put(ingredient, Score);
+            nScoreMap.put(ingredient,normalise(Score));
         }
     }
 
@@ -76,8 +68,8 @@ public class ViewModel {
 
     public void normalise() {
         // return 2 * ((Score - min) / (max - min)) - 1;
-        for (Scores scores : ScoreMap.values()) {
-            scores.nScore = 2 * ((scores.score - min) / (max - min)) - 1;
+        for (String ingredient : ScoreMap.keySet()) {
+            nScoreMap.put(ingredient, 2 * ((ScoreMap.get(ingredient) - min) / (max - min)) - 1) ;
         }
     }
 

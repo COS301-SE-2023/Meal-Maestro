@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fellowship.mealmaestro.models.neo4j.MealModel;
 import fellowship.mealmaestro.models.neo4j.UserModel;
@@ -18,7 +19,7 @@ public class LogService {
     private UserService userService;
     @Autowired
     private UserRepository userRepository;
-
+    @Transactional
     public void logMeal(String token, MealModel meal, String entryType) {
         UserModel user = userService.getUser(token);
         MealModel dbMeal = null;

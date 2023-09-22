@@ -16,9 +16,9 @@ public interface UserRepository extends Neo4jRepository<UserModel, String> {
     @Query("MATCH (n0:User {email: $email}) SET n0.name = $name RETURN n0")
     UserModel updateUser(String email, String username);
 
-    @Query("MATCH (u:User)-[r:HAS_LOG_ENTRY]->(logEntry) WHERE NOT EXISTS(r.processed) OR NOT r.processed RETURN DISTINCT u")
+    @Query("MATCH (u:User)-[r:HAS_LOG_ENTRY]->(logEntry) WHERE r.processed IS NULL OR NOT r.processed RETURN DISTINCT u")
     List<UserModel> findUsersWithNewLogEntries();
 
-    @Query("MATCH (user:User {id: $user.id})-[:HAS_LOG_ENTRY]->(logEntry:HasLogEntry) WHERE NOT logEntry.processed RETURN logEntry")
+    @Query("MATCH (user:User {id: $user.id})-[:HAS_LOG_ENTRY]->(logEntry) WHERE NOT logEntry.processed RETURN logEntry")
     List<HasLogEntry> findUnprocessedLogEntriesForUser(UserModel user);
 }

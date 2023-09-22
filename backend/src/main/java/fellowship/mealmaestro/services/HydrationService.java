@@ -3,6 +3,7 @@ package fellowship.mealmaestro.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fellowship.mealmaestro.models.neo4j.UserModel;
 import fellowship.mealmaestro.models.neo4j.ViewModel;
@@ -16,15 +17,19 @@ import java.util.List;
 public class HydrationService {
     @Autowired
     private UserRepository userRepository;
-
+    @Transactional
     @Scheduled(fixedRate =  1 * 60 * 1000)
     public void pollLogs() {
         List<UserModel> userList = userRepository.findUsersWithNewLogEntries();
         // per user
-        for (UserModel user : userList) {
+        for (UserModel nuser : userList) {
+            UserModel user = userRepository.findByEmail(nuser.getEmail()).get();
             List<HasLogEntry> logEntries = userRepository.findUnprocessedLogEntriesForUser(user);
             ViewModel viewModel = user.getView();
-
+            if(viewModel == null)
+            {
+                viewModel = new ViewModel();
+            }
             for (HasLogEntry entry : logEntries) {
 
                 String ingredientString = entry.getMeal().getIngredients();
@@ -42,8 +47,9 @@ public class HydrationService {
 
                 // set processed
                 entry.setProcessed(true);
-            }
 
+            }
+            user.setEntries(logEntries);
             user.setView(viewModel);
             userRepository.save(user);
         }
@@ -61,9 +67,8 @@ public class HydrationService {
     // convert
     private static List<String> parseCommaSeparatedString(String input) {
         String[] elements = input.split(",");
-        List<String> result = Arrays.asList(elements);
-
-        return result;
+        
+        return Arrays.asList(elements);
     }
 
     // scores
