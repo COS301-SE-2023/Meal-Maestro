@@ -10,17 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 import fellowship.mealmaestro.models.mongo.findBarcodeRequest;
 import fellowship.mealmaestro.models.mongo.FoodModelM;
 import fellowship.mealmaestro.services.BarcodeService;
-import fellowship.mealmaestro.services.webscraping.CheckersScraper;
+// import fellowship.mealmaestro.services.webscraping.CheckersScraper;
 
 @RestController
 public class ProductController {
 
     private final BarcodeService barcodeService;
-    private final CheckersScraper checkersScraper;
+    // private final CheckersScraper checkersScraper;
 
-    public ProductController(BarcodeService barcodeService, CheckersScraper checkersScraper) {
+    public ProductController(BarcodeService barcodeService) {
         this.barcodeService = barcodeService;
-        this.checkersScraper = checkersScraper;
     }
 
     @PostMapping("/findProduct")
@@ -43,7 +42,7 @@ public class ProductController {
 
     @GetMapping("/loc")
     public ResponseEntity<String> loc() {
-        checkersScraper.getLocLinks();
+        // checkersScraper.getLocLinks();
         return ResponseEntity.ok("loc");
     }
 }
