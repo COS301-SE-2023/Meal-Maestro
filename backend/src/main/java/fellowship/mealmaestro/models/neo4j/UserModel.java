@@ -55,10 +55,10 @@ public class UserModel implements UserDetails {
     @Relationship(type = "HAS_MEAL")
     private List<HasMeal> meals;
 
-    @Relationship(type = "HAS_LOG_ENTRY", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "HAS_LOG_ENTRY")
     private List<HasLogEntry> entries;
 
-    @Relationship(type = "HAS_VIEW", direction = Relationship.Direction.OUTGOING)
+    @Relationship(type = "HAS_VIEW")
     private ViewModel view;
 
     public Long getVersion() {

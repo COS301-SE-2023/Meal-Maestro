@@ -30,8 +30,8 @@ public class HydrationService {
             {
                 viewModel = new ViewModel();
             }
-            for (HasLogEntry entry : logEntries) {
-
+            for (int i = 0; i < user.getEntries().size();i++) {
+                 HasLogEntry entry = user.getEntries().remove(i);
                 String ingredientString = entry.getMeal().getIngredients();
                 // trim ingredient list
                 ingredientString = trimCharacters(ingredientString);
@@ -47,9 +47,8 @@ public class HydrationService {
 
                 // set processed
                 entry.setProcessed(true);
-
+                user.getEntries().add(entry);
             }
-            user.setEntries(logEntries);
             user.setView(viewModel);
             userRepository.save(user);
         }
