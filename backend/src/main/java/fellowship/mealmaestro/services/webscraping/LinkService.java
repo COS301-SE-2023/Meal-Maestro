@@ -14,7 +14,6 @@ import fellowship.mealmaestro.models.mongo.ToVisitLinkModel;
 
 @Service
 public class LinkService {
-
     private final MongoTemplate mongoTemplate;
 
     public LinkService(MongoTemplate mongoTemplate) {
@@ -22,22 +21,18 @@ public class LinkService {
     }
 
     public Optional<ToVisitLinkModel> getNextLink(String store) {
+        System.out.println("Fetching next link for store: " + store);
         MatchOperation match = Aggregation.match(Criteria.where("store").is(store));
 
-        Aggregation aggregation = Aggregation.newAggregation(
-                match,
-                Aggregation.sample(1));
+        Aggregation aggregation = Aggregation.newAggregation(match, Aggregation.sample(1));
 
-        AggregationResults<ToVisitLinkModel> results = mongoTemplate.aggregate(aggregation, "ToVisitLinks",
-                ToVisitLinkModel.class);
+        AggregationResults<ToVisitLinkModel> results = mongoTemplate.aggregate(aggregation, "ToVisitLinks", ToVisitLinkModel.class);
 
         List<ToVisitLinkModel> links = results.getMappedResults();
 
-        return links.isEmpty() ? Optional.empty() : Optional.of(links.get(0));
-    }
+        System.out.println("Number of links found: " + links.size());
 
-    public Optional<ToVisitLinkModel> getNextCheckersLink() {
-        return getNextLink("Checkers");
+        return links.isEmpty() ? Optional.empty() : Optional.of(links.get(0));
     }
 
     public Optional<ToVisitLinkModel> getNextWoolworthsLink() {
