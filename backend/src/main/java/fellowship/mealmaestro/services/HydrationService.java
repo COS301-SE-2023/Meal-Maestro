@@ -70,13 +70,13 @@ public class HydrationService {
     private static Double getScoreValue(String entryType) {
         switch (entryType.toLowerCase()) {
             case "regenerated":
-                return -0.9;
+                return -0.4;
                 
             case "like":
                 return 1.0;
 
             case "dislike":
-                return -0.5;
+                return -0.7;
 
             case "save":
                 return 0.7;
