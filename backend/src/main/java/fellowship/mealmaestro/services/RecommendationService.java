@@ -20,43 +20,40 @@ public class RecommendationService {
     private MealDatabaseService mealDatabaseService;
     @Autowired
     private MealManagementService mealManagementService;
-    
+
     private final Double MIN_VALUE = -0.01;
 
-    public MealModel getRecommendedMeal(String token) throws Exception{
+    public MealModel getRecommendedMeal(String token) throws Exception {
         MealModel recMealModel = new MealModel();
-        //get view and pantry
+        // get view and pantry
         List<String> pantryItems = userService.getUser(token).getPantry().getNameList();
-        List<String> validIngredients = userService.getUser(token).getView().getPositiveNScores(MIN_VALUE); 
-       
+        List<String> validIngredients = userService.getUser(token).getView().getPositiveNScores(MIN_VALUE);
+
         // compare view and pantry
 
+        // use list to find db meal
 
-        //use list to find db meal
-
-
-        //query gpt
+        // query gpt
 
         return recMealModel;
     }
 
     public static List<String> findCommonItems(List<String> list1, List<String> list2) {
         List<String> commonItems = new ArrayList<>();
-        
+
         for (String item1 : list1) {
             for (String item2 : list2) {
                 if (item2.contains(item1)) {
                     commonItems.add(item1);
-                    break; 
+                    break;
                 }
                 if (item1.contains(item2)) {
                     commonItems.add(item2);
-                    break; 
+                    break;
                 }
             }
         }
 
         return commonItems;
-
     }
 }
