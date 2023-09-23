@@ -20,12 +20,13 @@ public class RecommendationService {
     @Autowired
     private MealManagementService mealManagementService;
     
-    public MealModel getRecommendedMeal(String token){
+    public MealModel getRecommendedMeal(String token) throws Exception{
         MealModel recMealModel = new MealModel();
         //get view and pantry
         List<FoodModel> pantryModel = pantryService.getPantry(token.substring(7));
         ViewModel viewModel = userService.getUser(token).getView();
         //get positive keys
+           List<String> validIngredients = viewModel.getPositiveNScores(-0.1); 
         
         // compare view and pantry
 
