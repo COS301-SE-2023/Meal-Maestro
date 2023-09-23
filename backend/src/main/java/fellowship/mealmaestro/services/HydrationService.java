@@ -59,7 +59,7 @@ public class HydrationService {
     private static String trimCharacters(String input) {
         String regex = "[0-9\\s]+";
         String result = input.replaceAll(regex, "");
-        return result;
+        return result.toLowerCase();
     }
 
     // convert
