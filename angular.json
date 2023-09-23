@@ -116,7 +116,7 @@
                 "output": "./svg"
               }
             ],
-            "styles": ["frontend/src/theme/variables.scss", "frontend/src/global.scss","src/styles.scss"],
+            "styles": ["frontend/src/theme/variables.scss", "frontend/src/global.scss"],
             "scripts": []
           },
           "configurations": {
