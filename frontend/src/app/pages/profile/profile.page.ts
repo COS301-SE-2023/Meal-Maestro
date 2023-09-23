@@ -1,5 +1,5 @@
-import { Component, OnInit,ElementRef, ViewChild  } from '@angular/core';
-import { IonicModule, PickerController } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+import { IonicModule, PickerController, ToastController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { UserPreferencesI } from '../../models/userpreference.model';
 
@@ -10,10 +10,8 @@ import { SettingsApiService } from '../../services/settings-api/settings-api.ser
 import { UserI } from '../../models/user.model';
 import { AuthenticationService } from '../../services/services';
 
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @Component({
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'app-profile',
   templateUrl: 'profile.page.html',
   styleUrls: ['profile.page.scss'],
@@ -23,16 +21,16 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 export class ProfilePage implements OnInit {
   
+
   constructor(
     private router: Router,
     private pickerController: PickerController,
     private settingsApiService: SettingsApiService,
-    private auth: AuthenticationService
+    private auth: AuthenticationService,
+    private toastController: ToastController
   ) {
-    this.selectedPriceRange = '';
+   
   }
-
- 
   // User data
   user: UserI = {
     username: '',
@@ -63,16 +61,14 @@ export class ProfilePage implements OnInit {
     shoppingIntervalSet: false,
   };
 
-  // Variables for displaying
   displaying_Macroratio: string | undefined;
-  shoppingIntervalOtherValue: number | undefined | any;
+  shoppingIntervalOtherValue: number | undefined | any = 7;
   shoppingInterval: string | any;
   displayAllergies: string[] | string = '';
   displayPreferences: string[] | string = '' ;
   selectedPreferences: string | any;
-  selectedPriceRange: string;
+  selectedPriceRange: string | any;
 
-  // Check if possible to change
   preferences = {
     vegetarian: false,
     vegan: false,
@@ -87,7 +83,6 @@ export class ProfilePage implements OnInit {
     eggs: false,
   };
 
-  // Modal controllers
   isPreferencesModalOpen: boolean = false;
   isCalorieModalOpen: boolean = false;
   isBudgetModalOpen: boolean = false;
@@ -97,7 +92,7 @@ export class ProfilePage implements OnInit {
   isBMIModalOpen: boolean = false;
   isShoppingModalOpen: boolean = false;
 
-  //
+  //toggle logic
   shoppingintervalToggle: boolean = false;
   preferenceToggle: boolean = false;
   calorieToggle: boolean = false;
@@ -107,16 +102,34 @@ export class ProfilePage implements OnInit {
   cookingToggle: boolean = false;
   BMIToggle: boolean = false;
 
+  //reset logic for cancel button
+  initialshoppinginterval : string | any;
+  initialpreference : string | any;
+  initialpreferenceVegetarian : string | any;
+  initialpreferenceVegan : string | any;
+  initialpreferenceGlutenIntolerant : string | any;
+  initialpreferenceLactoseIntolerant : string | any;
+  initialcalorie : number | any;
+  initialbudget : string | any;
+  initialmacro : any;
+  initialallergies : string | any;
+  initialallergiesSeafood : string | any;
+  initialallergiesNuts : string | any;
+  initialallergiesEggs : string | any;
+  initialallergiesSoy : string | any;
+
+  initialcooking : string | any;
+  initialBMI : number | any;
+  initialshoppingintervalToggle : boolean | any;
+  initialpreferenceToggle : boolean | any;
+  initialcalorieToggle : boolean | any;
+  initialbudgetToggle : boolean | any;
+  initialmacroToggle : boolean | any;
+  initialallergiesToggle : boolean | any;
+  initialcookingToggle : boolean | any;
+  initialBMIToggle : boolean | any;
+
   ngOnInit() {
-
-  //   const swiper = new Swiper(this.swiperContainer.nativeElement, {
-  //     // Configure Swiper options here
-  //     loop: true,
-  //     autoplay: {
-  //         delay: 3000,
-  //     },
-  // });
-
     this.loadUserSettings();
     this.auth.getUser().subscribe({
       next: (response) => {
@@ -136,49 +149,102 @@ export class ProfilePage implements OnInit {
 
    private async loadUserSettings() {
     this.settingsApiService.getSettings().subscribe({
-    
-    
       next: (response) => {
-       
         if (response.status === 200) {
-         
-          if (response.body) {
-           
-            
+          if (response.body) { 
+            console.log("loaduser")
+            console.log(response.body)
             this.userpreferences.goal = response.body.goal;
-            this.userpreferences.shoppingInterval = response.body.shoppingInterval;
+            if (response.body.shoppingInterval != '') {
+              this.userpreferences.shoppingIntervalSet = true;
+            }
+
+            if (response.body.shoppingInterval === 'weekly' || response.body.shoppingInterval === 'biweekly' || response.body.shoppingInterval === 'monthly') {
+              this.userpreferences.shoppingInterval = response.body.shoppingInterval;
+              this.shoppingInterval = response.body.shoppingInterval;
+            }
+            else if (response.body.shoppingInterval.includes("days")) {
+              this.userpreferences.shoppingInterval = "other";  
+              this.shoppingIntervalOtherValue = response.body.shoppingInterval;
+            }
+            else {
+              this.userpreferences.shoppingIntervalSet = false;
+              this.userpreferences.shoppingInterval = '';
+              this.shoppingInterval = ''; 
+            }
+
             this.userpreferences.foodPreferences = response.body.foodPreferences;
-           
-            if (response.body.calorieAmount == null) {
-              this.userpreferences.calorieAmount = 0;
+            if (response.body.calorieAmount == 0) {
+              this.userpreferences.calorieAmount = '';
+            }
+            else 
+            {
+            this.userpreferences.calorieAmount = response.body.calorieAmount;
+            }
+
+            console.log("budget")
+            console.log(response.body.budgetRange)
+            if (response.body.budgetRange.includes("R")) {
+              this.userpreferences.budgetRange = response.body.budgetRange;
+              this.selectedPriceRange = "custom";
             }
             else
-            this.userpreferences.calorieAmount = response.body.calorieAmount;
-
-            this.userpreferences.budgetRange = response.body.budgetRange;
+            {
+              this.userpreferences.budgetRange = response.body.budgetRange;
+              this.selectedPriceRange = response.body.budgetRange;
+            }
             this.userpreferences.allergies = response.body.allergies;
             this.userpreferences.cookingTime = response.body.cookingTime;
             this.userpreferences.userHeight = response.body.userHeight;
             this.userpreferences.userWeight = response.body.userWeight;
+            if (response.body.userBMI == 0) {
+              this.userpreferences.userBMI = '';
+            }
+            else
             this.userpreferences.userBMI = response.body.userBMI;
             this.userpreferences.bmiset = response.body.bmiset;
             this.userpreferences.cookingTimeSet = response.body.cookingTimeSet;
             this.userpreferences.allergiesSet = response.body.allergiesSet;
-            this.userpreferences.macroSet = response.body.macroSet;
+            if (response.body.macroRatio.protein > 0 && response.body.macroRatio.carbs > 0 && response.body.macroRatio.fat > 0 && response.body.macroSet === true)
+            {
+              this.userpreferences.macroSet = true;
+            }
+            else if (response.body.macroRatio.protein === 0 || response.body.macroRatio.carbs === 0 || response.body.macroRatio.fat === 0 || response.body.macroSet === false)
+           {
+                this.userpreferences.macroSet = false;
+            }
             this.userpreferences.budgetSet = response.body.budgetSet;
             this.userpreferences.calorieSet = response.body.calorieSet;
-            this.userpreferences.foodPreferenceSet = response.body.foodPreferenceSet;
             this.userpreferences.shoppingIntervalSet = response.body.shoppingIntervalSet;
             this.userpreferences.macroRatio.fat = response.body.macroRatio.fat;
             this.userpreferences.macroRatio.carbs = response.body.macroRatio.carbs;
             this.userpreferences.macroRatio.protein = response.body.macroRatio.protein;
-            
-           
-
             this.displayPreferences = this.userpreferences.foodPreferences;
             this.displayAllergies = this.userpreferences.allergies;
+
+            this.shoppingintervalToggle = this.userpreferences.shoppingIntervalSet;
+            this.calorieToggle = this.userpreferences.calorieSet;
+            this.budgetToggle = this.userpreferences.budgetSet;
+           
+            this.allergiesToggle = this.userpreferences.allergiesSet;
+            this.cookingToggle = this.userpreferences.cookingTimeSet;
+            this.BMIToggle = this.userpreferences.bmiset;
+            this.shoppingInterval = this.userpreferences.shoppingInterval;
+            
+            
             this.displaying_Macroratio = this.getDisplayMacroratio();
             this.updateDisplayData();
+
+            this.setInitialAllergies()
+            this.setInitialBMI()
+            this.setInitialBudget()
+            this.setInitialCalorie()
+            this.setInitialCooking()
+            this.setIntialPreference()
+            this.setInitialMacro()
+            this.setInitialShopping()
+            this.setInitialBMI();
+
           }
                   }
       },
@@ -200,9 +266,16 @@ export class ProfilePage implements OnInit {
     this.updateSettingsOnServer(); // Update the settings on the server when the goal is set
   }
   
-
+  
   private updateSettingsOnServer() {
-    // console.log(this.userpreferences);
+    console.log("update")
+    //if check to ensure only 1 "days" is in the string 
+    if (this.userpreferences.shoppingInterval.includes("days") && this.userpreferences.shoppingInterval.split("days").length - 1 > 1) {
+      this.userpreferences.shoppingInterval = this.userpreferences.shoppingInterval.replace("days", "").trim();
+    }
+
+    console.log(this.userpreferences)
+
     this.settingsApiService.updateSettings(this.userpreferences).subscribe(
       (response) => {
         if (response.status === 200) {
@@ -216,7 +289,6 @@ export class ProfilePage implements OnInit {
       }
     );
   }
-
   // Function to navigate to account-profile page
   navToProfile() {
     this.router.navigate(['acc-profile']);
@@ -230,32 +302,39 @@ export class ProfilePage implements OnInit {
 
   setOpenPreferences(isOpen: boolean) {
     this.isPreferencesModalOpen = isOpen;
+    this.resetPreference();
   }
 
+
+
   setOpenPreferencesSave(isOpen: boolean) {
+    console.log('Saving Preferences');
     if (this.userpreferences.foodPreferenceSet === true) {
+      this.getSelectedPreferences();  // This will update this.userpreferences.foodPreferences
       if (
-        this.preferences.vegetarian ||
-        this.preferences.vegan ||
-        this.preferences.glutenIntolerant ||
-        this.preferences.lactoseIntolerant
+        !this.preferences.vegetarian &&
+        !this.preferences.vegan &&
+        !this.preferences.glutenIntolerant &&
+        !this.preferences.lactoseIntolerant
       ) {
-        if (!isOpen) {
-          this.updateDisplayData(); // Update the display data when the modal is closed
-        }
-        this.isPreferencesModalOpen = isOpen;
+        this.presentToast('Please select at least one food preference. If you have no food preferences, please uncheck the food preferences toggle.');
+        return;
       }
-    } else if (this.userpreferences.foodPreferenceSet === false) {
+      if (!isOpen) {
+        this.updateDisplayData(); // Update the display data when the modal is closed
+      }
+      this.isPreferencesModalOpen = isOpen;
+    } else {
       this.userpreferences.foodPreferences = [];
       this.displayPreferences = '';
       this.isPreferencesModalOpen = isOpen;
     }
+    this.setIntialPreference();
     this.updateSettingsOnServer();
   }
 
   preference_Toggle() {
     this.userpreferences.foodPreferenceSet = !this.userpreferences.foodPreferenceSet;
-    this.updateSettingsOnServer();
   }
 
   getSelectedPreferences(): string {
@@ -295,10 +374,9 @@ export class ProfilePage implements OnInit {
     }
     }
 
-   
-
   setOpenCalorie(isOpen: boolean) {
     this.isCalorieModalOpen = isOpen;
+    this.resetCalorie();
   }
 
   setOpenCalorieSave(isOpen: boolean) {
@@ -310,15 +388,16 @@ export class ProfilePage implements OnInit {
         this.isCalorieModalOpen = isOpen;
       }
     } else if (this.userpreferences.calorieSet === false) {
-      this.userpreferences.calorieAmount = 0;
+      this.userpreferences.calorieAmount = '';
       this.isCalorieModalOpen = isOpen;
     }
+    this.setInitialCalorie();
     this.updateSettingsOnServer();
+    
   }
 
   calorieAmount_Toggle() {
     this.userpreferences.calorieSet = !this.userpreferences.calorieSet;
-    this.updateSettingsOnServer();
   }
 
   showSelectedCalorieAmount(event: any) {
@@ -327,23 +406,70 @@ export class ProfilePage implements OnInit {
 
   setOpenBudget(isOpen: boolean) {
     this.isBudgetModalOpen = isOpen;
+    this.resetBudget();
   }
 
   setOpenBudgetSave(isOpen: boolean) {
+    console.log('setOpenBudgetSave called with:', isOpen); // Debug 1
+  
     if (this.userpreferences.budgetSet === true) {
-      this.userpreferences.budgetRange = this.selectedPriceRange;
-      this.isBudgetModalOpen = isOpen;
-    } else if (this.userpreferences.budgetSet === false) {
+      console.log('Budget is set.'); // Debug 2
+  
+      if (this.selectedPriceRange === 'custom') {
+        console.log('Custom range selected.'); // Debug 3
+  
+        if (this.userpreferences.budgetRange !== null && this.userpreferences.budgetRange !== undefined) {
+          console.log('Budget range is neither null nor undefined.'); // Debug 4
+  
+          const budgetString = this.userpreferences.budgetRange.toString();
+          const rCount = (budgetString.match(/R/g) || []).length;
+  
+          const isValid = /^[R]?[0-9\s]*$/.test(budgetString);
+  
+          if (!isValid) {
+            this.userpreferences.budgetRange = budgetString.replace(/[^0-9R\s]/g, '');
+          }
+  
+          if (rCount > 1) {
+            this.userpreferences.budgetRange = budgetString.replace(/R/g, '').trim();
+            this.userpreferences.budgetRange = 'R ' + this.userpreferences.budgetRange;
+          } else if (rCount === 0) {
+            this.userpreferences.budgetRange = 'R ' + budgetString;
+          }
+        }
+      } else {
+        this.userpreferences.budgetRange = this.selectedPriceRange;
+      }
+  
+      this.isBudgetModalOpen = false;
+      console.log('Attempting to close the modal.'); // Debug 5
+    } else {
       this.userpreferences.budgetRange = '';
-      this.isBudgetModalOpen = isOpen;
+      this.isBudgetModalOpen = false;
     }
+  
+    this.setInitialBudget();
     this.updateSettingsOnServer();
+    console.log('Function completed.'); // Debug 6
   }
+  
+  
 
+  validateBudgetInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+  
+    input.value = value.replace(/[^0-9.]/g, '');
+  }
+  
+  
   budgetRange_Toggle() {
     this.userpreferences.budgetSet = !this.userpreferences.budgetSet;
-    this.updateSettingsOnServer();
+    if (!this.userpreferences.budgetSet && this.selectedPriceRange === 'custom') {
+      this.userpreferences.budgetRange = '';
+    }
   }
+  
 
   async openPicker() {
     const picker = await this.pickerController.create({
@@ -394,7 +520,6 @@ export class ProfilePage implements OnInit {
             this.userpreferences.macroRatio.protein = value['protein'].value;
             this.userpreferences.macroRatio.carbs = value['carbs'].value;
             this.userpreferences.macroRatio.fat = value['fat'].value;
-            this.updateSettingsOnServer();
           },
         },
       ],
@@ -402,17 +527,19 @@ export class ProfilePage implements OnInit {
 
     await picker.present();
   }
-
   setOpenMacro(isOpen: boolean) {
     this.isMacroModalOpen = isOpen;
+    this.resetMacro();
   }
-
   setOpenMacroSave(isOpen: boolean) {
+
     if (this.userpreferences.macroSet === true) {
       if (!isOpen) {
-        this.displaying_Macroratio = this.getDisplayMacroratio(); // Update the display data when the modal is closed
+        this.displaying_Macroratio = this.getDisplayMacroratio();
       }
+     
       this.isMacroModalOpen = isOpen;
+      
     } else if (this.userpreferences.macroSet === false) {
       this.userpreferences.macroRatio.protein = 0;
       this.userpreferences.macroRatio.carbs = 0;
@@ -420,44 +547,43 @@ export class ProfilePage implements OnInit {
       this.displaying_Macroratio = '';
       this.isMacroModalOpen = isOpen;
     }
+    this.setInitialMacro();
     this.updateSettingsOnServer();
   }
-
   macro_Toggle() {
     this.userpreferences.macroSet = !this.userpreferences.macroSet;
-    this.updateSettingsOnServer();
   }
-
   setOpenAllergies(isOpen: boolean) {
     this.isAllergiesModalOpen = isOpen;
+    this.resetAllergies();
   }
-
   setOpenAllergiesSave(isOpen: boolean) {
     if (this.userpreferences.allergiesSet === true) {
       if (
-        this.allergens.seafood ||
-        this.allergens.nuts ||
-        this.allergens.eggs ||
-        this.allergens.soy
+        !this.allergens.seafood &&
+        !this.allergens.nuts &&
+        !this.allergens.eggs &&
+        !this.allergens.soy
       ) {
-        if (!isOpen) {
-          this.displayAllergies = this.getSelectedAllergens(); // Update the display data when the modal is closed
-        }
-        this.isAllergiesModalOpen = isOpen;
+        this.presentToast('Please select at least one allergen. if you have no allergies, please uncheck the allergies toggle.');
+        return;
       }
-    } else if (this.userpreferences.allergiesSet === false) {
+      if (!isOpen) {
+        this.displayAllergies = this.getSelectedAllergens(); // Update the display data when the modal is closed
+      }
+      this.isAllergiesModalOpen = isOpen;
+    } else {
       this.userpreferences.allergies = [];
       this.displayAllergies = '';
       this.isAllergiesModalOpen = isOpen;
     }
+    this.setInitialAllergies();
     this.updateSettingsOnServer();
   }
 
   allergies_Toggle() {
     this.userpreferences.allergiesSet = !this.userpreferences.allergiesSet;
-    this.updateSettingsOnServer();
   }
-
   getSelectedAllergens(): string {
     const selectedAllergens  = [];
     if (this.userpreferences.allergies == null) {
@@ -484,7 +610,6 @@ export class ProfilePage implements OnInit {
       selectedAllergens.push('Soy');
       this.userpreferences.allergies.push('Soy');
     }
-
     if (selectedAllergens.length === 1) {
       return selectedAllergens[0];
     } else if (selectedAllergens.length > 1) {
@@ -494,12 +619,10 @@ export class ProfilePage implements OnInit {
     }
   }
   }
-
-
   setOpenCooking(isOpen: boolean) {
+    this.resetCooking();
     this.isCookingModalOpen = isOpen;
   }
-
   setOpenCookingSave(isOpen: boolean) {
     if (this.userpreferences.cookingTimeSet === true) {
       this.isCookingModalOpen = isOpen;
@@ -507,46 +630,65 @@ export class ProfilePage implements OnInit {
       this.userpreferences.cookingTime = '';
       this.isCookingModalOpen = isOpen;
     }
+    this.setInitialCooking();
     this.updateSettingsOnServer();
   }
-
   cookingtime_Toggle() {
     this.userpreferences.cookingTimeSet = !this.userpreferences.cookingTimeSet;
-    this.updateSettingsOnServer();
   }
-
   setOpenBMI(isOpen: boolean) {
+    this.resetBMI();
     this.isBMIModalOpen = isOpen;
   }
-
   setOpenBMISave(isOpen: boolean) {
-     if (this.userpreferences.userHeight && this.userpreferences.userWeight) {
-      this.updateDisplayData(); // Update the display data when the modal is closed
+    if (this.userpreferences.bmiset === true && this.userpreferences.userHeight > 0 && this.userpreferences.userWeight > 0) {
+     if (this.userpreferences.userHeight > 0 && this.userpreferences.userWeight > 0) {
+      this.calculateBMI();
+      this.updateDisplayData();
+      this.updateSettingsOnServer();
       this.isBMIModalOpen = isOpen;
-
      }
-    
-
+    } 
      if (this.userpreferences.bmiset === false) {
-      this.userpreferences.userBMI = 0;
+      this.userpreferences.userHeight = 0;
+      this.userpreferences.userWeight = 0;
+      this.userpreferences.userBMI = '';
       this.isBMIModalOpen = isOpen;
-    }
+     }
+    this.setInitialBMI();
     this.updateSettingsOnServer();
-  }
+    
+}
 
   BMI_Toggle() {
     this.userpreferences.bmiset = !this.userpreferences.bmiset;
-    this.updateSettingsOnServer();
   }
 
   setOpenShopping(isOpen: boolean) {
+    if (isOpen === false) {
+      console.log("resetClose")
+      console.log(this.userpreferences.shoppingInterval)
+    this.resetShopping()
+    console.log(this.userpreferences.shoppingInterval)
     this.isShoppingModalOpen = isOpen;
+    }
+    else if (isOpen === true) {
+      console.log("resetOpen")
+      if (this.userpreferences.shoppingInterval.includes("days")) {
+        this.shoppingInterval = "other";
+        this.shoppingIntervalOtherValue = this.userpreferences.shoppingInterval.replace("days", "").trim();
+      }
+      console.log(this.userpreferences.shoppingInterval)
+     
+    this.isShoppingModalOpen = isOpen;
+    }
   }
 
   setOpenShoppingSave(isOpen: boolean) {
     if (this.userpreferences.shoppingIntervalSet === true) {
       if (this.shoppingInterval === 'other') {
-        this.userpreferences.shoppingInterval = this.shoppingIntervalOtherValue.toString();
+  
+        this.userpreferences.shoppingInterval = this.shoppingIntervalOtherValue.toString() + " days";
       } else if (
         this.shoppingInterval == 'weekly' ||
         this.shoppingInterval == 'biweekly' ||
@@ -559,13 +701,47 @@ export class ProfilePage implements OnInit {
       this.userpreferences.shoppingInterval = '';
       this.isShoppingModalOpen = isOpen;
     }
+    else if (this.userpreferences.shoppingIntervalSet === false && this.shoppingInterval === 'other') {
+      this.userpreferences.shoppingInterval = '';
+      this.isShoppingModalOpen = isOpen;
+    }
+    this.setInitialShopping();
     this.updateSettingsOnServer();
   }
 
   shoppingInterval_Toggle() {
     this.userpreferences.shoppingIntervalSet = !this.userpreferences.shoppingIntervalSet;
-    this.updateSettingsOnServer();
+    if (this.userpreferences.shoppingIntervalSet === false) {
+      this.shoppingInterval = '';
+    }
   }
+
+  // Function to determine what to display for Shopping Interval
+getDisplayShoppingInterval() {
+  if (this.shoppingInterval === 'other') {
+    if (this.shoppingIntervalOtherValue.toString().includes("days")) {
+    return this.shoppingIntervalOtherValue ;
+    }
+    else 
+    {
+      return this.shoppingIntervalOtherValue + " days";
+    }
+  } else {
+    return this.userpreferences.shoppingInterval;
+  }
+}
+
+getDisplayOtherShoppingInterval() {
+
+  if (this.shoppingIntervalOtherValue.toString().includes("days")) {
+    return this.shoppingIntervalOtherValue.toString().replace("days", "").trim();
+  } else {
+    return this.shoppingIntervalOtherValue;
+  }
+}
+
+
+
 
   // Function to update display data
   updateDisplayData() {
@@ -575,7 +751,7 @@ export class ProfilePage implements OnInit {
     this.userpreferences.shoppingIntervalSet = true;
     }
 
-    if (this.userpreferences.foodPreferences != null) {
+    if (this.userpreferences.foodPreferences != null && this.userpreferences.foodPreferences.length != 0) {
       this.preferenceToggle = true
       if (this.userpreferences.foodPreferences.includes('Vegetarian')) {
         this.preferences.vegetarian = true;
@@ -593,24 +769,28 @@ export class ProfilePage implements OnInit {
 
       }
 
-    if (this.userpreferences.calorieAmount != 0) {
-      this.calorieToggle = true
-      this.userpreferences.calorieSet = true;
-      }
-
-    if (this.userpreferences.budgetRange != '') {
-        this.budgetToggle = true
-        this.selectedPriceRange = this.userpreferences.budgetRange;
-        this.userpreferences.budgetSet = true;
-      }
-
-    if (this.userpreferences.macroRatio != null) {
-        this.macroToggle = true
+      console.log("budgetupdatedisplay");
+      console.log(this.userpreferences.budgetRange);
       
-        this.userpreferences.macroSet = true;
-      }   
+      // Convert budgetRange to a string to avoid type errors
+      const budgetString = this.userpreferences.budgetRange ? this.userpreferences.budgetRange.toString() : '';
+      
+      // Check for the presence of 'R' and whether it's a custom range
+      if (budgetString.includes("R") && ['low', 'moderate', 'high'].indexOf(budgetString.toLowerCase().replace('r ', '')) === -1) {
+        this.budgetToggle = true;
+        this.selectedPriceRange = "custom";
+        this.userpreferences.budgetSet = true;
+        console.log("budget- custom");
+      }
+      else {
+        this.budgetToggle = true;
+        this.selectedPriceRange = budgetString.replace('R ', '');
+        this.userpreferences.budgetSet = true;
+        console.log("budget- not custom");
+      }
 
-    if (this.userpreferences.allergies != null) {
+
+    if (this.userpreferences.allergies != null && this.userpreferences.allergies.length != 0) {
         this.allergiesToggle = true
         if (this.userpreferences.allergies.includes('Seafood')) {
           this.allergens.seafood = true;
@@ -645,8 +825,7 @@ export class ProfilePage implements OnInit {
 
   // Function to get the displaying macro ratio
   getDisplayMacroratio(): string {
-    console.log(this.userpreferences.macroRatio)
-    if(this.userpreferences && this.userpreferences.macroRatio){
+    if(this.userpreferences.macroSet && this.userpreferences.macroRatio && this.userpreferences.macroRatio.protein > 0 && this.userpreferences.macroRatio.carbs > 0 && this.userpreferences.macroRatio.fat > 0){
         return (
             this.userpreferences.macroRatio.protein +
             ' : ' +
@@ -655,12 +834,202 @@ export class ProfilePage implements OnInit {
             this.userpreferences.macroRatio.fat
         );
     } else {
-        return "Not available";
+        return "";
     }
 }
 
 calculateBMI() {
-    this.userpreferences.userBMI = Math.round(this.userpreferences.userHeight /
-        this.userpreferences.userWeight);
+    this.userpreferences.userBMI = Math.round(this.userpreferences.userWeight /
+        this.userpreferences.userHeight*this.userpreferences.userHeight);
  }
+
+
+ setInitialShopping()
+ {
+    this.initialshoppinginterval = this.userpreferences.shoppingInterval;
+    this.initialshoppingintervalToggle = this.userpreferences.shoppingIntervalSet;
+ }
+
+ setIntialPreference() {
+  console.log('Setting Initial Preferences');
+  this.initialpreference = this.userpreferences.foodPreferences;
+  this.initialpreferenceToggle = this.userpreferences.foodPreferenceSet;
+  this.initialpreferenceVegetarian = this.preferences.vegetarian;
+  this.initialpreferenceVegan = this.preferences.vegan;
+  this.initialpreferenceGlutenIntolerant = this.preferences.glutenIntolerant;
+  this.initialpreferenceLactoseIntolerant = this.preferences.lactoseIntolerant;
 }
+
+  setInitialCalorie()
+  {
+    this.initialcalorie = this.userpreferences.calorieAmount;
+    this.initialcalorieToggle = this.userpreferences.calorieSet;
+  }
+
+  setInitialBudget()
+  {
+    this.initialbudget = this.userpreferences.budgetRange;
+    this.initialbudgetToggle = this.userpreferences.budgetSet;
+  }
+
+  setInitialMacro()
+  {
+    this.initialmacro = this.userpreferences.macroRatio;
+    this.initialmacroToggle = this.userpreferences.macroSet;
+  }
+
+  setInitialAllergies()
+  {
+    this.initialallergiesSeafood = this.allergens.seafood;
+    this.initialallergiesNuts = this.allergens.nuts;
+    this.initialallergiesEggs = this.allergens.eggs;
+    this.initialallergiesSoy = this.allergens.soy;
+    this.initialallergies = this.userpreferences.allergies;
+    this.initialallergiesToggle = this.userpreferences.allergiesSet;
+  }
+
+  setInitialCooking()
+  {
+    this.initialcooking = this.userpreferences.cookingTime;
+    this.initialcookingToggle = this.userpreferences.cookingTimeSet;
+  }
+
+  setInitialBMI()
+  {
+    this.initialBMI = this.userpreferences.userBMI;
+    this.initialBMIToggle = this.userpreferences.bmiset;
+  }
+
+
+ resetShopping()
+{
+  if (this.userpreferences.shoppingInterval.includes("days")) {
+     const temp = this.userpreferences.shoppingInterval;
+    this.userpreferences.shoppingInterval = "other";  
+    this.shoppingIntervalOtherValue = temp;
+  }
+
+ 
+  this.userpreferences.shoppingInterval = this.initialshoppinginterval;
+  this.shoppingintervalToggle = this.initialshoppingintervalToggle;
+  this.userpreferences.shoppingIntervalSet = this.initialshoppingintervalToggle;
+  this.shoppingInterval = this.initialshoppinginterval;
+}
+
+resetPreference() {
+  console.log('Resetting Preferences');
+  // Reset both userpreferences and preferences objects
+  this.preferences.vegetarian = this.initialpreferenceVegetarian;
+  this.preferences.vegan = this.initialpreferenceVegan;
+  this.preferences.glutenIntolerant = this.initialpreferenceGlutenIntolerant;
+  this.preferences.lactoseIntolerant = this.initialpreferenceLactoseIntolerant;
+
+  this.userpreferences.foodPreferences = this.initialpreference;
+  this.userpreferences.foodPreferenceSet = this.initialpreferenceToggle;
+  this.preferenceToggle = this.initialpreferenceToggle;
+  this.displayPreferences = this.initialpreference;
+}
+
+resetCalorie()
+{
+  this.userpreferences.calorieAmount = this.initialcalorie;
+  this.calorieToggle = this.initialcalorieToggle;
+  this.userpreferences.calorieSet = this.initialcalorieToggle;
+}
+
+resetBudget()
+{
+  console.log("resetbudget")
+  if (this.initialbudget.includes("R") && this.initialbudgetToggle === true) {
+   this.userpreferences.budgetRange = this.initialbudget;
+   this.selectedPriceRange = "custom";
+   this.userpreferences.budgetSet = this.initialbudgetToggle;
+   this.budgetToggle = this.initialbudgetToggle;
+  }
+  else if (!this.initialbudget.includes("R") && this.initialbudgetToggle === true)
+  {
+    this.userpreferences.budgetRange = this.initialbudget;
+    this.selectedPriceRange = this.initialbudget;
+    this.userpreferences.budgetSet = this.initialbudgetToggle;
+  this.budgetToggle = this.initialbudgetToggle;
+  }
+  
+}
+
+resetMacro()
+{
+  this.userpreferences.macroRatio = this.initialmacro;
+  this.userpreferences.macroSet = this.initialmacroToggle;
+  this.macroToggle = this.initialmacroToggle;
+  this.displaying_Macroratio = this.getDisplayMacroratio();
+}
+
+resetAllergies()
+{
+  this.allergens.seafood = this.initialallergiesSeafood;
+  this.allergens.nuts = this.initialallergiesNuts;
+  this.allergens.eggs = this.initialallergiesEggs;
+  this.allergens.soy = this.initialallergiesSoy;
+  this.userpreferences.allergies = this.initialallergies;
+  this.userpreferences.allergiesSet = this.initialallergiesToggle;
+  this.allergiesToggle = this.initialallergiesToggle;
+  this.displayAllergies = this.initialallergies;
+}
+
+resetCooking()
+{
+  this.userpreferences.cookingTime = this.initialcooking;
+  this.userpreferences.cookingTimeSet = this.initialcookingToggle;
+  this.cookingToggle = this.initialcookingToggle;
+}
+
+resetBMI()
+{
+  this.userpreferences.userBMI = this.initialBMI;
+  this.userpreferences.bmiset = this.initialBMIToggle;
+  this.BMIToggle = this.initialBMIToggle;
+}
+
+
+
+disabledConfirmShopping(): boolean {
+  if (this.userpreferences.shoppingIntervalSet) {
+    return !this.shoppingInterval; 
+  }
+  return false; 
+}
+
+disabledConfirmPreference(): boolean {
+  if (this.userpreferences.foodPreferenceSet) {
+    return !this.displayPreferences; 
+  }
+  return false; 
+}
+
+disabledConfirmBudget(): boolean {
+
+
+  if (this.userpreferences.budgetSet) {
+    return !this.selectedPriceRange; 
+  }
+  return false; 
+}
+
+disabledCalorieCookingTime(): boolean {
+  if (this.userpreferences.cookingTimeSet) {
+    return !this.userpreferences.cookingTime; 
+  }
+  return false; 
+}
+
+async presentToast(message: string) {
+  const toast = await this.toastController.create({
+    message: message,
+    duration: 2000
+  });
+  toast.present();
+}
+
+
+}
+
