@@ -128,7 +128,7 @@ public class MealManagementController {
 
         logService.logMeal(token, request.getMeal(), "regenerate");
         try {
-            recommendationService.getRecommendedMeal(request.getMeal(),token);
+            recommendationService.getRecommendedMeal(request.getMeal().getType(),token);
         } catch (Exception e) {
             System.out.println("Recommendation Error");
         }
