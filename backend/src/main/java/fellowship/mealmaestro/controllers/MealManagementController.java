@@ -143,19 +143,16 @@ public class MealManagementController {
             token = token.substring(7);
 
             // Try find an appropriate meal in the database
-            replacementMeal = mealDatabaseService.findMealTypeForUser(request.getMeal().getType(),token);
+            replacementMeal = mealDatabaseService.findMealTypeForUser(request.getMeal().getType(), token);
         }
-        if(recoMeal != null)
-        {
-            returnedMeal = recoMeal;
-        } else
-            if (replacementMeal.isPresent()) {
-                returnedMeal = mealDatabaseService.replaceMeal(request, replacementMeal.get(), token);
-            } else {
-                // If there is no replacement, generate a new meal
-                MealModel newMeal = mealManagementService.generateMeal(request.getMeal().getType(), token);
-                returnedMeal = mealDatabaseService.replaceMeal(request, newMeal, token);
-            }
+
+        if (replacementMeal.isPresent()) {
+            returnedMeal = mealDatabaseService.replaceMeal(request, replacementMeal.get(), token);
+        } else {
+            // If there is no replacement, generate a new meal
+            MealModel newMeal = mealManagementService.generateMeal(request.getMeal().getType(), token);
+            returnedMeal = mealDatabaseService.replaceMeal(request, newMeal, token);
+        }
 
         return ResponseEntity.ok(returnedMeal);
     }
