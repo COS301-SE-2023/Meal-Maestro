@@ -11,7 +11,6 @@ import fellowship.mealmaestro.models.neo4j.relationships.HasLogEntry;
 import fellowship.mealmaestro.repositories.neo4j.UserRepository;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
