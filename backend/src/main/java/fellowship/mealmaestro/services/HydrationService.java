@@ -57,7 +57,7 @@ public class HydrationService {
     // helper functions to be done
     // trim
     private static String trimCharacters(String input) {
-        String regex = "[0-9\\s]+";
+        String regex = "\\d+(?:/\\d+)?\\s*(?:tablespoon|tablespoons|teaspoon|teaspoons|cup|cups|ounce|ounces|gram|grams|milliliter|milliliters|liter|liters|pound|pounds|kg|kilo|kilogram|kilograms|gallon|gallons)?";
         String result = input.replaceAll(regex, "");
         return result.toLowerCase();
     }
