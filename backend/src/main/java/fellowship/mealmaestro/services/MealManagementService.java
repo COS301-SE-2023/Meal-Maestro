@@ -2,8 +2,6 @@ package fellowship.mealmaestro.services;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,17 +59,17 @@ public class MealManagementService {
         }
     }
 
-    public MealModel generateMealFromIngredients(String mealType, List<String> AvailableIngredients, String token) throws IOException {
+    public MealModel generateMealFromIngredients(String mealType, String availableIngredients, String token) throws IOException {
         MealModel defaultMeal = new MealModel("Bread", "1. Toast the bread", "Delicious Bread",
                 "https://images.unsplash.com/photo-1598373182133-52452f7691ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
                 "Bread", "5 minutes");
         defaultMeal.setType("breakfast");
         try {
-            JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponseFromIngredients(mealType, AvailableIngredients, token));
+            JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponseFromIngredients(mealType, availableIngredients, token));
             int i = 0;
             if (!validate(mealJson)) {
                 for (i = 0; i < 4; i++) {
-                    mealJson = objectMapper.readTree(openaiApiService.fetchMealResponseFromIngredients(mealType, AvailableIngredients,token));
+                    mealJson = objectMapper.readTree(openaiApiService.fetchMealResponseFromIngredients(mealType, availableIngredients,token));
                     if (validate(mealJson))
                         break;
                 }
