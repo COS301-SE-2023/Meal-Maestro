@@ -24,15 +24,21 @@ public class RecommendationService {
 
     private final Double MIN_VALUE = -0.01;
 
-    public MealModel getRecommendedMeal(String token) throws Exception {
-        MealModel recMealModel = new MealModel();
+    public MealModel getRecommendedMeal(MealModel meal, String token) throws Exception {
+        MealModel recMealModel = null;
         // get best items that are available in pantry
         List<String> bestAvailableIngredients = findCommonItems(userService.getUser(token).getPantry().getNameList(), userService.getUser(token).getView().getPositiveNScores(MIN_VALUE));
         System.out.println("Valid Ingredients" + bestAvailableIngredients);
+        // protection
+        if(bestAvailableIngredients == null || bestAvailableIngredients.isEmpty()){
+            throw new IllegalArgumentException("no valid ingredients");
+        }
         // use list to find db meal
 
         // query gpt
+        if(recMealModel == null){
 
+        }
         return recMealModel;
     }
 
