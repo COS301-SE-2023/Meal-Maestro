@@ -29,8 +29,12 @@ public class RecommendationService {
             throw new IllegalArgumentException("No valid ingredients in pantry, Could be empty or no matches");
         }
         // use list to find db meal
-
+        java.util.Optional<MealModel> recMealFromDatabase = mealDatabaseService.findMealUserLikes(mealType, token, String.join(", ", bestAvailableIngredients));
         // query gpt
+        if(recMealFromDatabase.isPresent())
+        {
+            return recMealFromDatabase.get();
+        }
         if(recMealModel == null){
             recMealModel = mealManagementService.generateMealFromIngredients(mealType, token, String.join(", ", bestAvailableIngredients));
         }
