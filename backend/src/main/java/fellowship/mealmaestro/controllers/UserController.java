@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import fellowship.mealmaestro.config.exceptions.UserNotFoundException;
 import fellowship.mealmaestro.models.UpdateUserRequestModel;
 import fellowship.mealmaestro.models.auth.AuthenticationRequestModel;
 import fellowship.mealmaestro.models.auth.AuthenticationResponseModel;
@@ -32,7 +33,7 @@ public class UserController {
 
     @PostMapping("/findByEmail")
     public UserModel findByEmail(@RequestBody UserModel user) {
-        return userService.findByEmail(user.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
+        return userService.findByEmail(user.getEmail()).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     @PostMapping("/register")
