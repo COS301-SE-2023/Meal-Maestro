@@ -151,6 +151,27 @@ public class MealDatabaseService {
 
         return Optional.empty();
     }
+    
+    public Optional<MealModel> findMealUserLikes(String type, String token, String likedAndAvailableIngredients) {
+        String email = jwtService.extractUserEmail(token);
+
+        UserModel user = userRepository.findByEmail(email).get();
+        List<MealModel> randomMeals = mealRepository.get100RandomMeals();
+
+        // if meal with meal type is present in randomMeals, return it
+        for (MealModel meal : randomMeals) {
+            if (meal.getType().equals(type)) {
+                if (canMakeMeal(user.getPantry().getFoods(), meal.getIngredients())) 
+                //% matched
+                    if(mealPercentageMatched(likedAndAvailableIngredients, meal.getIngredients()))
+                    {
+                        return Optional.of(meal);
+                    }
+            }
+        }
+
+        return Optional.empty();
+    }
 
     public boolean canMakeMeal(List<FoodModel> pantryItems, String ingredients) {
         String[] ingredientsArray = ingredients.split(",");
@@ -167,6 +188,28 @@ public class MealDatabaseService {
             }
         }
         return true;
+    }
+
+    private final Double PERCENTAGE_TO_MATCH = 0.4;
+
+    public boolean mealPercentageMatched(String likedIngredients, String mealIngredients) {
+        String[] likedIngredientsArray = likedIngredients.split(",");
+        String[] mealIngredientsArray = mealIngredients.split(",");
+        int totalLikedIngredients = likedIngredientsArray.length;
+        int matchingIngredientsCount = 0;
+
+        for (String likedIngredient : likedIngredientsArray) {
+            for (String mealIngredient : mealIngredientsArray) {
+                if (mealIngredient.trim().equalsIgnoreCase(likedIngredient.trim())) {
+                    matchingIngredientsCount++;
+                    break;
+                }
+            }
+        }
+
+        double percentageMatched = (double) matchingIngredientsCount / totalLikedIngredients;
+
+        return percentageMatched >= PERCENTAGE_TO_MATCH;
     }
 
     @Transactional
