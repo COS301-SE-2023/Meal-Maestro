@@ -35,7 +35,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 })
 
 export class ProfilePage implements OnInit {
-  @ViewChild('swiperContainer') swiperContainer!: ElementRef;
+  //@ViewChild('swiperContainer') swiperContainer!: ElementRef;
 
   constructor(
     private router: Router,
@@ -121,7 +121,7 @@ export class ProfilePage implements OnInit {
   cookingToggle: boolean = false;
   BMIToggle: boolean = false;
 
-  ngOnInit() : void {
+  ngOnInit() {
 
   //   const swiper = new Swiper(this.swiperContainer.nativeElement, {
   //     // Configure Swiper options here
