@@ -9,7 +9,6 @@ describe('TutorialComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TutorialComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
