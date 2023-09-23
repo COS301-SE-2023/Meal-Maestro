@@ -22,6 +22,7 @@ import fellowship.mealmaestro.models.neo4j.MealModel;
 import fellowship.mealmaestro.services.LogService;
 import fellowship.mealmaestro.services.MealDatabaseService;
 import fellowship.mealmaestro.services.MealManagementService;
+import fellowship.mealmaestro.services.RecommendationService;
 import jakarta.validation.Valid;
 
 @RestController
@@ -32,6 +33,8 @@ public class MealManagementController {
     private MealDatabaseService mealDatabaseService;
     @Autowired
     private LogService logService;
+    @Autowired
+    private RecommendationService recommendationService;
 
     @PostMapping("/getMealPlanForDay")
     public ResponseEntity<List<MealModel>> dailyMeals(@Valid @RequestBody DateModel request,
@@ -124,9 +127,14 @@ public class MealManagementController {
             throws JsonMappingException, JsonProcessingException {
 
         logService.logMeal(token, request.getMeal(), "regenerate");
-
+        try {
+            recommendationService.getRecommendedMeal(token);
+        } catch (Exception e) {
+            System.out.println("Recommendation Error");
+        }
+        
         token = token.substring(7);
-
+        
         // Try find an appropriate meal in the database
         Optional<MealModel> replacementMeal = mealDatabaseService.findMealTypeForUser(request.getMeal().getType(),
                 token);

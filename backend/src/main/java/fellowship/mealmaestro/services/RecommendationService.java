@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import fellowship.mealmaestro.models.neo4j.FoodModel;
 import fellowship.mealmaestro.models.neo4j.MealModel;
@@ -11,6 +12,7 @@ import fellowship.mealmaestro.models.neo4j.PantryModel;
 import fellowship.mealmaestro.models.neo4j.ViewModel;
 import fellowship.mealmaestro.repositories.neo4j.UserRepository;
 
+@Service
 public class RecommendationService {
     @Autowired
     private UserService userService;
