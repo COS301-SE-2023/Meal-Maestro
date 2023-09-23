@@ -42,11 +42,11 @@ public class RecommendationService {
 
         for (String item1 : list1) {
             for (String item2 : list2) {
-                if (item2.contains(item1)) {
+                if (item2.toLowerCase().contains(item1.toLowerCase())) {
                     commonItems.add(item1);
                     break;
                 }
-                if (item1.contains(item2)) {
+                if (item1.toLowerCase().contains(item2.toLowerCase())) {
                     commonItems.add(item2);
                     break;
                 }
