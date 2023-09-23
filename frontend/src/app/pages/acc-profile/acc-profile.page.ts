@@ -5,6 +5,8 @@ import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../services/services';
 import { UserI } from '../../models/user.model';
+import { ModalController } from '@ionic/angular';
+import { TutorialComponent } from '../../components/tutorial/tutorial.component';
 
 @Component({
   selector: 'app-acc-profile',
@@ -16,15 +18,25 @@ import { UserI } from '../../models/user.model';
 export class AccProfilePage implements OnInit {
 
   user: UserI;
+  hovered: boolean = false;
+
 
   
-  constructor(private router: Router, private auth: AuthenticationService) {
+  constructor(private router: Router, private auth: AuthenticationService,private modalController: ModalController) {
     this.user = {
       username: '',
       email: '',
       password: ''
     };
    }
+
+   async openModal() {
+      const modal = await this.modalController.create({
+      component: TutorialComponent,
+    });
+
+    await modal.present();
+  }
   
   ngOnInit() {
     this.auth.getUser().subscribe({
@@ -49,6 +61,14 @@ export class AccProfilePage implements OnInit {
 
   logout() {
     this.auth.logout();
+  }
+
+  showTooltip() {
+    this.hovered = true;
+  }
+
+  hideTooltip() {
+    this.hovered = false;
   }
 
 }

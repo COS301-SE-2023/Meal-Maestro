@@ -5,6 +5,8 @@ import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthenticationService, ErrorHandlerService } from '../../services/services';
 import { UserI } from '../../models/interfaces';
+import { TutorialComponent } from '../../components/tutorial/tutorial.component';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-signup',
@@ -22,7 +24,7 @@ export class SignupPage {
     email: '',
   }
 
-  constructor(private router: Router, private errorHandlerService: ErrorHandlerService, private auth: AuthenticationService ) { }
+  constructor(private router: Router, private errorHandlerService: ErrorHandlerService, private auth: AuthenticationService,private modalController: ModalController ) { }
 
   async signup(form: any) {
     if (form.initial !== form.verify) {
@@ -55,6 +57,13 @@ export class SignupPage {
       }
     });
   }
+  async openModal() {
+    const modal = await this.modalController.create({
+    component: TutorialComponent,
+  });
+
+  await modal.present();
+}
 
   goToLogin() {
     this.router.navigate(['../']);
