@@ -127,26 +127,35 @@ public class MealManagementController {
             throws JsonMappingException, JsonProcessingException {
 
         logService.logMeal(token, request.getMeal(), "regenerate");
+        MealModel recoMeal = null;
         try {
-            recommendationService.getRecommendedMeal(request.getMeal().getType(),token);
+            recoMeal = recommendationService.getRecommendedMeal(request.getMeal().getType(), token);
         } catch (Exception e) {
-            System.out.println("Recommendation Error");
+            System.out.println(e);
         }
-        
-        token = token.substring(7);
-        
-        // Try find an appropriate meal in the database
-        Optional<MealModel> replacementMeal = mealDatabaseService.findMealTypeForUser(request.getMeal().getType(),
-                token);
+
+        Optional<MealModel> replacementMeal = null;
         MealModel returnedMeal = null;
 
-        if (replacementMeal.isPresent()) {
-            returnedMeal = mealDatabaseService.replaceMeal(request, replacementMeal.get(), token);
+        if (recoMeal != null) {
+            replacementMeal = Optional.ofNullable(recoMeal);
         } else {
-            // If there is no replacement, generate a new meal
-            MealModel newMeal = mealManagementService.generateMeal(request.getMeal().getType(), token);
-            returnedMeal = mealDatabaseService.replaceMeal(request, newMeal, token);
+            token = token.substring(7);
+
+            // Try find an appropriate meal in the database
+            replacementMeal = mealDatabaseService.findMealTypeForUser(request.getMeal().getType(),token);
         }
+        if(recoMeal != null)
+        {
+            returnedMeal = recoMeal;
+        } else
+            if (replacementMeal.isPresent()) {
+                returnedMeal = mealDatabaseService.replaceMeal(request, replacementMeal.get(), token);
+            } else {
+                // If there is no replacement, generate a new meal
+                MealModel newMeal = mealManagementService.generateMeal(request.getMeal().getType(), token);
+                returnedMeal = mealDatabaseService.replaceMeal(request, newMeal, token);
+            }
 
         return ResponseEntity.ok(returnedMeal);
     }
