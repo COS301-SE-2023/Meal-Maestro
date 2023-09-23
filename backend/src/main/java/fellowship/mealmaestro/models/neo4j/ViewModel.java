@@ -9,6 +9,8 @@ import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 
+import kotlin.coroutines.ContinuationInterceptor.Key;
+
 @Node("View")
 public class ViewModel {
 
@@ -116,5 +118,19 @@ public class ViewModel {
         return hashMap;
     }
 
-   
+    public List<String> getPositiveNScores(Double minNValue) throws Exception{
+        List<String>Keys = new ArrayList<>();
+        if(this.Keys != null && this.Keys.length > 0){
+            HashMap<String, Double> nScoreMap = arraysToHashMap(this.Keys, this.nScoreValues);
+
+            for (Map.Entry<String, Double> entry : nScoreMap.entrySet()) {
+                if (entry.getValue() >= minNValue) {
+                    Keys.add(entry.getKey());
+                }
+            }
+
+            return Keys;
+        }
+        else return null;
+    }
 }
