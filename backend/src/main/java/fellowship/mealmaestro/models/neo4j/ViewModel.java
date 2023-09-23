@@ -1,6 +1,9 @@
 package fellowship.mealmaestro.models.neo4j;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
@@ -13,9 +16,9 @@ public class ViewModel {
     @GeneratedValue
     private Long id;
 
-    String[] Keys;
-    Double[] scoreValues;
-    Double[] nScoreValues;
+    private String[] Keys;
+    private List<Double> scoreValues;
+    private List<Double> nScoreValues;
    
     private Double max =0.0;
     private Double min =0.0;
@@ -88,22 +91,27 @@ public class ViewModel {
         nScoreValues = hashMapValuesToArray(nScoreMap);
     }
 
-    public static Double[] hashMapValuesToArray(HashMap<String, Double> hashMap) {
-        return hashMap.values().toArray(new Double[0]);
+    public static List<Double> hashMapValuesToArray(HashMap<String, Double> hashMap) {
+        List<Double> listFromHashMap = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : hashMap.entrySet()) {
+            Double value = entry.getValue();
+            listFromHashMap.add(value);
+        }
+        return listFromHashMap;
     }
 
     public static String[] hashMapKeysToArray(HashMap<String, Double> hashMap) {
         return hashMap.keySet().toArray(new String[0]);
     }
 
-    public static HashMap<String, Double> arraysToHashMap(String[] keys, Double[] values) {
-        if (keys.length != values.length) {
+    public static HashMap<String, Double> arraysToHashMap(String[] keys, List<Double> nScoreValues2) {
+        if (keys.length != nScoreValues2.size()) {
             throw new IllegalArgumentException("Keys and values arrays must have the same length.");
         }
 
         HashMap<String, Double> hashMap = new HashMap<>();
         for (int i = 0; i < keys.length; i++) {
-            hashMap.put(keys[i], values[i]);
+            hashMap.put(keys[i], nScoreValues2.get(i));
         }
         return hashMap;
     }
