@@ -14,8 +14,7 @@ import fellowship.mealmaestro.repositories.neo4j.UserRepository;
 public class RecommendationService {
     @Autowired
     private UserService userService;
-    @Autowired
-    private PantryService pantryService;
+
     @Autowired
     private MealDatabaseService mealDatabaseService;
     @Autowired
@@ -25,12 +24,9 @@ public class RecommendationService {
 
     public MealModel getRecommendedMeal(String token) throws Exception {
         MealModel recMealModel = new MealModel();
-        // get view and pantry
-        List<String> pantryItems = userService.getUser(token).getPantry().getNameList();
-        List<String> validIngredients = userService.getUser(token).getView().getPositiveNScores(MIN_VALUE);
-
-        // compare view and pantry
-
+        // get best items that are available in pantry
+        List<String> bestAvailableIngredients = findCommonItems(userService.getUser(token).getPantry().getNameList(), userService.getUser(token).getView().getPositiveNScores(MIN_VALUE));
+        System.out.println("Valid Ingredients" + bestAvailableIngredients);
         // use list to find db meal
 
         // query gpt
@@ -38,7 +34,7 @@ public class RecommendationService {
         return recMealModel;
     }
 
-    public static List<String> findCommonItems(List<String> list1, List<String> list2) {
+    private static List<String> findCommonItems(List<String> list1, List<String> list2) {
         List<String> commonItems = new ArrayList<>();
 
         for (String item1 : list1) {
