@@ -10,6 +10,7 @@ import fellowship.mealmaestro.models.neo4j.ViewModel;
 import fellowship.mealmaestro.models.neo4j.relationships.HasLogEntry;
 import fellowship.mealmaestro.repositories.neo4j.UserRepository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -57,16 +58,14 @@ public class HydrationService {
     // helper functions to be done
     // trim
     private static String trimCharacters(String input) {
-        String regex = "\\d+(?:/\\d+)?\\s*(?:tablespoon|tablespoons|teaspoon|teaspoons|cup|cups|ounce|ounces|gram|grams|milliliter|milliliters|liter|liters|pound|pounds|kg|kilo|kilogram|kilograms|gallon|gallons)?";
+        String regex = "\\d+(?:/\\d+)?(?:\\s*(?:tablespoon|tablespoons|teaspoon|teaspoons|cup|cups|ounce|ounces|gram|grams|milliliter|milliliters|liter|liters|pound|pounds|kg|kilo|kilogram|kilograms|gallon|gallons))?";
         String result = input.replaceAll(regex, "");
         return result.toLowerCase();
     }
 
     // convert
     private static List<String> parseCommaSeparatedString(String input) {
-        String[] elements = input.split(",");
-        
-        return Arrays.asList(elements);
+        return Arrays.asList(input.split(","));
     }
 
     // scores
