@@ -18,20 +18,20 @@ import java.util.List;
 public class HydrationService {
     @Autowired
     private UserRepository userRepository;
+
     @Transactional
-    @Scheduled(fixedRate =  1 * 60 * 1000)
+    @Scheduled(fixedRate = 1 * 60 * 1000)
     public void pollLogs() {
         List<UserModel> userList = userRepository.findUsersWithNewLogEntries();
         // per user
         for (UserModel nuser : userList) {
             UserModel user = userRepository.findByEmail(nuser.getEmail()).get();
             ViewModel viewModel = user.getView();
-            if(viewModel == null)
-            {
+            if (viewModel == null) {
                 viewModel = new ViewModel();
             }
-            for (int i = 0; i < user.getEntries().size();i++) {
-                 HasLogEntry entry = user.getEntries().remove(i);
+            for (int i = 0; i < user.getEntries().size(); i++) {
+                HasLogEntry entry = user.getEntries().remove(i);
                 String ingredientString = entry.getMeal().getIngredients();
                 // trim ingredient list
                 ingredientString = trimCharacters(ingredientString);
@@ -65,7 +65,15 @@ public class HydrationService {
 
     // convert
     private static List<String> parseCommaSeparatedString(String input) {
-        return Arrays.asList(input.split(","));
+        // return Arrays.asList(input.split(","));
+        String[] elements = input.split(",");
+
+        List<String> result = new ArrayList<>();
+        for (String element : elements) {
+            result.add(element.trim());
+        }
+
+        return result;
     }
 
     // scores
@@ -73,7 +81,7 @@ public class HydrationService {
         switch (entryType.toLowerCase()) {
             case "regenerated":
                 return -0.2;
-                
+
             case "like":
                 return 1.0;
 
