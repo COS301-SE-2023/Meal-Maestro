@@ -6,17 +6,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import fellowship.mealmaestro.models.neo4j.FoodModel;
 import fellowship.mealmaestro.models.neo4j.MealModel;
-import fellowship.mealmaestro.models.neo4j.PantryModel;
-import fellowship.mealmaestro.models.neo4j.ViewModel;
-import fellowship.mealmaestro.repositories.neo4j.UserRepository;
 
 @Service
 public class RecommendationService {
     @Autowired
     private UserService userService;
-
     @Autowired
     private MealDatabaseService mealDatabaseService;
     @Autowired
@@ -24,20 +19,20 @@ public class RecommendationService {
 
     private final Double MIN_VALUE = -0.01;
 
-    public MealModel getRecommendedMeal(MealModel meal, String token) throws Exception {
+    public MealModel getRecommendedMeal(String mealType, String token) throws Exception {
         MealModel recMealModel = null;
         // get best items that are available in pantry
         List<String> bestAvailableIngredients = findCommonItems(userService.getUser(token).getPantry().getNameList(), userService.getUser(token).getView().getPositiveNScores(MIN_VALUE));
         System.out.println("Valid Ingredients" + bestAvailableIngredients);
         // protection
         if(bestAvailableIngredients == null || bestAvailableIngredients.isEmpty()){
-            throw new IllegalArgumentException("no valid ingredients");
+            throw new IllegalArgumentException("No valid ingredients in pantry, Could be empty or no matches");
         }
         // use list to find db meal
 
         // query gpt
         if(recMealModel == null){
-
+            recMealModel = mealManagementService.generateMealFromIngredients(mealType, token, String.join(", ", bestAvailableIngredients));
         }
         return recMealModel;
     }
