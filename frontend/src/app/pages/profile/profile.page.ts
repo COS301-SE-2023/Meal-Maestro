@@ -12,19 +12,6 @@ import { AuthenticationService } from '../../services/services';
 
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
-
-// import {Swiper} from 'swiper';
-// import { Navigation, Pagination } from 'swiper/modules';
-//import type { SwiperModule } from '../shared.d.ts';
-
-//import 'swiper/css';
-//import 'swipeination/css/navigation';
-//import 'swiper/css/pagination';
-//import 'swiper/swiper-bundle.css';
-
-
-// Swiper.use([Navigation,Pagination]);
-
 @Component({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'app-profile',
@@ -35,8 +22,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 })
 
 export class ProfilePage implements OnInit {
-  //@ViewChild('swiperContainer') swiperContainer!: ElementRef;
-
+  
   constructor(
     private router: Router,
     private pickerController: PickerController,
