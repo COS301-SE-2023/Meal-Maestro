@@ -53,6 +53,19 @@ public class WoolworthsScraper {
         return links;
     }
 
+    public void cleanUpToVisitLinks() {
+        System.out.println("Cleaning up ToVisitLink collection");
+        List<ToVisitLinkModel> toVisitLinks = toVisitLinkRepository.findAll();
+        for (ToVisitLinkModel link : toVisitLinks) {
+            if (!link.getLink().contains("Food")) {
+                toVisitLinkRepository.deleteById(link.getLink());
+            }
+        }
+    }
+
+    
+    
+
     public void populateInternalLinksFromSitemaps() {
         // List of sitemaps to fetch internal URLs from
         List<String> sitemapUrls = Arrays.asList(
@@ -67,18 +80,19 @@ public class WoolworthsScraper {
                 Document sitemap = Jsoup.connect(sitemapUrl).get();
                 Elements urls = sitemap.select("loc");
     
-                // Save each internal URL to ToVisitLink
+                // Save each internal URL to ToVisitLink if it contains the word 'Food'
                 for (Element urlElement : urls) {
                     String internalUrl = urlElement.text();
-                    ToVisitLinkModel toVisitLinkModel = new ToVisitLinkModel(internalUrl, "Woolworths");
-                    toVisitLinkRepository.save(toVisitLinkModel);
+                    if (internalUrl.contains("Food")) {  // Filtering condition
+                        ToVisitLinkModel toVisitLinkModel = new ToVisitLinkModel(internalUrl, "Woolworths");
+                        toVisitLinkRepository.save(toVisitLinkModel);
+                    }
                 }
             } catch (IOException e) {
                 logger.error("Error fetching sitemap: ", e);
             }
         }
     }
-    
     
 
     // Initiator method for scraping
@@ -93,59 +107,75 @@ public class WoolworthsScraper {
             logger.error("Error fetching sitemap: ", e);
         }
     }
+// Existing scraping method modified to accept a URL
+public void scrapeWoolworths(String categoryUrl) {
+    logger.info("Woolworths scraping started.");
 
-    // Existing scraping method modified to accept a URL
-    public void scrapeWoolworths(String categoryUrl) {
-        logger.info("Woolworths scraping started.");
-    
-        Optional<VisitedLinkModel> visitedLinkModelOptional = visitedLinkRepository.findById(categoryUrl);
-    
-        if (visitedLinkModelOptional.isPresent()) {
-            logger.info("Skipping " + categoryUrl + ", already visited...");
-            return;
-        }
-    
-        try {
-            Document categoryPage = Jsoup.connect(categoryUrl).get();
-            Elements productCards = categoryPage.select(".product-card");
-    
-            for (Element card : productCards) {
-                FoodModelM food = new FoodModelM();
-    
-                String name = card.select(".product-card__name a").text();
-                food.setName(name);
-    
-                String price = card.select(".price").text();
-                if (!price.isEmpty()) {
-                    food.setPrice(Double.parseDouble(price.replaceAll("[^\\d.]", "")));
-                } else {
-                    food.setPrice(0.0); // Or some default value, or log an error
-                }
-    
-                String productLink = card.select(".product--view").attr("abs:href");
-                
-                Document productPage = Jsoup.connect(productLink).get();
-                String barcode = productPage.select("input[name=catalogRefIds]").val();
-                food.setBarcode(barcode);
-    
-                String weight = extractWeight(name); 
-                 food.setAmount(weight);
-    
-                // Saving to MongoDB
-                food.setStore("Woolworths");
-                dynamicFoodMRepository.saveInDynamicCollection(food);
-    
-                logger.info("Scraped product: " + food.toString());
-            }
-    
-            visitedLinkRepository.save(new VisitedLinkModel(categoryUrl, LocalDate.now(), "category", "Woolworths"));
-    
-        } catch (IOException e) {
-            logger.error("Error fetching category page: ", e);
-        }
-    
-        logger.info("Woolworths scraping completed.");
+    Optional<VisitedLinkModel> visitedLinkModelOptional = visitedLinkRepository.findById(categoryUrl);
+
+    if (visitedLinkModelOptional.isPresent()) {
+        logger.info("Skipping " + categoryUrl + ", already visited...");
+        return;
     }
+
+    try {
+        Document categoryPage = Jsoup.connect(categoryUrl).get();
+        Elements productCards = categoryPage.select(".product-card");
+
+        for (Element card : productCards) {
+            FoodModelM food = new FoodModelM();
+
+            // Set the default quantity to 1
+            food.setQuantity(1.0);  // Assuming quantity is a double
+
+            String name = card.select(".product-card__name a").text();
+            food.setName(name);
+
+            String price = card.select(".price").text();
+            if (!price.isEmpty()) {
+                String cleanedPrice = price.replaceAll("[^\\d.]", "");
+                int firstDecimalPoint = cleanedPrice.indexOf('.');
+                if (firstDecimalPoint != -1) {
+                    cleanedPrice = cleanedPrice.substring(0, firstDecimalPoint + 1) +
+                                   cleanedPrice.substring(firstDecimalPoint + 1).replace(".", "");
+                }
+                try {
+                    food.setPrice(Double.parseDouble(cleanedPrice));
+                } catch (NumberFormatException e) {
+                    logger.error("Could not parse price: " + cleanedPrice, e);
+                    food.setPrice(0.0);  // or some default value, or log an error
+                }
+            } else {
+                food.setPrice(0.0);  // Or some default value, or log an error
+            }
+
+            String productLink = card.select(".product--view").attr("abs:href");
+
+            Document productPage = Jsoup.connect(productLink).get();
+            String barcode = productPage.select("input[name=catalogRefIds]").val();
+            food.setBarcode(barcode);
+
+            String weight = extractWeight(name);
+            food.setAmount(weight);
+
+            // Saving to MongoDB
+            food.setStore("Woolworths");
+            dynamicFoodMRepository.saveInDynamicCollection(food);
+
+            logger.info("Scraped product: " + food.toString());
+        }
+
+        visitedLinkRepository.save(new VisitedLinkModel(categoryUrl, LocalDate.now(), "category", "Woolworths"));
+
+    } catch (IOException e) {
+        logger.error("Error fetching category page: ", e);
+    }
+
+    logger.info("Woolworths scraping completed.");
+}
+
+    
+    
 
     public void populateToVisitLinks() {
         String sitemapUrl = "https://www.woolworths.co.za/images/sitemaps/siteIndex.xml";
