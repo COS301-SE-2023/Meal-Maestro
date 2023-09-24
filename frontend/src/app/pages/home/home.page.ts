@@ -68,6 +68,7 @@ export class HomePage implements OnInit, ViewWillEnter {
           script
         );
       });
+
   }
 
   async ionViewWillEnter() {
@@ -109,6 +110,7 @@ export class HomePage implements OnInit, ViewWillEnter {
       await new Promise<void>((resolve, reject) => {
         this.mealGenerationservice.getDailyMeals(date).subscribe({
           next: (data) => {
+            console.log('Received data:', data);
             if (data.body) {
               let mealsForDay: DaysMealsI = {
                 breakfast: undefined,
@@ -154,9 +156,11 @@ export class HomePage implements OnInit, ViewWillEnter {
 
   hideLoading() {
     this.showLoading = false;
+    this.isLoading = false;
 
     setTimeout(() => {
       this.showLoading = false;
+      this.isLoading = false;
     }, 200);
   }
 }

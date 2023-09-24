@@ -7,7 +7,7 @@ import { MealI, RegenerateMealRequestI } from '../../models/interfaces';
   providedIn: 'root',
 })
 export class MealGenerationService {
-  url: String = 'http://localhost:8080';
+  url: string = 'http://localhost:8080';
 
   constructor(private http: HttpClient) {}
 

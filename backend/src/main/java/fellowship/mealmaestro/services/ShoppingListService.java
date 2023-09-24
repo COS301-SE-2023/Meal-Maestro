@@ -3,7 +3,6 @@ package fellowship.mealmaestro.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,20 +19,20 @@ import fellowship.mealmaestro.services.auth.JwtService;
 @Service
 public class ShoppingListService {
 
-    @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
+    private final ShoppingListRepository shoppingListRepository;
+    private final UserRepository userRepository;
+    private final PantryRepository pantryRepository;
+    private final FoodRepository foodRepository;
 
-    @Autowired
-    private ShoppingListRepository shoppingListRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PantryRepository pantryRepository;
-
-    @Autowired
-    private FoodRepository foodRepository;
+    public ShoppingListService(JwtService jwtService, ShoppingListRepository shoppingListRepository,
+            UserRepository userRepository, PantryRepository pantryRepository, FoodRepository foodRepository) {
+        this.jwtService = jwtService;
+        this.shoppingListRepository = shoppingListRepository;
+        this.userRepository = userRepository;
+        this.pantryRepository = pantryRepository;
+        this.foodRepository = foodRepository;
+    }
 
     @Transactional
     public FoodModel addToShoppingList(FoodModel food, String token) {

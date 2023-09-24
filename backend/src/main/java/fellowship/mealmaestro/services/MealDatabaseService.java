@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,14 +21,17 @@ import fellowship.mealmaestro.services.auth.JwtService;
 
 @Service
 public class MealDatabaseService {
-    @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
 
-    @Autowired
-    private MealRepository mealRepository;
+    private final MealRepository mealRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public MealDatabaseService(JwtService jwtService, MealRepository mealRepository, UserRepository userRepository) {
+        this.jwtService = jwtService;
+        this.mealRepository = mealRepository;
+        this.userRepository = userRepository;
+    }
 
     @Transactional
     public List<MealModel> saveMeals(List<MealModel> mealsToSave, LocalDate date, String token)
@@ -72,6 +74,7 @@ public class MealDatabaseService {
         return meals;
     }
 
+    @Transactional
     public List<MealModel> findUsersMealPlanForDate(LocalDate date, String token) {
 
         removeOldMeals(token);
@@ -117,6 +120,7 @@ public class MealDatabaseService {
         userRepository.save(user);
     }
 
+    @Transactional
     public Optional<MealModel> findMealTypeForUser(String type, String token) {
         String email = jwtService.extractUserEmail(token);
 
@@ -129,6 +133,44 @@ public class MealDatabaseService {
                 if (canMakeMeal(user.getPantry().getFoods(), meal.getIngredients())) {
                     return Optional.of(meal);
                 }
+            }
+        }
+
+        return Optional.empty();
+    }
+    public Optional<MealModel> findMealForUser(String mealName, String token) {
+        String email = jwtService.extractUserEmail(token);
+
+        UserModel user = userRepository.findByEmail(email).get();
+        List<MealModel> randomMeals = mealRepository.get100RandomMeals();
+
+        // if meal with meal type is present in randomMeals, return it
+        for (MealModel meal : randomMeals) {
+            if (meal.getName().equals(mealName)) {
+                if (canMakeMeal(user.getPantry().getFoods(), meal.getIngredients())) {
+                    return Optional.of(meal);
+                }
+            }
+        }
+
+        return Optional.empty();
+    }
+    
+    public Optional<MealModel> findMealUserLikes(String type, String token, String likedAndAvailableIngredients) {
+        String email = jwtService.extractUserEmail(token);
+
+        UserModel user = userRepository.findByEmail(email).get();
+        List<MealModel> randomMeals = mealRepository.get100RandomMeals();
+
+        // if meal with meal type is present in randomMeals, return it
+        for (MealModel meal : randomMeals) {
+            if (meal.getType().equals(type)) {
+                if (canMakeMeal(user.getPantry().getFoods(), meal.getIngredients())) 
+                //% matched
+                    if(mealPercentageMatched(likedAndAvailableIngredients, meal.getIngredients()))
+                    {
+                        return Optional.of(meal);
+                    }
             }
         }
 
@@ -150,6 +192,28 @@ public class MealDatabaseService {
             }
         }
         return true;
+    }
+
+    private final Double PERCENTAGE_TO_MATCH = 0.4;
+
+    public boolean mealPercentageMatched(String likedIngredients, String mealIngredients) {
+        String[] likedIngredientsArray = likedIngredients.split(",");
+        String[] mealIngredientsArray = mealIngredients.split(",");
+        int totalLikedIngredients = likedIngredientsArray.length;
+        int matchingIngredientsCount = 0;
+
+        for (String likedIngredient : likedIngredientsArray) {
+            for (String mealIngredient : mealIngredientsArray) {
+                if (mealIngredient.trim().equalsIgnoreCase(likedIngredient.trim())) {
+                    matchingIngredientsCount++;
+                    break;
+                }
+            }
+        }
+
+        double percentageMatched = (double) matchingIngredientsCount / totalLikedIngredients;
+
+        return percentageMatched >= PERCENTAGE_TO_MATCH;
     }
 
     @Transactional

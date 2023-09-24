@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import fellowship.mealmaestro.models.mongo.VisitedLinkModel;
 
-public interface VisitedLinkRepository extends MongoRepository<VisitedLinkModel, String> {
+public interface VisitedLinkRepository extends
+        MongoRepository<VisitedLinkModel, String> {
 
 }

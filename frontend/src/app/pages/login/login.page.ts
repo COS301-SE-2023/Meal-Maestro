@@ -3,7 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { AuthenticationService, ErrorHandlerService } from '../../services/services';
+import {
+  AuthenticationService,
+  ErrorHandlerService,
+} from '../../services/services';
 import { UserI } from '../../models/user.model';
 
 @Component({
@@ -11,30 +14,29 @@ import { UserI } from '../../models/user.model';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule],
 })
 export class LoginPage implements OnInit {
   user: UserI = {
     username: '',
     email: '',
     password: '',
-  }
-  
+  };
 
-  constructor(private router: Router,
-              private errorHandlerService: ErrorHandlerService, 
-              private auth: AuthenticationService 
-              ) { }
+  constructor(
+    private router: Router,
+    private errorHandlerService: ErrorHandlerService,
+    private auth: AuthenticationService
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   async login(form: any) {
     const loginUser: UserI = {
       username: '',
       email: form.email,
       password: form.password,
-    }
+    };
     this.auth.login(loginUser).subscribe({
       next: (response) => {
         if (response.status == 200) {
@@ -46,21 +48,32 @@ export class LoginPage implements OnInit {
         }
       },
       error: (error) => {
-        if (error.status == 403){
-          this.errorHandlerService.presentErrorToast('Invalid credentials', 'Invalid credentials');
+        if (error.status == 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Invalid credentials',
+            'Invalid credentials'
+          );
           localStorage.removeItem('token');
-        }else if(error.status == 404){
-          this.errorHandlerService.presentErrorToast('Email or password incorrect', 'Email or password incorrect');
+        } else if (error.status == 404) {
+          this.errorHandlerService.presentErrorToast(
+            'Email or password incorrect',
+            'Email or password incorrect'
+          );
           localStorage.removeItem('token');
-        }else{
-          this.errorHandlerService.presentErrorToast('Unexpected error. Please try again', error);
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Unexpected error. Please try again',
+            error
+          );
         }
-      }
+      },
     });
   }
 
   goToSignup() {
     this.router.navigate(['../signup']);
+    // this.router.navigate(['app/tabs/home']);
+
     localStorage.removeItem('token');
   }
 }

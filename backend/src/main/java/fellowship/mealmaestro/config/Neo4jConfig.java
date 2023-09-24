@@ -38,7 +38,7 @@ public class Neo4jConfig {
             username = "No DB Username Found";
             password = "No DB Password Found";
         }
-
+        
         return GraphDatabase.driver(uri, AuthTokens.basic(username, password));
     }
 }

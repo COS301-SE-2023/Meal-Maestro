@@ -1,6 +1,5 @@
 package fellowship.mealmaestro.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,8 +13,11 @@ import jakarta.validation.Valid;
 @RestController
 public class SettingsController {
 
-    @Autowired
-    private SettingsService settingsService;
+    private final SettingsService settingsService;
+
+    public SettingsController(SettingsService settingsService) {
+        this.settingsService = settingsService;
+    }
 
     @PostMapping("/getSettings")
     public ResponseEntity<SettingsModel> getSettings(@RequestHeader("Authorization") String token) {

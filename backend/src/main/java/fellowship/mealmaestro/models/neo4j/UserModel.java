@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import fellowship.mealmaestro.models.auth.AuthorityRoleModel;
+import fellowship.mealmaestro.models.neo4j.relationships.HasLogEntry;
 import fellowship.mealmaestro.models.neo4j.relationships.HasMeal;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -53,6 +54,36 @@ public class UserModel implements UserDetails {
 
     @Relationship(type = "HAS_MEAL")
     private List<HasMeal> meals;
+
+    @Relationship(type = "HAS_LOG_ENTRY")
+    private List<HasLogEntry> entries;
+
+    @Relationship(type = "HAS_VIEW")
+    private ViewModel view;
+
+    public Long getVersion() {
+        return this.version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public List<HasLogEntry> getEntries() {
+        return this.entries;
+    }
+
+    public void setEntries(List<HasLogEntry> entries) {
+        this.entries = entries;
+    }
+
+    public ViewModel getView() {
+        return this.view;
+    }
+
+    public void setView(ViewModel view) {
+        this.view = view;
+    }
 
     public UserModel() {
         this.authorityRole = AuthorityRoleModel.USER;
@@ -166,5 +197,13 @@ public class UserModel implements UserDetails {
 
     public void setMeals(List<HasMeal> meals) {
         this.meals = meals;
+    }
+
+    public List<HasLogEntry> getLogEntries() {
+        return entries;
+    }
+
+    public void setLogEntries(List<HasLogEntry> entries) {
+        this.entries = entries;
     }
 }

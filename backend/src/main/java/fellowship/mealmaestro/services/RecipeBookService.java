@@ -1,6 +1,5 @@
 package fellowship.mealmaestro.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,14 +14,16 @@ import fellowship.mealmaestro.services.auth.JwtService;
 @Service
 public class RecipeBookService {
 
-    @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
+    private final RecipeBookRepository recipeBookRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private RecipeBookRepository recipeBookRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    public RecipeBookService(JwtService jwtService, RecipeBookRepository recipeBookRepository,
+            UserRepository userRepository) {
+        this.jwtService = jwtService;
+        this.recipeBookRepository = recipeBookRepository;
+        this.userRepository = userRepository;
+    }
 
     public MealModel addRecipe(MealModel recipe, String token) {
         String email = jwtService.extractUserEmail(token);

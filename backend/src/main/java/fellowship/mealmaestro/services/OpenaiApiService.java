@@ -3,7 +3,6 @@ package fellowship.mealmaestro.services;
 import java.time.Duration;
 import java.util.concurrent.TimeoutException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -21,13 +20,16 @@ import reactor.core.publisher.Mono;
 @Service
 public class OpenaiApiService {
     private static final String OPENAI_URL = "https://api.openai.com/v1/chat/completions";
-
     private final static String API_KEY;
 
     private final WebClient webClient;
+    private final ObjectMapper jsonMapper;
+    private final OpenaiPromptBuilder pBuilder;
 
-    public OpenaiApiService(WebClient.Builder webClientBuilder) {
+    public OpenaiApiService(WebClient.Builder webClientBuilder, ObjectMapper jsonMapper, OpenaiPromptBuilder pBuilder) {
         this.webClient = webClientBuilder.build();
+        this.jsonMapper = jsonMapper;
+        this.pBuilder = pBuilder;
     }
 
     static {
@@ -48,11 +50,6 @@ public class OpenaiApiService {
         }
         API_KEY = apiKey;
     }
-
-    @Autowired
-    private ObjectMapper jsonMapper = new ObjectMapper();
-    @Autowired
-    private OpenaiPromptBuilder pBuilder = new OpenaiPromptBuilder();
 
     public String fetchMealResponse(String type, String token) throws JsonMappingException, JsonProcessingException {
         String jsonResponse = getJSONResponse(type, token);
@@ -107,7 +104,76 @@ public class OpenaiApiService {
                     .body(Mono.just(jsonRequest), String.class)
                     .retrieve()
                     .bodyToMono(String.class)
-                    .timeout(Duration.ofSeconds(10))
+                    .timeout(Duration.ofSeconds(30))
+                    .block();
+
+            return response;
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof TimeoutException) {
+                System.out.println("Timeout");
+                return "Timeout";
+            } else {
+                System.out.println("Error");
+                return "Error";
+            }
+        }
+    }
+
+    public String fetchMealResponseFromIngredients(String type, String availableIngredients, String token)throws JsonMappingException, JsonProcessingException {
+       
+        String jsonResponse = getJSONResponse(type, token);
+        if (jsonResponse.equals("Timeout")) {
+            jsonResponse = getJSONResponse(type, token);
+        }
+        if (jsonResponse.equals("Error") || jsonResponse.equals("Timeout")) {
+            return "{\"error\":\"error\"}";
+        }
+
+        JsonNode jsonNode = jsonMapper.readTree(jsonResponse);
+
+        JsonNode contentNode = jsonNode
+                .path("choices")
+                .get(0)
+                .path("message")
+                .path("content");
+
+        String text = contentNode.asText();
+
+        text = text.replace("\\\"", "\"");
+        text = text.replace("\n", "");
+        text = text.replace("/r/n", "\\r\\n");
+        int index = text.indexOf('{');
+        int lastIndex = text.lastIndexOf('}') + 1;
+        if (index != -1 && lastIndex != -1 && index < lastIndex) {
+            text = text.substring(index, lastIndex);
+        }
+
+        return text;
+    }
+
+    public String getJSONResponse(String Type, String token, String availableIngredients) throws JsonProcessingException {
+
+        OpenAIChatRequest prompt;
+        String jsonRequest;
+
+        prompt = pBuilder.buildPrompt(Type, token,availableIngredients);
+        jsonRequest = jsonMapper.writeValueAsString(prompt);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + API_KEY);
+
+        System.out.println("Sending request to OpenAI");
+
+        try {
+            String response = webClient.post()
+                    .uri(OPENAI_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .headers(h -> h.setAll(headers.toSingleValueMap()))
+                    .body(Mono.just(jsonRequest), String.class)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .timeout(Duration.ofSeconds(30))
                     .block();
 
             return response;

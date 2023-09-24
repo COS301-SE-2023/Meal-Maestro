@@ -8,6 +8,7 @@ export class LoginService {
   private pantryRefreshed: boolean = false;
   private recipeBookRefreshed: boolean = false;
   private settingsRefreshed: boolean = false;
+  private shoppingLocation: string | '' = '';
 
   constructor() {}
 
@@ -43,10 +44,32 @@ export class LoginService {
     this.settingsRefreshed = refreshed;
   }
 
+  isShoppingAt(): string {
+    return this.shoppingLocation;
+  }
+
+  setShoppingAt(location: string): void {
+    this.shoppingLocation = location;
+  }
+
   resetRefreshed(): void {
     this.homeRefreshed = false;
     this.pantryRefreshed = false;
     this.recipeBookRefreshed = false;
     this.settingsRefreshed = false;
+    this.shoppingLocation = '';
+  }
+
+  toString(): string {
+    return (
+      'homeRefreshed: ' +
+      this.homeRefreshed +
+      ', pantryRefreshed: ' +
+      this.pantryRefreshed +
+      ', recipeBookRefreshed: ' +
+      this.recipeBookRefreshed +
+      ', settingsRefreshed: ' +
+      this.settingsRefreshed
+    );
   }
 }

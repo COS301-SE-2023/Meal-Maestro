@@ -3,7 +3,6 @@ package fellowship.mealmaestro.controllers;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,16 +18,28 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fellowship.mealmaestro.models.RegenerateMealRequest;
 import fellowship.mealmaestro.models.neo4j.DateModel;
 import fellowship.mealmaestro.models.neo4j.MealModel;
+import fellowship.mealmaestro.services.LogService;
 import fellowship.mealmaestro.services.MealDatabaseService;
 import fellowship.mealmaestro.services.MealManagementService;
+import fellowship.mealmaestro.services.RecommendationService;
 import jakarta.validation.Valid;
 
 @RestController
 public class MealManagementController {
-    @Autowired
-    private MealManagementService mealManagementService;
-    @Autowired
-    private MealDatabaseService mealDatabaseService;
+
+    private final MealManagementService mealManagementService;
+    private final MealDatabaseService mealDatabaseService;
+    private final RecommendationService recommendationService;
+    private final LogService logService;
+
+    public MealManagementController(MealManagementService mealManagementService,
+            MealDatabaseService mealDatabaseService, RecommendationService recommendationService,
+            LogService logService) {
+        this.mealManagementService = mealManagementService;
+        this.mealDatabaseService = mealDatabaseService;
+        this.recommendationService = recommendationService;
+        this.logService = logService;
+    }
 
     @PostMapping("/getMealPlanForDay")
     public ResponseEntity<List<MealModel>> dailyMeals(@Valid @RequestBody DateModel request,
@@ -120,12 +131,25 @@ public class MealManagementController {
             @RequestHeader("Authorization") String token)
             throws JsonMappingException, JsonProcessingException {
 
-        token = token.substring(7);
+        logService.logMeal(token, request.getMeal(), "regenerate");
+        MealModel recoMeal = null;
+        try {
+            recoMeal = recommendationService.getRecommendedMeal(request.getMeal().getType(), token);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
 
-        // Try find an appropriate meal in the database
-        Optional<MealModel> replacementMeal = mealDatabaseService.findMealTypeForUser(request.getMeal().getType(),
-                token);
+        Optional<MealModel> replacementMeal = null;
         MealModel returnedMeal = null;
+
+        if (recoMeal != null) {
+            replacementMeal = Optional.ofNullable(recoMeal);
+        } else {
+            token = token.substring(7);
+
+            // Try find an appropriate meal in the database
+            replacementMeal = mealDatabaseService.findMealTypeForUser(request.getMeal().getType(), token);
+        }
 
         if (replacementMeal.isPresent()) {
             returnedMeal = mealDatabaseService.replaceMeal(request, replacementMeal.get(), token);
@@ -138,16 +162,4 @@ public class MealManagementController {
         return ResponseEntity.ok(returnedMeal);
     }
 
-    // @GetMapping("/getPopularMeals")
-    // public String popularMeals() throws JsonMappingException,
-    // JsonProcessingException{
-    // return mealManagementService.generatePopularMeals();
-    // }
-
-    // @GetMapping("/getSearchedMeals")
-    // public String searchedMeals(@RequestParam String query) throws
-    // JsonMappingException, JsonProcessingException {
-    // // Call the mealManagementService to search meals based on the query
-    // return mealManagementService.generateSearchedMeals(query);
-    // }
 }
