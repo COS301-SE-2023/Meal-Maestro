@@ -60,17 +60,12 @@ public class FoodModelM {
     }
 
     public void setAmount(String amount) {
-        // Regular expression to find quantity and unit from the amount string
-        Pattern pattern = Pattern.compile("([0-9.]+)\\s*([a-zA-Z]+)");
+        Pattern pattern = Pattern.compile("([0-9.]+)([a-zA-Z]+)");
         Matcher matcher = pattern.matcher(amount);
-    
+
         if (matcher.find()) {
-            // Group 1 will contain the quantity
             this.quantity = Double.parseDouble(matcher.group(1));
-            
-            // Group 2 will contain the unit
             this.unit = matcher.group(2);
         }
     }
-    
 }
