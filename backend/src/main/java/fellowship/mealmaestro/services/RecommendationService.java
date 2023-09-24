@@ -17,7 +17,7 @@ public class RecommendationService {
     @Autowired
     private MealManagementService mealManagementService;
 
-    private final Double MIN_VALUE = -0.01;
+    private final Double MIN_VALUE = -0.2;
 
     public MealModel getRecommendedMeal(String mealType, String token) throws Exception {
         MealModel recMealModel = null;
