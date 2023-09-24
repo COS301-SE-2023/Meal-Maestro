@@ -7,6 +7,7 @@ import { MealGenerationService } from '../../services/meal-generation/meal-gener
 import {
   AuthenticationService,
   ErrorHandlerService,
+  RecipeBookApiService,
 } from '../../services/services';
 import { MealI } from '../../models/interfaces';
 
@@ -25,12 +26,14 @@ export class BrowsePage implements OnInit {
   Loading: boolean = false;
   searchQuery: string = '';
   searchResults: any;
+  recipeItems: MealI[] = [];
 
   constructor(
     public r: Router,
     private mealGenerationservice: MealGenerationService,
     private errorHandlerService: ErrorHandlerService,
-    private auth: AuthenticationService
+    private auth: AuthenticationService,
+    private recipeService: RecipeBookApiService
   ) {
     this.searchQuery = '';
   }

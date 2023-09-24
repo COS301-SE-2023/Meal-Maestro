@@ -15,8 +15,10 @@ import {
   ErrorHandlerService,
   LoginService,
   MealGenerationService,
+  RecipeBookApiService,
 } from '../../services/services';
 import { CommonModule } from '@angular/common';
+import { MealI } from '../../models/interfaces';
 
 @Component({
   selector: 'app-home',
@@ -32,6 +34,8 @@ export class HomePage implements OnInit, ViewWillEnter {
   isLoading: boolean = true;
   showLoading: boolean = true;
 
+  recipeItems: MealI[] = [];
+
   constructor(
     public r: Router,
     private renderer: Renderer2,
@@ -39,7 +43,8 @@ export class HomePage implements OnInit, ViewWillEnter {
     private mealGenerationservice: MealGenerationService,
     private errorHandlerService: ErrorHandlerService,
     private loginService: LoginService,
-    private auth: AuthenticationService
+    private auth: AuthenticationService,
+    private recipeService: RecipeBookApiService
   ) {}
 
   async ngOnInit() {

@@ -2,7 +2,7 @@ export interface SettingsI {
   goal: string;
   shoppingInterval: string;
   foodPreferences: string[];
-  calorieAmount: number;
+  calorieAmount: number | string;
   budgetRange: string;
 
   protein: number;
@@ -13,7 +13,7 @@ export interface SettingsI {
   cookingTime: string;
   userHeight: number; //consider moving to account
   userWeight: number; //consider moving to account
-  userBMI: number;
+  userBMI: number | string;
 
   bmiset: boolean;
   cookingTimeSet: boolean;

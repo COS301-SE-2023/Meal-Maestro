@@ -95,6 +95,15 @@ describe('PantryPage', () => {
     expect(component).toBeTruthy();
   });
 
+  it('#viewWillEnter should call getPantryItems and getShoppingListItems', () => {
+    component.ionViewWillEnter();
+    expect(mockPantryService.getPantryItems).toHaveBeenCalled();
+    expect(mockShoppingListService.getShoppingListItems).toHaveBeenCalled();
+
+    expect(component.pantryItems).toEqual(mockItems);
+    expect(component.shoppingItems).toEqual(mockItems);
+  });
+
   it('#addItemToPantry should call addToPantry', () => {
     component.addItemToPantry({
       detail: { role: 'confirm', data: mockItems[0] },

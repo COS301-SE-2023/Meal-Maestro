@@ -5,12 +5,15 @@
 </ion-header>
 
 <ion-content>
-  <ion-card>
-    <ion-button (click)="navToProfile()"
-      ><ion-icon name="person-circle" size="small"></ion-icon>
-    </ion-button>
-
-    <ion-label>{{this.user.username}}'s Profile</ion-label>
+  <ion-card class="profile-card">
+    <ion-card-content class="profile-content">
+      <ion-button class="profile-button" (click)="navToProfile()">
+        <ion-icon name="person-circle" class="profile-icon"></ion-icon>
+      </ion-button>
+      <ion-label class="profile-label"
+        >{{ this.user.username }}'s Profile</ion-label
+      >
+    </ion-card-content>
   </ion-card>
   <!-- the Goal -->
   <ion-card>
@@ -37,7 +40,7 @@
       <ion-card-subtitle>
         <div class="card-toggle">
           <div class="toggle-label">Shopping Interval</div>
-          <div class="toggle-value">{{ settings.shoppingInterval }}</div>
+          <div class="toggle-value">{{ getDisplayShoppingInterval() }}</div>
           <ion-icon name="chevron-forward-outline" size="medium"></ion-icon>
         </div>
       </ion-card-subtitle>
@@ -52,7 +55,10 @@
               <ion-button (click)="setOpenShopping(false)">Cancel</ion-button>
             </ion-buttons>
             <ion-buttons slot="end">
-              <ion-button (click)="setOpenShoppingSave(false)" [strong]="true"
+              <ion-button
+                [disabled]="disabledConfirmShopping()"
+                (click)="setOpenShoppingSave(false)"
+                [strong]="true"
                 >Confirm</ion-button
               >
             </ion-buttons>
@@ -114,7 +120,8 @@
 
                 <ion-item *ngIf="shoppingInterval === 'other'">
                   <ion-label class="range-label"
-                    >Every {{ shoppingIntervalOtherValue }} day(s)</ion-label
+                    >Every {{ getDisplayOtherShoppingInterval() }}
+                    day(s)</ion-label
                   >
                 </ion-item>
 
@@ -182,6 +189,7 @@
             </ion-buttons>
             <ion-buttons slot="end">
               <ion-button
+                [disabled]="disabledConfirmPreference()"
                 (click)="setOpenPreferencesSave(false)"
                 [strong]="true"
                 >Confirm</ion-button
@@ -359,7 +367,10 @@
               <ion-button (click)="setOpenBudget(false)">Cancel</ion-button>
             </ion-buttons>
             <ion-buttons slot="end">
-              <ion-button (click)="setOpenBudgetSave(false)" [strong]="true"
+              <ion-button
+                [disabled]="disabledConfirmBudget()"
+                (click)="setOpenBudgetSave(false)"
+                [strong]="true"
                 >Confirm</ion-button
               >
             </ion-buttons>
@@ -393,22 +404,6 @@
                     <ion-radio [disabled]="!settings.budgetSet" value="high"
                       >High Budget</ion-radio
                     >
-                  </ion-item>
-                  <ion-item>
-                    <ion-radio [disabled]="!settings.budgetSet" value="custom"
-                      >Custom Amount</ion-radio
-                    >
-                  </ion-item>
-                  <ion-item *ngIf="selectedPriceRange === 'custom'">
-                    <ion-input
-                      type="number"
-                      label="Enter Custom Amount:"
-                      labelPlacement="floating"
-                      [(ngModel)]="settings.budgetRange"
-                      step="0.01"
-                      min="0"
-                      placeholder="Enter amount"
-                    ></ion-input>
                   </ion-item>
                 </ion-radio-group>
               </ion-list>
@@ -624,7 +619,10 @@
               <ion-button (click)="setOpenCooking(false)">Cancel</ion-button>
             </ion-buttons>
             <ion-buttons slot="end">
-              <ion-button (click)="setOpenCookingSave(false)" [strong]="true"
+              <ion-button
+                [disabled]="disabledCalorieCookingTime()"
+                (click)="setOpenCookingSave(false)"
+                [strong]="true"
                 >Confirm</ion-button
               >
             </ion-buttons>
@@ -717,10 +715,7 @@
               <ion-button (click)="setOpenBMI(false)">Cancel</ion-button>
             </ion-buttons>
             <ion-buttons slot="end">
-              <ion-button
-                (click)="setOpenBMISave(false)"
-                (click)="calculateBMI()"
-                [strong]="true"
+              <ion-button (click)="setOpenBMISave(false)" [strong]="true"
                 >Confirm</ion-button
               >
             </ion-buttons>
@@ -743,6 +738,7 @@
                   <ion-input
                     [disabled]="!settings.bmiset"
                     type="number"
+                    (input)="validateBudgetInput($event)"
                     [(ngModel)]="settings.userHeight"
                     step="0.01"
                     min="0"
@@ -754,6 +750,7 @@
                   <ion-input
                     [disabled]="!settings.bmiset"
                     type="number"
+                    (input)="validateBudgetInput($event)"
                     [(ngModel)]="settings.userWeight"
                     step="0.01"
                     min="0"

@@ -129,30 +129,47 @@
             </ion-avatar>
           </div>
 
-          <ion-modal [isOpen]="isLunchModalOpen">
+<!--THIS MODAL IS THE ONLY ONE BEING USED AS OF SEPTEMBER 16-->
+          <ion-modal [isOpen]="isModalOpen">    
             <ng-template>
               <ion-header>
                 <ion-toolbar>
-                  <ion-title>{{ dayData.lunch?.name }}</ion-title>
+                  <ion-title>{{ item?.name }}</ion-title>
                   <ion-buttons slot="end">
-                    <ion-button (click)="setOpen(false, 'lunch')"
-                      >Close</ion-button
-                    >
+                    <ion-button (click)="setOpen(false, 'lunch')">Close</ion-button>
                   </ion-buttons>
                 </ion-toolbar>
               </ion-header>
-              <ion-avatar class="background">
-                <img [src]="dayData.lunch?.image" alt="Lunch Image" />
+              <ion-avatar>
+                <img [src]="item?.image" [alt]="item?.name"/>
               </ion-avatar>
+
               <ion-content class="ion-padding">
-                <h2>Ingredients:</h2>
-                <p>{{ dayData.lunch?.ingredients }}</p>
-                <h2>Instructions:</h2>
-                <p>{{ dayData.lunch?.instructions }}</p>
-                <h2>Cooking time:</h2>
-                <p>{{ dayData.lunch?.cookingTime }}</p>
-              </ion-content>
-            </ng-template>
+                <div class="buttons">
+                  <ion-button (click)="liked(item!)" class="likebutton" fill="outline" shape="round" color="black">
+                    <ion-icon name="thumbs-up-outline"></ion-icon>
+                  </ion-button>
+                  <ion-button (click)="disliked(item!)" class="likebutton" fill="outline" shape="round" color="black">
+                    <ion-icon name="thumbs-down-outline"></ion-icon>
+                  </ion-button>
+                  <ion-button (click)="addRecipe(item!)" class="savebutton" fill="outline" shape="round" color="black">
+                    <ion-icon slot="start" name="bookmark-outline"></ion-icon> 
+                    Save to Recipe Book
+                  </ion-button>
+                </div>
+                <p>{{ item?.description }}</p>
+                <h4>Preparation Time</h4>
+                <p>{{ item?.cookingTime }}</p>
+                <h4>Ingredients:</h4>
+                  <ul>
+                    <li *ngFor="let ingredient of fIng">{{ ingredient }}</li>
+                  </ul>
+              <h4>Instructions</h4>
+                  <ol>
+                    <li *ngFor="let instruction of fIns">{{ instruction }}</li>
+                  </ol>
+              </ion-content>       
+            </ng-template>            
           </ion-modal>
         </ion-item>
         <ion-item-options
@@ -210,29 +227,37 @@
           </div>
 
           <ion-modal [isOpen]="isDinnerModalOpen">
-            <ng-template>
               <ion-header>
                 <ion-toolbar>
                   <ion-title>{{ dayData.dinner?.name }}</ion-title>
                   <ion-buttons slot="end">
-                    <ion-button (click)="setOpen(false, 'dinner')"
-                      >Close</ion-button
-                    >
+                    <ion-button (click)="setOpen(false, 'dinner')">Close</ion-button>
                   </ion-buttons>
                 </ion-toolbar>
               </ion-header>
               <ion-avatar class="background">
-                <img [src]="this.dayData.dinner?.image" alt="Dinner Image" />
+                <img [src]="this.dayData.dinner?.image" alt="dayData.dinner.name" />
               </ion-avatar>
+
               <ion-content class="ion-padding">
-                <h2>Ingredients:</h2>
-                <p>{{ dayData.dinner?.ingredients }}</p>
-                <h2>Instructions:</h2>
-                <p>{{ dayData.dinner?.instructions }}</p>
-                <h2>Cooking Time:</h2>
+                <div>
+                  <ion-button (click)="addRecipe(item!)" class="savebutton" fill="outline" shape="round" color="black">
+                    <ion-icon slot="start" name="bookmark-outline"></ion-icon> 
+                    Save to Recipe Book
+                  </ion-button>
+                </div>
+                <p style="padding-top: 40px;">{{ dayData.dinner?.description }}</p>
+                <h4>Preparation Time</h4>
                 <p>{{ dayData.dinner?.cookingTime }}</p>
+                <h4>Ingredients:</h4>
+                  <ul>
+                    <li *ngFor="let ingredient of fIng">{{ ingredient }}</li>
+                  </ul>
+              <h4>Instructions</h4>
+                  <ol>+
+                    <li *ngFor="let instruction of fIns">{{ instruction }}</li>
+                  </ol>
               </ion-content>
-            </ng-template>
           </ion-modal>
         </ion-item>
         <ion-item-options

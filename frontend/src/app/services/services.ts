@@ -7,3 +7,4 @@ export { SettingsApiService } from './settings-api/settings-api.service';
 export { MealGenerationService } from './meal-generation/meal-generation.service';
 export { LoginService } from './login/login.service';
 export { BarcodeApiService } from './barcode-api/barcode-api.service';
+export { LikeDislikeService } from './like-dislike/like-dislike.service';

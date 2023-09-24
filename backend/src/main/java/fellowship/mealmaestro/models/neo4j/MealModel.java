@@ -13,7 +13,7 @@ public class MealModel {
     private String name;
 
     @NotBlank(message = "An image is required")
-    private String image;
+    private String image =  "https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80";
 
     @NotBlank(message = "A Description is required")
     private String description;
@@ -37,7 +37,7 @@ public class MealModel {
         this.name = name;
         this.instructions = instructions;
         this.description = description;
-        this.image = image;
+        this.image = "https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80";
         this.ingredients = ingredients;
         this.cookingTime = cookingTime;
     }

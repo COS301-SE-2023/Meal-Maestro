@@ -15,52 +15,38 @@ substitutions, budget preferences and gives users the ability to add ingredients
 virtual pantry through image recognition. It aims to reduce decision fatigue, helps users
 easily plan meals for the coming week and helps them hit their nutritional goals. 
 
-# Set Up
-## Install:
-- Node v18.16.0
-- npm v9.5.1
-- Angular CLI v16.0.0
-- Ionic CLI v7.1.1
-- Gradle v8
-
-## Install prerequisites:
-
-1. Install Node.js (https://nodejs.org/) and npm (comes with Node.js).
-2. Install Angular CLI globally by running `npm install -g @angular/cli`
-3. Install Ionic CLI globally by running `npm install -g @ionic/cli`
-4. Install Gradle (https://gradle.org/install/)
-
-## Starting the app:
-1. Will most likely need to run `npm install` to install all dependencies.
-2. Run `ionic serve` to start the app in the browser.
-3. Run `.\backend\gradlew.bat -p backend bootRun` to start the backend server.
-4. Frontend will be running on http://localhost:8100/ and the backend will be running on http://localhost:8080/
-
 # Documentation
 ## Demo 1
 
-- 🎥 https://drive.google.com/file/d/10Eq8U3jkWRM08BBfeC6RolvX8edsNR31/view?usp=sharing
+- 🎥 [Demo 1](https://drive.google.com/file/d/10Eq8U3jkWRM08BBfeC6RolvX8edsNR31/view?usp=sharing)
+### System Requirements Specification
+- 📃 [SRS](https://docs.google.com/document/d/1r36yfCPophZftvO_4PcoFPyaN1UonBcP5Fbmt0ypGoI/edit?usp=sharing)
 
-## System Requirements Specification
-### v1:
 
-- 📃 https://docs.google.com/document/d/1r36yfCPophZftvO_4PcoFPyaN1UonBcP5Fbmt0ypGoI/edit?usp=sharing
-### v2:
+## Demo 2
+### System Requirements Specification
+- 📃 [SRS](https://docs.google.com/document/d/1FmSqFAENVQOZEEr14x5cBBWr9sgkA5lm3mrld0XY0l8/edit?usp=sharing)
+### User Manual Document
+- 📃 [User Manual](https://docs.google.com/document/d/1Cvxc9UgSUuXDbWwugPlxlK7Dh_KO7xvwuzCKtDzu1sM/edit?usp=sharing)
+### Coding Standards Document
+- 📃 [Coding Standards](https://docs.google.com/document/d/1Prh1NJkLCubiySVKyEGGlkWgBTonqnkokMo-sBYGPYw/edit?usp=sharing)
+### Architectural Requirements Document
+- 📃 [Architectural Requirements](https://docs.google.com/document/d/1GADUq8VWsgqLFTfSPIBHwsFnrli8AbZGp7uwuRqVZu8/edit?usp=sharing)
 
-- 📃 https://docs.google.com/document/d/1FmSqFAENVQOZEEr14x5cBBWr9sgkA5lm3mrld0XY0l8/edit?usp=sharing
 
-## User Manual Document
-- 📃 https://docs.google.com/document/d/1Cvxc9UgSUuXDbWwugPlxlK7Dh_KO7xvwuzCKtDzu1sM/edit?usp=sharing
-
-## Coding Standards Document
-- 📃 https://docs.google.com/document/d/1Prh1NJkLCubiySVKyEGGlkWgBTonqnkokMo-sBYGPYw/edit?usp=sharing
-
-## Architectural Requirements Document
-- 📃 https://docs.google.com/document/d/1GADUq8VWsgqLFTfSPIBHwsFnrli8AbZGp7uwuRqVZu8/edit?usp=sharing
-
-## Project Board
-
-- 📋 https://github.com/orgs/COS301-SE-2023/projects/38
+## Demo 3
+### System Requirements Specification
+- 📃 [SRS](https://docs.google.com/document/d/1FmSqFAENVQOZEEr14x5cBBWr9sgkA5lm3mrld0XY0l8/edit?usp=sharing)
+### Technical Installation Manual
+- 📖 [Installation Manual](https://docs.google.com/document/d/1KWnnRnpyYKyQDBUFijPwVD7MgGMjvhL-w9v_T77EAyE/edit?usp=sharing)
+### User Manual Document
+- 📃 [User Manual](https://docs.google.com/document/d/1npM7LlKqEH4eLSaIJUsVhWk6_DC4qCrBcZCBaxCqGWk/edit?usp=sharing)
+### Coding Standards Document
+- 📃 [Coding Standards](https://docs.google.com/document/d/1Prh1NJkLCubiySVKyEGGlkWgBTonqnkokMo-sBYGPYw/edit?usp=sharing)
+### Architectural Requirements Document
+- 📃 [Architectural Requirements](https://docs.google.com/document/d/1GADUq8VWsgqLFTfSPIBHwsFnrli8AbZGp7uwuRqVZu8/edit?usp=sharing)
+### Project Board
+- 📋 [Project Board](https://github.com/orgs/COS301-SE-2023/projects/38)
 
 ## Individuals
 
@@ -82,8 +68,8 @@ implementing them. To improve in this area, Theo is dedicating time to relevant 
 and learning resources
 
 Links:
-- https://www.linkedin.com/in/theodor-le-roux-123a4a274
-- https://github.com/theodorleroux
+- [Linkedin](https://www.linkedin.com/in/theodor-le-roux-123a4a274)
+- [Github](https://github.com/theodorleroux)
 
 ### Ethan
 Ethan is a proficient team player, adept at completing tasks swiftly and effectively. He has
@@ -104,8 +90,8 @@ committed to integrating these tests at every stage of development, thereby stre
 his skill set in this area.
 
 Links:
-- https://www.linkedin.com/in/ethan-de-beer-257403277
-- https://github.com/SkulderLock
+- [Linkedin](https://www.linkedin.com/in/ethan-de-beer-257403277)
+- [Github](https://github.com/SkulderLock)
 
 ### Wian
 Wian is a versatile and creative problem solver, able to effectively contribute to a wide
@@ -124,8 +110,8 @@ for growth. By recognizing this tendency, he can continue to refine his approach
 problem-solving and project management
 
 Links:
-- https://github.com/gryffindor-coder
-- https://www.linkedin.com/in/wian-du-toit-995238271
+- [Linkedin](https://www.linkedin.com/in/wian-du-toit-995238271)
+- [Github](https://github.com/gryffindor-coder)
 
 ### Franko
 Franko is an intrigued and determined engineer who finds solutions to counter-intuitive
@@ -150,8 +136,8 @@ and driven, we provide him with clear communication and engaging tasks. This app
 ensures that he stays focused and delivers exceptional results for the project
 
 Links:
-- https://www.linkedin.com/in/franko-swanepoel-1071b3277/
-- https://github.com/Krygsmancode
+- [Linkedin](https://www.linkedin.com/in/franko-swanepoel-1071b3277/)
+- [Github](https://github.com/Krygsmancode)
 
 ### Amicke
 Amicke has been actively involved in project designing and web development. Over time,
@@ -175,4 +161,5 @@ working to overcome these shortcomings and constantly seeking opportunities to l
 and grow as a software developer
 
 Links:
-- https://github.com/AmickeC
+- [Github](https://github.com/AmickeC)
+- [Linkedin](https://www.linkedin.com/in/amicke-croucamp-3ab400277/)
