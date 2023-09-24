@@ -20,8 +20,8 @@ public class ViewModel {
     private List<Double> scoreValues;
     private List<Double> nScoreValues;
    
-    private Double max =0.0;
-    private Double min =0.0;
+    private Double max = Double.MIN_VALUE;
+    private Double min = Double.MAX_VALUE;
 
     public ViewModel() {
     }
@@ -81,6 +81,16 @@ public class ViewModel {
 
     public void normalise() {
         // return 2 * ((Score - min) / (max - min)) - 1;
+        this.max = Double.MIN_VALUE;
+        this.min = Double.MAX_VALUE;
+        for (Double score : scoreValues) {
+            if(score < this.min){
+                this.min = score;
+            }
+            if(score > this.max){
+                this.max = score;
+            }
+        }
         HashMap<String, Double> ScoreMap = new HashMap<>();
         HashMap<String, Double> nScoreMap = new HashMap<>();
         for (String ingredient : ScoreMap.keySet()) {
