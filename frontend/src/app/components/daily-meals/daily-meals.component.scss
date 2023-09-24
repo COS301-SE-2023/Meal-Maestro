@@ -11,6 +11,7 @@ ion-item {
   width: 100%;
   display: block;
   --ion-padding: 0px;
+
 }
 ion-card {
   padding: 0%;
@@ -18,16 +19,23 @@ ion-card {
 }
 
 .div1 img {
+  min-width: 100%;
   width: 100%;
   height: 100%;
   object-fit: cover;
   padding-right: 0px !important;
+  overflow: hidden;
 }
 
 .no-style {
   --padding-start: 0;
   --padding-end: 0;
   padding-right: 0%;
+  --border-style:none;
+}
+
+.item-inner {
+  border-style: none !important;
 }
 .side {
   display: inline;

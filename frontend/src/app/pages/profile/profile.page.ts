@@ -109,7 +109,9 @@ export class ProfilePage implements OnInit, ViewWillEnter {
   cookingToggle: boolean = false;
   BMIToggle: boolean = false;
 
+
   ngOnInit() {}
+
 
   ionViewWillEnter(): void {
     if (!this.loginService.isSettingsRefreshed()) {

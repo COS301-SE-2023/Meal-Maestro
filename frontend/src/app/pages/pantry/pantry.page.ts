@@ -70,11 +70,13 @@ export class PantryPage implements OnInit, ViewWillEnter {
     private alertController: AlertController
   ) {}
 
+
   async ngOnInit() {
     BarcodeScanner.isSupported().then((result) => {
       this.isBarcodeSupported = result.supported;
     });
   }
+
 
   async ionViewWillEnter() {
     if (!this.loginService.isPantryRefreshed()) {

@@ -65,6 +65,38 @@ public class MealManagementService {
         }
     }
 
+    public MealModel generateMealFromIngredients(String mealType, String availableIngredients, String token) throws IOException {
+        MealModel defaultMeal = new MealModel("Bread", "1. Toast the bread", "Delicious Bread",
+                "https://images.unsplash.com/photo-1598373182133-52452f7691ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                "Bread", "5 minutes");
+        defaultMeal.setType("breakfast");
+        try {
+            JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponseFromIngredients(mealType, availableIngredients, token));
+            int i = 0;
+            if (!validate(mealJson)) {
+                for (i = 0; i < 4; i++) {
+                    mealJson = objectMapper.readTree(openaiApiService.fetchMealResponseFromIngredients(mealType, availableIngredients,token));
+                    if (validate(mealJson))
+                        break;
+                }
+                return defaultMeal;
+            }
+
+            String imageUrl = "";
+            imageUrl = unsplashService.fetchPhoto(mealJson.get("name").asText());
+
+            ObjectNode mealObject = objectMapper.valueToTree(mealJson);
+            mealObject.put("type", mealType);
+            mealObject.put("image", imageUrl);
+
+            MealModel mealModel = objectMapper.treeToValue(mealObject, MealModel.class);
+            return mealModel;
+        } catch (JsonProcessingException e) {
+            System.out.println(e.getMessage());
+            return defaultMeal;
+        }
+    }
+
     public boolean validate(JsonNode data) {
         try {
             File schemaFile = new File("src\\main\\resources\\MealSchema.json");
