@@ -83,8 +83,8 @@ describe('PantryPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#ngOnInit should call getPantryItems and getShoppingListItems', () => {
-    component.ngOnInit();
+  it('#viewWillEnter should call getPantryItems and getShoppingListItems', () => {
+    component.ionViewWillEnter();
     expect(mockPantryService.getPantryItems).toHaveBeenCalled();
     expect(mockShoppingListService.getShoppingListItems).toHaveBeenCalled();
 
