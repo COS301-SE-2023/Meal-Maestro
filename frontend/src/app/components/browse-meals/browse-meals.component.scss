@@ -11,6 +11,12 @@
     font-size: smaller;
     margin-right:5px;
     margin-left: 5px;
+    transition: background-color 0.3 ease;
+}
+  
+.savebutton:hover {
+background-color: #00c853;
+cursor: pointer;
 }
 
 .buttons {
