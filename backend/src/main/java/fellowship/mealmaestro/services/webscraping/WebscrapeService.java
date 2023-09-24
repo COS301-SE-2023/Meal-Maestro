@@ -29,13 +29,12 @@ public class WebscrapeService {
 
     @PostConstruct
     public void init() {
-        System.out.println("WebscrapeService init");
-        startScraping();
+        // startScraping();
     }
 
     private LocalDateTime getStartTime() {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime next6AM = now.withHour(13).withMinute(55).withSecond(0);
+        LocalDateTime next6AM = now.withHour(6).withMinute(0).withSecond(0);
 
         if (now.isAfter(next6AM) || now.isEqual(next6AM)) {
             return next6AM.plusDays(1);

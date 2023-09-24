@@ -112,7 +112,7 @@ public class CheckersScraper {
             Document doc;
             if (link.getLink().startsWith("/")) {
                 doc = Jsoup.connect("http://www.checkers.co.za" + link.getLink()).userAgent(
-                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.76")
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36")
                         .header("Accept",
                                 "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("Accept-Encoding", "gzip, deflate, br")
@@ -120,7 +120,7 @@ public class CheckersScraper {
                         .get();
             } else {
                 doc = Jsoup.connect(link.getLink()).userAgent(
-                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.76")
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36")
                         .header("Accept",
                                 "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("Accept-Encoding", "gzip, deflate, br")
@@ -203,7 +203,7 @@ public class CheckersScraper {
             Document doc;
             if (link.getLink().startsWith("/")) {
                 doc = Jsoup.connect("http://www.checkers.co.za" + link.getLink()).userAgent(
-                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36")
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36")
                         .header("Accept",
                                 "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("Accept-Encoding", "gzip, deflate, br")
@@ -211,7 +211,7 @@ public class CheckersScraper {
                         .get();
             } else {
                 doc = Jsoup.connect(link.getLink()).userAgent(
-                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36")
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36")
                         .header("Accept",
                                 "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
                         .header("Accept-Encoding", "gzip, deflate, br")
