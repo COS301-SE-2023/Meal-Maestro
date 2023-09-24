@@ -6,6 +6,7 @@ import {
   AuthenticationService,
   MealGenerationService,
 } from '../../services/services';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('HomePage', () => {
   let component: HomePage;
@@ -18,7 +19,7 @@ describe('HomePage', () => {
     mockAuthService = jasmine.createSpyObj('AuthenticationService', ['logout']);
 
     await TestBed.configureTestingModule({
-      imports: [HomePage, IonicModule, DailyMealsComponent],
+      imports: [HomePage, IonicModule, DailyMealsComponent, HttpClientModule],
       providers: [
         { provide: MealGenerationService, useValue: mockMealGenerationService },
         { provide: AuthenticationService, useValue: mockAuthService },
