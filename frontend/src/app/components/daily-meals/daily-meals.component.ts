@@ -7,12 +7,13 @@ import {
   QueryList,
   Renderer2,
   ElementRef,
+  ViewChild,
 } from '@angular/core';
-import { IonItemSliding, IonicModule } from '@ionic/angular';
+import { IonItemSliding, IonicModule, NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
 import { DaysMealsI } from '../../models/daysMeals.model';
-import { ErrorHandlerService } from '../../services/services';
+import { AuthenticationService, ErrorHandlerService, LikeDislikeService, LoginService, RecipeBookApiService } from '../../services/services';
 import { MealI, RegenerateMealRequestI } from '../../models/interfaces';
 import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
 
@@ -38,6 +39,11 @@ export class DailyMealsComponent implements OnInit {
   isBreakfastLoading: boolean = false;
   isLunchLoading: boolean = false;
   isDinnerLoading: boolean = false;
+  item: MealI | undefined;
+  fIns: String[] = [];
+  fIng: String[] = [];
+  @Input() items!: MealI[];
+  @ViewChild('saveb') buttonDiv!: ElementRef<HTMLDivElement>;
 
   constructor(
     public r: Router,
@@ -45,30 +51,95 @@ export class DailyMealsComponent implements OnInit {
     private errorHandlerService: ErrorHandlerService,
     private addService: AddRecipeService,
     private renderer: Renderer2,
-    private el: ElementRef
+    private el: ElementRef,
+    private recipeService: RecipeBookApiService,
+    private auth: AuthenticationService,
+    private loginService: LoginService,
+    private likeDislikeService: LikeDislikeService
   ) {}
 
   setOpen(isOpen: boolean, mealType: string) {
-    if (mealType === 'breakfast') {
-      this.isBreakfastModalOpen = isOpen;
+    if (mealType === 'breakfast') {       
+      this.isModalOpen = isOpen;
       if (isOpen) {
-        this.setCurrent(this.dayData?.breakfast);
+        this.setCurrent(this.dayData?.breakfast);        
+        this.item = this.dayData.breakfast;  
       }
-    } else if (mealType === 'lunch') {
-      this.isLunchModalOpen = isOpen;
+    } else if (mealType === 'lunch') {     
+      this.isModalOpen = isOpen;
       if (isOpen) {
-        this.setCurrent(this.dayData?.lunch);
+        this.setCurrent(this.dayData?.lunch);        
+        this.item = this.dayData.lunch; 
       }
     } else if (mealType === 'dinner') {
-      this.isDinnerModalOpen = isOpen;
+        this.isModalOpen = isOpen;
+        this.item = this.dayData.dinner;
       if (isOpen) {
         this.setCurrent(this.dayData?.dinner);
       }
     }
+
+    if (isOpen) {       
+      this.formatIns(this.item!.instructions);
+      this.formatIng(this.item!.ingredients);   
+    } 
   }
+
+  async addRecipe(item: MealI) {
+    this.recipeService.addRecipe(item).subscribe({
+      next: (response) => {
+        if (response.status === 200) {
+          if (response.body) {
+            this.getRecipes();
+            this.loginService.setRecipeBookRefreshed(false);
+            this.errorHandlerService.presentSuccessToast(
+              item.name + ' added to Recipe Book'
+            );
+          }
+        }
+      },
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorised access. Please log in again.',
+            err
+          );
+          this.auth.logout();
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Error adding item to your Recipe Book',
+            err
+          );
+        }
+      },
+    });
+  }
+
+  private formatIns(ins: string) {
+    const insArr: string[] = ins.split(/\d+\.\s+/);
+    this.fIns = insArr.filter(instruction => instruction.trim() !== '');
+  }
+
+  private formatIng(ing: string) {
+    const ingArr: string[] = ing.split(/,[^()]*?(?![^(]*\))/);
+    this.fIng = ingArr.map((ingredient) => ingredient.trim());
+  }
+
+  notSaved(): boolean {
+    return !this.items.includes(this.item!);
+  } 
 
   ngOnInit() {
     console.log(this.dayData);
+    if (this.item && this.item.instructions) {
+      this.formatIns(this.item.instructions);
+    }
+
+    if (this.item && this.item.ingredients) {
+      this.formatIng(this.item.ingredients);
+    }
+
+    this.getRecipes();
   }
 
   handleArchive(meal: string) {
@@ -145,5 +216,59 @@ export class DailyMealsComponent implements OnInit {
         );
         return;
       });
+  }
+
+  async getRecipes() {
+    this.recipeService.getAllRecipes().subscribe({
+      next: (response) => {
+        if (response.status === 200) {
+          if (response.body) {
+            this.items = response.body;
+          }
+        }
+      },
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorised access. Please log in again',
+            err
+          );
+          this.auth.logout();
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Error loading saved recipes',
+            err
+          );
+        }
+      },
+    });
+  }
+
+  async liked(item: MealI) {
+    this.likeDislikeService.liked(item).subscribe({
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorised access. Please log in again',
+            err
+          );
+          this.auth.logout();
+        }
+      }
+    });
+  }
+
+  async disliked(item: MealI) {
+    this.likeDislikeService.disliked(item).subscribe({
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorised access. Please log in again',
+            err
+          );
+          this.auth.logout();          
+        }
+      }
+    });
   }
 }

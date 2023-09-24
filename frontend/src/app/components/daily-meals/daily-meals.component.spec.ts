@@ -4,6 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { DailyMealsComponent } from './daily-meals.component';
 import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
 import { DaysMealsI } from '../../models/interfaces';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('DailyMealsComponent', () => {
   let component: DailyMealsComponent;
@@ -49,7 +50,7 @@ describe('DailyMealsComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [IonicModule.forRoot(), DailyMealsComponent],
+      imports: [IonicModule.forRoot(), DailyMealsComponent, HttpClientModule],
       providers: [
         { provide: MealGenerationService, useValue: mockMealGenerationService },
       ],

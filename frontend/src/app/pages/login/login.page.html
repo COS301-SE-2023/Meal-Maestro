@@ -2,54 +2,65 @@
   <div class="background-image"></div>
   <ion-grid>
     <div class="logo-container">
-      <img class="logo" src="assets/logo.svg" alt="logo">
+      <img class="logo" src="assets/logo.svg" alt="logo" />
     </div>
-    <br>
+    <br />
     <form #form="ngForm" (ngSubmit)="login(form.value)">
-    <ion-col>
-      <ion-input class="firstinput"
-        id="login-email"
-        placeholder="Email"
-        type="email"
-        required
-        email
-        name="email"
-        [(ngModel)]="user.email"
-        #email="ngModel"
-      >
-      </ion-input>
-      <div [class.hidden]="!(email.invalid && email.touched)" class="alert">
-        Please enter a valid email.
-      </div>
-      <ion-input
-        id="login-password"
-        placeholder="Password"
-        type="password" 
-        required
-        name="password"
-        [(ngModel)]="user.password"
-        #password="ngModel"
-        >
-      </ion-input>
-      <div [class.hidden]="!(password.invalid && password.touched)" class="alert">
-        Please enter a password.
-      </div>
-    </ion-col>
-    <ion-row>
-      <ion-col></ion-col>
       <ion-col>
-        <ion-button id="login-button" expand="block" type="submit" [disabled]="form.invalid" >Login</ion-button>
+        <ion-input
+          class="firstinput"
+          id="login-email"
+          placeholder="Email"
+          type="email"
+          required
+          email
+          name="email"
+          [(ngModel)]="user.email"
+          #email="ngModel"
+        >
+        </ion-input>
+        <div [class.hidden]="!(email.invalid && email.touched)" class="alert">
+          Please enter a valid email.
+        </div>
+        <ion-input
+          id="login-password"
+          placeholder="Password"
+          type="password"
+          required
+          name="password"
+          [(ngModel)]="user.password"
+          #password="ngModel"
+        >
+        </ion-input>
+        <div
+          [class.hidden]="!(password.invalid && password.touched)"
+          class="alert"
+        >
+          Please enter a password.
+        </div>
       </ion-col>
-      <ion-col></ion-col>
-    </ion-row>
+      <ion-row>
+        <ion-col></ion-col>
+        <ion-col>
+          <ion-button
+            id="login-button"
+            expand="block"
+            type="submit"
+            [disabled]="form.invalid"
+            >Login</ion-button
+          >
+        </ion-col>
+        <ion-col></ion-col>
+      </ion-row>
     </form>
 
     <ion-row>
-      <a class="firstlink"><u>Forget Password?</u></a>
+      <a class="firstlink"><u></u></a>
     </ion-row>
     <ion-row>
-      <a class="signup" (click)="goToSignup()">Don't have an account? <u>Sign Up</u></a>
+      <a class="signup" (click)="goToSignup()"
+        >Don't have an account? <u>Sign Up</u></a
+      >
     </ion-row>
-    
   </ion-grid>
 </ion-content>

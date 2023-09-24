@@ -70,11 +70,13 @@ export class PantryPage implements OnInit, ViewWillEnter {
     private alertController: AlertController
   ) {}
 
+
   async ngOnInit() {
     BarcodeScanner.isSupported().then((result) => {
       this.isBarcodeSupported = result.supported;
     });
   }
+
 
   async ionViewWillEnter() {
     if (!this.loginService.isPantryRefreshed()) {
@@ -303,7 +305,13 @@ export class PantryPage implements OnInit, ViewWillEnter {
   calculateTotalPrice() {
     this.totalShoppingPrice = 0;
     this.shoppingItems.forEach((item) => {
-      if (item.price) {
+      if (
+        item.price &&
+        item.price !== undefined &&
+        item.price !== null &&
+        item.price !== 0 &&
+        item.price !== -1
+      ) {
         this.totalShoppingPrice += item.price;
       }
     });

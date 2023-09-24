@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 import { FoodItemI } from '../../models/interfaces';
 import {
   AuthenticationService,
+  BarcodeApiService,
   PantryApiService,
   ShoppingListApiService,
 } from '../../services/services';
@@ -17,6 +18,7 @@ describe('PantryPage', () => {
   let mockPantryService: jasmine.SpyObj<PantryApiService>;
   let mockShoppingListService: jasmine.SpyObj<ShoppingListApiService>;
   let mockAuthService: jasmine.SpyObj<AuthenticationService>;
+  let mockBarcodeService: jasmine.SpyObj<BarcodeApiService>;
   let mockItems: FoodItemI[];
 
   beforeEach(async () => {
@@ -31,11 +33,15 @@ describe('PantryPage', () => {
       'deleteShoppingListItem',
     ]);
     mockAuthService = jasmine.createSpyObj('AuthenticationService', ['logout']);
+    mockBarcodeService = jasmine.createSpyObj('BarcodeApiService', [
+      'findProduct',
+    ]);
     mockItems = [
       {
         name: 'test',
         quantity: 1,
         unit: 'pcs',
+        price: 2,
       },
       {
         name: 'test2',
@@ -53,6 +59,10 @@ describe('PantryPage', () => {
       body: mockItems[0],
       status: 200,
     });
+    const barcodeResponse = new HttpResponse<FoodItemI>({
+      body: mockItems[0],
+      status: 200,
+    });
 
     mockPantryService.getPantryItems.and.returnValue(of(itemsResponse));
     mockPantryService.addToPantry.and.returnValue(of(itemResponse));
@@ -64,6 +74,7 @@ describe('PantryPage', () => {
     mockShoppingListService.deleteShoppingListItem.and.returnValue(
       of(emptyResponse)
     );
+    mockBarcodeService.findProduct.and.returnValue(of(barcodeResponse));
 
     await TestBed.configureTestingModule({
       imports: [IonicModule, PantryPage],
@@ -71,6 +82,7 @@ describe('PantryPage', () => {
         { provide: PantryApiService, useValue: mockPantryService },
         { provide: ShoppingListApiService, useValue: mockShoppingListService },
         { provide: AuthenticationService, useValue: mockAuthService },
+        { provide: BarcodeApiService, useValue: mockBarcodeService },
       ],
     }).compileComponents();
 
@@ -83,8 +95,8 @@ describe('PantryPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#ngOnInit should call getPantryItems and getShoppingListItems', () => {
-    component.ngOnInit();
+  it('#viewWillEnter should call getPantryItems and getShoppingListItems', () => {
+    component.ionViewWillEnter();
     expect(mockPantryService.getPantryItems).toHaveBeenCalled();
     expect(mockShoppingListService.getShoppingListItems).toHaveBeenCalled();
 

@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar class="bar">
+    <ion-title>Tutorial</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon class="closeButton" slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollY="false">
+ <!-- preferneces,pantr,main,browse,recipe -->
+      <swiper-container [loop]="false" pagination="true" navigation="true" (slideChange)="onSlideChange()">
+        <swiper-slide>
+          <div class="slide-background">
+            <img src="assets/preferences.jpg" alt="Background Image">
+          </div>
+          <button (click)="closeModal()" class="link-button">Skip</button>
+        </swiper-slide>
+        <swiper-slide>
+          <img src="assets/Pantry.jpg">
+          
+          <button (click)="closeModal()" class="link-button">Skip</button>
+        </swiper-slide>
+        <swiper-slide>
+          <img src="assets/Home.jpg">
+          <button (click)="closeModal()" class="link-button">Skip</button>
+        </swiper-slide>
+        <swiper-slide>
+          <img src="assets/modal.jpg">
+          <button (click)="closeModal()" class="link-button">Skip</button>
+        </swiper-slide>
+        <swiper-slide class="swip">
+          <video #videoPlayer src="assets/Final.mp4" controls autoplay loop muted></video>
+          <button (click)="closeModal()" class="link-but">Skip</button>        
+        </swiper-slide>
+          <swiper-slide>
+          <img src="assets/Browse.jpg">
+          <button (click)="closeModal()" class="link-button">Skip</button>
+        </swiper-slide>
+        <swiper-slide>
+          <img src="assets/Recipe book.jpg">
+          <!-- <button (click)="closeModal()" class="link-button">Skip</button> -->
+        </swiper-slide>
+      </swiper-container>
+
+</ion-content>

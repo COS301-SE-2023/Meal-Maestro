@@ -45,4 +45,12 @@ public class PantryModel {
 
         return csv;
     }
+
+    public List<String> getNameList() throws Exception{
+        List<String> list = new ArrayList<>();
+        for (FoodModel foodModel : this.foods) {
+            list.add(foodModel.getName());
+        }
+        return list;
+    }
 }

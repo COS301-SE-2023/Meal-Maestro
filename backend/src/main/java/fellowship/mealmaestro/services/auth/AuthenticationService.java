@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fellowship.mealmaestro.config.exceptions.UserNotFoundException;
 import fellowship.mealmaestro.models.auth.AuthenticationRequestModel;
 import fellowship.mealmaestro.models.auth.AuthenticationResponseModel;
 import fellowship.mealmaestro.models.auth.AuthorityRoleModel;
@@ -76,7 +77,7 @@ public class AuthenticationService {
                         request.getPassword()));
 
         var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         var jwt = jwtService.generateToken(user);
         return new AuthenticationResponseModel(jwt);

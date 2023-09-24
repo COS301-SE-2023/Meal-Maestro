@@ -8,6 +8,8 @@ import {
   ErrorHandlerService,
 } from '../../services/services';
 import { UserI } from '../../models/user.model';
+import { ModalController } from '@ionic/angular';
+import { TutorialComponent } from '../../components/tutorial/tutorial.component';
 import { UserApiService } from '../../services/user-api/user-api.service';
 
 @Component({
@@ -17,8 +19,10 @@ import { UserApiService } from '../../services/user-api/user-api.service';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule],
 })
-export class AccProfilePage implements OnInit, ViewWillEnter {
+export class AccProfilePage implements ViewWillEnter {
   user: UserI;
+  hovered: boolean = false;
+
   usernameButtons = [
     {
       text: 'Cancel',
@@ -40,7 +44,8 @@ export class AccProfilePage implements OnInit, ViewWillEnter {
     private router: Router,
     private auth: AuthenticationService,
     private userApi: UserApiService,
-    private errorHandler: ErrorHandlerService
+    private errorHandler: ErrorHandlerService,
+    private modalController: ModalController
   ) {
     this.user = {
       username: '',
@@ -52,7 +57,13 @@ export class AccProfilePage implements OnInit, ViewWillEnter {
     this.getUserInfo();
   }
 
-  ngOnInit() {}
+  async openModal() {
+    const modal = await this.modalController.create({
+      component: TutorialComponent,
+    });
+
+    await modal.present();
+  }
 
   async getUserInfo() {
     this.auth.getUser().subscribe({
@@ -98,5 +109,13 @@ export class AccProfilePage implements OnInit, ViewWillEnter {
 
   logout() {
     this.auth.logout();
+  }
+
+  showTooltip() {
+    this.hovered = true;
+  }
+
+  hideTooltip() {
+    this.hovered = false;
   }
 }

@@ -3,6 +3,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { BrowseMealsComponent } from './browse-meals.component';
 import { MealI } from '../../models/interfaces';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('BrowseMealsComponent', () => {
   let component: BrowseMealsComponent;
@@ -21,7 +22,7 @@ describe('BrowseMealsComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [IonicModule.forRoot(), BrowseMealsComponent],
+      imports: [IonicModule.forRoot(), BrowseMealsComponent, HttpClientModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BrowseMealsComponent);

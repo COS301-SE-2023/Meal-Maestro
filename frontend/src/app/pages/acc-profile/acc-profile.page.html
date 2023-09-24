@@ -4,6 +4,15 @@
     <ion-button size="small" (click)="goBack()"
       ><ion-icon name="arrow-back"></ion-icon
     ></ion-button>
+    <ion-buttons slot="end">
+      <ion-button
+        class="help-button"
+        (click)="openModal()"
+        title="Help Tutorial!"
+      >
+        <ion-icon name="help-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -25,9 +34,9 @@
   <ion-button class="logout" color="danger" (click)="logout()"
     >Logout</ion-button
   >
-  <ion-button class="delete" fill="outline" color="danger" (click)="logout()"
+  <!-- <ion-button class="delete" fill="outline" color="danger" (click)="logout()"
     >Delete Account</ion-button
-  >
+  > -->
 
   <ion-alert
     trigger="username"
