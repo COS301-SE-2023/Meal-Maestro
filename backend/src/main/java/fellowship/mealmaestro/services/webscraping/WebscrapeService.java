@@ -58,11 +58,4 @@ public class WebscrapeService {
         logger.info("Scheduled Woolworths scraping task to start immediately.");
     }
     
-
-    private void stopWoolworthsScraping() {
-        if (woolworthsScrapingTask != null) {
-            woolworthsScrapingTask.cancel(false);
-        }
-        logger.info("Stopped Woolworths scraping task");
-    }
 }
