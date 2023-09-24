@@ -29,13 +29,17 @@ public class MealManagementController {
 
     private final MealManagementService mealManagementService;
     private final MealDatabaseService mealDatabaseService;
+    private final RecommendationService recommendationService;
+    private final LogService logService;
 
     public MealManagementController(MealManagementService mealManagementService,
-            MealDatabaseService mealDatabaseService) {
+            MealDatabaseService mealDatabaseService, RecommendationService recommendationService,
+            LogService logService) {
         this.mealManagementService = mealManagementService;
         this.mealDatabaseService = mealDatabaseService;
+        this.recommendationService = recommendationService;
+        this.logService = logService;
     }
-
 
     @PostMapping("/getMealPlanForDay")
     public ResponseEntity<List<MealModel>> dailyMeals(@Valid @RequestBody DateModel request,
