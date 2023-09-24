@@ -72,3 +72,21 @@ ion-segment-button.md {
   --color-checked: var(--ion-color-primary);
   --indicator-height: 4px;
 }
+
+ion-fab-button.fab-button-disabled {
+  --background: #7fb688 !important;
+}
+
+ion-fab-button.fab-button-in-list {
+  --background: #acf7b7;
+}
+
+ion-item.fixed-price {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  font-weight: bold;
+  font-family: "Roboto", sans-serif;
+  color: #656565;
+  font-size: 20px;
+}

@@ -2,7 +2,6 @@ package fellowship.mealmaestro.services;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fellowship.mealmaestro.models.neo4j.MealModel;
@@ -11,8 +10,11 @@ import fellowship.mealmaestro.repositories.neo4j.MealRepository;
 @Service
 public class BrowseService {
 
-    @Autowired
-    private MealRepository mealRepository;
+    private final MealRepository mealRepository;
+
+    public BrowseService(MealRepository mealRepository) {
+        this.mealRepository = mealRepository;
+    }
 
     public List<MealModel> getPopularMeals() {
 

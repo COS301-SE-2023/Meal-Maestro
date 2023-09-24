@@ -3,7 +3,6 @@ package fellowship.mealmaestro.controllers;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,8 +16,11 @@ import jakarta.validation.Valid;
 @RestController
 public class ShoppingListController {
 
-    @Autowired
-    private ShoppingListService shoppingListService;
+    private final ShoppingListService shoppingListService;
+
+    public ShoppingListController(ShoppingListService shoppingListService) {
+        this.shoppingListService = shoppingListService;
+    }
 
     @PostMapping("/addToShoppingList")
     public ResponseEntity<FoodModel> addToShoppingList(@Valid @RequestBody FoodModel request,

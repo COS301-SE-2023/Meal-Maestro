@@ -3,7 +3,6 @@ package fellowship.mealmaestro.controllers;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,8 +16,11 @@ import jakarta.validation.Valid;
 @RestController
 public class PantryController {
 
-    @Autowired
-    private PantryService pantryService;
+    private final PantryService pantryService;
+
+    public PantryController(PantryService pantryService) {
+        this.pantryService = pantryService;
+    }
 
     @PostMapping("/addToPantry")
     public ResponseEntity<FoodModel> addToPantry(@Valid @RequestBody FoodModel request,

@@ -1,6 +1,5 @@
 package fellowship.mealmaestro.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fellowship.mealmaestro.models.neo4j.SettingsModel;
@@ -12,14 +11,16 @@ import fellowship.mealmaestro.services.auth.JwtService;
 @Service
 public class SettingsService {
 
-    @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
+    private final SettingsRepository SettingsRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private SettingsRepository SettingsRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    public SettingsService(JwtService jwtService, SettingsRepository SettingsRepository,
+            UserRepository userRepository) {
+        this.jwtService = jwtService;
+        this.SettingsRepository = SettingsRepository;
+        this.userRepository = userRepository;
+    }
 
     public SettingsModel getSettings(String token) {
         String email = jwtService.extractUserEmail(token);

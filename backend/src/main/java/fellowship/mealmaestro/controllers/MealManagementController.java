@@ -3,7 +3,6 @@ package fellowship.mealmaestro.controllers;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,14 +26,20 @@ import jakarta.validation.Valid;
 
 @RestController
 public class MealManagementController {
-    @Autowired
-    private MealManagementService mealManagementService;
-    @Autowired
-    private MealDatabaseService mealDatabaseService;
-    @Autowired
-    private LogService logService;
-    @Autowired
-    private RecommendationService recommendationService;
+
+    private final MealManagementService mealManagementService;
+    private final MealDatabaseService mealDatabaseService;
+    private final RecommendationService recommendationService;
+    private final LogService logService;
+
+    public MealManagementController(MealManagementService mealManagementService,
+            MealDatabaseService mealDatabaseService, RecommendationService recommendationService,
+            LogService logService) {
+        this.mealManagementService = mealManagementService;
+        this.mealDatabaseService = mealDatabaseService;
+        this.recommendationService = recommendationService;
+        this.logService = logService;
+    }
 
     @PostMapping("/getMealPlanForDay")
     public ResponseEntity<List<MealModel>> dailyMeals(@Valid @RequestBody DateModel request,

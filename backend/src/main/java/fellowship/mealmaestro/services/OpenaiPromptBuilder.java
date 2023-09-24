@@ -3,7 +3,6 @@ package fellowship.mealmaestro.services;
 import java.util.List;
 import java.util.Random;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,13 +17,16 @@ import jakarta.annotation.PostConstruct;
 @Service
 public class OpenaiPromptBuilder {
 
-    @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     private Random rand;
+
+    public OpenaiPromptBuilder(JwtService jwtService, UserRepository userRepository) {
+        this.jwtService = jwtService;
+        this.userRepository = userRepository;
+    }
 
     @PostConstruct
     public void init() {

@@ -109,37 +109,12 @@ export class ProfilePage implements OnInit, ViewWillEnter {
   cookingToggle: boolean = false;
   BMIToggle: boolean = false;
 
-  ngOnInit() {
-    // this.loadUserSettings();
-    // this.auth.getUser().subscribe({
-    //   next: (response) => {
-    //     if (response.status == 200) {
-    //       if (response.body && response.body.name) {
-    //         this.user.username = response.body.name;
-    //         this.user.email = response.body.email;
-    //         this.user.password = response.body.password;
-    //       }
-    //     }
-    //   },
-    //   error: (error) => {
-    //     if (error.status === 403) {
-    //       this.errorHandlerService.presentErrorToast(
-    //         'Unauthorized access. Please login again.',
-    //         error
-    //       );
-    //       this.auth.logout();
-    //     } else {
-    //       this.errorHandlerService.presentErrorToast(
-    //         'Unexpected error while loading user data',
-    //         error
-    //       );
-    //     }
-    //   },
-    // });
-  }
+
+  ngOnInit() {}
+
 
   ionViewWillEnter(): void {
-    if (this.loginService.isSettingsRefreshed()) {
+    if (!this.loginService.isSettingsRefreshed()) {
       this.loadUserSettings();
       this.auth.getUser().subscribe({
         next: (response) => {

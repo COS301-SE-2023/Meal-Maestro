@@ -5,7 +5,13 @@ import {
   ViewChildren,
   ViewChild,
 } from '@angular/core';
-import { IonModal, IonicModule, ViewWillEnter } from '@ionic/angular';
+import {
+  AlertController,
+  AlertInput,
+  IonModal,
+  IonicModule,
+  ViewWillEnter,
+} from '@ionic/angular';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,11 +19,17 @@ import { FoodListItemComponent } from '../../components/food-list-item/food-list
 import { FoodItemI } from '../../models/interfaces';
 import { OverlayEventDetail } from '@ionic/core/components';
 import {
+  BarcodeScanner,
+  Barcode,
+  ScanResult,
+} from '@capacitor-mlkit/barcode-scanning';
+import {
   AuthenticationService,
   ErrorHandlerService,
   LoginService,
   PantryApiService,
   ShoppingListApiService,
+  BarcodeApiService,
 } from '../../services/services';
 
 @Component({
@@ -32,16 +44,19 @@ export class PantryPage implements OnInit, ViewWillEnter {
   foodListItem!: QueryList<FoodListItemComponent>;
   @ViewChild(IonModal) modal!: IonModal;
 
+  isBarcodeSupported: boolean = false;
   segment: 'pantry' | 'shopping' | null = 'pantry';
   isLoading: boolean = false;
   pantryItems: FoodItemI[] = [];
   shoppingItems: FoodItemI[] = [];
+  totalShoppingPrice: number = 0;
   searchTerm: string = '';
   currentSort: string = 'name-down';
   newItem: FoodItemI = {
     name: '',
     quantity: null,
-    unit: 'pcs',
+    unit: undefined,
+    price: undefined,
   };
 
   constructor(
@@ -50,10 +65,18 @@ export class PantryPage implements OnInit, ViewWillEnter {
     private shoppingListService: ShoppingListApiService,
     private errorHandlerService: ErrorHandlerService,
     private auth: AuthenticationService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private barcodeApiService: BarcodeApiService,
+    private alertController: AlertController
   ) {}
 
-  async ngOnInit() {}
+
+  async ngOnInit() {
+    BarcodeScanner.isSupported().then((result) => {
+      this.isBarcodeSupported = result.supported;
+    });
+  }
+
 
   async ionViewWillEnter() {
     if (!this.loginService.isPantryRefreshed()) {
@@ -100,6 +123,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
             this.shoppingItems = response.body;
             this.isLoading = false;
             this.sortNameDescending();
+            this.calculateTotalPrice();
           }
         }
       },
@@ -133,6 +157,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
                 name: '',
                 quantity: null,
                 unit: 'pcs',
+                price: undefined,
               };
             }
           }
@@ -167,7 +192,9 @@ export class PantryPage implements OnInit, ViewWillEnter {
                 name: '',
                 quantity: null,
                 unit: 'pcs',
+                price: undefined,
               };
+              this.calculateTotalPrice();
             }
           }
         },
@@ -221,6 +248,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
             this.shoppingItems = this.shoppingItems.filter(
               (i) => i.name !== item.name
             );
+            this.calculateTotalPrice();
           }
         },
         error: (err) => {
@@ -251,6 +279,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
               (i) => i.name !== item.name
             );
             this.errorHandlerService.presentSuccessToast('Item Bought!');
+            this.calculateTotalPrice();
           }
         }
       },
@@ -270,6 +299,21 @@ export class PantryPage implements OnInit, ViewWillEnter {
           this.errorHandlerService.presentErrorToast('Error buying item.', err);
         }
       },
+    });
+  }
+
+  calculateTotalPrice() {
+    this.totalShoppingPrice = 0;
+    this.shoppingItems.forEach((item) => {
+      if (
+        item.price &&
+        item.price !== undefined &&
+        item.price !== null &&
+        item.price !== 0 &&
+        item.price !== -1
+      ) {
+        this.totalShoppingPrice += item.price;
+      }
     });
   }
 
@@ -294,6 +338,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
       name: '',
       quantity: null,
       unit: 'pcs',
+      price: undefined,
     };
   }
 
@@ -438,5 +483,156 @@ export class PantryPage implements OnInit, ViewWillEnter {
     } else if (this.segment === 'shopping') {
       this.shoppingItems.sort(sortFunction);
     }
+  }
+
+  async scan(): Promise<void> {
+    const granted = await this.requestPermissions();
+    if (!granted) {
+      this.errorHandlerService.presentErrorToast(
+        'Please grant camera permissions to use this feature',
+        'Camera permissions not granted'
+      );
+      return;
+    }
+
+    const result = await BarcodeScanner.scan();
+
+    if (
+      result.barcodes.length === 0 ||
+      result.barcodes[0].displayValue === '' ||
+      result.barcodes[0].displayValue === null ||
+      result.barcodes[0].displayValue === undefined
+    ) {
+      return;
+    }
+    // let result = {
+    //   barcodes: [
+    //     {
+    //       displayValue: '13761238123', // for testing
+    //     },
+    //   ],
+    // };
+
+    if (this.loginService.isShoppingAt() === '') {
+      this.askShoppingLocation(result);
+    } else {
+      this.sendBarcode(result);
+    }
+  }
+
+  async requestPermissions(): Promise<boolean> {
+    const { camera } = await BarcodeScanner.requestPermissions();
+    return camera === 'granted' || camera === 'limited';
+  }
+
+  async sendBarcode(result: any): Promise<void> {
+    // replace any with ScanResult
+    console.log(result.barcodes[0].displayValue);
+    let code = result.barcodes[0].displayValue;
+
+    this.barcodeApiService
+      .findProduct(code, this.loginService.isShoppingAt())
+      .subscribe({
+        next: (response) => {
+          if (response.status === 200) {
+            if (response.body) {
+              if (response.body.name === '') {
+                this.barcodeNotFound();
+              } else {
+                this.newItem = {
+                  name: response.body.name,
+                  quantity: response.body.quantity,
+                  unit: response.body.unit,
+                  price: response.body.price,
+                };
+                this.modal.present();
+              }
+            }
+          }
+        },
+        error: (err) => {
+          if (err.status === 403) {
+            this.errorHandlerService.presentErrorToast(
+              'Unauthorized access. Please login again.',
+              err
+            );
+            this.auth.logout();
+          } else {
+            this.errorHandlerService.presentErrorToast(
+              'Error finding product',
+              err
+            );
+          }
+        },
+      });
+  }
+
+  async barcodeNotFound() {
+    //IMPLEMENT
+    const alert = await this.alertController.create({
+      header: 'Barcode not found',
+      message: 'Please enter the name of the item',
+      inputs: [
+        {
+          name: 'name',
+          type: 'text',
+          placeholder: 'Name',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Confirm',
+          handler: (data) => {
+            this.newItem = {
+              name: data.name,
+              quantity: null,
+              unit: 'pcs',
+              price: undefined,
+            };
+            this.modal.present();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async askShoppingLocation(code: any) {
+    const alert = await this.alertController.create({
+      header: 'Shopping Location',
+      message: 'Where are you shopping?',
+      inputs: [
+        {
+          label: 'Woolworths',
+          type: 'radio',
+          value: 'Woolworths',
+        },
+        {
+          label: 'Checkers',
+          type: 'radio',
+          value: 'Checkers',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Confirm',
+          handler: (data) => {
+            this.loginService.setShoppingAt(data);
+            this.sendBarcode(code);
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }

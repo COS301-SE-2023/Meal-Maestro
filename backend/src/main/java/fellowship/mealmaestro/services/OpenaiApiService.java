@@ -3,7 +3,6 @@ package fellowship.mealmaestro.services;
 import java.time.Duration;
 import java.util.concurrent.TimeoutException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -21,13 +20,16 @@ import reactor.core.publisher.Mono;
 @Service
 public class OpenaiApiService {
     private static final String OPENAI_URL = "https://api.openai.com/v1/chat/completions";
-
     private final static String API_KEY;
 
     private final WebClient webClient;
+    private final ObjectMapper jsonMapper;
+    private final OpenaiPromptBuilder pBuilder;
 
-    public OpenaiApiService(WebClient.Builder webClientBuilder) {
+    public OpenaiApiService(WebClient.Builder webClientBuilder, ObjectMapper jsonMapper, OpenaiPromptBuilder pBuilder) {
         this.webClient = webClientBuilder.build();
+        this.jsonMapper = jsonMapper;
+        this.pBuilder = pBuilder;
     }
 
     static {
@@ -48,11 +50,6 @@ public class OpenaiApiService {
         }
         API_KEY = apiKey;
     }
-
-    @Autowired
-    private ObjectMapper jsonMapper = new ObjectMapper();
-    @Autowired
-    private OpenaiPromptBuilder pBuilder = new OpenaiPromptBuilder();
 
     public String fetchMealResponse(String type, String token) throws JsonMappingException, JsonProcessingException {
         String jsonResponse = getJSONResponse(type, token);

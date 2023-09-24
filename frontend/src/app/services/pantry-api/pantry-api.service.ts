@@ -7,7 +7,7 @@ import { FoodItemI } from '../../models/interfaces';
   providedIn: 'root',
 })
 export class PantryApiService {
-  url: String = 'http://localhost:8080';
+  url: string = 'http://localhost:8080';
 
   constructor(private http: HttpClient) {}
 
