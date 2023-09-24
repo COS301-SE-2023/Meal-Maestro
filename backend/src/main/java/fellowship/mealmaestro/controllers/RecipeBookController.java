@@ -1,9 +1,11 @@
 package fellowship.mealmaestro.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import fellowship.mealmaestro.models.neo4j.MealModel;
+import fellowship.mealmaestro.services.LogService;
 import fellowship.mealmaestro.services.RecipeBookService;
 import jakarta.validation.Valid;
 
@@ -11,7 +13,8 @@ import java.util.List;
 
 @RestController
 public class RecipeBookController {
-
+    @Autowired
+    private LogService logService;
     private final RecipeBookService recipeBookService;
 
     public RecipeBookController(RecipeBookService recipeBookService) {
@@ -24,6 +27,8 @@ public class RecipeBookController {
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+
+        logService.logMeal(token, request, "save");
 
         String authToken = token.substring(7);
         return ResponseEntity.ok(recipeBookService.addRecipe(request, authToken));

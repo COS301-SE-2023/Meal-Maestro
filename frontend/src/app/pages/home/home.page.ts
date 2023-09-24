@@ -104,6 +104,7 @@ export class HomePage implements OnInit, ViewWillEnter {
       await new Promise<void>((resolve, reject) => {
         this.mealGenerationservice.getDailyMeals(date).subscribe({
           next: (data) => {
+            console.log('Received data:', data);
             if (data.body) {
               let mealsForDay: DaysMealsI = {
                 breakfast: undefined,

@@ -122,4 +122,73 @@ public class OpenaiApiService {
         }
     }
 
+    public String fetchMealResponseFromIngredients(String type, String availableIngredients, String token)throws JsonMappingException, JsonProcessingException {
+       
+        String jsonResponse = getJSONResponse(type, token);
+        if (jsonResponse.equals("Timeout")) {
+            jsonResponse = getJSONResponse(type, token);
+        }
+        if (jsonResponse.equals("Error") || jsonResponse.equals("Timeout")) {
+            return "{\"error\":\"error\"}";
+        }
+
+        JsonNode jsonNode = jsonMapper.readTree(jsonResponse);
+
+        JsonNode contentNode = jsonNode
+                .path("choices")
+                .get(0)
+                .path("message")
+                .path("content");
+
+        String text = contentNode.asText();
+
+        text = text.replace("\\\"", "\"");
+        text = text.replace("\n", "");
+        text = text.replace("/r/n", "\\r\\n");
+        int index = text.indexOf('{');
+        int lastIndex = text.lastIndexOf('}') + 1;
+        if (index != -1 && lastIndex != -1 && index < lastIndex) {
+            text = text.substring(index, lastIndex);
+        }
+
+        return text;
+    }
+
+    public String getJSONResponse(String Type, String token, String availableIngredients) throws JsonProcessingException {
+
+        OpenAIChatRequest prompt;
+        String jsonRequest;
+
+        prompt = pBuilder.buildPrompt(Type, token,availableIngredients);
+        jsonRequest = jsonMapper.writeValueAsString(prompt);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + API_KEY);
+
+        System.out.println("Sending request to OpenAI");
+
+        try {
+            String response = webClient.post()
+                    .uri(OPENAI_URL)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .headers(h -> h.setAll(headers.toSingleValueMap()))
+                    .body(Mono.just(jsonRequest), String.class)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .timeout(Duration.ofSeconds(30))
+                    .block();
+
+            return response;
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof TimeoutException) {
+                System.out.println("Timeout");
+                return "Timeout";
+            } else {
+                System.out.println("Error");
+                return "Error";
+            }
+        }
+    }
+
 }
