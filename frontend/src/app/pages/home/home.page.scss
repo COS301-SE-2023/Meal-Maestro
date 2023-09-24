@@ -10,27 +10,81 @@ ion-item {
     font-weight: bold;
     font-size: medium;
     text-transform: uppercase;
-    padding: 10px 0 3px 5px;   
+    padding: 10px 0 3px 5px;
   }
 }
 
-
-
 ion-card {
- // background-color: var(--ion-color-primary-shade);
- background-color: var(--ion-color-primary);
- 
-div {
+  // background-color: var(--ion-color-primary-shade);
+  background-color: var(--ion-color-primary);
+
+  div {
     float: left;
     width: 68%;
-    
-}
+  }
   img {
     padding-bottom: 0;
     float: right;
-    width:32%;
+    width: 32%;
     height: max-content;
     object-fit: fill;
   }
 }
 
+#parent-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  position: relative;
+  top: -20%;
+}
+
+#svg-container {
+  width: 60%;
+  // position: absolute;
+  // top: 40%;
+  // left: 50%;
+  // transform: translate(-50%, -50%);
+}
+
+#loading {
+  text-align: center;
+  font-weight: bold;
+  font-family: "Roboto", sans-serif;
+  font-size: 20px;
+  color: #a9a9a9;
+}
+#loading::after {
+  content: ".";
+  animation: dots 2s ease-in-out infinite;
+}
+
+@keyframes dots {
+  0%,
+  20% {
+    color: #a9a9a9;
+    text-shadow: 0.25em 0 0 #a9a9a9, 0.5em 0 0 #a9a9a9;
+  }
+  40% {
+    color: #a9a9a9;
+    text-shadow: 0.25em 0 0 #a9a9a9, 0.5em 0 0 transparent;
+  }
+  60% {
+    text-shadow: 0.25em 0 0 transparent, 0.5em 0 0 transparent;
+  }
+  80%,
+  100% {
+    text-shadow: 0.25em 0 0 transparent, 0.5em 0 0 #a9a9a9;
+  }
+}
+
+.fade-out {
+  opacity: 1;
+  transition: opacity 0.2s ease-out;
+}
+
+.fade-out.ng-hide {
+  opacity: 0;
+}

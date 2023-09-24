@@ -1,18 +1,21 @@
 package fellowship.mealmaestro.services;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.github.fge.jsonschema.main.JsonSchema;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
+
+import fellowship.mealmaestro.models.neo4j.MealModel;
 
 @Service
 public class MealManagementService {
@@ -22,250 +25,60 @@ public class MealManagementService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public String generateDaysMeals() throws JsonMappingException, JsonProcessingException {
-        int i = 0;
-        JsonNode breakfastJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
-        if (breakfastJson.isMissingNode()) {
-            int prevBestOfN = openaiApiService.getBestofN();
-            Boolean success = false;
-            openaiApiService.setBestofN(prevBestOfN + 1);
-            while (!success && i < 5) {
-                breakfastJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
-                if (!breakfastJson.isMissingNode())
-                    success = true;
-                i++;
+    @Autowired
+    private UnsplashService unsplashService;
+
+    public MealModel generateMeal(String mealType, String token) {
+        MealModel defaultMeal = new MealModel("Bread", "1. Toast the bread", "Delicious Bread",
+                "https://images.unsplash.com/photo-1598373182133-52452f7691ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                "Bread", "5 minutes");
+        try {
+            JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(mealType, token));
+            int i = 0;
+            if (!validate(mealJson)) {
+                for (i = 0; i < 4; i++) {
+                    mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(mealType, token));
+                    if (validate(mealJson))
+                        break;
+                }
+                return defaultMeal;
             }
-            openaiApiService.setBestofN(prevBestOfN);
+
+            String imageUrl = "";
+            imageUrl = unsplashService.fetchPhoto(mealJson.get("name").asText());
+
+            ObjectNode mealObject = objectMapper.valueToTree(mealJson);
+            mealObject.put("type", mealType);
+            mealObject.put("image", imageUrl);
+
+            MealModel mealModel = objectMapper.treeToValue(mealObject, MealModel.class);
+            return mealModel;
+        } catch (JsonProcessingException e) {
+            System.out.println(e.getMessage());
+            return defaultMeal;
         }
-        JsonNode lunchJson = objectMapper.readTree(openaiApiService.fetchMealResponse("lunch"));
-        if (lunchJson.isMissingNode()) {
-            int prevBestOfN = openaiApiService.getBestofN();
-            Boolean success = false;
-            openaiApiService.setBestofN(prevBestOfN + 1);
-            while (!success && i < 5) {
-                lunchJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
-                if (!lunchJson.isMissingNode())
-                    success = true;
-                i++;
-            }
-            openaiApiService.setBestofN(prevBestOfN);
-        }
-        JsonNode dinnerJson = objectMapper.readTree(openaiApiService.fetchMealResponse("dinner"));
-        if (dinnerJson.isMissingNode()) {
-            int prevBestOfN = openaiApiService.getBestofN();
-            Boolean success = false;
-            openaiApiService.setBestofN(prevBestOfN + 1);
-            while (!success && i < 5) {
-                dinnerJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
-                if (!dinnerJson.isMissingNode())
-                    success = true;
-                i++;
-            }
-            openaiApiService.setBestofN(prevBestOfN);
-        }
-        ObjectNode combinedNode = JsonNodeFactory.instance.objectNode();
-        combinedNode.set("breakfast", breakfastJson);
-        combinedNode.set("lunch", lunchJson);
-        combinedNode.set("dinner", dinnerJson);
-        //
-        // DaysMeals daysMeals = objectMapper.treeToValue(combinedNode,
-        // DaysMeals.class);
-        return combinedNode.toString();
     }
 
-    public JsonNode generateDaysMealsJson() throws JsonMappingException, JsonProcessingException {
-        int i = 0;
-        JsonNode breakfastJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
-        if (breakfastJson.isMissingNode()) {
-            int prevBestOfN = openaiApiService.getBestofN();
-            Boolean success = false;
-            openaiApiService.setBestofN(prevBestOfN + 1);
-            while (!success && i < 5) {
-                breakfastJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
-                if (!breakfastJson.isMissingNode())
-                    success = true;
-                i++;
-            }
-            openaiApiService.setBestofN(prevBestOfN);
+    public boolean validate(JsonNode data) {
+        try {
+            File schemaFile = new File("src\\main\\resources\\MealSchema.json");
+            JsonNode schemaNode = objectMapper.readTree(schemaFile);
+
+            JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
+            JsonSchema schema = factory.getJsonSchema(schemaNode);
+
+            ProcessingReport report = schema.validate(data);
+
+            return report.isSuccess();
+
+        } catch (ProcessingException e) {
+            System.out.println("Error validating meal schema");
+            return false;
+        } catch (IOException e) {
+            System.out.println("Error reading meal schema file");
+            System.out.println(e.getMessage());
+            return false;
         }
-        JsonNode lunchJson = objectMapper.readTree(openaiApiService.fetchMealResponse("lunch"));
-        if (lunchJson.isMissingNode()) {
-            int prevBestOfN = openaiApiService.getBestofN();
-            Boolean success = false;
-            openaiApiService.setBestofN(prevBestOfN + 1);
-            while (!success && i < 5) {
-                lunchJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
-                if (!lunchJson.isMissingNode())
-                    success = true;
-                i++;
-            }
-            openaiApiService.setBestofN(prevBestOfN);
-        }
-        JsonNode dinnerJson = objectMapper.readTree(openaiApiService.fetchMealResponse("dinner"));
-        if (dinnerJson.isMissingNode()) {
-            int prevBestOfN = openaiApiService.getBestofN();
-            Boolean success = false;
-            openaiApiService.setBestofN(prevBestOfN + 1);
-            while (!success && i < 5) {
-                dinnerJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
-                if (!dinnerJson.isMissingNode())
-                    success = true;
-                i++;
-            }
-            openaiApiService.setBestofN(prevBestOfN);
-        }
-        ObjectNode combinedNode = JsonNodeFactory.instance.objectNode();
-        combinedNode.set("breakfast", breakfastJson);
-        combinedNode.set("lunch", lunchJson);
-        combinedNode.set("dinner", dinnerJson);
-        //
-        // DaysMeals daysMeals = objectMapper.treeToValue(combinedNode,
-        // DaysMeals.class);
-        return combinedNode;
     }
-
-    public String generateMeal() throws JsonMappingException, JsonProcessingException {
-        int i = 0;
-        JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast lunch or dinner"));
-        if (mealJson.isMissingNode()) {
-            int prevBestOfN = openaiApiService.getBestofN();
-            Boolean success = false;
-            openaiApiService.setBestofN(prevBestOfN + 1);
-            while (!success && i < 5) {
-                mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast lunch or dinner"));
-                if (!mealJson.isMissingNode())
-                    success = true;
-                i++;
-            }
-            openaiApiService.setBestofN(prevBestOfN);
-        }
-        return mealJson.toString();
-    }
-
-    public String generateMeal(String mealType) throws JsonMappingException, JsonProcessingException {
-        
-        JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(mealType));
-        int i = 0;
-        if(mealJson.isMissingNode())
-        {
-        int prevBestOfN = openaiApiService.getBestofN();
-        Boolean success = false;
-        openaiApiService.setBestofN(prevBestOfN + 1);
-        while(!success&& i < 4)
-        {
-        mealJson =
-        objectMapper.readTree(openaiApiService.fetchMealResponse(mealType));
-        if(!mealJson.isMissingNode())
-        success = true;
-        i++;
-        }
-        openaiApiService.setBestofN(prevBestOfN);
-        }
-        return mealJson.toString();
-    }
-
-    // public String generatePopularMeals()throws JsonMappingException, JsonProcessingException {
-        
-    //     JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast lunch or dinner"));
-    //     int i = 0;
-    //     if(mealJson.isMissingNode())
-    //     {
-    //         int prevBestOfN = openaiApiService.getBestofN();
-    //         Boolean success = false;
-    //         openaiApiService.setBestofN(prevBestOfN + 1);
-    //         while(!success&& i < 5)
-    //         {
-    //             mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
-    //             if(!mealJson.isMissingNode())
-    //                 success = true;
-    //                 i++;
-    //         }
-    //         openaiApiService.setBestofN(prevBestOfN);
-    //     }
-    //     return mealJson.toString();    
-        
-    // }
-
-    // public String generateSearchedMeals(String query) throws JsonProcessingException {
-        
-    //    JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast lunch or dinner"));
-    //    int i = 0;
-    //     if(mealJson.isMissingNode())
-    //     {
-    //         int prevBestOfN = openaiApiService.getBestofN();
-    //         Boolean success = false;
-    //         openaiApiService.setBestofN(prevBestOfN + 1);
-    //         while(!success&& i < 5)
-    //         {
-    //             mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse("breakfast"));
-    //             if(!mealJson.isMissingNode())
-    //                 success = true;
-    //                 i++;
-    //         }
-    //         openaiApiService.setBestofN(prevBestOfN);
-    //     }
-
-    //     // Convert the JSON node to a List<JsonNode> to filter the entities
-    //     List<JsonNode> mealList = new ArrayList<>();
-    //     if (mealJson.isArray()) {
-    //         for (JsonNode entity : mealJson) {
-    //             mealList.add(entity);
-    //         }
-    //     }
-
-    //     // Split the query into individual words
-    //     String[] searchWords = query.toLowerCase().split(" ");
-
-    //     // Filter the entities based on the query parameter
-    //     List<JsonNode> filteredEntities = new ArrayList<>();
-    //     for (JsonNode entity : mealList) {
-    //         String name = entity.get("name").asText().toLowerCase();
-    //     // String description = entity.get("description").asText().toLowerCase();
-    //         String ingredients = entity.get("ingredients").asText().toLowerCase();
-    //         String description = entity.get("description").asText().toLowerCase();
-    //     // String instructions = entity.get("instruction").asText().toLowerCase();
-        
-    //     // Check if all search words are present in the name, ingredients, or description
-    //     boolean allWordsFound = true;
-    //     for (String word : searchWords) {
-    //         if (!name.contains(word) && !ingredients.contains(word) && !description.contains(word)) {
-    //             allWordsFound = false;
-    //             break;
-    //         }
-    //     }
-    //     if (allWordsFound) {
-    //         filteredEntities.add(entity);
-    //     }
-
-    // }
-    //     // if (name.contains(query.toLowerCase()) || ingredients.contains(query.toLowerCase()) || description.contains(query.toLowerCase()) ) {
-    //     //         filteredEntities.add(entity);
-    //     //     }
-    //     // }
-    //     // Create a new JSON array node to store the filtered entities
-    //     ArrayNode filteredEntitiesArray = JsonNodeFactory.instance.arrayNode();
-    //     filteredEntities.forEach(filteredEntitiesArray::add);
-
-    //     return filteredEntitiesArray.toString();
-
-    //     // int i = 0;
-    //     // JsonNode searchedMeal = objectMapper.readTree(openaiApiService.fetchMealResponse(query));
-    //     // if (searchedMeal.isMissingNode()) {
-    //     //     int prevBestOfN = openaiApiService.getBestofN();
-    //     //     boolean success = false;
-    //     //     openaiApiService.setBestofN(prevBestOfN + 1);
-    //     //     while (!success && i < 5) {
-    //     //         searchedMeal = objectMapper.readTree(openaiApiService.fetchMealResponse(query));
-    //     //         if (!searchedMeal.isMissingNode())
-    //     //             success = true;
-    //     //         i++;
-    //     //     }
-    //     //     openaiApiService.setBestofN(prevBestOfN);
-    //     // }
-    //    // return searchedMeal.toString();
-
-
-    // }
 
 }
-

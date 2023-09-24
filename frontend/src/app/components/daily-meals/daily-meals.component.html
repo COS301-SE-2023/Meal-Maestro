@@ -3,198 +3,280 @@
     <div class="label-container">
       <ion-item *ngIf="dayData">
         <!-- Rest of the code -->
-        <ion-label>{{ dayData?.mealDate }}</ion-label>
+        <ion-label>{{ dayData.mealDay }}</ion-label>
       </ion-item>
-     
+
       <span class="line"></span>
     </div>
 
-    <ion-item-sliding ion-padding="0px" style="display: contents;"> 
-      
-      <ion-card  color="primary" ion-padding>
-       <ion-item class="no-style" (click)="setOpen(true, 'breakfast')" color="none" style="  --inner-padding-end: 0;--inner-padding-bottom: 0;" >
-          <div ion-no-padding style="padding-inline-end:0px !important;">
+    <ion-item-sliding ion-padding="0px" style="display: contents">
+      <ion-card
+        color="primary"
+        ion-padding
+        [ngClass]="{ 'hidden-card': !isBreakfastLoading }"
+      >
+        <div class="svg-container breakfast-svg-container"></div>
+      </ion-card>
+
+      <ion-card
+        color="primary"
+        ion-padding
+        [ngClass]="{ 'hidden-card': isBreakfastLoading }"
+      >
+        <ion-item
+          class="no-style"
+          (click)="setOpen(true, 'breakfast')"
+          color="none"
+          style="--inner-padding-end: 0; --inner-padding-bottom: 0"
+        >
+          <div ion-no-padding style="padding-inline-end: 0px !important">
             <ion-card-header>
               <ion-card-subtitle>Breakfast</ion-card-subtitle>
-              <ion-card-title>{{ dayData?.breakfast?.name }}</ion-card-title>
+              <ion-card-title>{{ dayData.breakfast?.name }}</ion-card-title>
             </ion-card-header>
-      
-            <ion-card-content>
-              {{ dayData?.breakfast?.description }}
-            </ion-card-content>
-        
 
-         
+            <ion-card-content>
+              {{ dayData.breakfast?.description }}
+            </ion-card-content>
+
             <ion-avatar no-padding no-margin>
-              <img
-                src="https://plus.unsplash.com/premium_photo-1675252369719-dd52bc69c3df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80"
-                alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-              />
+              <img [src]="dayData.breakfast?.image" alt="Breakfast Image" />
             </ion-avatar>
           </div>
-      
-        <ion-modal [isOpen]="isBreakfastModalOpen">
-          <ng-template>
-            <ion-header>
-              <ion-toolbar>
-                <ion-title>{{ dayData?.breakfast?.name }}</ion-title>
-                <ion-buttons slot="end">
-                  <ion-button (click)="setOpen(false, 'breakfast')">Close</ion-button>
-                </ion-buttons>
-              </ion-toolbar>
-            </ion-header>
-            <ion-avatar class="background">
-              <img
-                src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-                alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-              />
-            </ion-avatar>
-            <ion-content class="ion-padding">
-              <h2>Ingredients:</h2>
-              <p>{{ dayData?.breakfast?.ingredients }}</p>
-              <h2>Instructions:</h2>
-              <p>{{ dayData?.breakfast?.instructions }}</p>
-              <h2>Cooking Time:</h2>
-              <p>{{ dayData?.breakfast?.cookingTime }}</p>
-            </ion-content>
-          </ng-template>
-        </ion-modal>
-      </ion-item>
-      <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="handleSync(breakfast)"> <ion-icon name="sync-outline"></ion-icon> </ion-item-option>
-      </ion-item-options>
-      <ion-item-options side="start">
-        <ion-item-option color="secondary" (click)="handleArchive(breakfast)" > <ion-icon slot="icon-only" name="archive"></ion-icon> </ion-item-option>
-      </ion-item-options>
+
+          <ion-modal [isOpen]="isBreakfastModalOpen">
+            <ng-template>
+              <ion-header>
+                <ion-toolbar>
+                  <ion-title>{{ dayData.breakfast?.name }}</ion-title>
+                  <ion-buttons slot="end">
+                    <ion-button (click)="setOpen(false, 'breakfast')"
+                      >Close</ion-button
+                    >
+                  </ion-buttons>
+                </ion-toolbar>
+              </ion-header>
+              <ion-avatar class="background">
+                <img [src]="dayData.breakfast?.image" alt="Breakfast Image" />
+              </ion-avatar>
+              <ion-content class="ion-padding">
+                <h2>Ingredients:</h2>
+                <p>{{ dayData.breakfast?.ingredients }}</p>
+                <h2>Instructions:</h2>
+                <p>{{ dayData.breakfast?.instructions }}</p>
+                <h2>Cooking Time:</h2>
+                <p>{{ dayData.breakfast?.cookingTime }}</p>
+              </ion-content>
+            </ng-template>
+          </ion-modal>
+        </ion-item>
+        <ion-item-options
+          side="end"
+          (ionSwipe)="
+            handleRegenerate(this.dayData.breakfast, this.dayData.mealDate)
+          "
+        >
+          <ion-item-option
+            color="danger"
+            (click)="
+              handleRegenerate(this.dayData.breakfast, this.dayData.mealDate)
+            "
+            expandable
+          >
+            <ion-icon slot="icon-only" name="sync-outline"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+        <ion-item-options side="start">
+          <ion-item-option color="secondary" (click)="handleArchive(breakfast)">
+            <ion-icon slot="icon-only" name="archive"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
       </ion-card>
-   
-    
     </ion-item-sliding>
 
-    <ion-item-sliding ion-padding="0px" style="display: contents;"> 
-      
-      <ion-card  color="primary" ion-padding>
-       <ion-item class="no-style" (click)="setOpen(true, 'lunch')" color="none" style="  --inner-padding-end: 0;--inner-padding-bottom: 0;" >
-          <div ion-no-padding style="padding-inline-end:0px !important;">
+    <ion-item-sliding ion-padding="0px" style="display: contents">
+      <ion-card
+        color="primary"
+        ion-padding
+        [ngClass]="{ 'hidden-card': !isLunchLoading }"
+      >
+        <div class="svg-container lunch-svg-container"></div>
+      </ion-card>
+
+      <ion-card
+        color="primary"
+        ion-padding
+        [ngClass]="{ 'hidden-card': isLunchLoading }"
+      >
+        <ion-item
+          class="no-style"
+          (click)="setOpen(true, 'lunch')"
+          color="none"
+          style="--inner-padding-end: 0; --inner-padding-bottom: 0"
+        >
+          <div ion-no-padding style="padding-inline-end: 0px !important">
             <ion-card-header>
               <ion-card-subtitle>Lunch</ion-card-subtitle>
-              <ion-card-title>{{ dayData?.lunch?.name }}</ion-card-title>
+              <ion-card-title>{{ dayData.lunch?.name }}</ion-card-title>
             </ion-card-header>
-      
-            <ion-card-content>
-              {{ dayData?.lunch?.description }}
-            </ion-card-content>
-        
 
-         
+            <ion-card-content>
+              {{ dayData.lunch?.description }}
+            </ion-card-content>
+
             <ion-avatar no-padding no-margin>
-              <img
-                src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-                alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-              />
+              <img [src]="dayData.lunch?.image" alt="Lunch Image" />
             </ion-avatar>
           </div>
-      
-        
 
-        <ion-modal [isOpen]="isLunchModalOpen">
-          <ng-template>
-            <ion-header>
-              <ion-toolbar>
-                <ion-title>{{ dayData?.lunch?.name }}</ion-title>
-                <ion-buttons slot="end">
-                  <ion-button (click)="setOpen(false, 'lunch')">Close</ion-button>
-                </ion-buttons>
-              </ion-toolbar>
-            </ion-header>
-            <ion-avatar class="background">
-              <img
-                src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-                alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-              />
-            </ion-avatar>
-            <ion-content class="ion-padding">
-              <h2>Ingredients:</h2>
-              <p>{{ dayData?.lunch?.ingredients }}</p>
-              <h2>Instructions:</h2>
-              <p>{{ dayData?.lunch?.instructions }}</p>
-              <h2>Cooking time:</h2>
-              <p>{{ dayData?.lunch?.cookingTime }}</p>
-            </ion-content>
-          </ng-template>
-        </ion-modal>
-      </ion-item>
-      <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="handleSync(lunch)"> <ion-icon name="sync-outline"></ion-icon> </ion-item-option>
-      </ion-item-options>
-      <ion-item-options side="start">
-        <ion-item-option color="secondary" (click)="handleArchive(lunch)" > <ion-icon slot="icon-only" name="archive"></ion-icon> </ion-item-option>
-      </ion-item-options>
+<!--THIS MODAL IS THE ONLY ONE BEING USED AS OF SEPTEMBER 16-->
+          <ion-modal [isOpen]="isModalOpen">    
+            <ng-template>
+              <ion-header>
+                <ion-toolbar>
+                  <ion-title>{{ item?.name }}</ion-title>
+                  <ion-buttons slot="end">
+                    <ion-button (click)="setOpen(false, 'lunch')">Close</ion-button>
+                  </ion-buttons>
+                </ion-toolbar>
+              </ion-header>
+              <ion-avatar>
+                <img [src]="item?.image" [alt]="item?.name"/>
+              </ion-avatar>
+
+              <ion-content class="ion-padding">
+                <div class="buttons">
+                  <ion-button (click)="liked(item!)" class="likebutton" fill="outline" shape="round" color="black">
+                    <ion-icon name="thumbs-up-outline"></ion-icon>
+                  </ion-button>
+                  <ion-button (click)="disliked(item!)" class="likebutton" fill="outline" shape="round" color="black">
+                    <ion-icon name="thumbs-down-outline"></ion-icon>
+                  </ion-button>
+                  <ion-button (click)="addRecipe(item!)" class="savebutton" fill="outline" shape="round" color="black">
+                    <ion-icon slot="start" name="bookmark-outline"></ion-icon> 
+                    Save to Recipe Book
+                  </ion-button>
+                </div>
+                <p>{{ item?.description }}</p>
+                <h4>Preparation Time</h4>
+                <p>{{ item?.cookingTime }}</p>
+                <h4>Ingredients:</h4>
+                  <ul>
+                    <li *ngFor="let ingredient of fIng">{{ ingredient }}</li>
+                  </ul>
+              <h4>Instructions</h4>
+                  <ol>
+                    <li *ngFor="let instruction of fIns">{{ instruction }}</li>
+                  </ol>
+              </ion-content>       
+            </ng-template>            
+          </ion-modal>
+        </ion-item>
+        <ion-item-options
+          side="end"
+          (ionSwipe)="handleRegenerate(dayData.lunch, this.dayData.mealDate)"
+        >
+          <ion-item-option
+            color="danger"
+            (click)="handleRegenerate(dayData.lunch, this.dayData.mealDate)"
+            expandable
+          >
+            <ion-icon slot="icon-only" name="sync-outline"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+        <ion-item-options side="start">
+          <ion-item-option color="secondary" (click)="handleArchive(lunch)">
+            <ion-icon slot="icon-only" name="archive"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
       </ion-card>
-   
-    
     </ion-item-sliding>
-    <ion-item-sliding ion-padding="0px" style="display: contents;"> 
-      
-      <ion-card  color="primary" ion-padding>
-       <ion-item class="no-style" (click)="setOpen(true, 'dinner')" color="none" style="  --inner-padding-end: 0;--inner-padding-bottom: 0;" >
-          <div ion-no-padding style="padding-inline-end:0px !important;">
+
+    <ion-item-sliding ion-padding="0px" style="display: contents">
+      <ion-card
+        color="primary"
+        ion-padding
+        [ngClass]="{ 'hidden-card': !isDinnerLoading }"
+      >
+        <div class="svg-container dinner-svg-container"></div>
+      </ion-card>
+      <ion-card
+        color="primary"
+        ion-padding
+        [ngClass]="{ 'hidden-card': isDinnerLoading }"
+      >
+        <ion-item
+          class="no-style"
+          (click)="setOpen(true, 'dinner')"
+          color="none"
+          style="--inner-padding-end: 0; --inner-padding-bottom: 0"
+        >
+          <div ion-no-padding style="padding-inline-end: 0px !important">
             <ion-card-header>
               <ion-card-subtitle>Dinner</ion-card-subtitle>
-              <ion-card-title>{{ dayData?.dinner?.name }}</ion-card-title>
+              <ion-card-title>{{ dayData.dinner?.name }}</ion-card-title>
             </ion-card-header>
-      
-            <ion-card-content>
-              {{ dayData?.dinner?.description }}
-            </ion-card-content>
-        
 
-         
+            <ion-card-content>
+              {{ dayData.dinner?.description }}
+            </ion-card-content>
+
             <ion-avatar no-padding no-margin>
-              <img
-                src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-                alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-              />
+              <img [src]="this.dayData.dinner?.image" alt="Dinner Image" />
             </ion-avatar>
           </div>
-      
-        
 
-        <ion-modal [isOpen]="isDinnerModalOpen">
-          <ng-template>
-            <ion-header>
-              <ion-toolbar>
-                <ion-title>{{ dayData?.dinner?.name }}</ion-title>
-                <ion-buttons slot="end">
-                  <ion-button (click)="setOpen(false,'dinner')">Close</ion-button>
-                </ion-buttons>
-              </ion-toolbar>
-            </ion-header>
-            <ion-avatar class="background">
-              <img
-                src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-                alt="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-              />
-            </ion-avatar>
-            <ion-content class="ion-padding">
-              <h2>Ingredients:</h2>
-              <p>{{ dayData?.dinner?.ingredients }}</p>
-              <h2>Instructions:</h2>
-              <p>{{ dayData?.dinner?.instructions }}</p>
-              <h2>Cooking Time:</h2>
-              <p>{{ dayData?.dinner?.cookingTime }}</p>
-            </ion-content>
-          </ng-template>
-        </ion-modal>
-      </ion-item>
-      <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="handleSync(dinner)"> <ion-icon name="sync-outline"></ion-icon> </ion-item-option>
-      </ion-item-options>
-      <ion-item-options side="start">
-        <ion-item-option color="secondary" (click)="handleArchive(dinner)" > <ion-icon slot="icon-only" name="archive"></ion-icon> </ion-item-option>
-      </ion-item-options>
+          <ion-modal [isOpen]="isDinnerModalOpen">
+              <ion-header>
+                <ion-toolbar>
+                  <ion-title>{{ dayData.dinner?.name }}</ion-title>
+                  <ion-buttons slot="end">
+                    <ion-button (click)="setOpen(false, 'dinner')">Close</ion-button>
+                  </ion-buttons>
+                </ion-toolbar>
+              </ion-header>
+              <ion-avatar class="background">
+                <img [src]="this.dayData.dinner?.image" alt="dayData.dinner.name" />
+              </ion-avatar>
+
+              <ion-content class="ion-padding">
+                <div>
+                  <ion-button (click)="addRecipe(item!)" class="savebutton" fill="outline" shape="round" color="black">
+                    <ion-icon slot="start" name="bookmark-outline"></ion-icon> 
+                    Save to Recipe Book
+                  </ion-button>
+                </div>
+                <p style="padding-top: 40px;">{{ dayData.dinner?.description }}</p>
+                <h4>Preparation Time</h4>
+                <p>{{ dayData.dinner?.cookingTime }}</p>
+                <h4>Ingredients:</h4>
+                  <ul>
+                    <li *ngFor="let ingredient of fIng">{{ ingredient }}</li>
+                  </ul>
+              <h4>Instructions</h4>
+                  <ol>+
+                    <li *ngFor="let instruction of fIns">{{ instruction }}</li>
+                  </ol>
+              </ion-content>
+          </ion-modal>
+        </ion-item>
+        <ion-item-options
+          side="end"
+          (ionSwipe)="handleRegenerate(dayData.dinner, this.dayData.mealDate)"
+        >
+          <ion-item-option
+            color="danger"
+            (click)="handleRegenerate(dayData.dinner, this.dayData.mealDate)"
+            expandable
+          >
+            <ion-icon slot="icon-only" name="sync-outline"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+        <ion-item-options side="start">
+          <ion-item-option color="secondary" (click)="handleArchive(dinner)">
+            <ion-icon slot="icon-only" name="archive"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
       </ion-card>
-   
-    
-    </ion-item-sliding>
-
+    </ion-item-sliding></div
+></ion-item>

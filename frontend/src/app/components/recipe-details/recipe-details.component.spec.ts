@@ -18,6 +18,7 @@ describe('RecipeDetailsComponent', () => {
       instructions: 'test',
       image: 'test',
       cookingTime: 'test',
+      type: 'breakfast',
     };
 
     mockItems = [mockItem];

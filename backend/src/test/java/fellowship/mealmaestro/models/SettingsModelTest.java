@@ -4,12 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import fellowship.mealmaestro.models.neo4j.SettingsModel;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 
 @SpringBootTest
 
@@ -50,16 +49,6 @@ public class SettingsModelTest {
     public void testSetBudgetRange() {
         settingsModel.setBudgetRange("Low");
         assertEquals("Low", settingsModel.getBudgetRange());
-    }
-
-    @Test
-    public void testSetMacroRatio() {
-        Map<String, Integer> macroRatio = new HashMap<>();
-        macroRatio.put("protein", 40);
-        macroRatio.put("carbs", 40);
-        macroRatio.put("fat", 20);
-        settingsModel.setMacroRatio(macroRatio);
-        assertEquals(macroRatio, settingsModel.getMacroRatio());
     }
 
     @Test

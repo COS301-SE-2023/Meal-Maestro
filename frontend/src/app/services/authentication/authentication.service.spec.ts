@@ -8,24 +8,28 @@ describe('AuthenticationService', () => {
   let service: AuthenticationService;
   let httpClientSpy: jasmine.SpyObj<HttpClient>;
   let routerSpy: jasmine.SpyObj<any>;
+  let loginServiceSpy: jasmine.SpyObj<any>;
   let mockUser: UserI;
   let mockAuthResponse: AuthResponseI;
 
   beforeEach(() => {
     httpClientSpy = jasmine.createSpyObj('HttpClient', ['post']);
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-    service = new AuthenticationService(httpClientSpy as any, routerSpy as any);
+    service = new AuthenticationService(
+      httpClientSpy as any,
+      routerSpy as any,
+      loginServiceSpy as any
+    );
 
     mockUser = {
-      "username": "test",
-      "email": "test@example.com",
-      "password": "test"
+      username: 'test',
+      email: 'test@example.com',
+      password: 'test',
     };
 
     mockAuthResponse = {
-      "token": "test",
-    }
-
+      token: 'test',
+    };
   });
 
   it('should be created', () => {
@@ -33,60 +37,57 @@ describe('AuthenticationService', () => {
   });
 
   it('should login user', (done: DoneFn) => {
-
-    httpClientSpy.post.and.returnValue(of(new HttpResponse({ body: mockAuthResponse })));
+    httpClientSpy.post.and.returnValue(
+      of(new HttpResponse({ body: mockAuthResponse }))
+    );
 
     service.login(mockUser).subscribe({
-      next: response => {
+      next: (response) => {
         expect(response.body)
           .withContext('expected response')
           .toEqual(mockAuthResponse);
         done();
       },
-      error: done.fail
+      error: done.fail,
     });
 
-    expect(httpClientSpy.post.calls.count())
-      .withContext('one call')
-      .toBe(1);
+    expect(httpClientSpy.post.calls.count()).withContext('one call').toBe(1);
   });
 
   it('should register user', (done: DoneFn) => {
-
-    httpClientSpy.post.and.returnValue(of(new HttpResponse({ body: mockAuthResponse })));
+    httpClientSpy.post.and.returnValue(
+      of(new HttpResponse({ body: mockAuthResponse }))
+    );
 
     service.register(mockUser).subscribe({
-      next: response => {
+      next: (response) => {
         expect(response.body)
           .withContext('expected response')
           .toEqual(mockAuthResponse);
         done();
       },
-      error: done.fail
+      error: done.fail,
     });
 
-    expect(httpClientSpy.post.calls.count())
-      .withContext('one call')
-      .toBe(1);
+    expect(httpClientSpy.post.calls.count()).withContext('one call').toBe(1);
   });
 
   it('should find user', (done: DoneFn) => {
-
-    httpClientSpy.post.and.returnValue(of(new HttpResponse({ body: mockUser })));
+    httpClientSpy.post.and.returnValue(
+      of(new HttpResponse({ body: mockUser }))
+    );
 
     service.findUser(mockUser.email).subscribe({
-      next: response => {
+      next: (response) => {
         expect(response.body)
           .withContext('expected response')
           .toEqual(mockUser);
         done();
       },
-      error: done.fail
+      error: done.fail,
     });
 
-    expect(httpClientSpy.post.calls.count())
-      .withContext('one call')
-      .toBe(1);
+    expect(httpClientSpy.post.calls.count()).withContext('one call').toBe(1);
   });
 
   it('should set token', () => {
@@ -97,5 +98,4 @@ describe('AuthenticationService', () => {
       .withContext('token set')
       .toEqual(token);
   });
-
 });

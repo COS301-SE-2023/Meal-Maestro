@@ -19,11 +19,4 @@ export class AppComponent {
 
   constructor() {}
 
-  //const url = 'http://localhost:7867/removeFromPantry
-  // const body = {
-  //   id : 'pantryItemId'
-  // }
-
-  // this.http.post(url, body)
-
 }

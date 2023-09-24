@@ -3,54 +3,58 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FoodItemI } from '../../models/interfaces';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PantryApiService {
+  url: String = 'http://localhost:8080';
 
-  url : String = 'http://localhost:8080';
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getPantryItems(): Observable<HttpResponse<FoodItemI[]>> {
     return this.http.post<FoodItemI[]>(
-      this.url+'/getPantry',
+      this.url + '/getPantry',
       {},
-      {observe: 'response'});
+      { observe: 'response' }
+    );
   }
 
   addToPantry(item: FoodItemI): Observable<HttpResponse<FoodItemI>> {
     return this.http.post<FoodItemI>(
-      this.url+'/addToPantry',
+      this.url + '/addToPantry',
       {
-        "name": item.name,
-        "quantity": item.quantity,
-        "weight": item.weight,
+        name: item.name,
+        quantity: item.quantity,
+        unit: item.unit,
       },
-      {observe: 'response'});
+      { observe: 'response' }
+    );
   }
 
   updatePantryItem(item: FoodItemI): Observable<HttpResponse<void>> {
     return this.http.post<void>(
-      this.url+'/updatePantry',
+      this.url + '/updatePantry',
       {
-        "name": item.name,
-        "quantity": item.quantity,
-        "weight": item.weight,
+        name: item.name,
+        quantity: item.quantity,
+        unit: item.unit,
+        id: item.id,
       },
-      {observe: 'response'});
+      { observe: 'response' }
+    );
   }
 
   deletePantryItem(item: FoodItemI): Observable<HttpResponse<void>> {
+    console.log(item);
     return this.http.post<void>(
-      this.url+'/removeFromPantry',
+      this.url + '/removeFromPantry',
       {
-        "name": item.name,
-        "quantity": item.quantity,
-        "weight": item.weight,
+        name: item.name,
+        quantity: item.quantity,
+        unit: item.unit,
+        id: item.id,
       },
-      {observe: 'response'});
+      { observe: 'response' }
+    );
   }
-  
 }

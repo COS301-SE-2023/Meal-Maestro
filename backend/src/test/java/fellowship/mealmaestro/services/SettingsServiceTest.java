@@ -11,13 +11,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import fellowship.mealmaestro.models.SettingsModel;
-import fellowship.mealmaestro.repositories.SettingsRepository;
+import fellowship.mealmaestro.models.neo4j.SettingsModel;
+import fellowship.mealmaestro.repositories.neo4j.SettingsRepository;
 import fellowship.mealmaestro.services.auth.JwtService;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 @SpringBootTest
 
@@ -45,20 +43,18 @@ public class SettingsServiceTest {
         settingsModel.setFoodPreferences(Arrays.asList("Vegetarian"));
         settingsModel.setCalorieAmount(2000);
         settingsModel.setBudgetRange("Low");
-        Map<String, Integer> macroRatio = new HashMap<>();
-        macroRatio.put("protein", 40);
-        macroRatio.put("carbs", 40);
-        macroRatio.put("fat", 20);
-        settingsModel.setMacroRatio(macroRatio);
+        settingsModel.setProtein(40);
+        settingsModel.setCarbs(40);
+        settingsModel.setFat(20);
         settingsModel.setAllergies(Arrays.asList("Peanuts"));
         settingsModel.setCookingTime("30 minutes");
         settingsModel.setUserHeight(180);
         settingsModel.setUserWeight(70);
         settingsModel.setUserBMI(22);
-        
+
         when(jwtService.extractUserEmail("validToken")).thenReturn("test@example.com");
-        when(settingsRepository.getSettings("test@example.com")).thenReturn(settingsModel);
-        
+        when(settingsService.getSettings("test@example.com")).thenReturn(settingsModel);
+
         SettingsModel result = settingsService.getSettings("validToken");
 
         assertEquals(settingsModel, result);
@@ -72,11 +68,9 @@ public class SettingsServiceTest {
         settingsModel.setFoodPreferences(Arrays.asList("Vegan"));
         settingsModel.setCalorieAmount(3000);
         settingsModel.setBudgetRange("High");
-        Map<String, Integer> macroRatio = new HashMap<>();
-        macroRatio.put("protein", 30);
-        macroRatio.put("carbs", 50);
-        macroRatio.put("fat", 20);
-        settingsModel.setMacroRatio(macroRatio);
+        settingsModel.setProtein(30);
+        settingsModel.setCarbs(50);
+        settingsModel.setFat(20);
         settingsModel.setAllergies(Arrays.asList("Dairy"));
         settingsModel.setCookingTime("45 minutes");
         settingsModel.setUserHeight(175);
@@ -87,6 +81,6 @@ public class SettingsServiceTest {
 
         settingsService.updateSettings(settingsModel, "validToken");
 
-        verify(settingsRepository).updateSettings(settingsModel, "test@example.com");
+        verify(settingsService).updateSettings(settingsModel, "test@example.com");
     }
 }

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RecipeBookPage } from './recipe-book.page';
 import { AuthenticationService, RecipeBookApiService } from '../../services/services';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('RecipeBookPage', () => {
   let component: RecipeBookPage;
@@ -10,7 +11,7 @@ describe('RecipeBookPage', () => {
 
   beforeEach(async() => {
     await TestBed.configureTestingModule({
-      imports: [RecipeBookPage],
+      imports: [HttpClientModule, RecipeBookPage],
       providers: [
         { provide: RecipeBookApiService, useValue: mockRecipeBookApiService },
         { provide: AuthenticationService, useValue: authServiceSpy },

@@ -1,13 +1,24 @@
-import { Component, OnInit, QueryList, ViewChildren, ViewChild } from '@angular/core';
-import { IonModal, IonicModule } from '@ionic/angular';
+import {
+  Component,
+  OnInit,
+  QueryList,
+  ViewChildren,
+  ViewChild,
+} from '@angular/core';
+import { IonModal, IonicModule, ViewWillEnter } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FoodListItemComponent } from '../../components/food-list-item/food-list-item.component';
 import { FoodItemI } from '../../models/interfaces';
 import { OverlayEventDetail } from '@ionic/core/components';
-import { AuthenticationService, ErrorHandlerService, PantryApiService, ShoppingListApiService } from '../../services/services';
-
+import {
+  AuthenticationService,
+  ErrorHandlerService,
+  LoginService,
+  PantryApiService,
+  ShoppingListApiService,
+} from '../../services/services';
 
 @Component({
   selector: 'app-pantry',
@@ -16,12 +27,12 @@ import { AuthenticationService, ErrorHandlerService, PantryApiService, ShoppingL
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, FoodListItemComponent],
 })
-export class PantryPage implements OnInit{
-  @ViewChildren(FoodListItemComponent) foodListItem!: QueryList<FoodListItemComponent>;
+export class PantryPage implements OnInit, ViewWillEnter {
+  @ViewChildren(FoodListItemComponent)
+  foodListItem!: QueryList<FoodListItemComponent>;
   @ViewChild(IonModal) modal!: IonModal;
 
-  segment: 'pantry'|'shopping'| null = 'pantry';
-  isQuantity: boolean = false;
+  segment: 'pantry' | 'shopping' | null = 'pantry';
   isLoading: boolean = false;
   pantryItems: FoodItemI[] = [];
   shoppingItems: FoodItemI[] = [];
@@ -30,53 +41,62 @@ export class PantryPage implements OnInit{
   newItem: FoodItemI = {
     name: '',
     quantity: null,
-    weight: null,
+    unit: 'pcs',
   };
 
-  constructor(public r : Router, 
-              private pantryService: PantryApiService, 
-              private shoppingListService: ShoppingListApiService,
-              private errorHandlerService: ErrorHandlerService,
-              private auth: AuthenticationService) {}
+  constructor(
+    public r: Router,
+    private pantryService: PantryApiService,
+    private shoppingListService: ShoppingListApiService,
+    private errorHandlerService: ErrorHandlerService,
+    private auth: AuthenticationService,
+    private loginService: LoginService
+  ) {}
 
-  async ngOnInit() {
-    this.fetchItems();
+  async ngOnInit() {}
+
+  async ionViewWillEnter() {
+    if (!this.loginService.isPantryRefreshed()) {
+      this.fetchItems();
+      this.loginService.setPantryRefreshed(true);
+    }
   }
 
-  async fetchItems(){
+  async fetchItems() {
     this.isLoading = true;
     this.pantryService.getPantryItems().subscribe({
       next: (response) => {
         if (response.status === 200) {
-          if (response.body){
+          if (response.body) {
             this.pantryItems = response.body;
+            console.log(this.pantryItems);
             this.isLoading = false;
             this.sortNameDescending();
           }
         }
       },
       error: (err) => {
-        if (err.status === 403){
+        if (err.status === 403) {
           this.errorHandlerService.presentErrorToast(
             'Unauthorized access. Please login again.',
             err
-          )
+          );
           this.isLoading = false;
           this.auth.logout();
-        }else{
+        } else {
           this.errorHandlerService.presentErrorToast(
             'Error loading pantry items',
             err
-          )
+          );
           this.isLoading = false;
         }
-      }
-    })
+      },
+    });
 
     this.shoppingListService.getShoppingListItems().subscribe({
       next: (response) => {
         if (response.status === 200) {
-          if (response.body){
+          if (response.body) {
             this.shoppingItems = response.body;
             this.isLoading = false;
             this.sortNameDescending();
@@ -84,213 +104,225 @@ export class PantryPage implements OnInit{
         }
       },
       error: (err) => {
-        if (err.status === 403){
+        if (err.status === 403) {
           this.errorHandlerService.presentErrorToast(
             'Unauthorized access. Please login again.',
             err
-          )
+          );
           this.auth.logout();
-        }else{
+        } else {
           this.errorHandlerService.presentErrorToast(
             'Error loading shopping list items',
             err
-          )
+          );
         }
-      }
+      },
     });
   }
 
-  async addItemToPantry(event : Event){
+  async addItemToPantry(event: Event) {
     var ev = event as CustomEvent<OverlayEventDetail<FoodItemI>>;
 
     if (ev.detail.role === 'confirm') {
       this.pantryService.addToPantry(ev.detail.data!).subscribe({
         next: (response) => {
           if (response.status === 200) {
-            if (response.body){
+            if (response.body) {
               this.pantryItems.unshift(response.body);
               this.newItem = {
                 name: '',
                 quantity: null,
-                weight: null,
+                unit: 'pcs',
               };
-              this.isQuantity = false;
             }
           }
         },
         error: (err) => {
-          if (err.status === 403){
+          if (err.status === 403) {
             this.errorHandlerService.presentErrorToast(
               'Unauthorized access. Please login again.',
               err
-            )
+            );
             this.auth.logout();
-          }else{
+          } else {
             this.errorHandlerService.presentErrorToast(
               'Error adding item to pantry',
               err
-            )
+            );
           }
-        }
+        },
       });
     }
   }
 
-  async addItemToShoppingList(event : Event){
+  async addItemToShoppingList(event: Event) {
     var ev = event as CustomEvent<OverlayEventDetail<FoodItemI>>;
     if (ev.detail.role === 'confirm') {
       this.shoppingListService.addToShoppingList(ev.detail.data!).subscribe({
         next: (response) => {
           if (response.status === 200) {
-            if (response.body){
+            if (response.body) {
               this.shoppingItems.unshift(response.body);
               this.newItem = {
                 name: '',
                 quantity: null,
-                weight: null,
+                unit: 'pcs',
               };
-              this.isQuantity = false;
             }
           }
-          
         },
         error: (err) => {
-          if (err.status === 403){
+          if (err.status === 403) {
             this.errorHandlerService.presentErrorToast(
               'Unauthorized access. Please login again.',
               err
-            )
+            );
             this.auth.logout();
-          }else{
+          } else {
             this.errorHandlerService.presentErrorToast(
               'Error adding item to shopping list',
               err
-            )
+            );
           }
-        }
+        },
       });
     }
   }
 
-  async onItemDeleted(item : FoodItemI){
-    if (this.segment === 'pantry'){
+  async onItemDeleted(item: FoodItemI) {
+    if (this.segment === 'pantry') {
       this.pantryService.deletePantryItem(item).subscribe({
         next: (response) => {
           if (response.status === 200) {
-            this.pantryItems = this.pantryItems.filter((i) => i.name !== item.name);
+            this.pantryItems = this.pantryItems.filter(
+              (i) => i.name !== item.name
+            );
           }
         },
         error: (err) => {
-          if (err.status === 403){
+          if (err.status === 403) {
             this.errorHandlerService.presentErrorToast(
               'Unauthorized access. Please login again.',
               err
-            )
+            );
             this.auth.logout();
-          }else{
+          } else {
             this.errorHandlerService.presentErrorToast(
               'Error deleting item from pantry',
               err
-            )
+            );
           }
-        }
+        },
       });
-    } else if (this.segment === 'shopping'){
+    } else if (this.segment === 'shopping') {
       this.shoppingListService.deleteShoppingListItem(item).subscribe({
         next: (response) => {
           if (response.status === 200) {
-            this.shoppingItems = this.shoppingItems.filter((i) => i.name !== item.name);
+            this.shoppingItems = this.shoppingItems.filter(
+              (i) => i.name !== item.name
+            );
           }
         },
         error: (err) => {
-          if (err.status === 403){
+          if (err.status === 403) {
             this.errorHandlerService.presentErrorToast(
               'Unauthorized access. Please login again.',
               err
-            )
+            );
             this.auth.logout();
-          }else{
+          } else {
             this.errorHandlerService.presentErrorToast(
               'Error deleting item from shopping list',
               err
-            )
+            );
           }
-        }
+        },
       });
     }
   }
 
- async onItemBought(item : FoodItemI){
-  this.shoppingListService.buyItem(item).subscribe({
-    next: (response) => {
-      if (response.status === 200) {
-        if (response.body){
-          this.pantryItems = response.body;
-          this.shoppingItems = this.shoppingItems.filter((i) => i.name !== item.name);
-          this.errorHandlerService.presentSuccessToast("Item Bought!");
+  async onItemBought(item: FoodItemI) {
+    this.shoppingListService.buyItem(item).subscribe({
+      next: (response) => {
+        if (response.status === 200) {
+          if (response.body) {
+            this.pantryItems = response.body;
+            this.shoppingItems = this.shoppingItems.filter(
+              (i) => i.name !== item.name
+            );
+            this.errorHandlerService.presentSuccessToast('Item Bought!');
+          }
         }
-      }
-    },
-    error: (err) => {
-      if (err.status === 403){
-        this.errorHandlerService.presentErrorToast(
-          'Unauthorize access. Please login again.',
-          err
-        )
-        this.auth.logout();
-      } else {
-        this.errorHandlerService.presentErrorToast(
-          'Error buying item.',
-          err
-        )
-      }
-    }
-  })
- }
+      },
+      error: (err) => {
+        if (err.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorized access. Please login again.',
+            err
+          );
+          this.auth.logout();
+        } else if (err.status === 409) {
+          this.errorHandlerService.presentErrorToast(
+            'Cannot convert units',
+            err
+          );
+        } else {
+          this.errorHandlerService.presentErrorToast('Error buying item.', err);
+        }
+      },
+    });
+  }
 
-  closeSlidingItems(){
+  closeSlidingItems() {
     this.foodListItem.forEach((item) => {
       item.closeItem();
     });
   }
 
-  segmentChanged(event : any){
-    if (event.detail.value !== 'pantry' && event.detail.value !== 'shopping'){
+  segmentChanged(event: any) {
+    if (event.detail.value !== 'pantry' && event.detail.value !== 'shopping') {
       this.segment = 'pantry';
-    }else{
+    } else {
       this.segment = event.detail.value;
     }
     this.closeSlidingItems();
   }
 
-  dismissModal(){
+  dismissModal() {
     this.modal.dismiss(null, 'cancel');
     this.newItem = {
       name: '',
       quantity: null,
-      weight: null,
+      unit: 'pcs',
     };
-    this.isQuantity = false;
   }
 
-  confirmModal(){
-    if (this.newItem.name === ''){
-      this.errorHandlerService.presentErrorToast('Please enter a name for the item', 'No name entered');
+  confirmModal() {
+    if (this.newItem.name === '') {
+      this.errorHandlerService.presentErrorToast(
+        'Please enter a name for the item',
+        'No name entered'
+      );
       return;
     }
-    if ((this.newItem.quantity !== null && this.newItem.quantity < 0) || 
-          (this.newItem.weight !== null && this.newItem.weight < 0)){
-      this.errorHandlerService.presentErrorToast('Please enter a valid quantity or weight', 'Invalid quantity or weight');
+    if (this.newItem.quantity !== null && this.newItem.quantity < 0) {
+      this.errorHandlerService.presentErrorToast(
+        'Please enter a valid quantity',
+        'Invalid quantity'
+      );
       return;
     }
-    if (this.newItem.quantity === null && this.newItem.weight === null){
-      this.errorHandlerService.presentErrorToast('Please enter a quantity or weight', 'No quantity or weight entered');
+    if (this.newItem.quantity === null) {
+      this.errorHandlerService.presentErrorToast(
+        'Please enter a quantity',
+        'No quantity entered'
+      );
       return;
     }
     this.modal.dismiss(this.newItem, 'confirm');
   }
 
-  doRefresh(event : any){
+  doRefresh(event: any) {
     this.isLoading = true;
     setTimeout(() => {
       this.fetchItems();
@@ -303,14 +335,14 @@ export class PantryPage implements OnInit{
     this.searchTerm = event.detail.value;
   }
 
-  isVisible(itemName: String){ 
+  isVisible(itemName: String) {
     // decides whether to show item based on search term
 
     if (!this.searchTerm) return true;
     return itemName.toLowerCase().includes(this.searchTerm.toLowerCase());
   }
 
-  changeSort(sort1: string, sort2: string){
+  changeSort(sort1: string, sort2: string) {
     this.currentSort = this.currentSort === sort1 ? sort2 : sort1;
     this.sortChanged();
   }
@@ -339,11 +371,11 @@ export class PantryPage implements OnInit{
   }
 
   sortNameDescending(): void {
-    if (this.segment === 'pantry'){
+    if (this.segment === 'pantry') {
       this.pantryItems.sort((a, b) => {
         return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
       });
-    } else if (this.segment === 'shopping'){
+    } else if (this.segment === 'shopping') {
       this.shoppingItems.sort((a, b) => {
         return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
       });
@@ -351,11 +383,11 @@ export class PantryPage implements OnInit{
   }
 
   sortNameAscending(): void {
-    if (this.segment === 'pantry'){
+    if (this.segment === 'pantry') {
       this.pantryItems.sort((a, b) => {
         return a.name.toLowerCase() > b.name.toLowerCase() ? -1 : 1;
       });
-    } else if (this.segment === 'shopping'){
+    } else if (this.segment === 'shopping') {
       this.shoppingItems.sort((a, b) => {
         return a.name.toLowerCase() > b.name.toLowerCase() ? -1 : 1;
       });
@@ -363,27 +395,48 @@ export class PantryPage implements OnInit{
   }
 
   sortAmountDescending(): void {
-    if (this.segment === 'pantry'){
-      this.pantryItems.sort((a, b) => {
-        return (a.quantity! + a.weight!) > (b.quantity! + b.weight!) ? -1 : 1;
-      });
-    } else if (this.segment === 'shopping'){
-      this.shoppingItems.sort((a, b) => {
-        return (a.quantity! + a.weight!) > (b.quantity! + b.weight!) ? -1 : 1;
-      });
+    const convertToCommonUnit = (item: FoodItemI) => {
+      let quantity = item.quantity || 0;
+      if (item.unit === 'kg') {
+        quantity *= 1000; // Convert kilograms to grams
+      } else if (item.unit === 'l') {
+        quantity *= 1000; // Convert liters to milliliters, if needed
+      }
+      // Add other unit conversions as needed
+      return quantity;
+    };
+
+    const sortFunction = (a: FoodItemI, b: FoodItemI) => {
+      return convertToCommonUnit(a) > convertToCommonUnit(b) ? -1 : 1;
+    };
+
+    if (this.segment === 'pantry') {
+      this.pantryItems.sort(sortFunction);
+    } else if (this.segment === 'shopping') {
+      this.shoppingItems.sort(sortFunction);
     }
   }
 
   sortAmountAscending(): void {
-    if (this.segment === 'pantry'){
-      this.pantryItems.sort((a, b) => {
-        return (a.quantity! + a.weight!) < (b.quantity! + b.weight!) ? -1 : 1;
-      });
-    } else if (this.segment === 'shopping'){
-      this.shoppingItems.sort((a, b) => {
-        return (a.quantity! + a.weight!) < (b.quantity! + b.weight!) ? -1 : 1;
-      });
+    const convertToCommonUnit = (item: FoodItemI) => {
+      let quantity = item.quantity || 0;
+      if (item.unit === 'kg') {
+        quantity *= 1000; // Convert kilograms to grams
+      } else if (item.unit === 'l') {
+        quantity *= 1000; // Convert liters to milliliters, if needed
+      }
+      // Add other unit conversions as needed
+      return quantity;
+    };
+
+    const sortFunction = (a: FoodItemI, b: FoodItemI) => {
+      return convertToCommonUnit(a) < convertToCommonUnit(b) ? -1 : 1;
+    };
+
+    if (this.segment === 'pantry') {
+      this.pantryItems.sort(sortFunction);
+    } else if (this.segment === 'shopping') {
+      this.shoppingItems.sort(sortFunction);
     }
   }
-
 }

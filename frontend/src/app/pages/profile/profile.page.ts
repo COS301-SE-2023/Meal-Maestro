@@ -1,15 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule, PickerController, ToastController } from '@ionic/angular';
+import {
+  IonicModule,
+  PickerController,
+  ViewWillEnter,
+  ToastController,
+} from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { UserPreferencesI } from '../../models/userpreference.model';
+import { SettingsI } from '../../models/settings.model';
 
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { SettingsApiService } from '../../services/settings-api/settings-api.service';
 
 import { UserI } from '../../models/user.model';
-import { AuthenticationService } from '../../services/services';
-
+import {
+  AuthenticationService,
+  ErrorHandlerService,
+  LoginService,
+  SettingsApiService,
+} from '../../services/services';
 
 @Component({
   selector: 'app-profile',
@@ -18,19 +26,16 @@ import { AuthenticationService } from '../../services/services';
   standalone: true,
   imports: [IonicModule, FormsModule, CommonModule],
 })
-
-export class ProfilePage implements OnInit {
-  
-
+export class ProfilePage implements OnInit, ViewWillEnter {
   constructor(
     private router: Router,
     private pickerController: PickerController,
     private settingsApiService: SettingsApiService,
     private auth: AuthenticationService,
+    private loginService: LoginService,
+    private errorHandlerService: ErrorHandlerService,
     private toastController: ToastController
-  ) {
-   
-  }
+  ) {}
   // User data
   user: UserI = {
     username: '',
@@ -38,13 +43,15 @@ export class ProfilePage implements OnInit {
     password: '',
   };
 
-  userpreferences: UserPreferencesI = {
+  settings: SettingsI = {
     goal: '',
     shoppingInterval: '',
-  foodPreferences: [],
+    foodPreferences: [],
     calorieAmount: 0,
     budgetRange: '',
-    macroRatio: { protein: 0, carbs: 0, fat: 0 },
+    protein: 0,
+    carbs: 0,
+    fat: 0,
     allergies: [],
     cookingTime: '',
     userHeight: 0,
@@ -65,7 +72,7 @@ export class ProfilePage implements OnInit {
   shoppingIntervalOtherValue: number | undefined | any = 7;
   shoppingInterval: string | any;
   displayAllergies: string[] | string = '';
-  displayPreferences: string[] | string = '' ;
+  displayPreferences: string[] | string = '';
   selectedPreferences: string | any;
   selectedPriceRange: string | any;
 
@@ -103,191 +110,256 @@ export class ProfilePage implements OnInit {
   BMIToggle: boolean = false;
 
   //reset logic for cancel button
-  initialshoppinginterval : string | any;
-  initialpreference : string | any;
-  initialpreferenceVegetarian : string | any;
-  initialpreferenceVegan : string | any;
-  initialpreferenceGlutenIntolerant : string | any;
-  initialpreferenceLactoseIntolerant : string | any;
-  initialcalorie : number | any;
-  initialbudget : string | any;
-  initialmacro : any;
-  initialallergies : string | any;
-  initialallergiesSeafood : string | any;
-  initialallergiesNuts : string | any;
-  initialallergiesEggs : string | any;
-  initialallergiesSoy : string | any;
+  initialshoppinginterval: string | any;
+  initialpreference: string | any;
+  initialpreferenceVegetarian: string | any;
+  initialpreferenceVegan: string | any;
+  initialpreferenceGlutenIntolerant: string | any;
+  initialpreferenceLactoseIntolerant: string | any;
+  initialcalorie: number | any;
+  initialbudget: string | any;
+  initialprotein: number | any;
+  initialcarbs: number | any;
+  initialfat: number | any;
+  initialallergies: string | any;
+  initialallergiesSeafood: string | any;
+  initialallergiesNuts: string | any;
+  initialallergiesEggs: string | any;
+  initialallergiesSoy: string | any;
 
-  initialcooking : string | any;
-  initialBMI : number | any;
-  initialshoppingintervalToggle : boolean | any;
-  initialpreferenceToggle : boolean | any;
-  initialcalorieToggle : boolean | any;
-  initialbudgetToggle : boolean | any;
-  initialmacroToggle : boolean | any;
-  initialallergiesToggle : boolean | any;
-  initialcookingToggle : boolean | any;
-  initialBMIToggle : boolean | any;
+  initialcooking: string | any;
+  initialBMI: number | any;
+  initialshoppingintervalToggle: boolean | any;
+  initialpreferenceToggle: boolean | any;
+  initialcalorieToggle: boolean | any;
+  initialbudgetToggle: boolean | any;
+  initialmacroToggle: boolean | any;
+  initialallergiesToggle: boolean | any;
+  initialcookingToggle: boolean | any;
+  initialBMIToggle: boolean | any;
 
   ngOnInit() {
-    this.loadUserSettings();
-    this.auth.getUser().subscribe({
-      next: (response) => {
-        if (response.status == 200) {
-          if (response.body && response.body.name) {
-            this.user.username = response.body.name;
-            this.user.email = response.body.email;
-            this.user.password = response.body.password;
-          }
-        }
-      },
-      error: (error) => {
-        console.log(error);
-      }
-    })
+    // this.loadUserSettings();
+    // this.auth.getUser().subscribe({
+    //   next: (response) => {
+    //     if (response.status == 200) {
+    //       if (response.body && response.body.name) {
+    //         this.user.username = response.body.name;
+    //         this.user.email = response.body.email;
+    //         this.user.password = response.body.password;
+    //       }
+    //     }
+    //   },
+    //   error: (error) => {
+    //     if (error.status === 403) {
+    //       this.errorHandlerService.presentErrorToast(
+    //         'Unauthorized access. Please login again.',
+    //         error
+    //       );
+    //       this.auth.logout();
+    //     } else {
+    //       this.errorHandlerService.presentErrorToast(
+    //         'Unexpected error while loading user data',
+    //         error
+    //       );
+    //     }
+    //   },
+    // });
   }
 
-   private async loadUserSettings() {
+  ionViewWillEnter(): void {
+    if (this.loginService.isSettingsRefreshed()) {
+      this.loadUserSettings();
+      this.auth.getUser().subscribe({
+        next: (response) => {
+          if (response.status == 200) {
+            if (response.body && response.body.name) {
+              this.user.username = response.body.name;
+              this.user.email = response.body.email;
+              this.user.password = response.body.password;
+            }
+          }
+        },
+        error: (error) => {
+          if (error.status === 403) {
+            this.errorHandlerService.presentErrorToast(
+              'Unauthorized access. Please login again.',
+              error
+            );
+            this.auth.logout();
+          } else {
+            this.errorHandlerService.presentErrorToast(
+              'Unexpected error while loading user data',
+              error
+            );
+          }
+        },
+      });
+      this.loginService.setSettingsRefreshed(false);
+    }
+  }
+
+  private async loadUserSettings() {
     this.settingsApiService.getSettings().subscribe({
       next: (response) => {
         if (response.status === 200) {
-          if (response.body) { 
-            console.log("loaduser")
-            console.log(response.body)
-            this.userpreferences.goal = response.body.goal;
+          if (response.body) {
+            console.log('loaduser');
+            console.log(response.body);
+            this.settings.goal = response.body.goal;
             if (response.body.shoppingInterval != '') {
-              this.userpreferences.shoppingIntervalSet = true;
+              this.settings.shoppingIntervalSet = true;
             }
 
-            if (response.body.shoppingInterval === 'weekly' || response.body.shoppingInterval === 'biweekly' || response.body.shoppingInterval === 'monthly') {
-              this.userpreferences.shoppingInterval = response.body.shoppingInterval;
+            if (
+              response.body.shoppingInterval === 'weekly' ||
+              response.body.shoppingInterval === 'biweekly' ||
+              response.body.shoppingInterval === 'monthly'
+            ) {
+              this.settings.shoppingInterval = response.body.shoppingInterval;
               this.shoppingInterval = response.body.shoppingInterval;
-            }
-            else if (response.body.shoppingInterval.includes("days")) {
-              this.userpreferences.shoppingInterval = "other";  
+            } else if (response.body.shoppingInterval.includes('days')) {
+              this.settings.shoppingInterval = 'other';
               this.shoppingIntervalOtherValue = response.body.shoppingInterval;
-            }
-            else {
-              this.userpreferences.shoppingIntervalSet = false;
-              this.userpreferences.shoppingInterval = '';
-              this.shoppingInterval = ''; 
+            } else {
+              this.settings.shoppingIntervalSet = false;
+              this.settings.shoppingInterval = '';
+              this.shoppingInterval = '';
             }
 
-            this.userpreferences.foodPreferences = response.body.foodPreferences;
+            this.settings.foodPreferences = response.body.foodPreferences;
             if (response.body.calorieAmount == 0) {
-              this.userpreferences.calorieAmount = '';
-            }
-            else 
-            {
-            this.userpreferences.calorieAmount = response.body.calorieAmount;
+              this.settings.calorieAmount = '';
+            } else {
+              this.settings.calorieAmount = response.body.calorieAmount;
             }
 
-            console.log("budget")
-            console.log(response.body.budgetRange)
-            if (response.body.budgetRange.includes("R")) {
-              this.userpreferences.budgetRange = response.body.budgetRange;
-              this.selectedPriceRange = "custom";
-            }
-            else
-            {
-              this.userpreferences.budgetRange = response.body.budgetRange;
+            console.log('budget');
+            console.log(response.body.budgetRange);
+            if (response.body.budgetRange.includes('R')) {
+              this.settings.budgetRange = response.body.budgetRange;
+              this.selectedPriceRange = 'custom';
+            } else {
+              this.settings.budgetRange = response.body.budgetRange;
               this.selectedPriceRange = response.body.budgetRange;
             }
-            this.userpreferences.allergies = response.body.allergies;
-            this.userpreferences.cookingTime = response.body.cookingTime;
-            this.userpreferences.userHeight = response.body.userHeight;
-            this.userpreferences.userWeight = response.body.userWeight;
+            this.settings.allergies = response.body.allergies;
+            this.settings.cookingTime = response.body.cookingTime;
+            this.settings.userHeight = response.body.userHeight;
+            this.settings.userWeight = response.body.userWeight;
             if (response.body.userBMI == 0) {
-              this.userpreferences.userBMI = '';
+              this.settings.userBMI = '';
+            } else this.settings.userBMI = response.body.userBMI;
+            this.settings.bmiset = response.body.bmiset;
+            this.settings.cookingTimeSet = response.body.cookingTimeSet;
+            this.settings.allergiesSet = response.body.allergiesSet;
+            if (
+              response.body.protein > 0 &&
+              response.body.carbs > 0 &&
+              response.body.fat > 0 &&
+              response.body.macroSet === true
+            ) {
+              this.settings.macroSet = true;
+            } else if (
+              response.body.protein === 0 ||
+              response.body.carbs === 0 ||
+              response.body.fat === 0 ||
+              response.body.macroSet === false
+            ) {
+              this.settings.macroSet = false;
             }
-            else
-            this.userpreferences.userBMI = response.body.userBMI;
-            this.userpreferences.bmiset = response.body.bmiset;
-            this.userpreferences.cookingTimeSet = response.body.cookingTimeSet;
-            this.userpreferences.allergiesSet = response.body.allergiesSet;
-            if (response.body.macroRatio.protein > 0 && response.body.macroRatio.carbs > 0 && response.body.macroRatio.fat > 0 && response.body.macroSet === true)
-            {
-              this.userpreferences.macroSet = true;
-            }
-            else if (response.body.macroRatio.protein === 0 || response.body.macroRatio.carbs === 0 || response.body.macroRatio.fat === 0 || response.body.macroSet === false)
-           {
-                this.userpreferences.macroSet = false;
-            }
-            this.userpreferences.budgetSet = response.body.budgetSet;
-            this.userpreferences.calorieSet = response.body.calorieSet;
-            this.userpreferences.shoppingIntervalSet = response.body.shoppingIntervalSet;
-            this.userpreferences.macroRatio.fat = response.body.macroRatio.fat;
-            this.userpreferences.macroRatio.carbs = response.body.macroRatio.carbs;
-            this.userpreferences.macroRatio.protein = response.body.macroRatio.protein;
-            this.displayPreferences = this.userpreferences.foodPreferences;
-            this.displayAllergies = this.userpreferences.allergies;
+            this.settings.budgetSet = response.body.budgetSet;
+            this.settings.calorieSet = response.body.calorieSet;
+            this.settings.shoppingIntervalSet =
+              response.body.shoppingIntervalSet;
+            this.settings.fat = response.body.fat;
+            this.settings.carbs = response.body.carbs;
+            this.settings.protein = response.body.protein;
+            this.displayPreferences = this.settings.foodPreferences;
+            this.displayAllergies = this.settings.allergies;
 
-            this.shoppingintervalToggle = this.userpreferences.shoppingIntervalSet;
-            this.calorieToggle = this.userpreferences.calorieSet;
-            this.budgetToggle = this.userpreferences.budgetSet;
-           
-            this.allergiesToggle = this.userpreferences.allergiesSet;
-            this.cookingToggle = this.userpreferences.cookingTimeSet;
-            this.BMIToggle = this.userpreferences.bmiset;
-            this.shoppingInterval = this.userpreferences.shoppingInterval;
-            
-            
+            this.shoppingintervalToggle = this.settings.shoppingIntervalSet;
+            this.calorieToggle = this.settings.calorieSet;
+            this.budgetToggle = this.settings.budgetSet;
+
+            this.allergiesToggle = this.settings.allergiesSet;
+            this.cookingToggle = this.settings.cookingTimeSet;
+            this.BMIToggle = this.settings.bmiset;
+            this.shoppingInterval = this.settings.shoppingInterval;
+
             this.displaying_Macroratio = this.getDisplayMacroratio();
             this.updateDisplayData();
 
-            this.setInitialAllergies()
-            this.setInitialBMI()
-            this.setInitialBudget()
-            this.setInitialCalorie()
-            this.setInitialCooking()
-            this.setIntialPreference()
-            this.setInitialMacro()
-            this.setInitialShopping()
+            this.setInitialAllergies();
             this.setInitialBMI();
-
+            this.setInitialBudget();
+            this.setInitialCalorie();
+            this.setInitialCooking();
+            this.setIntialPreference();
+            this.setInitialMacro();
+            this.setInitialShopping();
+            this.setInitialBMI();
           }
-                  }
+        }
       },
       error: (err) => {
         if (err.status === 403) {
-          console.log('Unauthorized access. Please login again.', err);
-          this.router.navigate(['../']);
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorized access. Please login again.',
+            err
+          );
+          this.auth.logout();
         } else {
-          console.log('Error loading user settings', err);
+          this.errorHandlerService.presentErrorToast(
+            'Unexpected error while loading user settings',
+            err
+          );
         }
-       
       },
     });
-    
-   
   }
 
   setGoal() {
     this.updateSettingsOnServer(); // Update the settings on the server when the goal is set
   }
-  
-  
+
   private updateSettingsOnServer() {
-    console.log("update")
-    //if check to ensure only 1 "days" is in the string 
-    if (this.userpreferences.shoppingInterval.includes("days") && this.userpreferences.shoppingInterval.split("days").length - 1 > 1) {
-      this.userpreferences.shoppingInterval = this.userpreferences.shoppingInterval.replace("days", "").trim();
+    console.log('update');
+    //if check to ensure only 1 "days" is in the string
+    if (
+      this.settings.shoppingInterval.includes('days') &&
+      this.settings.shoppingInterval.split('days').length - 1 > 1
+    ) {
+      this.settings.shoppingInterval = this.settings.shoppingInterval
+        .replace('days', '')
+        .trim();
     }
 
-    console.log(this.userpreferences)
+    console.log(this.settings);
 
-    this.settingsApiService.updateSettings(this.userpreferences).subscribe(
-      (response) => {
+    this.settingsApiService.updateSettings(this.settings).subscribe({
+      next: (response) => {
         if (response.status === 200) {
           // Successfully updated settings on the server
           console.log('Settings updated successfully');
         }
       },
-      (error) => {
+      error: (error) => {
         // Handle error while updating settings
-        console.log('Error updating settings', error);
-      }
-    );
+        if (error.status === 403) {
+          this.errorHandlerService.presentErrorToast(
+            'Unauthorized access. Please login again.',
+            error
+          );
+          this.auth.logout();
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Unexpected error while updating settings',
+            error
+          );
+        }
+      },
+    });
   }
   // Function to navigate to account-profile page
   navToProfile() {
@@ -305,19 +377,19 @@ export class ProfilePage implements OnInit {
     this.resetPreference();
   }
 
-
-
   setOpenPreferencesSave(isOpen: boolean) {
     console.log('Saving Preferences');
-    if (this.userpreferences.foodPreferenceSet === true) {
-      this.getSelectedPreferences();  // This will update this.userpreferences.foodPreferences
+    if (this.settings.foodPreferenceSet === true) {
+      this.getSelectedPreferences(); // This will update this.settings.foodPreferences
       if (
         !this.preferences.vegetarian &&
         !this.preferences.vegan &&
         !this.preferences.glutenIntolerant &&
         !this.preferences.lactoseIntolerant
       ) {
-        this.presentToast('Please select at least one food preference. If you have no food preferences, please uncheck the food preferences toggle.');
+        this.presentToast(
+          'Please select at least one food preference. If you have no food preferences, please uncheck the food preferences toggle.'
+        );
         return;
       }
       if (!isOpen) {
@@ -325,7 +397,7 @@ export class ProfilePage implements OnInit {
       }
       this.isPreferencesModalOpen = isOpen;
     } else {
-      this.userpreferences.foodPreferences = [];
+      this.settings.foodPreferences = [];
       this.displayPreferences = '';
       this.isPreferencesModalOpen = isOpen;
     }
@@ -334,36 +406,46 @@ export class ProfilePage implements OnInit {
   }
 
   preference_Toggle() {
-    this.userpreferences.foodPreferenceSet = !this.userpreferences.foodPreferenceSet;
+    this.settings.foodPreferenceSet = !this.settings.foodPreferenceSet;
   }
 
   getSelectedPreferences(): string {
     const selectedPreferences = [];
-    if (this.userpreferences.foodPreferences == null) {
-      this.userpreferences.foodPreferences = [];
+    if (this.settings.foodPreferences == null) {
+      this.settings.foodPreferences = [];
       return '';
-    }
-    else
-    {
-      this.userpreferences.foodPreferences = [];
-      if (this.preferences.vegetarian && !this.userpreferences.foodPreferences.includes('Vegetarian')) {
-        console.log("here")
+    } else {
+      this.settings.foodPreferences = [];
+      if (
+        this.preferences.vegetarian &&
+        !this.settings.foodPreferences.includes('Vegetarian')
+      ) {
+        console.log('here');
         selectedPreferences.push('Vegetarian');
-        this.userpreferences.foodPreferences.push('Vegetarian');
+        this.settings.foodPreferences.push('Vegetarian');
       }
-      if (this.preferences.vegan && !this.userpreferences.foodPreferences.includes('Vegan')) {
+      if (
+        this.preferences.vegan &&
+        !this.settings.foodPreferences.includes('Vegan')
+      ) {
         selectedPreferences.push('Vegan');
-        this.userpreferences.foodPreferences.push('Vegan');
+        this.settings.foodPreferences.push('Vegan');
       }
-      if (this.preferences.glutenIntolerant && !this.userpreferences.foodPreferences.includes('Gluten-intolerant')) {
+      if (
+        this.preferences.glutenIntolerant &&
+        !this.settings.foodPreferences.includes('Gluten-intolerant')
+      ) {
         selectedPreferences.push('Gluten-intolerant');
-        this.userpreferences.foodPreferences.push('Gluten-intolerant');
+        this.settings.foodPreferences.push('Gluten-intolerant');
       }
-      if (this.preferences.lactoseIntolerant && !this.userpreferences.foodPreferences.includes('Lactose-intolerant')) {
+      if (
+        this.preferences.lactoseIntolerant &&
+        !this.settings.foodPreferences.includes('Lactose-intolerant')
+      ) {
         selectedPreferences.push('Lactose-intolerant');
-        this.userpreferences.foodPreferences.push('Lactose-intolerant');
+        this.settings.foodPreferences.push('Lactose-intolerant');
       }
-  
+
       if (selectedPreferences.length === 1) {
         return selectedPreferences[0];
       } else if (selectedPreferences.length > 1) {
@@ -372,7 +454,7 @@ export class ProfilePage implements OnInit {
         return '';
       }
     }
-    }
+  }
 
   setOpenCalorie(isOpen: boolean) {
     this.isCalorieModalOpen = isOpen;
@@ -380,28 +462,27 @@ export class ProfilePage implements OnInit {
   }
 
   setOpenCalorieSave(isOpen: boolean) {
-    if (this.userpreferences.calorieSet === true) {
-      if (this.userpreferences.calorieAmount) {
+    if (this.settings.calorieSet === true) {
+      if (this.settings.calorieAmount) {
         if (!isOpen) {
           this.updateDisplayData(); // Update the display data when the modal is closed
         }
         this.isCalorieModalOpen = isOpen;
       }
-    } else if (this.userpreferences.calorieSet === false) {
-      this.userpreferences.calorieAmount = '';
+    } else if (this.settings.calorieSet === false) {
+      this.settings.calorieAmount = '';
       this.isCalorieModalOpen = isOpen;
     }
     this.setInitialCalorie();
     this.updateSettingsOnServer();
-    
   }
 
   calorieAmount_Toggle() {
-    this.userpreferences.calorieSet = !this.userpreferences.calorieSet;
+    this.settings.calorieSet = !this.settings.calorieSet;
   }
 
   showSelectedCalorieAmount(event: any) {
-    this.userpreferences.calorieAmount = event.target.value;
+    this.settings.calorieAmount = event.target.value;
   }
 
   setOpenBudget(isOpen: boolean) {
@@ -411,65 +492,64 @@ export class ProfilePage implements OnInit {
 
   setOpenBudgetSave(isOpen: boolean) {
     console.log('setOpenBudgetSave called with:', isOpen); // Debug 1
-  
-    if (this.userpreferences.budgetSet === true) {
+
+    if (this.settings.budgetSet === true) {
       console.log('Budget is set.'); // Debug 2
-  
+
       if (this.selectedPriceRange === 'custom') {
         console.log('Custom range selected.'); // Debug 3
-  
-        if (this.userpreferences.budgetRange !== null && this.userpreferences.budgetRange !== undefined) {
+
+        if (
+          this.settings.budgetRange !== null &&
+          this.settings.budgetRange !== undefined
+        ) {
           console.log('Budget range is neither null nor undefined.'); // Debug 4
-  
-          const budgetString = this.userpreferences.budgetRange.toString();
+
+          const budgetString = this.settings.budgetRange.toString();
           const rCount = (budgetString.match(/R/g) || []).length;
-  
+
           const isValid = /^[R]?[0-9\s]*$/.test(budgetString);
-  
+
           if (!isValid) {
-            this.userpreferences.budgetRange = budgetString.replace(/[^0-9R\s]/g, '');
+            this.settings.budgetRange = budgetString.replace(/[^0-9R\s]/g, '');
           }
-  
+
           if (rCount > 1) {
-            this.userpreferences.budgetRange = budgetString.replace(/R/g, '').trim();
-            this.userpreferences.budgetRange = 'R ' + this.userpreferences.budgetRange;
+            this.settings.budgetRange = budgetString.replace(/R/g, '').trim();
+            this.settings.budgetRange = 'R ' + this.settings.budgetRange;
           } else if (rCount === 0) {
-            this.userpreferences.budgetRange = 'R ' + budgetString;
+            this.settings.budgetRange = 'R ' + budgetString;
           }
         }
       } else {
-        this.userpreferences.budgetRange = this.selectedPriceRange;
+        this.settings.budgetRange = this.selectedPriceRange;
       }
-  
+
       this.isBudgetModalOpen = false;
       console.log('Attempting to close the modal.'); // Debug 5
     } else {
-      this.userpreferences.budgetRange = '';
+      this.settings.budgetRange = '';
       this.isBudgetModalOpen = false;
     }
-  
+
     this.setInitialBudget();
     this.updateSettingsOnServer();
     console.log('Function completed.'); // Debug 6
   }
-  
-  
 
   validateBudgetInput(event: Event) {
     const input = event.target as HTMLInputElement;
     const value = input.value;
-  
+
     input.value = value.replace(/[^0-9.]/g, '');
   }
-  
-  
+
   budgetRange_Toggle() {
-    this.userpreferences.budgetSet = !this.userpreferences.budgetSet;
-    if (!this.userpreferences.budgetSet && this.selectedPriceRange === 'custom') {
-      this.userpreferences.budgetRange = '';
+    this.settings.budgetSet = !this.settings.budgetSet;
+    if (!this.settings.budgetSet && this.selectedPriceRange === 'custom') {
+      this.settings.budgetRange = '';
     }
   }
-  
 
   async openPicker() {
     const picker = await this.pickerController.create({
@@ -483,7 +563,7 @@ export class ProfilePage implements OnInit {
             { text: '4', value: 4 },
             { text: '5', value: 5 },
           ],
-          selectedIndex: this.userpreferences.macroRatio.protein, // Set the default selected index
+          selectedIndex: this.settings.protein, // Set the default selected index
         },
         {
           name: 'carbs',
@@ -494,7 +574,7 @@ export class ProfilePage implements OnInit {
             { text: '4', value: 4 },
             { text: '5', value: 5 },
           ],
-          selectedIndex: this.userpreferences.macroRatio.carbs, // Set the default selected index
+          selectedIndex: this.settings.carbs, // Set the default selected index
         },
         {
           name: 'fat',
@@ -505,7 +585,7 @@ export class ProfilePage implements OnInit {
             { text: '4', value: 4 },
             { text: '5', value: 5 },
           ],
-          selectedIndex: this.userpreferences.macroRatio.fat, // Set the default selected index
+          selectedIndex: this.settings.fat, // Set the default selected index
         },
       ],
       buttons: [
@@ -517,9 +597,9 @@ export class ProfilePage implements OnInit {
           text: 'Confirm',
           handler: (value) => {
             // Update the selected macro values based on the selected indexes
-            this.userpreferences.macroRatio.protein = value['protein'].value;
-            this.userpreferences.macroRatio.carbs = value['carbs'].value;
-            this.userpreferences.macroRatio.fat = value['fat'].value;
+            this.settings.protein = value['protein'].value;
+            this.settings.carbs = value['carbs'].value;
+            this.settings.fat = value['fat'].value;
           },
         },
       ],
@@ -532,18 +612,16 @@ export class ProfilePage implements OnInit {
     this.resetMacro();
   }
   setOpenMacroSave(isOpen: boolean) {
-
-    if (this.userpreferences.macroSet === true) {
+    if (this.settings.macroSet === true) {
       if (!isOpen) {
         this.displaying_Macroratio = this.getDisplayMacroratio();
       }
-     
+
       this.isMacroModalOpen = isOpen;
-      
-    } else if (this.userpreferences.macroSet === false) {
-      this.userpreferences.macroRatio.protein = 0;
-      this.userpreferences.macroRatio.carbs = 0;
-      this.userpreferences.macroRatio.fat = 0;
+    } else if (this.settings.macroSet === false) {
+      this.settings.protein = 0;
+      this.settings.carbs = 0;
+      this.settings.fat = 0;
       this.displaying_Macroratio = '';
       this.isMacroModalOpen = isOpen;
     }
@@ -551,21 +629,23 @@ export class ProfilePage implements OnInit {
     this.updateSettingsOnServer();
   }
   macro_Toggle() {
-    this.userpreferences.macroSet = !this.userpreferences.macroSet;
+    this.settings.macroSet = !this.settings.macroSet;
   }
   setOpenAllergies(isOpen: boolean) {
     this.isAllergiesModalOpen = isOpen;
     this.resetAllergies();
   }
   setOpenAllergiesSave(isOpen: boolean) {
-    if (this.userpreferences.allergiesSet === true) {
+    if (this.settings.allergiesSet === true) {
       if (
         !this.allergens.seafood &&
         !this.allergens.nuts &&
         !this.allergens.eggs &&
         !this.allergens.soy
       ) {
-        this.presentToast('Please select at least one allergen. if you have no allergies, please uncheck the allergies toggle.');
+        this.presentToast(
+          'Please select at least one allergen. if you have no allergies, please uncheck the allergies toggle.'
+        );
         return;
       }
       if (!isOpen) {
@@ -573,7 +653,7 @@ export class ProfilePage implements OnInit {
       }
       this.isAllergiesModalOpen = isOpen;
     } else {
-      this.userpreferences.allergies = [];
+      this.settings.allergies = [];
       this.displayAllergies = '';
       this.isAllergiesModalOpen = isOpen;
     }
@@ -582,127 +662,134 @@ export class ProfilePage implements OnInit {
   }
 
   allergies_Toggle() {
-    this.userpreferences.allergiesSet = !this.userpreferences.allergiesSet;
+    this.settings.allergiesSet = !this.settings.allergiesSet;
   }
   getSelectedAllergens(): string {
-    const selectedAllergens  = [];
-    if (this.userpreferences.allergies == null) {
-      this.userpreferences.allergies = [];
+    const selectedAllergens = [];
+    if (this.settings.allergies == null) {
+      this.settings.allergies = [];
       return '';
-    }
-    else
-    {
-     this.userpreferences.allergies = [];
-
-    if (this.allergens.seafood && !this.userpreferences.allergies.includes('Seafood')) {
-      selectedAllergens.push('Seafood');
-      this.userpreferences.allergies.push('Seafood');
-    }
-    if (this.allergens.nuts && !this.userpreferences.allergies.includes('Nuts')) {
-      selectedAllergens.push('Nuts');
-      this.userpreferences.allergies.push('Nuts');
-    }
-    if (this.allergens.eggs && !this.userpreferences.allergies.includes('Eggs')) {
-      selectedAllergens.push('Eggs');
-      this.userpreferences.allergies.push('Eggs');
-    }
-    if (this.allergens.soy && !this.userpreferences.allergies.includes('Soy')) {
-      selectedAllergens.push('Soy');
-      this.userpreferences.allergies.push('Soy');
-    }
-    if (selectedAllergens.length === 1) {
-      return selectedAllergens[0];
-    } else if (selectedAllergens.length > 1) {
-      return 'Multiple';
     } else {
-      return '';
+      this.settings.allergies = [];
+
+      if (
+        this.allergens.seafood &&
+        !this.settings.allergies.includes('Seafood')
+      ) {
+        selectedAllergens.push('Seafood');
+        this.settings.allergies.push('Seafood');
+      }
+      if (this.allergens.nuts && !this.settings.allergies.includes('Nuts')) {
+        selectedAllergens.push('Nuts');
+        this.settings.allergies.push('Nuts');
+      }
+      if (this.allergens.eggs && !this.settings.allergies.includes('Eggs')) {
+        selectedAllergens.push('Eggs');
+        this.settings.allergies.push('Eggs');
+      }
+      if (this.allergens.soy && !this.settings.allergies.includes('Soy')) {
+        selectedAllergens.push('Soy');
+        this.settings.allergies.push('Soy');
+      }
+      if (selectedAllergens.length === 1) {
+        return selectedAllergens[0];
+      } else if (selectedAllergens.length > 1) {
+        return 'Multiple';
+      } else {
+        return '';
+      }
     }
-  }
   }
   setOpenCooking(isOpen: boolean) {
     this.resetCooking();
     this.isCookingModalOpen = isOpen;
   }
   setOpenCookingSave(isOpen: boolean) {
-    if (this.userpreferences.cookingTimeSet === true) {
+    if (this.settings.cookingTimeSet === true) {
       this.isCookingModalOpen = isOpen;
-    } else if (this.userpreferences.cookingTimeSet === false) {
-      this.userpreferences.cookingTime = '';
+    } else if (this.settings.cookingTimeSet === false) {
+      this.settings.cookingTime = '';
       this.isCookingModalOpen = isOpen;
     }
     this.setInitialCooking();
     this.updateSettingsOnServer();
   }
   cookingtime_Toggle() {
-    this.userpreferences.cookingTimeSet = !this.userpreferences.cookingTimeSet;
+    this.settings.cookingTimeSet = !this.settings.cookingTimeSet;
   }
   setOpenBMI(isOpen: boolean) {
     this.resetBMI();
     this.isBMIModalOpen = isOpen;
   }
   setOpenBMISave(isOpen: boolean) {
-    if (this.userpreferences.bmiset === true && this.userpreferences.userHeight > 0 && this.userpreferences.userWeight > 0) {
-     if (this.userpreferences.userHeight > 0 && this.userpreferences.userWeight > 0) {
-      this.calculateBMI();
-      this.updateDisplayData();
-      this.updateSettingsOnServer();
+    if (
+      this.settings.bmiset === true &&
+      this.settings.userHeight > 0 &&
+      this.settings.userWeight > 0
+    ) {
+      if (this.settings.userHeight > 0 && this.settings.userWeight > 0) {
+        this.calculateBMI();
+        this.updateDisplayData();
+        this.updateSettingsOnServer();
+        this.isBMIModalOpen = isOpen;
+      }
+    }
+    if (this.settings.bmiset === false) {
+      this.settings.userHeight = 0;
+      this.settings.userWeight = 0;
+      this.settings.userBMI = '';
       this.isBMIModalOpen = isOpen;
-     }
-    } 
-     if (this.userpreferences.bmiset === false) {
-      this.userpreferences.userHeight = 0;
-      this.userpreferences.userWeight = 0;
-      this.userpreferences.userBMI = '';
-      this.isBMIModalOpen = isOpen;
-     }
+    }
     this.setInitialBMI();
     this.updateSettingsOnServer();
-    
-}
+  }
 
   BMI_Toggle() {
-    this.userpreferences.bmiset = !this.userpreferences.bmiset;
+    this.settings.bmiset = !this.settings.bmiset;
   }
 
   setOpenShopping(isOpen: boolean) {
     if (isOpen === false) {
-      console.log("resetClose")
-      console.log(this.userpreferences.shoppingInterval)
-    this.resetShopping()
-    console.log(this.userpreferences.shoppingInterval)
-    this.isShoppingModalOpen = isOpen;
-    }
-    else if (isOpen === true) {
-      console.log("resetOpen")
-      if (this.userpreferences.shoppingInterval.includes("days")) {
-        this.shoppingInterval = "other";
-        this.shoppingIntervalOtherValue = this.userpreferences.shoppingInterval.replace("days", "").trim();
+      console.log('resetClose');
+      console.log(this.settings.shoppingInterval);
+      this.resetShopping();
+      console.log(this.settings.shoppingInterval);
+      this.isShoppingModalOpen = isOpen;
+    } else if (isOpen === true) {
+      console.log('resetOpen');
+      if (this.settings.shoppingInterval.includes('days')) {
+        this.shoppingInterval = 'other';
+        this.shoppingIntervalOtherValue = this.settings.shoppingInterval
+          .replace('days', '')
+          .trim();
       }
-      console.log(this.userpreferences.shoppingInterval)
-     
-    this.isShoppingModalOpen = isOpen;
+      console.log(this.settings.shoppingInterval);
+
+      this.isShoppingModalOpen = isOpen;
     }
   }
 
   setOpenShoppingSave(isOpen: boolean) {
-    if (this.userpreferences.shoppingIntervalSet === true) {
+    if (this.settings.shoppingIntervalSet === true) {
       if (this.shoppingInterval === 'other') {
-  
-        this.userpreferences.shoppingInterval = this.shoppingIntervalOtherValue.toString() + " days";
+        this.settings.shoppingInterval =
+          this.shoppingIntervalOtherValue.toString() + ' days';
       } else if (
         this.shoppingInterval == 'weekly' ||
         this.shoppingInterval == 'biweekly' ||
         this.shoppingInterval == 'monthly'
       ) {
-        this.userpreferences.shoppingInterval = this.shoppingInterval;
+        this.settings.shoppingInterval = this.shoppingInterval;
       }
       this.isShoppingModalOpen = isOpen;
-    } else if (this.userpreferences.shoppingIntervalSet === false) {
-      this.userpreferences.shoppingInterval = '';
+    } else if (this.settings.shoppingIntervalSet === false) {
+      this.settings.shoppingInterval = '';
       this.isShoppingModalOpen = isOpen;
-    }
-    else if (this.userpreferences.shoppingIntervalSet === false && this.shoppingInterval === 'other') {
-      this.userpreferences.shoppingInterval = '';
+    } else if (
+      this.settings.shoppingIntervalSet === false &&
+      this.shoppingInterval === 'other'
+    ) {
+      this.settings.shoppingInterval = '';
       this.isShoppingModalOpen = isOpen;
     }
     this.setInitialShopping();
@@ -710,114 +797,142 @@ export class ProfilePage implements OnInit {
   }
 
   shoppingInterval_Toggle() {
-    this.userpreferences.shoppingIntervalSet = !this.userpreferences.shoppingIntervalSet;
-    if (this.userpreferences.shoppingIntervalSet === false) {
+    this.settings.shoppingIntervalSet = !this.settings.shoppingIntervalSet;
+    if (this.settings.shoppingIntervalSet === false) {
       this.shoppingInterval = '';
     }
   }
 
   // Function to determine what to display for Shopping Interval
-getDisplayShoppingInterval() {
-  if (this.shoppingInterval === 'other') {
-    if (this.shoppingIntervalOtherValue.toString().includes("days")) {
-    return this.shoppingIntervalOtherValue ;
+  getDisplayShoppingInterval() {
+    if (this.shoppingInterval === 'other') {
+      if (this.shoppingIntervalOtherValue.toString().includes('days')) {
+        return this.shoppingIntervalOtherValue;
+      } else {
+        return this.shoppingIntervalOtherValue + ' days';
+      }
+    } else {
+      return this.settings.shoppingInterval;
     }
-    else 
-    {
-      return this.shoppingIntervalOtherValue + " days";
+  }
+
+  getDisplayOtherShoppingInterval() {
+    if (this.shoppingIntervalOtherValue.toString().includes('days')) {
+      return this.shoppingIntervalOtherValue
+        .toString()
+        .replace('days', '')
+        .trim();
+    } else {
+      return this.shoppingIntervalOtherValue;
     }
-  } else {
-    return this.userpreferences.shoppingInterval;
   }
-}
-
-getDisplayOtherShoppingInterval() {
-
-  if (this.shoppingIntervalOtherValue.toString().includes("days")) {
-    return this.shoppingIntervalOtherValue.toString().replace("days", "").trim();
-  } else {
-    return this.shoppingIntervalOtherValue;
-  }
-}
-
-
-
 
   // Function to update display data
   updateDisplayData() {
-    if (this.userpreferences.shoppingInterval != '') {
-    this.shoppingintervalToggle = true
-    this.shoppingInterval = this.userpreferences.shoppingInterval;
-    this.userpreferences.shoppingIntervalSet = true;
+    if (this.settings.shoppingIntervalSet === true) {
+      this.shoppingintervalToggle = true;
+      this.shoppingInterval = this.settings.shoppingInterval;
+      this.settings.shoppingIntervalSet = true;
     }
 
-    if (this.userpreferences.foodPreferences != null && this.userpreferences.foodPreferences.length != 0) {
-      this.preferenceToggle = true
-      if (this.userpreferences.foodPreferences.includes('Vegetarian')) {
+    if (
+      this.settings.foodPreferences != null &&
+      this.settings.foodPreferences.length != 0
+    ) {
+      this.preferenceToggle = true;
+      if (this.settings.foodPreferences.includes('Vegetarian')) {
         this.preferences.vegetarian = true;
       }
-      if (this.userpreferences.foodPreferences.includes('Vegan')) {
+      if (this.settings.foodPreferences.includes('Vegan')) {
         this.preferences.vegan = true;
       }
-      if (this.userpreferences.foodPreferences.includes('Gluten-intolerant')) {
+      if (this.settings.foodPreferences.includes('Gluten-intolerant')) {
         this.preferences.glutenIntolerant = true;
       }
-      if (this.userpreferences.foodPreferences.includes('Lactose-intolerant')) {
+      if (this.settings.foodPreferences.includes('Lactose-intolerant')) {
         this.preferences.lactoseIntolerant = true;
       }
-      this.userpreferences.foodPreferenceSet = true;
+      this.settings.foodPreferenceSet = true;
+    }
 
+    if (this.settings.calorieAmount != 0) {
+      this.calorieToggle = true;
+      this.settings.calorieSet = true;
+    }
+
+    if (this.settings.budgetRange != '') {
+      this.budgetToggle = true;
+      this.selectedPriceRange = this.settings.budgetRange;
+      this.settings.budgetSet = true;
+    }
+
+    if (
+      this.settings.protein != null &&
+      this.settings.carbs != null &&
+      this.settings.fat
+    ) {
+      this.macroToggle = true;
+
+      this.settings.macroSet = true;
+    }
+
+    console.log('budgetupdatedisplay');
+    console.log(this.settings.budgetRange);
+
+    // Convert budgetRange to a string to avoid type errors
+    const budgetString = this.settings.budgetRange
+      ? this.settings.budgetRange.toString()
+      : '';
+
+    // Check for the presence of 'R' and whether it's a custom range
+    if (
+      budgetString.includes('R') &&
+      ['low', 'moderate', 'high'].indexOf(
+        budgetString.toLowerCase().replace('r ', '')
+      ) === -1
+    ) {
+      this.budgetToggle = true;
+      this.selectedPriceRange = 'custom';
+      this.settings.budgetSet = true;
+      console.log('budget- custom');
+    } else {
+      this.budgetToggle = true;
+      this.selectedPriceRange = budgetString.replace('R ', '');
+      this.settings.budgetSet = true;
+      console.log('budget- not custom');
+    }
+
+    if (
+      this.settings.allergies != null &&
+      this.settings.allergies.length != 0
+    ) {
+      this.allergiesToggle = true;
+      if (this.settings.allergies.includes('Seafood')) {
+        this.allergens.seafood = true;
       }
-
-      console.log("budgetupdatedisplay");
-      console.log(this.userpreferences.budgetRange);
-      
-      // Convert budgetRange to a string to avoid type errors
-      const budgetString = this.userpreferences.budgetRange ? this.userpreferences.budgetRange.toString() : '';
-      
-      // Check for the presence of 'R' and whether it's a custom range
-      if (budgetString.includes("R") && ['low', 'moderate', 'high'].indexOf(budgetString.toLowerCase().replace('r ', '')) === -1) {
-        this.budgetToggle = true;
-        this.selectedPriceRange = "custom";
-        this.userpreferences.budgetSet = true;
-        console.log("budget- custom");
+      if (this.settings.allergies.includes('Nuts')) {
+        this.allergens.nuts = true;
       }
-      else {
-        this.budgetToggle = true;
-        this.selectedPriceRange = budgetString.replace('R ', '');
-        this.userpreferences.budgetSet = true;
-        console.log("budget- not custom");
+      if (this.settings.allergies.includes('Eggs')) {
+        this.allergens.eggs = true;
       }
-
-
-    if (this.userpreferences.allergies != null && this.userpreferences.allergies.length != 0) {
-        this.allergiesToggle = true
-        if (this.userpreferences.allergies.includes('Seafood')) {
-          this.allergens.seafood = true;
-        }
-        if (this.userpreferences.allergies.includes('Nuts')) {
-          this.allergens.nuts = true;
-        }
-        if (this.userpreferences.allergies.includes('Eggs')) {
-          this.allergens.eggs = true;
-        }
-        if (this.userpreferences.allergies.includes('Soy')) {
-          this.allergens.soy = true;
-        }
-        this.userpreferences.allergiesSet = true;
+      if (this.settings.allergies.includes('Soy')) {
+        this.allergens.soy = true;
       }
+      this.settings.allergiesSet = true;
+    }
+    this.settings.allergiesSet = true;
 
-      if (this.userpreferences.userBMI != 0) {
-        this.BMIToggle = true
-        this.userpreferences.bmiset = true;
-        }
+    if (this.settings.userBMI != 0) {
+      this.BMIToggle = true;
+      this.settings.bmiset = true;
+    }
 
-      if (this.userpreferences.cookingTime != '') {
-        this.cookingToggle = true
-        this.userpreferences.cookingTimeSet = true;
-        }
- 
-    
+    if (this.settings.cookingTime != '') {
+      this.cookingToggle = true;
+      this.settings.cookingTimeSet = true;
+    }
+
     this.displayPreferences = this.getSelectedPreferences();
     this.displaying_Macroratio = this.getDisplayMacroratio();
     this.displayAllergies = this.getSelectedAllergens();
@@ -825,211 +940,200 @@ getDisplayOtherShoppingInterval() {
 
   // Function to get the displaying macro ratio
   getDisplayMacroratio(): string {
-    if(this.userpreferences.macroSet && this.userpreferences.macroRatio && this.userpreferences.macroRatio.protein > 0 && this.userpreferences.macroRatio.carbs > 0 && this.userpreferences.macroRatio.fat > 0){
-        return (
-            this.userpreferences.macroRatio.protein +
-            ' : ' +
-            this.userpreferences.macroRatio.carbs +
-            ' : ' +
-            this.userpreferences.macroRatio.fat
-        );
+    if (
+      this.settings &&
+      this.settings.protein &&
+      this.settings.carbs &&
+      this.settings.fat
+    ) {
+      return (
+        this.settings.protein +
+        ' : ' +
+        this.settings.carbs +
+        ' : ' +
+        this.settings.fat
+      );
     } else {
-        return "";
+      return 'Not available';
     }
-}
-
-calculateBMI() {
-    this.userpreferences.userBMI = Math.round(this.userpreferences.userWeight /
-        this.userpreferences.userHeight*this.userpreferences.userHeight);
- }
-
-
- setInitialShopping()
- {
-    this.initialshoppinginterval = this.userpreferences.shoppingInterval;
-    this.initialshoppingintervalToggle = this.userpreferences.shoppingIntervalSet;
- }
-
- setIntialPreference() {
-  console.log('Setting Initial Preferences');
-  this.initialpreference = this.userpreferences.foodPreferences;
-  this.initialpreferenceToggle = this.userpreferences.foodPreferenceSet;
-  this.initialpreferenceVegetarian = this.preferences.vegetarian;
-  this.initialpreferenceVegan = this.preferences.vegan;
-  this.initialpreferenceGlutenIntolerant = this.preferences.glutenIntolerant;
-  this.initialpreferenceLactoseIntolerant = this.preferences.lactoseIntolerant;
-}
-
-  setInitialCalorie()
-  {
-    this.initialcalorie = this.userpreferences.calorieAmount;
-    this.initialcalorieToggle = this.userpreferences.calorieSet;
   }
 
-  setInitialBudget()
-  {
-    this.initialbudget = this.userpreferences.budgetRange;
-    this.initialbudgetToggle = this.userpreferences.budgetSet;
+  calculateBMI() {
+    let heightInMeters = this.settings.userHeight / 100;
+    let heightSquared = heightInMeters * heightInMeters;
+    let bmi = this.settings.userWeight / heightSquared;
+    this.settings.userBMI = parseFloat(bmi.toFixed(2));
   }
 
-  setInitialMacro()
-  {
-    this.initialmacro = this.userpreferences.macroRatio;
-    this.initialmacroToggle = this.userpreferences.macroSet;
+  setInitialShopping() {
+    this.initialshoppinginterval = this.settings.shoppingInterval;
+    this.initialshoppingintervalToggle = this.settings.shoppingIntervalSet;
   }
 
-  setInitialAllergies()
-  {
+  setIntialPreference() {
+    console.log('Setting Initial Preferences');
+    this.initialpreference = this.settings.foodPreferences;
+    this.initialpreferenceToggle = this.settings.foodPreferenceSet;
+    this.initialpreferenceVegetarian = this.preferences.vegetarian;
+    this.initialpreferenceVegan = this.preferences.vegan;
+    this.initialpreferenceGlutenIntolerant = this.preferences.glutenIntolerant;
+    this.initialpreferenceLactoseIntolerant =
+      this.preferences.lactoseIntolerant;
+  }
+
+  setInitialCalorie() {
+    this.initialcalorie = this.settings.calorieAmount;
+    this.initialcalorieToggle = this.settings.calorieSet;
+  }
+
+  setInitialBudget() {
+    this.initialbudget = this.settings.budgetRange;
+    this.initialbudgetToggle = this.settings.budgetSet;
+  }
+
+  setInitialMacro() {
+    this.initialprotein = this.settings.protein;
+    this.initialcarbs = this.settings.carbs;
+    this.initialfat = this.settings.fat;
+    this.initialmacroToggle = this.settings.macroSet;
+  }
+
+  setInitialAllergies() {
     this.initialallergiesSeafood = this.allergens.seafood;
     this.initialallergiesNuts = this.allergens.nuts;
     this.initialallergiesEggs = this.allergens.eggs;
     this.initialallergiesSoy = this.allergens.soy;
-    this.initialallergies = this.userpreferences.allergies;
-    this.initialallergiesToggle = this.userpreferences.allergiesSet;
+    this.initialallergies = this.settings.allergies;
+    this.initialallergiesToggle = this.settings.allergiesSet;
   }
 
-  setInitialCooking()
-  {
-    this.initialcooking = this.userpreferences.cookingTime;
-    this.initialcookingToggle = this.userpreferences.cookingTimeSet;
+  setInitialCooking() {
+    this.initialcooking = this.settings.cookingTime;
+    this.initialcookingToggle = this.settings.cookingTimeSet;
   }
 
-  setInitialBMI()
-  {
-    this.initialBMI = this.userpreferences.userBMI;
-    this.initialBMIToggle = this.userpreferences.bmiset;
+  setInitialBMI() {
+    this.initialBMI = this.settings.userBMI;
+    this.initialBMIToggle = this.settings.bmiset;
   }
 
+  resetShopping() {
+    if (this.settings.shoppingInterval.includes('days')) {
+      const temp = this.settings.shoppingInterval;
+      this.settings.shoppingInterval = 'other';
+      this.shoppingIntervalOtherValue = temp;
+    }
 
- resetShopping()
-{
-  if (this.userpreferences.shoppingInterval.includes("days")) {
-     const temp = this.userpreferences.shoppingInterval;
-    this.userpreferences.shoppingInterval = "other";  
-    this.shoppingIntervalOtherValue = temp;
+    this.settings.shoppingInterval = this.initialshoppinginterval;
+    this.shoppingintervalToggle = this.initialshoppingintervalToggle;
+    this.settings.shoppingIntervalSet = this.initialshoppingintervalToggle;
+    this.shoppingInterval = this.initialshoppinginterval;
   }
 
- 
-  this.userpreferences.shoppingInterval = this.initialshoppinginterval;
-  this.shoppingintervalToggle = this.initialshoppingintervalToggle;
-  this.userpreferences.shoppingIntervalSet = this.initialshoppingintervalToggle;
-  this.shoppingInterval = this.initialshoppinginterval;
-}
+  resetPreference() {
+    console.log('Resetting Preferences');
+    // Reset both settings and preferences objects
+    this.preferences.vegetarian = this.initialpreferenceVegetarian;
+    this.preferences.vegan = this.initialpreferenceVegan;
+    this.preferences.glutenIntolerant = this.initialpreferenceGlutenIntolerant;
+    this.preferences.lactoseIntolerant =
+      this.initialpreferenceLactoseIntolerant;
 
-resetPreference() {
-  console.log('Resetting Preferences');
-  // Reset both userpreferences and preferences objects
-  this.preferences.vegetarian = this.initialpreferenceVegetarian;
-  this.preferences.vegan = this.initialpreferenceVegan;
-  this.preferences.glutenIntolerant = this.initialpreferenceGlutenIntolerant;
-  this.preferences.lactoseIntolerant = this.initialpreferenceLactoseIntolerant;
-
-  this.userpreferences.foodPreferences = this.initialpreference;
-  this.userpreferences.foodPreferenceSet = this.initialpreferenceToggle;
-  this.preferenceToggle = this.initialpreferenceToggle;
-  this.displayPreferences = this.initialpreference;
-}
-
-resetCalorie()
-{
-  this.userpreferences.calorieAmount = this.initialcalorie;
-  this.calorieToggle = this.initialcalorieToggle;
-  this.userpreferences.calorieSet = this.initialcalorieToggle;
-}
-
-resetBudget()
-{
-  console.log("resetbudget")
-  if (this.initialbudget.includes("R") && this.initialbudgetToggle === true) {
-   this.userpreferences.budgetRange = this.initialbudget;
-   this.selectedPriceRange = "custom";
-   this.userpreferences.budgetSet = this.initialbudgetToggle;
-   this.budgetToggle = this.initialbudgetToggle;
+    this.settings.foodPreferences = this.initialpreference;
+    this.settings.foodPreferenceSet = this.initialpreferenceToggle;
+    this.preferenceToggle = this.initialpreferenceToggle;
+    this.displayPreferences = this.initialpreference;
   }
-  else if (!this.initialbudget.includes("R") && this.initialbudgetToggle === true)
-  {
-    this.userpreferences.budgetRange = this.initialbudget;
-    this.selectedPriceRange = this.initialbudget;
-    this.userpreferences.budgetSet = this.initialbudgetToggle;
-  this.budgetToggle = this.initialbudgetToggle;
+
+  resetCalorie() {
+    this.settings.calorieAmount = this.initialcalorie;
+    this.calorieToggle = this.initialcalorieToggle;
+    this.settings.calorieSet = this.initialcalorieToggle;
   }
-  
-}
 
-resetMacro()
-{
-  this.userpreferences.macroRatio = this.initialmacro;
-  this.userpreferences.macroSet = this.initialmacroToggle;
-  this.macroToggle = this.initialmacroToggle;
-  this.displaying_Macroratio = this.getDisplayMacroratio();
-}
-
-resetAllergies()
-{
-  this.allergens.seafood = this.initialallergiesSeafood;
-  this.allergens.nuts = this.initialallergiesNuts;
-  this.allergens.eggs = this.initialallergiesEggs;
-  this.allergens.soy = this.initialallergiesSoy;
-  this.userpreferences.allergies = this.initialallergies;
-  this.userpreferences.allergiesSet = this.initialallergiesToggle;
-  this.allergiesToggle = this.initialallergiesToggle;
-  this.displayAllergies = this.initialallergies;
-}
-
-resetCooking()
-{
-  this.userpreferences.cookingTime = this.initialcooking;
-  this.userpreferences.cookingTimeSet = this.initialcookingToggle;
-  this.cookingToggle = this.initialcookingToggle;
-}
-
-resetBMI()
-{
-  this.userpreferences.userBMI = this.initialBMI;
-  this.userpreferences.bmiset = this.initialBMIToggle;
-  this.BMIToggle = this.initialBMIToggle;
-}
-
-
-
-disabledConfirmShopping(): boolean {
-  if (this.userpreferences.shoppingIntervalSet) {
-    return !this.shoppingInterval; 
+  resetBudget() {
+    console.log('resetbudget');
+    if (this.initialbudget.includes('R') && this.initialbudgetToggle === true) {
+      this.settings.budgetRange = this.initialbudget;
+      this.selectedPriceRange = 'custom';
+      this.settings.budgetSet = this.initialbudgetToggle;
+      this.budgetToggle = this.initialbudgetToggle;
+    } else if (
+      !this.initialbudget.includes('R') &&
+      this.initialbudgetToggle === true
+    ) {
+      this.settings.budgetRange = this.initialbudget;
+      this.selectedPriceRange = this.initialbudget;
+      this.settings.budgetSet = this.initialbudgetToggle;
+      this.budgetToggle = this.initialbudgetToggle;
+    }
   }
-  return false; 
-}
 
-disabledConfirmPreference(): boolean {
-  if (this.userpreferences.foodPreferenceSet) {
-    return !this.displayPreferences; 
+  resetMacro() {
+    this.settings.protein = this.initialprotein;
+    this.settings.carbs = this.initialcarbs;
+    this.settings.fat = this.initialfat;
+    this.settings.macroSet = this.initialmacroToggle;
+    this.macroToggle = this.initialmacroToggle;
+    this.displaying_Macroratio = this.getDisplayMacroratio();
   }
-  return false; 
-}
 
-disabledConfirmBudget(): boolean {
-
-
-  if (this.userpreferences.budgetSet) {
-    return !this.selectedPriceRange; 
+  resetAllergies() {
+    this.allergens.seafood = this.initialallergiesSeafood;
+    this.allergens.nuts = this.initialallergiesNuts;
+    this.allergens.eggs = this.initialallergiesEggs;
+    this.allergens.soy = this.initialallergiesSoy;
+    this.settings.allergies = this.initialallergies;
+    this.settings.allergiesSet = this.initialallergiesToggle;
+    this.allergiesToggle = this.initialallergiesToggle;
+    this.displayAllergies = this.initialallergies;
   }
-  return false; 
-}
 
-disabledCalorieCookingTime(): boolean {
-  if (this.userpreferences.cookingTimeSet) {
-    return !this.userpreferences.cookingTime; 
+  resetCooking() {
+    this.settings.cookingTime = this.initialcooking;
+    this.settings.cookingTimeSet = this.initialcookingToggle;
+    this.cookingToggle = this.initialcookingToggle;
   }
-  return false; 
+
+  resetBMI() {
+    this.settings.userBMI = this.initialBMI;
+    this.settings.bmiset = this.initialBMIToggle;
+    this.BMIToggle = this.initialBMIToggle;
+  }
+
+  disabledConfirmShopping(): boolean {
+    if (this.settings.shoppingIntervalSet) {
+      return !this.shoppingInterval;
+    }
+    return false;
+  }
+
+  disabledConfirmPreference(): boolean {
+    if (this.settings.foodPreferenceSet) {
+      return !this.displayPreferences;
+    }
+    return false;
+  }
+
+  disabledConfirmBudget(): boolean {
+    if (this.settings.budgetSet) {
+      return !this.selectedPriceRange;
+    }
+    return false;
+  }
+
+  disabledCalorieCookingTime(): boolean {
+    if (this.settings.cookingTimeSet) {
+      return !this.settings.cookingTime;
+    }
+    return false;
+  }
+
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+    });
+    toast.present();
+  }
 }
-
-async presentToast(message: string) {
-  const toast = await this.toastController.create({
-    message: message,
-    duration: 2000
-  });
-  toast.present();
-}
-
-
-}
-
