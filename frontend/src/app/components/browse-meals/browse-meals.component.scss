@@ -3,7 +3,8 @@
     text-transform: capitalize;
     font-size: smaller;
     margin-right:5px;
-    margin-left: 5px;
+    margin-left: 5px;    
+    transition: color 0.3 ease;
 }
 
 .likebutton {
@@ -11,11 +12,16 @@
     font-size: smaller;
     margin-right:5px;
     margin-left: 5px;
-    transition: background-color 0.3 ease;
+    transition: color 0.3 ease;
+}
+
+.likebutton:hover {
+    color: #818181;
+    cursor: pointer;
 }
   
 .savebutton:hover {
-background-color: #00c853;
+color: #818181;
 cursor: pointer;
 }
 
