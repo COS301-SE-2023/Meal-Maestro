@@ -20,6 +20,8 @@ describe('PantryPage', () => {
   let mockAuthService: jasmine.SpyObj<AuthenticationService>;
   let mockBarcodeService: jasmine.SpyObj<BarcodeApiService>;
   let mockItems: FoodItemI[];
+  let pantryItems: FoodItemI[];
+  let shoppingListItems: FoodItemI[];
 
   beforeEach(async () => {
     mockPantryService = jasmine.createSpyObj('PantryApiService', [
@@ -47,6 +49,32 @@ describe('PantryPage', () => {
         name: 'test2',
         quantity: 2,
         unit: 'g',
+      },
+    ];
+
+    pantryItems = [
+      {
+        name: 'test',
+        quantity: 1,
+        unit: 'pcs',
+      },
+      {
+        name: 'test2',
+        quantity: 2,
+        unit: 'pcs',
+      },
+    ];
+
+    shoppingListItems = [
+      {
+        name: 'test3',
+        quantity: 3,
+        unit: 'pcs',
+      },
+      {
+        name: 'test4',
+        quantity: 4,
+        unit: 'pcs',
       },
     ];
 

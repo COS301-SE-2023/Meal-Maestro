@@ -9,21 +9,30 @@ import { PantryPage } from './pantry.page';
 import { FoodItemI } from '../../models/interfaces';
 import {
   AuthenticationService,
+  BarcodeApiService,
+  ErrorHandlerService,
+  LoginService,
   PantryApiService,
   ShoppingListApiService,
 } from '../../services/services';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { HttpEventType, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { of } from 'rxjs/internal/observable/of';
+import { throwError } from 'rxjs/internal/observable/throwError';
 
 describe('PantryPageIntegration', () => {
   let httpMock: HttpTestingController;
   let pantryService: PantryApiService;
+  let errorHandlerService: ErrorHandlerService;
   let shoppingListService: ShoppingListApiService;
+  let loginService: LoginService;
   let authService: AuthenticationService;
+  let barcodeApiService: BarcodeApiService;
   let component: PantryPage;
   let pantryItems: FoodItemI[];
   let shoppingListItems: FoodItemI[];
   let apiUrl: string = 'http://localhost:8080';
+  let modal: any;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -33,6 +42,9 @@ describe('PantryPageIntegration', () => {
         ShoppingListApiService,
         AuthenticationService,
         PantryPage,
+        ErrorHandlerService,
+        LoginService,
+        BarcodeApiService,
       ],
     }).compileComponents();
 
@@ -41,6 +53,10 @@ describe('PantryPageIntegration', () => {
     shoppingListService = TestBed.inject(ShoppingListApiService);
     authService = TestBed.inject(AuthenticationService);
     component = TestBed.inject(PantryPage);
+    errorHandlerService = TestBed.inject(ErrorHandlerService);
+
+    modal = jasmine.createSpyObj('Modal', ['present', 'dismiss']);
+    component.modal = modal;
 
     pantryItems = [
       {
@@ -698,5 +714,190 @@ describe('PantryPageIntegration', () => {
 
     expect(shoppingListService.buyItem).toHaveBeenCalled();
     expect(authService.logout).toHaveBeenCalled();
+  });
+
+  it('should calculate total shopping price correctly', () => {
+    component.shoppingItems = [
+      { name: 'item1', quantity: 1, unit: 'pcs', price: 1.23 },
+      { name: 'item2', quantity: 2, unit: 'pcs', price: 2.34 },
+      { name: 'item3', quantity: 3, unit: 'pcs', price: 3.45 },
+    ];
+
+    component.calculateTotalPrice();
+
+    expect(component.totalShoppingPrice).toEqual(1.23 + 2.34 + 3.45);
+  });
+
+  it('should handle missing or invalid prices', () => {
+    component.shoppingItems = [
+      { name: 'item1', quantity: 1, unit: 'pcs' },
+      { name: 'item2', quantity: 2, unit: 'pcs', price: undefined },
+      { name: 'item3', quantity: 3, unit: 'pcs', price: 0 },
+      { name: 'item4', quantity: 4, unit: 'pcs', price: -1 },
+    ];
+
+    component.calculateTotalPrice();
+
+    expect(component.totalShoppingPrice).toEqual(0);
+  });
+
+  it('should show error toast when name is missing', () => {
+    component.newItem = { name: '', quantity: 1, unit: 'pcs' };
+
+    component.confirmModal();
+
+    expect(modal.dismiss).not.toHaveBeenCalled();
+  });
+
+  it('should show error toast when quantity is missing', () => {
+    component.newItem = { name: 'item1', quantity: null, unit: 'pcs' };
+
+    component.confirmModal();
+
+    expect(modal.dismiss).not.toHaveBeenCalled();
+  });
+
+  it('should show error toast when quantity is invalid', () => {
+    component.newItem = { name: 'item1', quantity: -1, unit: 'pcs' };
+
+    component.confirmModal();
+
+    expect(modal.dismiss).not.toHaveBeenCalled();
+  });
+
+  it('should sort pantry items by name in descending order', () => {
+    component.segment = 'pantry';
+    component.pantryItems = [
+      { name: 'item3', quantity: 3, unit: 'pcs' },
+      { name: 'item1', quantity: 1, unit: 'pcs' },
+      { name: 'item2', quantity: 2, unit: 'pcs' },
+    ];
+
+    component.sortNameDescending();
+
+    expect(component.pantryItems).toEqual([
+      { name: 'item1', quantity: 1, unit: 'pcs' },
+      { name: 'item2', quantity: 2, unit: 'pcs' },
+      { name: 'item3', quantity: 3, unit: 'pcs' },
+    ]);
+  });
+
+  it('should sort shopping items by name in descending order', () => {
+    component.segment = 'shopping';
+    component.shoppingItems = [
+      { name: 'item3', quantity: 3, unit: 'pcs' },
+      { name: 'item1', quantity: 1, unit: 'pcs' },
+      { name: 'item2', quantity: 2, unit: 'pcs' },
+    ];
+
+    component.sortNameDescending();
+
+    expect(component.shoppingItems).toEqual([
+      { name: 'item1', quantity: 1, unit: 'pcs' },
+      { name: 'item2', quantity: 2, unit: 'pcs' },
+      { name: 'item3', quantity: 3, unit: 'pcs' },
+    ]);
+  });
+
+  it('should sort pantry items by name in ascending order', () => {
+    component.segment = 'pantry';
+    component.pantryItems = [
+      { name: 'item3', quantity: 3, unit: 'pcs' },
+      { name: 'item1', quantity: 1, unit: 'pcs' },
+      { name: 'item2', quantity: 2, unit: 'pcs' },
+    ];
+
+    component.sortNameAscending();
+
+    expect(component.pantryItems).toEqual([
+      { name: 'item3', quantity: 3, unit: 'pcs' },
+      { name: 'item2', quantity: 2, unit: 'pcs' },
+      { name: 'item1', quantity: 1, unit: 'pcs' },
+    ]);
+  });
+
+  it('should sort shopping items by name in ascending order', () => {
+    component.segment = 'shopping';
+    component.shoppingItems = [
+      { name: 'item3', quantity: 3, unit: 'pcs' },
+      { name: 'item1', quantity: 1, unit: 'pcs' },
+      { name: 'item2', quantity: 2, unit: 'pcs' },
+    ];
+
+    component.sortNameAscending();
+
+    expect(component.shoppingItems).toEqual([
+      { name: 'item3', quantity: 3, unit: 'pcs' },
+      { name: 'item2', quantity: 2, unit: 'pcs' },
+      { name: 'item1', quantity: 1, unit: 'pcs' },
+    ]);
+  });
+
+  it('should sort pantry items by amount in descending order', () => {
+    component.segment = 'pantry';
+    component.pantryItems = [
+      { name: 'item1', quantity: 1, unit: 'pcs' },
+      { name: 'item2', quantity: 2, unit: 'pcs' },
+      { name: 'item3', quantity: 3, unit: 'pcs' },
+    ];
+
+    component.sortAmountDescending();
+
+    expect(component.pantryItems).toEqual([
+      { name: 'item3', quantity: 3, unit: 'pcs' },
+      { name: 'item2', quantity: 2, unit: 'pcs' },
+      { name: 'item1', quantity: 1, unit: 'pcs' },
+    ]);
+  });
+
+  it('should sort shopping items by amount in descending order', () => {
+    component.segment = 'shopping';
+    component.shoppingItems = [
+      { name: 'item1', quantity: 1, unit: 'pcs' },
+      { name: 'item2', quantity: 2, unit: 'pcs' },
+      { name: 'item3', quantity: 3, unit: 'pcs' },
+    ];
+
+    component.sortAmountDescending();
+
+    expect(component.shoppingItems).toEqual([
+      { name: 'item3', quantity: 3, unit: 'pcs' },
+      { name: 'item2', quantity: 2, unit: 'pcs' },
+      { name: 'item1', quantity: 1, unit: 'pcs' },
+    ]);
+  });
+
+  it('should sort pantry items by amount in ascending order', () => {
+    component.segment = 'pantry';
+    component.pantryItems = [
+      { name: 'item1', quantity: 1, unit: 'pcs' },
+      { name: 'item2', quantity: 2, unit: 'pcs' },
+      { name: 'item3', quantity: 3, unit: 'pcs' },
+    ];
+
+    component.sortAmountAscending();
+
+    expect(component.pantryItems).toEqual([
+      { name: 'item1', quantity: 1, unit: 'pcs' },
+      { name: 'item2', quantity: 2, unit: 'pcs' },
+      { name: 'item3', quantity: 3, unit: 'pcs' },
+    ]);
+  });
+
+  it('should sort shopping items by amount in ascending order', () => {
+    component.segment = 'shopping';
+    component.shoppingItems = [
+      { name: 'item1', quantity: 1, unit: 'pcs' },
+      { name: 'item2', quantity: 2, unit: 'pcs' },
+      { name: 'item3', quantity: 3, unit: 'pcs' },
+    ];
+
+    component.sortAmountAscending();
+
+    expect(component.shoppingItems).toEqual([
+      { name: 'item1', quantity: 1, unit: 'pcs' },
+      { name: 'item2', quantity: 2, unit: 'pcs' },
+      { name: 'item3', quantity: 3, unit: 'pcs' },
+    ]);
   });
 });
