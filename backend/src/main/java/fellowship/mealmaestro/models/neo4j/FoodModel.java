@@ -22,11 +22,14 @@ public class FoodModel {
 
     private String unit;
 
-    public FoodModel(String name, double quantity, String unit, UUID id) {
+    private double price;
+
+    public FoodModel(String name, double quantity, String unit, double price, UUID id) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.unit = unit;
+        this.price = price;
     }
 
     public FoodModel() {

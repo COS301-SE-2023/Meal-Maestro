@@ -45,7 +45,7 @@ public class ShoppingListControllerTest {
 
     @Test
     public void addToShoppingListSuccessTest() throws Exception {
-        FoodModel foodModel = new FoodModel("testFood", 2, "testUnit", null);
+        FoodModel foodModel = new FoodModel("testFood", 2, "testUnit", 5.99, null);
 
         // When addToShoppingList method is called with any FoodModel and any String, it
         // returns foodModel
@@ -65,7 +65,7 @@ public class ShoppingListControllerTest {
 
     @Test
     public void addToShoppingListBadRequestTest() throws Exception {
-        FoodModel foodModel = new FoodModel("testFood", 2, "testUnit", null);
+        FoodModel foodModel = new FoodModel("testFood", 2, "testUnit", 5.99, null);
 
         // When addToShoppingList method is called with any FoodModel and any String, it
         // returns foodModel

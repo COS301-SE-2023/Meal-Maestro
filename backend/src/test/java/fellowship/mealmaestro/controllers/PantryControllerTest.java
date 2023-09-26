@@ -44,7 +44,7 @@ public class PantryControllerTest {
 
     @Test
     public void addToPantrySuccessTest() throws Exception {
-        FoodModel foodModel = new FoodModel("testFood", 2, "testUnit", null);
+        FoodModel foodModel = new FoodModel("testFood", 2, "testUnit", 5.99, null);
 
         // When addToPantry method is called with any FoodModel and any String, it
         // returns foodModel
@@ -64,7 +64,7 @@ public class PantryControllerTest {
 
     @Test
     public void addToPantryBadRequestTest() throws Exception {
-        FoodModel foodModel = new FoodModel("testFood", 2, "testUnit", null);
+        FoodModel foodModel = new FoodModel("testFood", 2, "testUnit", 5.99, null);
 
         // When addToPantry method is called with any FoodModel and any String, it
         // returns foodModel
