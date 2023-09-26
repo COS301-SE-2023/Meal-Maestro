@@ -504,13 +504,6 @@ export class PantryPage implements OnInit, ViewWillEnter {
     ) {
       return;
     }
-    // let result = {
-    //   barcodes: [
-    //     {
-    //       displayValue: '6003678902458', // for testing
-    //     },
-    //   ],
-    // };
 
     if (this.loginService.isShoppingAt() === '') {
       this.askShoppingLocation(result);
