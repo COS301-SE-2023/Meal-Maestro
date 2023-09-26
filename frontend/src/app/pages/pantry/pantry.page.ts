@@ -70,13 +70,11 @@ export class PantryPage implements OnInit, ViewWillEnter {
     private alertController: AlertController
   ) {}
 
-
   async ngOnInit() {
     BarcodeScanner.isSupported().then((result) => {
       this.isBarcodeSupported = result.supported;
     });
   }
-
 
   async ionViewWillEnter() {
     if (!this.loginService.isPantryRefreshed()) {
@@ -315,6 +313,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
         this.totalShoppingPrice += item.price;
       }
     });
+    this.totalShoppingPrice = Math.round(this.totalShoppingPrice * 100) / 100;
   }
 
   closeSlidingItems() {
@@ -489,7 +488,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
     const granted = await this.requestPermissions();
     if (!granted) {
       this.errorHandlerService.presentErrorToast(
-        'Please grant camera permissions to use this feature',
+        'No camera permissions',
         'Camera permissions not granted'
       );
       return;
@@ -508,7 +507,7 @@ export class PantryPage implements OnInit, ViewWillEnter {
     // let result = {
     //   barcodes: [
     //     {
-    //       displayValue: '13761238123', // for testing
+    //       displayValue: '6003678902458', // for testing
     //     },
     //   ],
     // };

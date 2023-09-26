@@ -26,6 +26,7 @@ export class PantryApiService {
         name: item.name,
         quantity: item.quantity,
         unit: item.unit,
+        price: item.price,
       },
       { observe: 'response' }
     );
