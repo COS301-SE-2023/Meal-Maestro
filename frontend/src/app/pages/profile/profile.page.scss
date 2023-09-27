@@ -78,8 +78,8 @@
   font-weight: 600;
 }
 .profile-card {
-  background: linear-gradient(135deg, #f3eff5, #faf3e0);
-  border-radius: 20px;
+  background: linear-gradient(135deg, #c5ff8f, #018235);
+  border-radius: 30px;  /* Increase the roundness of the corners */
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
@@ -91,7 +91,7 @@
 
 .profile-button {
   margin-right: 15px;
-  --background: #acf7b7;
+  --background: #ffffff;
   --background-activated: #0056b3;
 }
 
@@ -105,3 +105,30 @@
   font-weight: 600;
   color: #333;
 }
+
+.profile-icon svg {
+  width: 70px;
+  height: 70px;
+}
+
+.custom-button {
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-icon {
+  width: 50px;
+  height: 50px;
+  margin: 0;  /* Remove any default margins */
+  padding: 0; /* Remove any default padding */
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+
