@@ -593,9 +593,9 @@ export class ProfilePage implements OnInit, ViewWillEnter {
 
       this.isMacroModalOpen = isOpen;
     } else if (this.settings.macroSet === false) {
-      this.settings.protein = 0;
-      this.settings.carbs = 0;
-      this.settings.fat = 0;
+      this.settings.protein = 1;
+      this.settings.carbs = 1;
+      this.settings.fat = 1;
       this.displaying_Macroratio = '';
       this.isMacroModalOpen = isOpen;
     }
@@ -928,7 +928,7 @@ export class ProfilePage implements OnInit, ViewWillEnter {
         this.settings.fat
       );
     } else {
-      return 'Not available';
+      return '';
     }
   }
 
