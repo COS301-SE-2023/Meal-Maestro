@@ -1,56 +1,72 @@
-.button-container {
-  display: flex;
-  justify-content: flex-end;
-  position: absolute;
-  top: 20px;
-  right: 20px;
+// Base styles for cards and containers
+.card-base {
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.card-toggle {
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-between {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.toggle-label {
+// Button Container
+.button-container {
+  @extend .flex-center;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+// Card Toggle
+.card-toggle {
+  @extend .flex-between;
+}
+
+// Toggle Container
+.toggle-container {
+  @extend .flex-between;
+}
+
+// Labels and Values
+.toggle-label,
+.toggle-value {
   margin-right: 10px;
   flex: 1;
   text-align: left;
 }
 
 .toggle-value {
-  margin-right: 10px;
   font-weight: bold;
 }
 
-.toggle-container {
-  display: flex;
-  align-items: center;
-}
-
-.toggle-label {
-  margin-right: 10px;
-  flex: 1;
-  text-align: left;
-}
-
+// Profile Card
 .profile-card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @extend .card-base;
+  @extend .flex-center;
   padding: 10px;
   margin: 10px;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .profile-content {
-  display: flex;
-  align-items: center;
+  @extend .flex-center;
 }
 
 .profile-button {
   margin-right: 10px;
+}
+
+// Icons and Labels
+.profile-icon,
+.profile-label {
+  font-size: 18px;
+  color: #333;
 }
 
 .profile-icon {
@@ -59,8 +75,33 @@
 }
 
 .profile-label {
-  font-size: 18px;
+  font-weight: 600;
+}
+.profile-card {
+  background: linear-gradient(135deg, #f3eff5, #faf3e0);
+  border-radius: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.profile-content {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+}
+
+.profile-button {
+  margin-right: 15px;
+  --background: #acf7b7;
+  --background-activated: #0056b3;
+}
+
+.profile-icon {
+  font-size: 40px;
+  color: white;
+}
+
+.profile-label {
+  font-size: 24px;
   font-weight: 600;
   color: #333;
 }
-
