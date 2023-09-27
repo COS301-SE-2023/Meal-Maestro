@@ -93,6 +93,7 @@
   margin-right: 15px;
   --background: #ffffff;
   --background-activated: #0056b3;
+  border-radius: 0px;
 }
 
 .profile-icon {
@@ -117,18 +118,18 @@
   --padding-top: 0;
   --padding-bottom: 0;
   width: 60px;
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 65px;
+  position: relative; /* Set position to relative */
+}
+.profile-icon {
+  width: 40px;  /* Reduce the size a bit */
+  height: 20px;  /* Reduce the size a bit */
+  position: absolute;
+  top: 15%;  /* Adjust vertical position */
+  left: 25%;  
+  transform: translate(-50%, -50%);
 }
 
-.profile-icon {
-  width: 50px;
-  height: 50px;
-  margin: 0;  /* Remove any default margins */
-  padding: 0; /* Remove any default padding */
-  flex-shrink: 0; /* Prevent shrinking */
-}
+
 
 
