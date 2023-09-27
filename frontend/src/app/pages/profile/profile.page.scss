@@ -90,10 +90,9 @@
 }
 
 .profile-button {
-  margin-right: 15px;
-  --background: #ffffff;
-  --background-activated: #0056b3;
-  border-radius: 0px;
+  --border-radius: 20px;
+  --background: #fff;
+  --background-hover: #0c7019;
 }
 
 .profile-icon {
@@ -121,13 +120,11 @@
   height: 65px;
   position: relative; /* Set position to relative */
 }
-.profile-icon {
-  width: 40px;  /* Reduce the size a bit */
-  height: 20px;  /* Reduce the size a bit */
-  position: absolute;
-  top: 15%;  /* Adjust vertical position */
-  left: 25%;  
-  transform: translate(-50%, -50%);
+.profile-icon svg {
+  width: 60px;  /* Smaller size */
+  height: 60px;  /* Smaller size */
+  margin: auto;  /* Auto margins for centering */
+  display: block;  /* Make it a block element */
 }
 
 
