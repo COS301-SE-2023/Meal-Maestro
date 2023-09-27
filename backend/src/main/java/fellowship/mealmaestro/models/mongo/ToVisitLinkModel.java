@@ -25,6 +25,11 @@ public class ToVisitLinkModel {
         this.store = store;
     }
 
+     public ToVisitLinkModel(String link, String store) {
+        this.link = link;
+        this.store = store;
+    }
+
     public ToVisitLinkModel() {
     }
 }
