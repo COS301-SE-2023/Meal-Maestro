@@ -48,6 +48,20 @@ easily plan meals for the coming week and helps them hit their nutritional goals
 ### Project Board
 - 📋 [Project Board](https://github.com/orgs/COS301-SE-2023/projects/38)
 
+## Demo 4
+### System Requirements Specification
+- 📃 [SRS](https://docs.google.com/document/d/1yGrgTx9R4Mbimq7Fw-Z8slDKLCbLXii9hXrB4D8_clo/edit?usp=sharing)
+### Technical Installation Manual
+- 📖 [Installation Manual](https://docs.google.com/document/d/1q1G-NUT9rfDd2zlWS7SYJnYXWICxeHy6H322RTaM3Cg/edit?usp=sharing)
+### User Manual Document
+- 📃 [User Manual](https://docs.google.com/document/d/1xZFJfWNjgjoHvn9U5X1B9AnxyEgnXRfwtreeCtud2fU/edit?usp=sharing)
+### Coding Standards Document
+- 📃 [Coding Standards](https://docs.google.com/document/d/1kVnGl-BvSUdD4N9ta2LY5jSKuwUI7dawDJ8sjJxuMZc/edit?usp=sharing)
+### Architectural Requirements Document
+- 📃 [Architectural Requirements](https://docs.google.com/document/d/1GADUq8VWsgqLFTfSPIBHwsFnrli8AbZGp7uwuRqVZu8/edit?usp=sharing)
+### Project Board
+- 📋 [Project Board](https://github.com/orgs/COS301-SE-2023/projects/38)
+
 ## Individuals
 
 ### Theo
