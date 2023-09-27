@@ -4,12 +4,12 @@ import { Observable } from 'rxjs';
 import { MealI } from '../../models/meal.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LikeDislikeService {
-  url: String = 'http://localhost:8080';
+  url: String = 'http://68.183.42.105:8080';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   liked(item: MealI): Observable<HttpResponse<void>> {
     return this.http.post<void>(
