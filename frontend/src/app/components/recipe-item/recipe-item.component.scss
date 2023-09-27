@@ -2,6 +2,12 @@
     color: black;
     font-size: smaller;
     margin-right: 10px;
+    transition: color 0.3 ease;
+}
+
+.likebutton:hover { 
+    color: #818181;
+    cursor: pointer;
 }
 
 .buttons {
