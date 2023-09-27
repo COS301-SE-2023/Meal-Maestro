@@ -31,7 +31,8 @@ public class WebscrapeService {
 
     private final ToVisitLinkRepository toVisitLinkRepository;
 
-    public WebscrapeService(TaskScheduler taskScheduler, WoolworthsScraper woolworthsScraper, CheckersScraper checkersScraper, ToVisitLinkRepository toVisitLinkRepository) {
+    public WebscrapeService(TaskScheduler taskScheduler, WoolworthsScraper woolworthsScraper,
+            CheckersScraper checkersScraper, ToVisitLinkRepository toVisitLinkRepository) {
         this.woolworthsScraper = woolworthsScraper;
         this.checkersScraper = checkersScraper;
         this.taskScheduler = taskScheduler;
@@ -40,33 +41,33 @@ public class WebscrapeService {
 
     @PostConstruct
     public void init() {
-        System.out.println("WebscrapeService init");
-        woolworthsScraper.populateInternalLinksFromSitemaps();
-        startWoolworthsScraping();
-        startScraping();
+        // System.out.println("WebscrapeService init");
+        // woolworthsScraper.populateInternalLinksFromSitemaps();
+        // startWoolworthsScraping();
+        // startScraping();
     }
 
     // Woolworths Scraping
-      private void startWoolworthsScraping() {
+    private void startWoolworthsScraping() {
         logger.info("Starting Woolworths scraping task");
-        Duration interval = Duration.ofSeconds(24); 
-    
+        Duration interval = Duration.ofSeconds(24);
+
         woolworthsScrapingTask = taskScheduler.scheduleWithFixedDelay(() -> {
             Optional<ToVisitLinkModel> toVisitLinkOptional = toVisitLinkRepository.findFirstByStore("Woolworths");
             if (toVisitLinkOptional.isPresent()) {
                 String categoryUrl = toVisitLinkOptional.get().getLink();
                 woolworthsScraper.scrapeWoolworths(categoryUrl);
-                
+
                 // Remove the processed link from ToVisitLinkRepository
                 toVisitLinkRepository.delete(toVisitLinkOptional.get());
             }
         }, Instant.now(), interval);
-    
+
         logger.info("Scheduled Woolworths scraping task to start immediately.");
     }
 
     // Checkers Scraping
-   private void startScraping() {
+    private void startScraping() {
         LocalDateTime startTime = getStartTime();
 
         // schedule task to start at 6am and use a 10s fixedDelay
@@ -84,15 +85,15 @@ public class WebscrapeService {
         logger.info("Scheduled scraping task to stop at {}", stopTime);
     }
 
-private void stopScraping() {
-    if (checkersScrapingTask != null) {
-        checkersScrapingTask.cancel(false);
-    }
-    logger.info("Stopped scraping task");
+    private void stopScraping() {
+        if (checkersScrapingTask != null) {
+            checkersScrapingTask.cancel(false);
+        }
+        logger.info("Stopped scraping task");
 
-    // schedule tasks for next day
-    startScraping();
-}
+        // schedule tasks for next day
+        startScraping();
+    }
 
     private LocalDateTime getStartTime() {
         LocalDateTime now = LocalDateTime.now();
@@ -105,7 +106,7 @@ private void stopScraping() {
         }
     }
 
-     private LocalDateTime getStopTime() {
+    private LocalDateTime getStopTime() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime next1040AM = now.withHour(10).withMinute(40).withSecond(0);
 
