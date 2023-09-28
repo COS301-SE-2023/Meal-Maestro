@@ -31,7 +31,7 @@ describe('PantryPageIntegration', () => {
   let component: PantryPage;
   let pantryItems: FoodItemI[];
   let shoppingListItems: FoodItemI[];
-  let apiUrl: string = 'https://68.183.42.105:8080';
+  let apiUrl: string = 'http://68.183.42.105:8080';
   let modal: any;
 
   beforeEach(async () => {

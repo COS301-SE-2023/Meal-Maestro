@@ -13,7 +13,7 @@ export class RecipeBookApiService {
     password: '',
   };
 
-  url: string = 'https://68.183.42.105:8080';
+  url: string = 'http://68.183.42.105:8080';
 
   constructor(private http: HttpClient) {}
 
