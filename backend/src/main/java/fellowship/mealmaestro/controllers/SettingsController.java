@@ -1,25 +1,26 @@
 package fellowship.mealmaestro.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import fellowship.mealmaestro.models.SettingsModel;
+import fellowship.mealmaestro.models.neo4j.SettingsModel;
 import fellowship.mealmaestro.services.SettingsService;
 import jakarta.validation.Valid;
 
 @RestController
 public class SettingsController {
 
-     @Autowired
-    private SettingsService settingsService;
+    private final SettingsService settingsService;
 
+    public SettingsController(SettingsService settingsService) {
+        this.settingsService = settingsService;
+    }
 
     @PostMapping("/getSettings")
-    public ResponseEntity<SettingsModel> getSettings(@RequestHeader("Authorization") String token){
+    public ResponseEntity<SettingsModel> getSettings(@RequestHeader("Authorization") String token) {
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
@@ -28,7 +29,8 @@ public class SettingsController {
     }
 
     @PostMapping("/updateSettings")
-    public ResponseEntity<Void> updateSettings(@Valid @RequestBody SettingsModel request, @RequestHeader("Authorization") String token){
+    public ResponseEntity<Void> updateSettings(@Valid @RequestBody SettingsModel request,
+            @RequestHeader("Authorization") String token) {
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }

@@ -1,92 +1,173 @@
 package fellowship.mealmaestro.services;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Random;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+import fellowship.mealmaestro.models.OpenAIChatRequest;
+import fellowship.mealmaestro.models.OpenAIChatRequest.Message;
+import fellowship.mealmaestro.models.neo4j.UserModel;
+import fellowship.mealmaestro.repositories.neo4j.UserRepository;
+import fellowship.mealmaestro.services.auth.JwtService;
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class OpenaiPromptBuilder {
 
-    @Autowired
-    private SettingsService settingsService;
-    public String buildPrompt(String Type) throws JsonProcessingException {
-        String prompt = "";
-        String preferenceString =settingsService.ALL_SETTINGS;
-        prompt += buildContext(Type, preferenceString);
-        prompt += buildGoal();
-        prompt += buildFormat();
-        prompt += buildSubtasks();
-        prompt += buildExample();
-        prompt += " ";
-        
-        return prompt;
-    }
-    public String buildPrompt(String Type, String extendedPrompt) throws JsonProcessingException {
-        String prompt = "";
+    private final JwtService jwtService;
 
-        prompt += buildContext(Type,extendedPrompt);
-        prompt += buildGoal();
-        prompt += buildFormat();
-        prompt += buildSubtasks();
-        prompt += buildExample();
-      // prompt += "\r\n";
-        
-        return prompt;
+    private final UserRepository userRepository;
+
+    private Random rand;
+
+    public OpenaiPromptBuilder(JwtService jwtService, UserRepository userRepository) {
+        this.jwtService = jwtService;
+        this.userRepository = userRepository;
     }
 
-    public String buildContext(String Type) {
-        String res = "";
-        res = ("Act as a system that creates a meal for a user.The meal should be a " + Type
-                + " and should not be difficult to cook.");
-        return res;
-    }
-    public String buildContext(String Type, String extendedPropmpt) {
-        String res = "";
-        res = ("Act as a system that creates a meal for a user.The meal should be a " + Type
-                + " and should not be difficult to cook." + extendedPropmpt);
-        return res;
+    @PostConstruct
+    public void init() {
+        rand = new Random(System.currentTimeMillis());
     }
 
-    public String buildGoal() {
-        String res = "";
-        res = "Pick a meal based on this information and use the following format, a JSON object:";
-        return res;
+    public OpenAIChatRequest buildPrompt(String type, String token) throws JsonProcessingException {
+
+        OpenAIChatRequest request = new OpenAIChatRequest();
+        request.setModel("gpt-3.5-turbo");
+
+        OpenAIChatRequest.Message systemMessage = buildSystemMessage();
+        OpenAIChatRequest.Message userMessage = buildUserMessage(type, token);
+
+        request.setMessages(List.of(systemMessage, userMessage));
+
+        return request;
     }
 
-    public String buildFormat() throws JsonProcessingException {
-       
-        Map<String, Object> params = new HashMap<>();
-        params.put("name", "meal name");
-        params.put("description", "short description of meal");
-        params.put("cookingTime", "meal cooking time");
-        params.put("ingredients", "list of ingredients seperated by a new line");
-         params.put("instructions", "step by step instructions, numbered, and seperated by new lines");
-        
-        return new ObjectMapper().writeValueAsString(params.toString());
-
-        
+    public Message buildSystemMessage() {
+        OpenAIChatRequest.Message systemMessage = new OpenAIChatRequest.Message();
+        systemMessage.setRole("system");
+        systemMessage.setContent(
+                "You will be given some information about me. You must first use this information to create a meal for me. Then you will return the meal as a JSON object in the following format. {\"name\":\"meal name\",\"description\":\"short description\",\"cookingTime\":\"time to cook\",\"ingredients\":\"list of comma separated ingredients\",\"instructions\":\"numbered step by step instructions separated by new lines\"} Please only return the JSON object");
+        return systemMessage;
     }
 
-    public String buildSubtasks() {
-        String res = "";
-        res = "Then add that meals ingredients, and cooking instructions";
-        return res;
+    public Message buildUserMessage(String type, String token) {
+        String email = jwtService.extractUserEmail(token);
+
+        UserModel user = userRepository.findByEmail(email).get();
+        String pantryFoods = user.getPantry().toString();
+        String settings = user.getSettings().toString();
+
+        double random = rand.nextDouble();
+
+        OpenAIChatRequest.Message userMessage = new OpenAIChatRequest.Message();
+
+        System.out.println("1st random: " + random);
+
+        if (pantryFoods.equals("")) {
+            if (random < 0.3) {
+                pantryFoods = "I have no food in my pantry";
+            } else if (random < 0.6) {
+                pantryFoods = "There is no food in my pantry";
+            } else {
+                pantryFoods = "I haven't got any food in my pantry";
+            }
+        } else {
+            pantryFoods = "I have the following foods in my pantry: " + pantryFoods;
+        }
+
+        random = rand.nextDouble();
+        System.out.println("2nd random: " + random);
+
+        if (settings.equals("")) {
+            if (random < 0.3) {
+                settings = "You can make whatever unique meal you want.";
+            } else if (random < 0.6) {
+                settings = "You can make whatever meal you want.";
+            } else {
+                settings = "You can make whatever meal you want, as long as it is " + type + ".";
+            }
+        } else {
+            settings = "Some other useful information about me: " + settings + ".";
+        }
+
+        random = rand.nextDouble();
+        System.out.println("3rd random: " + random);
+        userMessage.setRole("user");
+        if (random < 0.5) {
+            userMessage.setContent("I want to cook a " + type + " meal. " + pantryFoods + ". " + settings);
+        } else {
+            userMessage.setContent("I want to cook a " + type + " meal. " + settings + ". " + pantryFoods);
+        }
+
+        return userMessage;
     }
 
-    public String buildExample() throws JsonProcessingException {
-       
-        Map<String, Object> params = new HashMap<>();
-        params.put("name", "Spaghetti");
-        params.put("description", "a classic hearty italian dish of mince tomato and pasta");
-        params.put("cookingTime", "40 minutes");
-        params.put("ingredients", "Linguini/r/nMince/r/nTomato Pasta Sauce");
-        params.put("instructions", "1. Bring a pot of water to a boil and then add a dash of salt and the Pasta/r/n2. Brown the mince in a pan/r/n3. Add the tomato sauce to the mince and set to simmer/r/n4. Safely remove and strain the pasta/r/n5. Turn off the mince and sauce when ready");
-        
-        return new ObjectMapper().writeValueAsString(params);
+    public OpenAIChatRequest buildPrompt(String type, String token, String fromIngredients) throws JsonProcessingException {
+
+        OpenAIChatRequest request = new OpenAIChatRequest();
+        request.setModel("gpt-3.5-turbo");
+
+        OpenAIChatRequest.Message systemMessage = buildSystemMessage();
+        OpenAIChatRequest.Message userMessage = buildUserMessage(type, token, fromIngredients);
+
+        request.setMessages(List.of(systemMessage, userMessage));
+
+        return request;
+    }
+
+    public Message buildUserMessage(String type, String token, String fromIngredients) {
+        String email = jwtService.extractUserEmail(token);
+
+        UserModel user = userRepository.findByEmail(email).get();
+        String pantryFoods = user.getPantry().toString();
+        String settings = user.getSettings().toString();
+
+        double random = rand.nextDouble();
+
+        OpenAIChatRequest.Message userMessage = new OpenAIChatRequest.Message();
+
+        System.out.println("1st random: " + random);
+
+        if (pantryFoods.equals("")) {
+            if (random < 0.3) {
+                pantryFoods = "I have no food in my pantry";
+            } else if (random < 0.6) {
+                pantryFoods = "There is no food in my pantry";
+            } else {
+                pantryFoods = "I haven't got any food in my pantry";
+            }
+        } else {
+            pantryFoods = "I have the following foods in my pantry: " + pantryFoods + " And These are my favourite: " + fromIngredients;
+        }
+
+        random = rand.nextDouble();
+        System.out.println("2nd random: " + random);
+
+        if (settings.equals("")) {
+            if (random < 0.3) {
+                settings = "You can make whatever unique meal you want.";
+            } else if (random < 0.6) {
+                settings = "You can make whatever meal you want.";
+            } else {
+                settings = "You can make whatever meal you want, as long as it is " + type + ".";
+            }
+        } else {
+            settings = "Some other useful information about me: " + settings + ".";
+        }
+
+        random = rand.nextDouble();
+        System.out.println("3rd random: " + random);
+        userMessage.setRole("user");
+        if (random < 0.5) {
+            userMessage.setContent("I want to cook a " + type + " meal. " + pantryFoods + ". " + settings);
+        } else {
+            userMessage.setContent("I want to cook a " + type + " meal. " + settings + ". " + pantryFoods);
+        }
+
+        return userMessage;
     }
 }

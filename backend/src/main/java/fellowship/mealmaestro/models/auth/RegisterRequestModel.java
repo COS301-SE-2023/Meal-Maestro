@@ -1,41 +1,41 @@
 package fellowship.mealmaestro.models.auth;
 
 public class RegisterRequestModel {
-    
+
     private String username;
     private String email;
     private String password;
 
-    public RegisterRequestModel(){
+    public RegisterRequestModel() {
     }
 
-    public RegisterRequestModel(String username, String email, String password){
+    public RegisterRequestModel(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
     }
 
-    public String getUsername(){
+    public String getUsername() {
         return username;
     }
 
-    public void setUserame(String username){
+    public void setUserame(String username) {
         this.username = username;
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email){
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setPassword(String password){
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getPassword(){
+    public String getPassword() {
         return password;
     }
 }

@@ -1,1 +1,37 @@
-
+<ion-modal [isOpen]="modalOpen">
+  <ng-template>
+    <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ item?.name }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeModal()">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-avatar>
+        <ion-img [src]="item?.image" [alt]="item?.name"></ion-img>
+      </ion-avatar>
+    
+      <ion-content class="ion-padding">        
+        <div class="buttons">
+          <ion-button (click)="liked(item!)" class="likebutton" fill="outline" shape="round" color="black">
+            <ion-icon name="thumbs-up-outline"></ion-icon>
+          </ion-button>
+          <ion-button (click)="disliked(item!)" class="likebutton" fill="outline" shape="round" color="black">
+            <ion-icon name="thumbs-down-outline"></ion-icon>
+          </ion-button>
+        </div>
+        <p>{{ item?.description }}</p>
+        <h4>Preparation Time</h4>
+        <p>{{ item?.cookingTime }}</p>
+        <h4>Ingredients</h4>
+          <ul>
+            <li *ngFor="let ingredient of fIng">{{ ingredient }}</li>
+          </ul>
+        <h4>Instructions</h4>
+          <ol>
+            <li *ngFor="let instruction of fIns">{{ instruction }}</li>
+          </ol>
+      </ion-content>
+      </ng-template>
+</ion-modal>

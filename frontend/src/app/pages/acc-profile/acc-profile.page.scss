@@ -1,0 +1,28 @@
+ion-button.logout {
+  width: 80%;
+  margin: 0 auto;
+  display: block;
+  position: absolute;
+  bottom: 9%;
+  left: 10%;
+  right: 10%;
+}
+
+.help-button ion-icon {
+  font-size: 24px;
+  --border-radius: 0%;
+  --padding-end: 8px;
+  font-size: 27px;
+}
+
+.help-button {
+  transition: all ease-in-out 0.2s;
+  cursor: pointer;
+  border-radius: 30%;
+  width: 10vw;
+}
+
+.help-button:hover {
+  // border: 1px solid #888;
+  background-color: #ddd;
+}

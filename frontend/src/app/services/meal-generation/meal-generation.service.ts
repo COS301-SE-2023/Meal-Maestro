@@ -1,37 +1,26 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, map, tap } from 'rxjs';
-import { MealI } from '../../models/meal.model';
-import { DaysMealsI, FoodItemI, UserI, MealBrowseI } from '../../models/interfaces';
-import { title } from 'process';
-import { request } from 'http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { MealI, RegenerateMealRequestI } from '../../models/interfaces';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MealGenerationService {
+  url: string = 'http://68.183.42.105:8080';
 
-  user: UserI = {
-    username: localStorage.getItem('user') ?? '',
-    email: localStorage.getItem('email') ?? '',
-    password: '', 
-  }
+  constructor(private http: HttpClient) {}
 
-  url : String = 'http://localhost:8080';
-
-
-  constructor(private http: HttpClient) { }
-
-  getDailyMeals(dayOfWeek : String):Observable<DaysMealsI[]> {
-    return this.http.post<any>(
-      this.url+'/getDaysMeals',
-      { 
-        "dayOfWeek" : dayOfWeek.toUpperCase(),
-      }
+  getDailyMeals(date: Date): Observable<HttpResponse<MealI[]>> {
+    return this.http.post<MealI[]>(
+      this.url + '/getMealPlanForDay',
+      {
+        date: date.toISOString().split('T')[0],
+      },
+      { observe: 'response' }
     );
   }
 
-  
   // handleArchive(daysMeals: DaysMealsI, meal: string): Observable<DaysMealsI> {
   //   // const headers = new HttpHeaders({
   //   //   'Content-Type': 'application/json'
@@ -48,22 +37,23 @@ export class MealGenerationService {
   //     })
   //   );
   // }
-  handleArchive(daysMeal: DaysMealsI, meal: String): Observable<DaysMealsI> {
-    return this.http.post<any>(
-      this.url+'/regenerate',
+  regenerate(request: RegenerateMealRequestI): Observable<HttpResponse<MealI>> {
+    return this.http.post<MealI>(
+      this.url + '/regenerate',
       {
-        "breakfast": daysMeal.breakfast,
-        "lunch": daysMeal.lunch,
-        "dinner": daysMeal.dinner,
-        "mealDate": daysMeal?.mealDate?.toUpperCase(),
-        "meal": meal
-      });
+        meal: request.meal,
+        date: request.mealDate?.toISOString().split('T')[0],
+      },
+      {
+        observe: 'response',
+      }
+    );
   }
 
   // Helper function to get the headers (if needed)
   private getHeaders() {
     return new HttpHeaders({
-      'Content-Type': 'application/json' // Set the content type of the request
+      'Content-Type': 'application/json', // Set the content type of the request
       // Add any other headers if required
     });
   }
@@ -79,7 +69,6 @@ export class MealGenerationService {
 
   //   return forkJoin(imageRequests);
   // }
-
 
   // private updateMealUrls(originalMeals: DaysMealsI[], updatedUrls: string[]): DaysMealsI[] {
   //   let index = 0;
@@ -101,16 +90,13 @@ export class MealGenerationService {
   //   }));
   // }
 
-
-  getMeal():Observable<MealI> {
-    return this.http.get<MealI>(
-      this.url+'/getMeal'
-    );
+  getMeal(): Observable<MealI> {
+    return this.http.get<MealI>(this.url + '/getMeal');
   }
 
-  getPopularMeals():Observable<MealI[]> {
+  getPopularMeals(): Observable<MealI[]> {
     return this.http.get<MealI[]>(
-      this.url+'/getPopularMeals',
+      this.url + '/getPopularMeals'
       // {},
       // {observe: 'response'}
     );
@@ -118,13 +104,8 @@ export class MealGenerationService {
 
   getSearchedMeals(query: string): Observable<MealI[]> {
     const params = { query: query }; // backend expects the query parameter
-    return this.http.get<MealI[]>(
-      this.url + '/getSearchedMeals', 
-      { params: params });
+    return this.http.get<MealI[]>(this.url + '/getSearchedMeals', {
+      params: params,
+    });
   }
-
-  
-
-
-
 }

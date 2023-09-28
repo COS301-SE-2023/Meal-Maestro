@@ -1,35 +1,41 @@
 package fellowship.mealmaestro.controllers;
 
 import java.util.List;
+import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import fellowship.mealmaestro.models.FoodModel;
+import fellowship.mealmaestro.models.neo4j.FoodModel;
 import fellowship.mealmaestro.services.ShoppingListService;
 import jakarta.validation.Valid;
 
 @RestController
 public class ShoppingListController {
-    
-    @Autowired
-    private ShoppingListService shoppingListService;
+
+    private final ShoppingListService shoppingListService;
+
+    public ShoppingListController(ShoppingListService shoppingListService) {
+        this.shoppingListService = shoppingListService;
+    }
 
     @PostMapping("/addToShoppingList")
-    public ResponseEntity<FoodModel> addToShoppingList(@Valid @RequestBody FoodModel request, @RequestHeader("Authorization") String token){
+    public ResponseEntity<FoodModel> addToShoppingList(@Valid @RequestBody FoodModel request,
+            @RequestHeader("Authorization") String token) {
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+        request.setId(UUID.randomUUID());
         String authToken = token.substring(7);
         return ResponseEntity.ok(shoppingListService.addToShoppingList(request, authToken));
     }
 
     @PostMapping("/removeFromShoppingList")
-    public ResponseEntity<Void> removeFromShoppingList(@Valid @RequestBody FoodModel request, @RequestHeader("Authorization") String token){
+    public ResponseEntity<Void> removeFromShoppingList(@Valid @RequestBody FoodModel request,
+            @RequestHeader("Authorization") String token) {
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
@@ -39,7 +45,8 @@ public class ShoppingListController {
     }
 
     @PostMapping("/updateShoppingList")
-    public ResponseEntity<Void> updateShoppingList(@Valid @RequestBody FoodModel request, @RequestHeader("Authorization") String token){
+    public ResponseEntity<Void> updateShoppingList(@Valid @RequestBody FoodModel request,
+            @RequestHeader("Authorization") String token) {
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
@@ -49,7 +56,7 @@ public class ShoppingListController {
     }
 
     @PostMapping("/getShoppingList")
-    public ResponseEntity<List<FoodModel>> getShoppingList(@RequestHeader("Authorization") String token){
+    public ResponseEntity<List<FoodModel>> getShoppingList(@RequestHeader("Authorization") String token) {
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
@@ -57,14 +64,20 @@ public class ShoppingListController {
         return ResponseEntity.ok(shoppingListService.getShoppingList(authToken));
     }
 
-    @PostMapping("/buyItem") 
-    public ResponseEntity<List<FoodModel>> buyItem(@Valid @RequestBody FoodModel request, @RequestHeader("Authorization") String token){
-        //Will move item from shopping list to pantry and return updated pantry
-        
+    @PostMapping("/buyItem")
+    public ResponseEntity<List<FoodModel>> buyItem(@Valid @RequestBody FoodModel request,
+            @RequestHeader("Authorization") String token) {
+        // Will move item from shopping list to pantry and return updated pantry
+
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
         String authToken = token.substring(7);
-        return ResponseEntity.ok(shoppingListService.buyItem(request, authToken));
+        List<FoodModel> pantry = shoppingListService.buyItem(request, authToken);
+
+        if (pantry == null) {
+            return ResponseEntity.status(409).build();
+        }
+        return ResponseEntity.ok(pantry);
     }
 }

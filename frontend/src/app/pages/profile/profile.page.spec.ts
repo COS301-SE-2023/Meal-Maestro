@@ -18,9 +18,8 @@ describe('ProfilePage', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      //removed ProfilePage from declarations
       imports: [IonicModule.forRoot(), HttpClientTestingModule, RouterTestingModule],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA] // added this line
+      schemas: [CUSTOM_ELEMENTS_SCHEMA] 
 
     }).compileComponents();
 

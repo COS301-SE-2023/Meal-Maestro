@@ -18,10 +18,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
-import fellowship.mealmaestro.models.UserModel;
 import fellowship.mealmaestro.models.auth.AuthenticationRequestModel;
 import fellowship.mealmaestro.models.auth.AuthenticationResponseModel;
 import fellowship.mealmaestro.models.auth.RegisterRequestModel;
+import fellowship.mealmaestro.models.neo4j.UserModel;
 import fellowship.mealmaestro.services.UserService;
 import fellowship.mealmaestro.services.auth.AuthenticationService;
 import fellowship.mealmaestro.services.auth.JwtService;
@@ -29,16 +29,16 @@ import fellowship.mealmaestro.services.auth.JwtService;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
-    "JWT_SECRET=secret",
-    "DB_URI=bolt://localhost:7687",
-    "DB_USERNAME=neo4j",
-    "DB_PASSWORD=password"
+        "JWT_SECRET=secret",
+        "DB_URI=bolt://localhost:7687",
+        "DB_USERNAME=neo4j",
+        "DB_PASSWORD=password"
 })
 public class UserControllerTest {
-    
+
     @Autowired
     private MockMvc mockMvc;
-    
+
     @MockBean
     private UserService userService;
 
@@ -47,7 +47,6 @@ public class UserControllerTest {
 
     @MockBean
     private static JwtService jwtService;
-
 
     @Test
     public void findByEmailSuccessTest() throws Exception {
@@ -64,7 +63,7 @@ public class UserControllerTest {
                 .contentType("application/json")
                 .header("Authorization", "Bearer testToken..")
                 .content("{\"name\":\"username\",\"password\":\"password\",\"email\":\"email\"}"))
-            .andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
 
     @Test

@@ -1,35 +1,132 @@
-.button-container {
-  display: flex;
-  justify-content: flex-end;
-  position: absolute;
-  top: 20px;
-  right: 20px;
+// Base styles for cards and containers
+.card-base {
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.card-toggle {
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-between {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.toggle-label {
+// Button Container
+.button-container {
+  @extend .flex-center;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+// Card Toggle
+.card-toggle {
+  @extend .flex-between;
+}
+
+// Toggle Container
+.toggle-container {
+  @extend .flex-between;
+}
+
+// Labels and Values
+.toggle-label,
+.toggle-value {
   margin-right: 10px;
   flex: 1;
   text-align: left;
 }
 
 .toggle-value {
-  margin-right: 10px;
   font-weight: bold;
 }
 
-.toggle-container {
-  display: flex;
-  align-items: center;
+// Profile Card
+.profile-card {
+  @extend .card-base;
+  @extend .flex-center;
+  padding: 10px;
+  margin: 10px;
 }
 
-.toggle-label {
-  margin-right: 10px;
-  flex: 1;
-  text-align: left;
+.profile-content {
+  @extend .flex-center;
 }
+
+.profile-button {
+  margin-right: 10px;
+}
+
+// Icons and Labels
+.profile-icon,
+.profile-label {
+  font-size: 18px;
+  color: #333;
+}
+
+.profile-icon {
+  font-size: 32px;
+  color: #007bff;
+}
+
+.profile-label {
+  font-weight: 600;
+}
+.profile-card {
+  background: linear-gradient(135deg, #c5ff8f, #018235);
+  border-radius: 30px;  /* Increase the roundness of the corners */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.profile-content {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+}
+
+.profile-button {
+  --border-radius: 20px;
+  --background: #fff;
+  --background-hover: #0c7019;
+}
+
+.profile-icon {
+  font-size: 40px;
+  color: white;
+}
+
+.profile-label {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+.profile-icon svg {
+  width: 70px;
+  height: 70px;
+}
+
+.custom-button {
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  width: 60px;
+  height: 65px;
+  position: relative; /* Set position to relative */
+}
+.profile-icon svg {
+  width: 60px;  /* Smaller size */
+  height: 60px;  /* Smaller size */
+  margin: auto;  /* Auto margins for centering */
+  display: block;  /* Make it a block element */
+}
+
+
+
+

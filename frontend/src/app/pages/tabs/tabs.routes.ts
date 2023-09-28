@@ -9,7 +9,9 @@ export const routes: Routes = [
       {
         path: 'recipe-book',
         loadComponent: () =>
-          import('../recipe-book/recipe-book.page').then((m) => m.RecipeBookPage),
+          import('../recipe-book/recipe-book.page').then(
+            (m) => m.RecipeBookPage
+          ),
       },
       {
         path: 'home',
@@ -26,11 +28,6 @@ export const routes: Routes = [
         loadComponent: () =>
           import('../profile/profile.page').then((m) => m.ProfilePage),
       },
-      // {
-      //   path: 'signup',
-      //   loadComponent: () =>
-      //     import('../signup/signup.page').then((m) => m.SignupPage),
-      // },
       {
         path: 'browse',
         loadComponent: () =>
@@ -41,7 +38,6 @@ export const routes: Routes = [
         redirectTo: '/tabs/home',
         pathMatch: 'full',
       },
-      
     ],
   },
   {

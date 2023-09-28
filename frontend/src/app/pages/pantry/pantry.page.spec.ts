@@ -1,11 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-
 import { PantryPage } from './pantry.page';
 import { of } from 'rxjs';
 import { FoodItemI } from '../../models/interfaces';
-import { AuthenticationService, PantryApiService, ShoppingListApiService } from '../../services/services';
+import {
+  AuthenticationService,
+  BarcodeApiService,
+  PantryApiService,
+  ShoppingListApiService,
+} from '../../services/services';
 import { HttpResponse } from '@angular/common/http';
 
 describe('PantryPage', () => {
@@ -14,36 +18,91 @@ describe('PantryPage', () => {
   let mockPantryService: jasmine.SpyObj<PantryApiService>;
   let mockShoppingListService: jasmine.SpyObj<ShoppingListApiService>;
   let mockAuthService: jasmine.SpyObj<AuthenticationService>;
+  let mockBarcodeService: jasmine.SpyObj<BarcodeApiService>;
   let mockItems: FoodItemI[];
+  let pantryItems: FoodItemI[];
+  let shoppingListItems: FoodItemI[];
 
   beforeEach(async () => {
-    mockPantryService = jasmine.createSpyObj('PantryApiService', ['getPantryItems', 'addToPantry', 'deletePantryItem']);
-    mockShoppingListService = jasmine.createSpyObj('ShoppingListApiService', ['getShoppingListItems', 'addToShoppingList', 'deleteShoppingListItem']);
+    mockPantryService = jasmine.createSpyObj('PantryApiService', [
+      'getPantryItems',
+      'addToPantry',
+      'deletePantryItem',
+    ]);
+    mockShoppingListService = jasmine.createSpyObj('ShoppingListApiService', [
+      'getShoppingListItems',
+      'addToShoppingList',
+      'deleteShoppingListItem',
+    ]);
     mockAuthService = jasmine.createSpyObj('AuthenticationService', ['logout']);
+    mockBarcodeService = jasmine.createSpyObj('BarcodeApiService', [
+      'findProduct',
+    ]);
     mockItems = [
       {
         name: 'test',
         quantity: 1,
-        weight: 1,
+        unit: 'pcs',
+        price: 2,
       },
       {
         name: 'test2',
         quantity: 2,
-        weight: 2,
+        unit: 'g',
+      },
+    ];
+
+    pantryItems = [
+      {
+        name: 'test',
+        quantity: 1,
+        unit: 'pcs',
+      },
+      {
+        name: 'test2',
+        quantity: 2,
+        unit: 'pcs',
+      },
+    ];
+
+    shoppingListItems = [
+      {
+        name: 'test3',
+        quantity: 3,
+        unit: 'pcs',
+      },
+      {
+        name: 'test4',
+        quantity: 4,
+        unit: 'pcs',
       },
     ];
 
     const emptyResponse = new HttpResponse<void>({ body: null, status: 200 });
-    const itemsResponse = new HttpResponse<FoodItemI[]>({ body: mockItems, status: 200 });
-    const itemResponse = new HttpResponse<FoodItemI>({ body: mockItems[0], status: 200 });
+    const itemsResponse = new HttpResponse<FoodItemI[]>({
+      body: mockItems,
+      status: 200,
+    });
+    const itemResponse = new HttpResponse<FoodItemI>({
+      body: mockItems[0],
+      status: 200,
+    });
+    const barcodeResponse = new HttpResponse<FoodItemI>({
+      body: mockItems[0],
+      status: 200,
+    });
 
     mockPantryService.getPantryItems.and.returnValue(of(itemsResponse));
     mockPantryService.addToPantry.and.returnValue(of(itemResponse));
     mockPantryService.deletePantryItem.and.returnValue(of(emptyResponse));
-    mockShoppingListService.getShoppingListItems.and.returnValue(of(itemsResponse));
+    mockShoppingListService.getShoppingListItems.and.returnValue(
+      of(itemsResponse)
+    );
     mockShoppingListService.addToShoppingList.and.returnValue(of(itemResponse));
-    mockShoppingListService.deleteShoppingListItem.and.returnValue(of(emptyResponse));
-
+    mockShoppingListService.deleteShoppingListItem.and.returnValue(
+      of(emptyResponse)
+    );
+    mockBarcodeService.findProduct.and.returnValue(of(barcodeResponse));
 
     await TestBed.configureTestingModule({
       imports: [IonicModule, PantryPage],
@@ -51,6 +110,7 @@ describe('PantryPage', () => {
         { provide: PantryApiService, useValue: mockPantryService },
         { provide: ShoppingListApiService, useValue: mockShoppingListService },
         { provide: AuthenticationService, useValue: mockAuthService },
+        { provide: BarcodeApiService, useValue: mockBarcodeService },
       ],
     }).compileComponents();
 
@@ -63,8 +123,8 @@ describe('PantryPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#ngOnInit should call getPantryItems and getShoppingListItems', () => {
-    component.ngOnInit();
+  it('#viewWillEnter should call getPantryItems and getShoppingListItems', () => {
+    component.ionViewWillEnter();
     expect(mockPantryService.getPantryItems).toHaveBeenCalled();
     expect(mockShoppingListService.getShoppingListItems).toHaveBeenCalled();
 
@@ -73,16 +133,22 @@ describe('PantryPage', () => {
   });
 
   it('#addItemToPantry should call addToPantry', () => {
-    component.addItemToPantry({ detail: { role: 'confirm', data: mockItems[0] } } as unknown as Event);
+    component.addItemToPantry({
+      detail: { role: 'confirm', data: mockItems[0] },
+    } as unknown as Event);
     expect(mockPantryService.addToPantry).toHaveBeenCalled();
     expect(mockPantryService.addToPantry).toHaveBeenCalledWith(mockItems[0]);
     expect(component.pantryItems).toContain(mockItems[0]);
   });
 
   it('#addItemToShoppingList should call addToShoppingList', () => {
-    component.addItemToShoppingList({ detail: { role: 'confirm', data: mockItems[0] } } as unknown as Event);
+    component.addItemToShoppingList({
+      detail: { role: 'confirm', data: mockItems[0] },
+    } as unknown as Event);
     expect(mockShoppingListService.addToShoppingList).toHaveBeenCalled();
-    expect(mockShoppingListService.addToShoppingList).toHaveBeenCalledWith(mockItems[0]);
+    expect(mockShoppingListService.addToShoppingList).toHaveBeenCalledWith(
+      mockItems[0]
+    );
     expect(component.shoppingItems).toContain(mockItems[0]);
   });
 
@@ -91,7 +157,9 @@ describe('PantryPage', () => {
     component.pantryItems = [...mockItems];
     component.onItemDeleted(mockItems[0]);
     expect(mockPantryService.deletePantryItem).toHaveBeenCalled();
-    expect(mockPantryService.deletePantryItem).toHaveBeenCalledWith(mockItems[0]);
+    expect(mockPantryService.deletePantryItem).toHaveBeenCalledWith(
+      mockItems[0]
+    );
     expect(component.pantryItems).not.toContain(mockItems[0]);
   });
 
@@ -100,14 +168,18 @@ describe('PantryPage', () => {
     component.shoppingItems = [...mockItems];
     component.onItemDeleted(mockItems[0]);
     expect(mockShoppingListService.deleteShoppingListItem).toHaveBeenCalled();
-    expect(mockShoppingListService.deleteShoppingListItem).toHaveBeenCalledWith(mockItems[0]);
+    expect(mockShoppingListService.deleteShoppingListItem).toHaveBeenCalledWith(
+      mockItems[0]
+    );
     expect(component.shoppingItems).not.toContain(mockItems[0]);
   });
 
   it('#onItemDeleted should not call deleteShoppingListItem or deletePantryItem if segment is not shopping or pantry ', () => {
     component.segment = null;
     component.onItemDeleted(mockItems[0]);
-    expect(mockShoppingListService.deleteShoppingListItem).not.toHaveBeenCalled();
+    expect(
+      mockShoppingListService.deleteShoppingListItem
+    ).not.toHaveBeenCalled();
     expect(mockPantryService.deletePantryItem).not.toHaveBeenCalled();
   });
 });
