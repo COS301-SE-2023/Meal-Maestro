@@ -59,6 +59,8 @@ easily plan meals for the coming week and helps them hit their nutritional goals
 - 📃 [Coding Standards](https://docs.google.com/document/d/1kVnGl-BvSUdD4N9ta2LY5jSKuwUI7dawDJ8sjJxuMZc/edit?usp=sharing)
 ### Architectural Requirements Document
 - 📃 [Architectural Requirements](https://docs.google.com/document/d/1GADUq8VWsgqLFTfSPIBHwsFnrli8AbZGp7uwuRqVZu8/edit?usp=sharing)
+### Testing Policy Document
+- 📃 [Testing Policy](https://docs.google.com/document/d/1eaa4MtHBVeKBffLzrD89ICBI439uYvGGv204FIzZsOk/edit?usp=sharing)
 ### Project Board
 - 📋 [Project Board](https://github.com/orgs/COS301-SE-2023/projects/38)
 
