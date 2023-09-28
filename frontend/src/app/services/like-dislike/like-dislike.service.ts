@@ -7,7 +7,7 @@ import { MealI } from '../../models/meal.model';
   providedIn: 'root',
 })
 export class LikeDislikeService {
-  url: String = 'http://68.183.42.105:8080';
+  url: String = 'https://68.183.42.105:8080';
 
   constructor(private http: HttpClient) {}
 

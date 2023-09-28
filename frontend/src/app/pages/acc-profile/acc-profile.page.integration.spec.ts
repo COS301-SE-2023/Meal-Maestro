@@ -20,7 +20,7 @@ describe('AccProfilePageIntegration', () => {
   let userApiService: UserApiService;
   let errorHandlerService: ErrorHandlerService;
   let user: UserI;
-  let apiUrl: string = 'http://68.183.42.105:8080';
+  let apiUrl: string = 'https://68.183.42.105:8080';
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
