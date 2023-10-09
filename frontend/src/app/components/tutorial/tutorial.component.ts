@@ -1,27 +1,30 @@
-import { Component, ViewChild, ElementRef,OnInit, AfterViewInit , CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  OnInit,
+  AfterViewInit,
+  CUSTOM_ELEMENTS_SCHEMA,
+} from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import {IonicModule } from '@ionic/angular';
-import { AuthenticationService, ErrorHandlerService } from '../../services/services';
+import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import Swiper from 'swiper';
 
-
 @Component({
-  
   selector: 'app-tutorial',
   templateUrl: './tutorial.component.html',
   styleUrls: ['./tutorial.component.scss'],
-  standalone:true,
+  standalone: true,
   imports: [CommonModule, IonicModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class TutorialComponent implements OnInit, AfterViewInit {
-  
   private swiper: Swiper = {} as Swiper;
   @ViewChild('swiper') swiperElement!: ElementRef;
   @ViewChild('videoPlayer') videoPlayer!: ElementRef;
 
-  constructor(private modalController: ModalController, private errorHandlerService: ErrorHandlerService) { }
+  constructor(private modalController: ModalController) {}
 
   ngOnInit() {}
 
@@ -52,7 +55,7 @@ export class TutorialComponent implements OnInit, AfterViewInit {
     //   console.log("IN FUNCTION")
     //   this.onSlideChange();
     // })
-   // console.log('done');
+    // console.log('done');
   }
 
   onSlideChange() {
@@ -68,21 +71,20 @@ export class TutorialComponent implements OnInit, AfterViewInit {
       video.pause();
     }
     //video.pause();
-   // }
+    // }
   }
 
   onSlideChangeTransitionStart() {
     console.log('slide started');
     const video: HTMLVideoElement = this.videoPlayer.nativeElement;
-    video.currentTime = 0; 
+    video.currentTime = 0;
   }
-
 
   onSwiper(swiper: Swiper) {
     this.swiper = swiper;
   }
 
- closeModal() {
+  closeModal() {
     this.modalController.dismiss();
   }
 }
