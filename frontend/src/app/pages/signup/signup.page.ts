@@ -3,7 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { AuthenticationService, ErrorHandlerService } from '../../services/services';
+import {
+  AuthenticationService,
+  ErrorHandlerService,
+} from '../../services/services';
 import { UserI } from '../../models/interfaces';
 import { TutorialComponent } from '../../components/tutorial/tutorial.component';
 import { ModalController } from '@ionic/angular';
@@ -13,7 +16,7 @@ import { ModalController } from '@ionic/angular';
   templateUrl: './signup.page.html',
   styleUrls: ['./signup.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule],
 })
 export class SignupPage {
   initial: string = '';
@@ -22,13 +25,21 @@ export class SignupPage {
     username: '',
     password: '',
     email: '',
-  }
+  };
 
-  constructor(private router: Router, private errorHandlerService: ErrorHandlerService, private auth: AuthenticationService,private modalController: ModalController ) { }
+  constructor(
+    private router: Router,
+    private errorHandlerService: ErrorHandlerService,
+    private auth: AuthenticationService,
+    private modalController: ModalController
+  ) {}
 
   async signup(form: any) {
     if (form.initial !== form.verify) {
-      this.errorHandlerService.presentErrorToast('Passwords do not match', 'Passwords do not match');
+      this.errorHandlerService.presentErrorToast(
+        'Passwords do not match',
+        'Passwords do not match'
+      );
       return;
     }
 
@@ -36,34 +47,43 @@ export class SignupPage {
       username: form.username,
       password: form.verify,
       email: form.email,
-    }
+    };
 
     this.auth.register(newUser).subscribe({
       next: (response) => {
         if (response.status == 200) {
           if (response.body) {
             this.auth.setToken(response.body.token);
-            this.errorHandlerService.presentSuccessToast('Registration successful');
+            this.errorHandlerService.presentSuccessToast(
+              'Registration successful'
+            );
             this.router.navigate(['app/tabs/home']);
+            this.openModal();
           }
-        } 
+        }
       },
       error: (error) => {
-        if (error.status == 400){
-          this.errorHandlerService.presentErrorToast('Email already exists', 'Email already exists');
-        }else{
-          this.errorHandlerService.presentErrorToast('Unexpected error. Please try again', error);
+        if (error.status == 400) {
+          this.errorHandlerService.presentErrorToast(
+            'Email already exists',
+            'Email already exists'
+          );
+        } else {
+          this.errorHandlerService.presentErrorToast(
+            'Unexpected error. Please try again',
+            error
+          );
         }
-      }
+      },
     });
   }
   async openModal() {
     const modal = await this.modalController.create({
-    component: TutorialComponent,
-  });
+      component: TutorialComponent,
+    });
 
-  await modal.present();
-}
+    await modal.present();
+  }
 
   goToLogin() {
     this.router.navigate(['../']);

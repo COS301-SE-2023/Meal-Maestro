@@ -31,10 +31,12 @@ public class MealManagementService {
     }
 
     public MealModel generateMeal(String mealType, String token) {
-        MealModel defaultMeal = new MealModel("Bread", "1. Toast the bread", "Delicious Bread",
+        String mealName = mealType.substring(0, 1).toUpperCase() + mealType.substring(1);
+        MealModel defaultMeal = new MealModel(mealName + " Bread", "1. Toast the bread",
+                "Delicious Fresh " + mealName + " Bread",
                 "https://images.unsplash.com/photo-1598373182133-52452f7691ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
                 "Bread", "5 minutes");
-        defaultMeal.setType("breakfast");
+        defaultMeal.setType(mealType);
         try {
             JsonNode mealJson = objectMapper.readTree(openaiApiService.fetchMealResponse(mealType, token));
             int i = 0;
