@@ -417,37 +417,262 @@
     </swiper-slide>
 
     <swiper-slide>
-      <img src="assets/Pantry.jpg" />
-
-      <button (click)="closeModal()" class="link-button">Skip</button>
+      <ion-backdrop [visible]="true" [tappable]="false"></ion-backdrop>
+      <ion-card class="info-card pantry-card1">
+        <span class="bold">Manage your</span>
+        <span class="bold green-text"> Pantry</span><br />
+        by adding the ingredients you have at home.<br />
+        <br />
+        <span class="bold">Swipe left</span>
+        to
+        <span class="bold green-text">delete</span>
+        an ingredient. <br />
+        <span class="bold">Swipe right</span>
+        to
+        <span class="bold green-text">edit</span>
+        an ingredient's quantity. <br />
+        <br />
+        <span class="bold">Let the</span>
+        <span class="bold green-text"> Shopping List </span>
+        <span class="bold">help you</span>
+        keep track of what you need to buy for your next meal.
+      </ion-card>
+      <ion-card class="info-card pantry-card2">
+        Let
+        <span class="bold">this</span>
+        <span class="bold green-text"> Button </span>
+        help you add meals.
+      </ion-card>
+      <div class="slide-background">
+        <ion-header>
+          <ion-toolbar class="highlight">
+            <ion-segment [value]="'pantry'">
+              <ion-segment-button value="pantry">
+                <ion-label>Pantry</ion-label>
+              </ion-segment-button>
+              <ion-segment-button value="shopping">
+                <ion-label>Shopping</ion-label>
+              </ion-segment-button>
+            </ion-segment>
+          </ion-toolbar>
+          <ion-toolbar>
+            <ion-searchbar></ion-searchbar>
+          </ion-toolbar>
+          <ion-toolbar class="labels">
+            <ion-label slot="start">
+              Name
+              <ng-container *ngIf="true">
+                <ion-icon name="caret-down"></ion-icon>
+              </ng-container>
+            </ion-label>
+            <ion-label class="amount-label" slot="end">
+              Amount
+              <ng-container *ngIf="false">
+                <ion-icon name="caret-down"></ion-icon>
+              </ng-container>
+            </ion-label>
+          </ion-toolbar>
+        </ion-header>
+        <div class="list">
+          <div class="empty-list" *ngIf="true">Pantry is empty :(</div>
+        </div>
+        <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+          <ion-fab-button>
+            <ion-icon name="menu"></ion-icon>
+          </ion-fab-button>
+          <ion-fab-list side="top">
+            <ion-fab-button id="open-add-modal">
+              <ion-icon name="add"></ion-icon>
+            </ion-fab-button>
+          </ion-fab-list>
+        </ion-fab>
+        <div class="fab-background"></div>
+      </div>
     </swiper-slide>
 
     <swiper-slide>
-      <img src="assets/Home.jpg" />
-      <button (click)="closeModal()" class="link-button">Skip</button>
+      <ion-backdrop
+        [visible]="true"
+        [tappable]="false"
+        style="z-index: 9999"
+      ></ion-backdrop>
+      <ion-card class="info-card home-card">
+        <span class="bold"
+          >Explore your <span class="green-text">Daily Meals,</span></span
+        >
+        including breakfast, lunch and dinner. Simply click on the meal to
+        access detailed information about it.<br />
+        <span class="bold">Swipe Left</span> to
+        <span class="green-text bold">regenerate </span> a meal. <br />
+        <span class="bold">Swipe Right</span> to
+        <span class="green-text bold">save </span> a meal for later. <br />
+      </ion-card>
+      <div class="slide-background">
+        <ion-header>
+          <ion-toolbar>
+            <ion-title size="large" style="color: black"
+              >What's on the Menu?</ion-title
+            >
+          </ion-toolbar>
+        </ion-header>
+
+        <ion-list lines="inset" class="list-container">
+          <app-daily-meals
+            *ngFor="let item of meals"
+            [dayData]="item"
+            [items]="foods"
+          >
+          </app-daily-meals>
+        </ion-list>
+      </div>
     </swiper-slide>
+
     <swiper-slide>
-      <img src="assets/modal.jpg" />
-      <button (click)="closeModal()" class="link-button">Skip</button>
+      <ion-backdrop
+        [visible]="true"
+        [tappable]="false"
+        style="z-index: 9999"
+      ></ion-backdrop>
+      <ion-card class="info-card modal-card">
+        <span class="bold"
+          >View <span class="green-text">Meal Details </span></span
+        >
+        when you click on a meal, including preparation time, ingredients, and
+        instructions. <br /><br />
+        Meals can also be <span class="bold green-text">saved </span> to your
+        recipe book from here. <br />
+        You can express your preference for a meal by
+        <span class="bold green-text">liking </span> or
+        <span class="bold green-text">disliking </span> it.
+      </ion-card>
+      <div class="slide-background">
+        <ion-header>
+          <ion-toolbar>
+            <ion-title style="font-size: medium"
+              >Sausage&Cheese Quiche</ion-title
+            >
+          </ion-toolbar>
+        </ion-header>
+        <ion-avatar>
+          <img [src]="meals[0].breakfast!.image" />
+        </ion-avatar>
+
+        <ion-content class="ion-padding">
+          <div class="buttons">
+            <ion-button
+              class="likebutton"
+              fill="outline"
+              shape="round"
+              color="black"
+            >
+              <ion-icon name="thumbs-up-outline"></ion-icon>
+            </ion-button>
+            <ion-button
+              class="likebutton"
+              fill="outline"
+              shape="round"
+              color="black"
+            >
+              <ion-icon name="thumbs-down-outline"></ion-icon>
+            </ion-button>
+            <ion-button
+              class="savebutton"
+              fill="outline"
+              shape="round"
+              color="black"
+            >
+              <ion-icon slot="start" name="bookmark-outline"></ion-icon>
+              Save to Recipe Book
+            </ion-button>
+          </div>
+          <p>A delicious and easy to cook breakfast meal!</p>
+          <h4>Preparation Time</h4>
+          <p>&bullet; Prep Time: 30 min <br /></p>
+          <h4>Ingredients:</h4>
+          <ul>
+            <li>Sausage</li>
+            <li>Cheese</li>
+          </ul>
+          <h4>Instructions</h4>
+          <ol>
+            <li>
+              Preheat oven at 180 and put the crust in dish and crimp edges.
+            </li>
+            <li>Cook and crumble sausage, then drain.</li>
+            <li>Sprinkle sausage and cheese in pie crust.</li>
+            <li>
+              Beat eggs, milk, salt and pepper. Pour over sausage and cheese.
+            </li>
+            <li>Bake for 30-35 mins until set and golden brown.</li>
+          </ol>
+        </ion-content>
+      </div>
     </swiper-slide>
-    <swiper-slide class="swip">
-      <video
-        #videoPlayer
-        src="assets/Final.mp4"
-        controls
-        autoplay
-        loop
-        muted
-      ></video>
-      <button (click)="closeModal()" class="link-but">Skip</button>
-    </swiper-slide>
+
     <swiper-slide>
-      <img src="assets/Browse.jpg" />
-      <button (click)="closeModal()" class="link-button">Skip</button>
+      <ion-backdrop [visible]="true" [tappable]="false"></ion-backdrop>
+      <ion-card class="info-card browse-card">
+        <span class="bold"
+          >Use the <span class="green-text">Search bar </span></span
+        ><br />
+        to find items based on keywords in titles, ingredients, or descriptions.
+        <br />
+        Simply click on the meal to access detailed information about it.<br />
+      </ion-card>
+      <div class="slide-background">
+        <ion-header [translucent]="true">
+          <ion-toolbar>
+            <ion-searchbar class="searchb"> </ion-searchbar>
+          </ion-toolbar>
+        </ion-header>
+      </div>
     </swiper-slide>
+
     <swiper-slide>
-      <img src="assets/Recipe book.jpg" />
-      <!-- <button (click)="closeModal()" class="link-button">Skip</button> -->
+      <ion-backdrop
+        [visible]="true"
+        [tappable]="false"
+        style="z-index: 9999"
+      ></ion-backdrop>
+      <ion-card class="info-card recipe-card">
+        <span class="bold"
+          >Explore your <span class="green-text">Recipe Book</span></span
+        >,<br />
+        a place to save and organize your favourite recipes. You can
+        effortlessly delete recipes you no longer need in order to maintain a
+        tidy meal collection.
+      </ion-card>
+      <div class="slide-background">
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Recipe Book</ion-title>
+          </ion-toolbar>
+        </ion-header>
+
+        <ion-content>
+          <ion-grid
+            style="padding-top: 30px; padding-left: 20px; padding-right: 20px"
+          >
+            <ion-row>
+              <ion-col size="6" *ngFor="let item of items">
+                <ion-card class="ion-no-margin">
+                  <ion-icon name="close" class="close-icon"></ion-icon>
+                  <div
+                    class="image-container"
+                    [style.background-image]="'url(' + item.image + ')'"
+                  >
+                    <div class="card-title">{{ item.name }}</div>
+                  </div>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-content>
+      </div>
+
+      <ion-button class="end-tutorial" color="secondary" (click)="closeModal()"
+        >Finish</ion-button
+      >
     </swiper-slide>
   </swiper-container>
 </ion-content>

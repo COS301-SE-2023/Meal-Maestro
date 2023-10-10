@@ -9,11 +9,17 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
-import { IonItemSliding, IonicModule, NavController } from '@ionic/angular';
+import { IonItemSliding, IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { MealGenerationService } from '../../services/meal-generation/meal-generation.service';
 import { DaysMealsI } from '../../models/daysMeals.model';
-import { AuthenticationService, ErrorHandlerService, LikeDislikeService, LoginService, RecipeBookApiService } from '../../services/services';
+import {
+  AuthenticationService,
+  ErrorHandlerService,
+  LikeDislikeService,
+  LoginService,
+  RecipeBookApiService,
+} from '../../services/services';
 import { MealI, RegenerateMealRequestI } from '../../models/interfaces';
 import { AddRecipeService } from '../../services/recipe-book/add-recipe.service';
 
@@ -59,30 +65,30 @@ export class DailyMealsComponent implements OnInit {
   ) {}
 
   setOpen(isOpen: boolean, mealType: string) {
-    if (mealType === 'breakfast') {       
+    if (mealType === 'breakfast') {
       this.isModalOpen = isOpen;
       if (isOpen) {
-        this.setCurrent(this.dayData?.breakfast);        
-        this.item = this.dayData.breakfast;  
+        this.setCurrent(this.dayData?.breakfast);
+        this.item = this.dayData.breakfast;
       }
-    } else if (mealType === 'lunch') {     
+    } else if (mealType === 'lunch') {
       this.isModalOpen = isOpen;
       if (isOpen) {
-        this.setCurrent(this.dayData?.lunch);        
-        this.item = this.dayData.lunch; 
+        this.setCurrent(this.dayData?.lunch);
+        this.item = this.dayData.lunch;
       }
     } else if (mealType === 'dinner') {
-        this.isModalOpen = isOpen;
-        this.item = this.dayData.dinner;
+      this.isModalOpen = isOpen;
+      this.item = this.dayData.dinner;
       if (isOpen) {
         this.setCurrent(this.dayData?.dinner);
       }
     }
 
-    if (isOpen) {       
+    if (isOpen) {
       this.formatIns(this.item!.instructions);
-      this.formatIng(this.item!.ingredients);   
-    } 
+      this.formatIng(this.item!.ingredients);
+    }
   }
 
   async addRecipe(item: MealI) {
@@ -117,7 +123,7 @@ export class DailyMealsComponent implements OnInit {
 
   private formatIns(ins: string) {
     const insArr: string[] = ins.split(/\d+\.\s+/);
-    this.fIns = insArr.filter(instruction => instruction.trim() !== '');
+    this.fIns = insArr.filter((instruction) => instruction.trim() !== '');
   }
 
   private formatIng(ing: string) {
@@ -127,7 +133,7 @@ export class DailyMealsComponent implements OnInit {
 
   notSaved(): boolean {
     return !this.items.includes(this.item!);
-  } 
+  }
 
   ngOnInit() {
     console.log(this.dayData);
@@ -254,7 +260,7 @@ export class DailyMealsComponent implements OnInit {
           );
           this.auth.logout();
         }
-      }
+      },
     });
   }
 
@@ -266,9 +272,9 @@ export class DailyMealsComponent implements OnInit {
             'Unauthorised access. Please log in again',
             err
           );
-          this.auth.logout();          
+          this.auth.logout();
         }
-      }
+      },
     });
   }
 }

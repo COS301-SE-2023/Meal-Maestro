@@ -1,123 +1,57 @@
-<!-- popularMeals display cards -->
-<!-- <ng-container *ngIf="!Searched">
-  
-<ion-card  (click)="setOpen(true, item)" color="primary">
-  <ion-card-header>
-    <ion-card-title class="head">{{mealsData.name}}</ion-card-title>
-  </ion-card-header>
-  <ion-card-content>
-   {{mealsData.description}}
-  </ion-card-content>
-<ion-avatar>
-  <img src="{{mealsData.url}}">
-  <img alt="{{mealsData.url}}">
-
-</ion-avatar>
-
-<ion-modal [isOpen]="isModalOpen">
-  <ng-template>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>{{mealsData.name}}</ion-title>
-        <ion-buttons slot="end">
-          <ion-button (click)="setOpen(false,null)">Close</ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    <ion-avatar class="background">
-
-      <img src="{{mealsData.url}}">
-      <img alt="{{mealsData.url}}"> 
-
-    </ion-avatar>
-    <ion-content class="ion-padding">
-      <p>{{mealsData.ingredients}}</p> 
-     <p>{{mealsData.instructions}}</p> 
-     <p>{{mealsData.cookingTime}}</p> 
-    </ion-content>
-  </ng-template>
-</ion-modal>
-</ion-card>
-</ng-container> -->
-
-
-<!-- searchedMeals display cards -->
-<!-- <ng-container *ngIf="Searched">
-  heloooo
-  <ion-card  (click)="setOpen(true, thing)" color="primary">
-    <ion-card-header>
-      <ion-card-title class="head">{{searchData.name}}</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-     {{searchData.description}}
-    </ion-card-content>
-  <ion-avatar>
-  <img src="{{searchData.url}}">
-  <img alt="{{searchData.url}}"> 
-      
-  </ion-avatar>
-  
-  <ion-modal [isOpen]="isModalOpen">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>{{searchData.name}}</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="setOpen(false,null)">Close</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-avatar class="background"> 
-  
-         <img src="{{searchData.url}}">
-         <img alt="{{searchData.url}}"> 
-      </ion-avatar>
-      <ion-content class="ion-padding">
-        <p>{{searchData.ingredients}}</p> 
-       <p>{{searchData.instructions}}</p> 
-       <p>{{searchData.cookingTime}}</p> 
-      </ion-content>
-    </ng-template>
-  </ion-modal>
-  </ion-card>
-  </ng-container> -->
-
 <ion-card *ngIf="mealsData" (click)="setOpen(true, item)" color="primary">
   <ion-card-header>
-    <ion-card-title class="head">{{mealsData.name}}</ion-card-title>
+    <ion-card-title class="head">{{ mealsData.name }}</ion-card-title>
   </ion-card-header>
   <ion-card-content>
-  {{mealsData.description}}
+    {{ mealsData.description }}
   </ion-card-content>
   <ion-avatar>
-    <img src="{{mealsData.image}}">
-    <img alt="{{mealsData.description}}">
+    <img src="{{ mealsData.image }}" />
+    <img alt="{{ mealsData.description }}" />
   </ion-avatar>
 
   <ion-modal [isOpen]="isModalOpen">
     <ng-template>
       <ion-header>
         <ion-toolbar>
-          <ion-title>{{item?.name}}</ion-title>
+          <ion-title>{{ item?.name }}</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="setOpen(false,null)">Close</ion-button>
+            <ion-button (click)="setOpen(false, null)">Close</ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
       <ion-avatar>
-        <img [src]="item?.image" [alt]="item?.name">
+        <img [src]="item?.image" [alt]="item?.name" />
       </ion-avatar>
 
       <ion-content class="ion-padding">
         <div *ngIf="notSaved()" class="buttons">
-          <ion-button (click)="liked(item!)" class="likebutton" fill="outline" shape="round" color="black">
+          <ion-button
+            (click)="liked(item!)"
+            class="likebutton"
+            fill="outline"
+            shape="round"
+            color="black"
+          >
             <ion-icon name="thumbs-up-outline"></ion-icon>
           </ion-button>
-          <ion-button (click)="disliked(item!)" class="likebutton" fill="outline" shape="round" color="black">
+          <ion-button
+            (click)="disliked(item!)"
+            class="likebutton"
+            fill="outline"
+            shape="round"
+            color="black"
+          >
             <ion-icon name="thumbs-down-outline"></ion-icon>
           </ion-button>
-          <ion-button (click)="addRecipe(item!)" class="savebutton" fill="outline" shape="round" color="black">
-            <ion-icon slot="start" name="bookmark-outline"></ion-icon> 
+          <ion-button
+            (click)="addRecipe(item!)"
+            class="savebutton"
+            fill="outline"
+            shape="round"
+            color="black"
+          >
+            <ion-icon slot="start" name="bookmark-outline"></ion-icon>
             Save to Recipe Book
           </ion-button>
         </div>
@@ -125,13 +59,13 @@
         <h4>Preparation Time</h4>
         <p>{{ item?.cookingTime }}</p>
         <h4>Ingredients</h4>
-          <ul>
-            <li *ngFor="let ingredient of fIng">{{ ingredient }}</li>
-          </ul>
+        <ul>
+          <li *ngFor="let ingredient of fIng">{{ ingredient }}</li>
+        </ul>
         <h4>Instructions</h4>
-          <ol>
-            <li *ngFor="let instruction of fIns">{{ instruction }}</li>
-          </ol>
+        <ol>
+          <li *ngFor="let instruction of fIns">{{ instruction }}</li>
+        </ol>
       </ion-content>
     </ng-template>
   </ion-modal>

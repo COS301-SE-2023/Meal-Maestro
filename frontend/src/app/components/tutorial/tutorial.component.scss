@@ -13,21 +13,34 @@ ion-title {
 }
 
 ion-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
   opacity: 0.6;
   background-color: black;
+}
+
+.highlight {
+  z-index: 9999 !important;
+  position: relative;
 }
 
 .info-card {
   background-color: white;
   border-radius: 10px;
   position: fixed;
-  width: 85%;
+  width: 80%;
   padding-top: 20px;
   padding-bottom: 20px;
+  padding-left: 5%;
+  padding-right: 5%;
   top: 50%;
   left: 50%;
   text-align: center;
-  font-size: 1.85ch;
+  font-size: 1.95ch;
   z-index: 9999;
 }
 .bold {
@@ -41,7 +54,36 @@ ion-backdrop {
   transform: translate(-55%, -50%);
 }
 .top-card {
-  transform: translate(-55%, -200%);
+  transform: translate(-55%, -180%);
+}
+.pantry-card1 {
+  transform: translate(-55%, -100%);
+}
+.pantry-card2 {
+  transform: translate(-55%, 250%);
+}
+.home-card {
+  transform: translate(-55%, -100%);
+}
+.modal-card {
+  transform: translate(-55%, -50%);
+}
+.browse-card {
+  transform: translate(-55%, -230%);
+}
+.recipe-card {
+  transform: translate(-55%, -130%);
+}
+
+ion-button.end-tutorial {
+  width: 80%;
+  margin: 0 auto;
+  display: block;
+  position: absolute;
+  bottom: 10%;
+  left: 10%;
+  right: 10%;
+  z-index: 9999;
 }
 
 .slide-background {
@@ -76,7 +118,7 @@ ion-backdrop {
 
 swiper-slide {
   // text-align: center;
-  // position: relative;
+  position: relative;
   // // font-size: 18px;
   // // background-color: red;
   // display: flex;
@@ -117,10 +159,15 @@ swiper-button-next {
   color: #53bb63;
 }
 
-video {
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
+div.fab-background {
+  background-color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  z-index: 2;
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
 }
 
 /* Initial tooltip style, hidden by default */
@@ -274,4 +321,138 @@ video {
   height: 60px; /* Smaller size */
   margin: auto; /* Auto margins for centering */
   display: block; /* Make it a block element */
+}
+
+.empty-list {
+  text-align: center;
+  margin-top: 20%;
+  font-size: 20px;
+  color: #a9a9a9;
+  font-weight: bold;
+  font-family: "Roboto", sans-serif;
+}
+
+.list {
+  margin-bottom: 10px;
+}
+
+ion-toolbar {
+  --border-width: 0px;
+  --border-color: transparent;
+}
+
+ion-toolbar.labels {
+  --min-height: 12px;
+  --padding-start: 4vw;
+  --padding-end: 4vw;
+  --padding-bottom: 10px;
+  --padding-top: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: "Roboto", sans-serif;
+}
+ion-segment-button {
+  --indicator-color: var(--ion-color-primary);
+}
+
+ion-segment-button.ios {
+  --color: black;
+  --color-checked: white;
+}
+
+ion-segment-button.md {
+  --color: #000;
+  --color-checked: var(--ion-color-primary);
+  --indicator-height: 4px;
+}
+
+ion-fab-button.fab-button-disabled {
+  --background: #7fb688 !important;
+}
+
+ion-fab-button.fab-button-in-list {
+  --background: #acf7b7;
+}
+
+ion-avatar {
+  height: 20vh;
+  width: auto;
+  --border-radius: 2%;
+}
+
+.savebutton {
+  color: black;
+  text-transform: capitalize;
+  font-size: smaller;
+  margin-right: 5px;
+  margin-left: 5px;
+  transition: color 0.3 ease;
+}
+
+.savebutton:hover {
+  color: #818181;
+  cursor: pointer;
+}
+
+.likebutton {
+  color: black;
+  font-size: smaller;
+  margin-right: 5px;
+  margin-left: 5px;
+  transition: color 0.3 ease;
+}
+
+.likebutton:hover {
+  color: #818181;
+  cursor: pointer;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+p {
+  padding-left: 5vw;
+}
+
+ion-content {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.searchb {
+  margin-top: 2vh;
+  margin-bottom: 0.5vh;
+}
+
+.image-container {
+  width: 100%;
+  height: 130px;
+  background-size: cover;
+  background-position: center;
+}
+
+.card-title {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-weight: bold;
+  font-size: large;
+  border-radius: 5px;
+  max-width: calc(100% - 20px);
+}
+
+.close-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 19px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  z-index: 1;
 }
