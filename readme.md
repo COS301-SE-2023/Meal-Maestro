@@ -9,6 +9,7 @@
 ## Table of Contents
 - [Description](#description)
 - [Documentation](#documentation)
+- [Project Management](#project-management)
 
 ## Description
 
