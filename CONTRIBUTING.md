@@ -40,5 +40,28 @@ First of all, thank you for your interest in contributing to our project! Your h
 
 8. **Localization:** Translate the application to support multiple languages.
 
-Code of Conduct
-Please follow our Code of Conduct to ensure a friendly and welcoming environment for all contributors.
+<details>
+  <summary><h1>Code of Conduct</h1></summary>
+  ### Purpose
+  The Meal Maestro team is dedicated to providing a harassment-free experience for everyone, regardless of gender, gender identity and expression, age, sexual orientation, disability, physical appearance, body size, race, ethnicity, or religion. We do not tolerate harassment of participants in any form. This Code of Conduct outlines our expectations for participant behaviour, as well as the consequences for unacceptable behavior.
+
+  ### Expected Behaviour
+   - **Be Respectful:** Different people have different perspectives and boundaries. Respect differences of opinion and always seek to understand before disagreeing or debating.
+   - **Be inclusive:** Actively seek to include those who may have been left out due to historic exclusion.
+   - **Be patient:** Remember that everyone here is here to learn and grow. Give them the space to do so.
+
+  ### Unacceptable Behaviour
+  Unacceptable behaviours include: intimidating, harassing, abusive, discriminatory, derogatory or demeaning speech or actions by any participant. This includes, but it not limited to:
+   - Written or verbal comments which have the effect of excluding people on the basis of membership of a specific group.
+   - Written or verbal comments that cause harm to an individual, especially if they're persistent.
+   - Sustained disruption of discussion.
+   - Sexual attention or advances of any kind.
+   - Advocating for, or encouraging, any of the above behaviour.
+
+  ### Consequences of Unacceptable Behaviour
+  Unacceptable behaviour from any community member will not be tolerated. Anyone asked to stop unacceptable behaviour is expected to comply immediately. If a community member engages in unacceptable behaviour, they may be temporarily banned or permanently expelled from the community without warning.
+
+  ### Reporting Guidelines
+  If you are the subject of, or witness to any violations of this Code of Conduct, please contact us by [email](theFellowshipCapstone@gmail.com). All reports will be treated as confidential.
+</details>
+
