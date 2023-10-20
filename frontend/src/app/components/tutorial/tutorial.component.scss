@@ -54,13 +54,14 @@ ion-backdrop {
   transform: translate(-55%, -50%);
 }
 .top-card {
-  transform: translate(-55%, -180%);
+  transform: translate(-55%, -120%);
 }
 .pantry-card1 {
-  transform: translate(-55%, -100%);
+  transform: translate(-55%, -50%);
 }
 .pantry-card2 {
-  transform: translate(-55%, 250%);
+  transform: translate(-55%, 200%);
+  width: 60%;
 }
 .home-card {
   transform: translate(-55%, -100%);
@@ -69,10 +70,10 @@ ion-backdrop {
   transform: translate(-55%, -50%);
 }
 .browse-card {
-  transform: translate(-55%, -230%);
+  transform: translate(-55%, -100%);
 }
 .recipe-card {
-  transform: translate(-55%, -130%);
+  transform: translate(-55%, -80%);
 }
 
 ion-button.end-tutorial {
