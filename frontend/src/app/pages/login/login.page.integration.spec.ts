@@ -20,7 +20,7 @@ describe('LoginPageIntegration', () => {
   let errorHandler: ErrorHandlerService;
   let component: LoginPage;
   let routerSpy = { navigate: jasmine.createSpy('navigate') };
-  let apiUrl = 'http://68.183.42.105:8080';
+  let apiUrl = 'http://localhost:8080';
   let mockUser: UserI;
 
   beforeEach(async () => {

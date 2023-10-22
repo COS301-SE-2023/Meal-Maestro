@@ -7,7 +7,7 @@ import { SettingsI } from '../../models/settings.model';
   providedIn: 'root',
 })
 export class SettingsApiService {
-  url: string = 'http://68.183.42.105:8080';
+  url: string = 'http://localhost:8080';
 
   constructor(private http: HttpClient) {}
 
