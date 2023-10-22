@@ -36,7 +36,10 @@
                 "output": "./svg"
               }
             ],
-            "styles": ["frontend/src/theme/variables.scss", "frontend/src/global.scss"],
+            "styles": [
+              "frontend/src/theme/variables.scss",
+              "frontend/src/global.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -50,7 +53,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumError": "5kb"
                 }
               ],
               "fileReplacements": [
@@ -116,7 +119,10 @@
                 "output": "./svg"
               }
             ],
-            "styles": ["frontend/src/theme/variables.scss", "frontend/src/global.scss"],
+            "styles": [
+              "frontend/src/theme/variables.scss",
+              "frontend/src/global.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -136,9 +142,7 @@
     }
   },
   "cli": {
-    "schematicCollections": [
-      "@ionic/angular-toolkit"
-    ],
+    "schematicCollections": ["@ionic/angular-toolkit"],
     "analytics": false
   },
   "schematics": {
