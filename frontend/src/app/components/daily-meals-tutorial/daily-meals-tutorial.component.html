@@ -1,0 +1,121 @@
+<ion-item>
+  <div class="card-container">
+    <div class="label-container">
+      <ion-item *ngIf="dayData">
+        <!-- Rest of the code -->
+        <ion-label>{{ dayData.mealDay }}</ion-label>
+      </ion-item>
+
+      <span class="line"></span>
+    </div>
+
+    <ion-item-sliding ion-padding="0px" style="display: contents">
+      <ion-card
+        color="primary"
+        ion-padding
+        [ngClass]="{ 'hidden-card': !isBreakfastLoading }"
+      >
+        <div class="svg-container breakfast-svg-container"></div>
+      </ion-card>
+
+      <ion-card
+        color="primary"
+        ion-padding
+        [ngClass]="{ 'hidden-card': isBreakfastLoading }"
+      >
+        <ion-item
+          class="no-style"
+          color="none"
+          style="--inner-padding-end: 0; --inner-padding-bottom: 0"
+        >
+          <div ion-no-padding style="padding-inline-end: 0px !important">
+            <ion-card-header>
+              <ion-card-subtitle>Breakfast</ion-card-subtitle>
+              <ion-card-title>{{ dayData.breakfast?.name }}</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+              {{ dayData.breakfast?.description }}
+            </ion-card-content>
+
+            <ion-avatar no-padding no-margin>
+              <img [src]="dayData.breakfast?.image" alt="Breakfast Image" />
+            </ion-avatar>
+          </div>
+        </ion-item>
+      </ion-card>
+    </ion-item-sliding>
+
+    <ion-item-sliding ion-padding="0px" style="display: contents">
+      <ion-card
+        color="primary"
+        ion-padding
+        [ngClass]="{ 'hidden-card': !isLunchLoading }"
+      >
+        <div class="svg-container lunch-svg-container"></div>
+      </ion-card>
+
+      <ion-card
+        color="primary"
+        ion-padding
+        [ngClass]="{ 'hidden-card': isLunchLoading }"
+      >
+        <ion-item
+          class="no-style"
+          color="none"
+          style="--inner-padding-end: 0; --inner-padding-bottom: 0"
+        >
+          <div ion-no-padding style="padding-inline-end: 0px !important">
+            <ion-card-header>
+              <ion-card-subtitle>Lunch</ion-card-subtitle>
+              <ion-card-title>{{ dayData.lunch?.name }}</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+              {{ dayData.lunch?.description }}
+            </ion-card-content>
+
+            <ion-avatar no-padding no-margin>
+              <img [src]="dayData.lunch?.image" alt="Lunch Image" />
+            </ion-avatar>
+          </div>
+        </ion-item>
+      </ion-card>
+    </ion-item-sliding>
+
+    <ion-item-sliding ion-padding="0px" style="display: contents">
+      <ion-card
+        color="primary"
+        ion-padding
+        [ngClass]="{ 'hidden-card': !isDinnerLoading }"
+      >
+        <div class="svg-container dinner-svg-container"></div>
+      </ion-card>
+      <ion-card
+        color="primary"
+        ion-padding
+        [ngClass]="{ 'hidden-card': isDinnerLoading }"
+      >
+        <ion-item
+          class="no-style"
+          color="none"
+          style="--inner-padding-end: 0; --inner-padding-bottom: 0"
+        >
+          <div ion-no-padding style="padding-inline-end: 0px !important">
+            <ion-card-header>
+              <ion-card-subtitle>Dinner</ion-card-subtitle>
+              <ion-card-title>{{ dayData.dinner?.name }}</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+              {{ dayData.dinner?.description }}
+            </ion-card-content>
+
+            <ion-avatar no-padding no-margin>
+              <img [src]="this.dayData.dinner?.image" alt="Dinner Image" />
+            </ion-avatar>
+          </div>
+        </ion-item>
+      </ion-card>
+    </ion-item-sliding></div
+></ion-item>

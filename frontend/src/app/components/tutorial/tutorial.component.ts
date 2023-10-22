@@ -11,20 +11,14 @@ import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import Swiper from 'swiper';
 import { DaysMealsI, MealI } from '../../models/interfaces';
-import { DailyMealsComponent } from '../daily-meals/daily-meals.component';
-import { RecipeItemComponent } from '../recipe-item/recipe-item.component';
+import { DailyMealsTutorialComponent } from '../daily-meals-tutorial/daily-meals-tutorial.component';
 
 @Component({
   selector: 'app-tutorial',
   templateUrl: './tutorial.component.html',
   styleUrls: ['./tutorial.component.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    IonicModule,
-    DailyMealsComponent,
-    RecipeItemComponent,
-  ],
+  imports: [CommonModule, IonicModule, DailyMealsTutorialComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class TutorialComponent implements OnInit, AfterViewInit {

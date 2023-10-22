@@ -513,12 +513,12 @@
         </ion-header>
 
         <ion-list lines="inset" class="list-container">
-          <app-daily-meals
+          <app-daily-meals-tutorial
             *ngFor="let item of meals"
             [dayData]="item"
             [items]="foods"
           >
-          </app-daily-meals>
+          </app-daily-meals-tutorial>
         </ion-list>
       </div>
     </swiper-slide>

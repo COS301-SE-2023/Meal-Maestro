@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -31,7 +31,8 @@ export class SignupPage {
     private router: Router,
     private errorHandlerService: ErrorHandlerService,
     private auth: AuthenticationService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private ngZone: NgZone
   ) {}
 
   async signup(form: any) {
@@ -57,8 +58,8 @@ export class SignupPage {
             this.errorHandlerService.presentSuccessToast(
               'Registration successful'
             );
-            this.router.navigate(['app/tabs/home']);
             this.openModal();
+            this.router.navigate(['app/tabs/home']);
           }
         }
       },
@@ -78,11 +79,12 @@ export class SignupPage {
     });
   }
   async openModal() {
-    const modal = await this.modalController.create({
-      component: TutorialComponent,
+    this.ngZone.run(async () => {
+      const modal = await this.modalController.create({
+        component: TutorialComponent,
+      });
+      await modal.present();
     });
-
-    await modal.present();
   }
 
   goToLogin() {
