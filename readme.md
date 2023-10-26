@@ -19,7 +19,7 @@ Meal Maestro isn't just another app; it's your indispensable AI co-pilot in the 
 ## Documentation
 
 ### Project Day
-- 📹 [Project Day Demo]
+- 📹 [Project Day Demo](https://youtu.be/ls89clmbUJ0)
 - 📹 [Video Advertisment](https://youtu.be/w6rcWmC8gdo)
 - 📰 [Project Slideshow](https://www.canva.com/design/DAFx4bkwGn0/SY-QM30P0vK9nhmOLRCnpg/edit?utm_content=DAFx4bkwGn0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 - ⭐ [Contribute to Development](https://github.com/COS301-SE-2023/Meal-Maestro/blob/main/CONTRIBUTING.md)
