@@ -55,7 +55,7 @@ Meal Maestro isn't just another app; it's your indispensable AI co-pilot in the 
 
 ## Application
 
-- 📱 [Website](http://skulderlock.co.za)
+- 📱 [Website](http://skulderlock.co.za)   *status* - down
 
 
 <details>
